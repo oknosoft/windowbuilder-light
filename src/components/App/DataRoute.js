@@ -8,7 +8,7 @@ import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "нео�
 
 import NotFound from '../Markdown/NotFound';
 
-import  {path} from './menu_items'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
+import {path} from './menu_items'; // метод для вычисления base path
 
 const stub = () => null;
 const lazy = {
