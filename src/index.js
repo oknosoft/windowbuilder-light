@@ -5,31 +5,19 @@ import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 
 // метод инициализации хранилища состояния приложения
-import configureStore, {history} from './redux';
-
-// диспетчер состояния интерфейса
-import {dispatchIface} from 'metadata-redux';
+import {history, store} from './redux';
 
 // заставка "загрузка занных"
-//import DumbScreen from './components/App/DumbScreen';
+import DumbScreen from './components/DumbScreen';
 
 // корневыой контейнер приложения, тема и метод для вычисления need_meta, need_user для location.pathname
 import AppView, {muiTheme, item_props} from './components/App';
-import DumbScreen from './components/DumbScreen';
-
 
 // типовой RootView, в котором подключается Router и основной макет приложения
 import RootView from 'metadata-react/App/RootView';
 
 // sw для оффлайна и прочих дел
 import * as serviceWorker from './serviceWorker';
-
-
-// создаём redux-store
-export const store = configureStore();
-
-// метод для установки state интерфейса
-export const {handleIfaceState} = dispatchIface(store.dispatch);
 
 
 class RootProvider extends React.Component {
