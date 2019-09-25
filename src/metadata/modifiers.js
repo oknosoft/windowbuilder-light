@@ -4,16 +4,19 @@
 import common from './common';
 
 // модификаторы справочников
-import catalogs from "./catalogs";
+import catalogs from './catalogs';
 
 // модификаторы документов
-import documents from "./documents";
+import documents from './documents';
 
 // модификаторы планов видов характеристик
-import chartscharacteristics from "./chartscharacteristics";
+import chartscharacteristics from './chartscharacteristics';
 
 // модификаторы отчетов
-import reports from "./reports";
+import reports from './reports';
+
+import paper from 'paper/dist/paper-core';
+import drawer from 'windowbuilder/public/dist/drawer';
 
 
 export default function ($p) {
@@ -22,4 +25,5 @@ export default function ($p) {
   chartscharacteristics($p);
   reports($p);
   common($p);
+  drawer({$p, paper});
 }

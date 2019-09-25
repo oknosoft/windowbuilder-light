@@ -8,6 +8,7 @@ import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "нео�
 
 import NotFound from '../Markdown/NotFound';
 
+/* eslint-disable-next-line */
 import {path} from './menu_items'; // метод для вычисления base path
 
 const stub = () => null;
@@ -21,13 +22,14 @@ import(/* webpackChunkName: "metadata-react" */ 'metadata-react/DynList').then(m
 import(/* webpackChunkName: "metadata-react" */ 'metadata-react/DataTree').then(module => lazy.DataTree = module.default);
 import(/* webpackChunkName: "metadata-react" */ 'metadata-react/FrmObj').then(module => lazy.DataObj = module.default);
 import(/* webpackChunkName: "metadata-react" */ 'metadata-react/FrmReport').then(module => lazy.FrmReport = module.default);
+import(/* webpackChunkName: "metadata-react" */ 'metadata-react/styles/react-data-grid.css');
 
 class DataRoute extends Component {
 
   render() {
     const {match, handlers, windowHeight, windowWidth, disablePermanent, couch_direct, offline, user} = this.props;
     const {area, name} = match.params;
-    let _mgr = $p[area][name];
+    let _mgr = global.$p && $p[area][name];
 
     if(!_mgr) {
       return <NotFound/>;

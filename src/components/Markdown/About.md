@@ -1,6 +1,6 @@
 # Окнософт: Заказ дилера
 Заказ дилера - это веб-приложение, разработанное компанией [Окнософт](http://www.oknosoft.ru/) на базе фреймворка [Metadata.js](https://github.com/oknosoft/metadata.js/tree/master/packages)  
-Исходный код и документация доступны в [GitHub <i className="fa fa-github-alt"></i>](https://github.com/oknosoft/windowbuilder)
+Исходный код и документация доступны в [GitHub <i class="fa fa-github-alt"></i>](https://github.com/oknosoft/windowbuilder)
 
 ### Назначение и возможности
 - Построение и редактирование эскизов изделий в графическом 2D редакторе

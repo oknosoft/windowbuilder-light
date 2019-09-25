@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Switch, Route, Redirect} from 'react-router';
-import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import Snack from 'metadata-react/App/Snack';       // сообщения в верхней части страницы (например, обновить после первого запуска)
 import Alert from 'metadata-react/App/Alert';       // диалог сообщения пользователю
 import Confirm from 'metadata-react/App/Confirm';   // диалог вопросов пользователю (да, нет)
@@ -13,8 +8,7 @@ import Login, {FrmLogin} from 'metadata-react/FrmLogin/Proxy';  // логин и
 import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "необхлдима авторизация"
 import Header from 'metadata-react/Header';         // навигация
 
-import HeaderButtons from 'metadata-react/Header/HeaderButtons';
-import {withIfaceAndMeta} from 'metadata-redux';
+import {withNavigateAndMeta} from 'metadata-redux';
 import withWindowSize from 'metadata-react/WindowSize';
 
 import DumbScreen from '../DumbScreen';             // заставка "загрузка занных"
@@ -26,7 +20,7 @@ import Settings from '../Settings';                 // страница наст
 import withStyles from './styles';
 import {compose} from 'redux';
 
-import items, {item_props, stitle, path} from './menu_items'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
+import items, {item_props, path} from './menu_items'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
 
 // основной layout
 class AppView extends Component {
@@ -78,8 +72,9 @@ class AppView extends Component {
   };
 
   render() {
-    const {props} = this;
-    const {snack, alert, confirm, meta_loaded, doc_ram_loaded, nom_prices_step, page, user, couch_direct, offline, title, idle, classes} = props;
+    /* eslint-disable-next-line */
+    const {classes, ...props} = this.props;
+    const {snack, alert, confirm, meta_loaded, doc_ram_loaded, nom_prices_step, page, user, couch_direct, offline, title, idle} = props;
     const iprops = item_props();
 
 
@@ -103,32 +98,22 @@ class AppView extends Component {
     };
 
     const wraper = (Component, routeProps) => {
-      /* eslint-disable-next-line */
-      const {classes, ...mainProps} = props;
-      return <Component {...mainProps} {...routeProps}/>;
+      return <Component {...props} {...routeProps}/>;
     };
 
     return [
 
       <Header key="header" items={items} {...props} />,
 
-      /*
-      <AppDrawer
-        className={classes.drawer}
-        onClose={this.handleDrawerClose}
-        open={state.mobileOpen}
-      >
-        {items}
-      </AppDrawer>,
-       */
-
       // основной layout
       // основной контент или заставка загрузки или приглашение к авторизации
       need_auth || idle ?
-        <NeedAuth
-          {...auth_props}
-          ComponentLogin={FrmLogin}
-        />
+        (
+          (need_auth && page) ?
+          <NeedAuth {...auth_props} ComponentLogin={FrmLogin}/>
+          :
+            <NeedAuth {...auth_props} ComponentLogin={FrmLogin}/>
+        )
         :
         (
           (!props.path_log_in && ((iprops.need_meta && !meta_loaded) || (iprops.need_user && !props.complete_loaded))) ?
@@ -189,4 +174,4 @@ AppView.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-export default compose(withStyles, withWindowSize, withIfaceAndMeta)(AppView);
+export default compose(withStyles, withWindowSize, withNavigateAndMeta)(AppView);

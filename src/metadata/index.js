@@ -5,6 +5,7 @@ import plugin_pouchdb from 'metadata-pouchdb';
 import plugin_ui from 'metadata-abstract-ui';
 import plugin_ui_tabulars from 'metadata-abstract-ui/tabulars';
 import plugin_react from 'metadata-react/plugin';
+import proxy_login from 'metadata-superlogin/proxy';
 
 // функция установки параметров сеанса
 import settings from '../../config/app.settings';
@@ -37,41 +38,33 @@ meta_init($p);
 // скрипт инициализации в привязке к store приложения
 export function init(store) {
 
-  // плагин pouchdb-authentication подключаем асинхронно
-  return import('pouchdb-authentication')
-    .then(() => {
-      const {dispatch} = store;
+  try{
+    const {dispatch} = store;
 
-      // подключаем metaMiddleware
-      addMiddleware(metaMiddleware($p));
+    // подключаем metaMiddleware
+    addMiddleware(metaMiddleware($p));
 
-      // сообщяем адаптерам пути, суффиксы и префиксы
-      const {wsql, job_prm, adapters: {pouch}} = $p;
-      if(wsql.get_user_param('couch_path') !== job_prm.couch_local && process.env.NODE_ENV !== 'development') {
-        wsql.set_user_param('couch_path', job_prm.couch_local);
-      }
-      pouch.init(wsql, job_prm);
+    // сообщяем адаптерам пути, суффиксы и префиксы
+    const {wsql, job_prm, classes, adapters: {pouch}} = $p;
+    if(wsql.get_user_param('couch_path') !== job_prm.couch_local && process.env.NODE_ENV !== 'development') {
+      wsql.set_user_param('couch_path', job_prm.couch_local);
+    }
+    classes.PouchDB.plugin(proxy_login());
+    pouch.init(wsql, job_prm);
 
-      // выполняем модификаторы
-      modifiers($p, dispatch);
+    // выполняем модификаторы
+    modifiers($p, dispatch);
 
-      // информируем хранилище о готовности MetaEngine
-      dispatch(metaActions.META_LOADED($p));
+    // информируем хранилище о готовности MetaEngine
+    dispatch(metaActions.META_LOADED($p));
 
-      // читаем локальные данные в ОЗУ
-      return $p.adapters.pouch.load_data();
+    // читаем локальные данные в ОЗУ
+    return pouch.load_data();
 
-      // // читаем локальные данные в ОЗУ
-      // pouch.load_changes({docs});
-      // pouch.call_data_loaded({
-      //   total_rows: docs.length,
-      //   docs_written: docs.length,
-      //   page: 1,
-      //   limit: 300,
-      //   start: Date.now(),
-      // });
-    })
-    .catch((err) => $p && $p.record_log(err));
+  }
+  catch(err) {
+    $p.record_log(err);
+  }
 
 }
 
