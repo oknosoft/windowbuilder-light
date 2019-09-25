@@ -21,19 +21,9 @@ class CalcOrderObj extends DataObj {
 
     return [
       <FormGroup row key="group_sys">
-        <DataField _obj={_obj} _fld="number_doc"/>
-        <DataField _obj={_obj} _fld="number_internal"/>
-        <DataField _obj={_obj} _fld="date"/>
-      </FormGroup>,
-      <FormGroup row key="row1">
-        <DataField _obj={_obj} _fld="organization"/>
-        <DataField _obj={_obj} _fld="partner"/>
-        <DataField _obj={_obj} _fld="department"/>
-      </FormGroup>,
-      <FormGroup row key="row2" className={classes.paddingBottom}>
-        <DataField _obj={_obj} _fld="manager"/>
-        <DataField _obj={_obj} _fld="leading_manager"/>
-        <DataField _obj={_obj} _fld="doc_amount" read_only/>
+        <DataField read_only _obj={_obj} _fld="number_doc"/>
+        <DataField read_only _obj={_obj} _fld="number_internal"/>
+        <DataField read_only _obj={_obj} _fld="date"/>
       </FormGroup>,
       <DataField key="client_of_dealer" _obj={_obj} _fld="client_of_dealer"/>,
       <DataField key="shipping_address"  _obj={_obj} _fld="shipping_address"/>

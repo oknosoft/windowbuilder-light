@@ -31,19 +31,12 @@ module.exports = function settings(prm = {}) {
 
     // расположение couchdb для сайта
     couch_path: process.env.COUCHPATH || "/couchdb/wb_",
-    //couch_path: "https://light.oknosoft.ru/couchdb/wb_",
-    //couch_path: 'http://cou200:5984/wb_',
 
     // расположение couchdb для nodejs
     couch_local: process.env.COUCHLOCAL || 'http://cou221:5984/wb_',
 
     // расположение адаптера postgres
     pg_path: process.env.PGPATH || "/r/postgres/wb_",
-
-    // фильтр для репликации с CouchDB не используем
-    pouch_filter: {
-      meta: 'auth/meta',
-    },
 
     // по умолчанию, обращаемся к зоне 1
     zone: process.env.ZONE || 1,

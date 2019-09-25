@@ -3,13 +3,20 @@
  */
 
 //import {handleIfaceState} from '../../redux';
-import FrmObj from '../../components/CalcOrder/FrmObj';
+import {FrmObj, FrmObjCompact} from '../../components/CalcOrder/FrmObj';
+import ListQuick from '../../components/CalcOrder/FrmList/Quick';
 
 export default function ($p) {
 
-  const {DocCalc_order: {prototype}, doc: {calc_order}} = $p;
+  const {DocCalc_order: {prototype}, doc: {calc_order}, wsql} = $p;
 
-  calc_order.FrmObj = FrmObj;
+  if(wsql.get_user_param('iface_kind') === 'quick') {
+    calc_order.FrmObj = FrmObjCompact;
+    calc_order.FrmList = ListQuick;
+  }
+  else {
+    calc_order.FrmObj = FrmObj;
+  }
 
   /**
    * Обработчик при изменении реквизита

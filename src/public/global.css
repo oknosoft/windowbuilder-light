@@ -66,3 +66,7 @@ body {
     padding-left: 50px;
   }
 }
+.fullscreen {
+  background-color: #fafafa;
+  overflow: auto;
+}

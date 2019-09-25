@@ -24,41 +24,46 @@ class Settings extends React.Component {
 
   constructor(props) {
     super(props);
-    const {zone, couch_path, couch_direct, ram_indexer} = props;
+    let {zone, couch_path, couch_direct, ram_indexer, iface_kind} = props;
+    const {wsql, cat, current_user, pricing} = $p;
 
     let hide_price;
-    if($p.wsql.get_user_param('hide_price_dealer')) {
+    if(wsql.get_user_param('hide_price_dealer')) {
       hide_price = 'dealer';
     }
-    else if($p.wsql.get_user_param('hide_price_manufacturer')) {
+    else if(wsql.get_user_param('hide_price_manufacturer')) {
       hide_price = 'manufacturer';
     }
     else {
       hide_price = 'none';
     }
 
-    let surcharge_internal = $p.wsql.get_user_param('surcharge_internal', 'number');
-    let discount_percent_internal = $p.wsql.get_user_param('discount_percent_internal', 'number');
+    let surcharge_internal = wsql.get_user_param('surcharge_internal', 'number');
+    let discount_percent_internal = wsql.get_user_param('discount_percent_internal', 'number');
     let surcharge_disabled = false;
 
-    if($p.current_user && $p.current_user.partners_uids.length) {
+    if(!iface_kind ){
+      wsql.set_user_param('iface_kind', iface_kind = 'normal');
+    }
+
+    if(current_user && current_user.partners_uids.length) {
 
       // если заданы параметры для текущего пользователя - используем их
       if(!surcharge_internal) {
 
-        let partner = $p.cat.partners.get($p.current_user.partners_uids[0]);
+        let partner = cat.partners.get(current_user.partners_uids[0]);
         let prm = {
           calc_order_row: {
-            nom: $p.cat.nom.get(),
+            nom: cat.nom.get(),
             characteristic: {params: {find_rows: () => null}},
             _owner: {_owner: {partner: partner}}
           }
         };
 
-        $p.pricing.price_type(prm);
+        pricing.price_type(prm);
 
-        $p.wsql.set_user_param('surcharge_internal', surcharge_internal = prm.price_type.extra_charge_external);
-        $p.wsql.set_user_param('discount_percent_internal', discount_percent_internal = prm.price_type.discount_external);
+        wsql.set_user_param('surcharge_internal', surcharge_internal = prm.price_type.extra_charge_external);
+        wsql.set_user_param('discount_percent_internal', discount_percent_internal = prm.price_type.discount_external);
       }
     }
     else {
@@ -66,7 +71,7 @@ class Settings extends React.Component {
     }
 
     this.state = {
-      zone, couch_path, couch_direct, ram_indexer, hide_price,
+      zone, couch_path, couch_direct, ram_indexer, hide_price, iface_kind,
       confirm_reset: false, surcharge_internal, discount_percent_internal, surcharge_disabled
     };
   }
@@ -112,6 +117,10 @@ class Settings extends React.Component {
     this.setState({hide_price: value});
   };
 
+  handleIfaseChange = (event, value) => {
+    this.setState({iface_kind: value});
+  };
+
   openConfirm = () => this.setState({confirm_reset: true});
 
   closeConfirm = () => this.setState({confirm_reset: false});
@@ -132,7 +141,7 @@ class Settings extends React.Component {
   render() {
     const {classes} = this.props;
     const {
-      zone, couch_path, couch_direct, ram_indexer, confirm_reset, hide_price,
+      zone, couch_path, couch_direct, ram_indexer, confirm_reset, hide_price, iface_kind,
       surcharge_internal, discount_percent_internal, surcharge_disabled
     } = this.state;
 
@@ -165,9 +174,9 @@ class Settings extends React.Component {
               control={<Switch
                 onChange={(event, checked) => this.setState({couch_direct: checked})}
                 checked={Boolean(couch_direct)}/>}
-              label="Прямое подключение без кеширования"
+              label={couch_direct ? "Прямое подключение к серверу" : "Работа через IDB браузера" }
             />
-            <FormHelperText style={{marginTop: -4}}>Отключает режим оффлайн</FormHelperText>
+            <FormHelperText style={{marginTop: -4}}>{couch_direct ? "Оффлайн не используется" : "Автономный режим при недоступности сервера"}</FormHelperText>
           </FormControl>
 
           <FormControl>
@@ -175,18 +184,28 @@ class Settings extends React.Component {
               control={<Switch
                 onChange={(event, checked) => this.setState({ram_indexer: checked})}
                 checked={Boolean(ram_indexer)}/>}
-              label="Использовать RamIndexer"
+              label="Использовать Indexer Postgres"
             />
             <FormHelperText style={{marginTop: -4}}>Новый источник данных для динсписков</FormHelperText>
           </FormControl>
 
         </FormGroup>
 
-
-        <Typography variant="h6" style={{paddingTop: 16}}>Колонки цен</Typography>
-        <Typography>Настройка видимости колонок в документе &quot;Расчет&quot; и графическом построителе</Typography>
-
+        <Typography variant="h6" style={{paddingTop: 16}}>Вариант интерфейса</Typography>
+        <Typography>Настройка видимости элементов управления в документе &quot;Расчет&quot; и графическом построителе</Typography>
         <RadioGroup
+          className={classes.group}
+          value={iface_kind}
+          onChange={this.handleIfaseChange}
+        >
+          <FormControlLabel value="normal" control={<Radio/>} label="Обычный режим"/>
+          <FormControlLabel value="quick" control={<Radio/>} label="Быстрые окна"/>
+
+        </RadioGroup>
+
+        {iface_kind !== 'quisk' && <Typography variant="h6" style={{paddingTop: 16}}>Колонки цен</Typography>}
+        {iface_kind !== 'quisk' && <Typography>Настройка видимости колонок в документе &quot;Расчет&quot; и графическом построителе</Typography>}
+        {iface_kind !== 'quisk' && <RadioGroup
           className={classes.group}
           value={hide_price}
           onChange={this.handleHidePriceChange}
@@ -195,7 +214,7 @@ class Settings extends React.Component {
           <FormControlLabel value="dealer" control={<Radio/>} label="Скрыть цены дилера"/>
           <FormControlLabel value="manufacturer" control={<Radio/>} label="Скрыть цены завода"/>
 
-        </RadioGroup>
+        </RadioGroup>}
 
         <Typography variant="h6" style={{paddingTop: 16}}>Наценки и скидки</Typography>
         <Typography>Значения наценки и скидки по умолчанию, которые дилер предоставляет своим (конечным) покупателям</Typography>
@@ -245,6 +264,7 @@ Settings.propTypes = {
   title: PropTypes.string,
   couch_direct: PropTypes.bool,
   ram_indexer: PropTypes.bool,
+  iface_kind: PropTypes.string,
   handleSetPrm: PropTypes.func.isRequired,
   handleIfaceState: PropTypes.func.isRequired,
   classes: PropTypes.object,

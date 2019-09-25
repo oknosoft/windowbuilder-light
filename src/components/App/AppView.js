@@ -20,7 +20,8 @@ import Settings from '../Settings';                 // страница наст
 import withStyles from './styles';
 import {compose} from 'redux';
 
-import items, {item_props, path} from './menu_items'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
+import items, {item_props, path} from './menu_items';
+import Fullscreenable from './Fullscreenable'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
 
 // основной layout
 class AppView extends Component {
@@ -74,7 +75,7 @@ class AppView extends Component {
   render() {
     /* eslint-disable-next-line */
     const {classes, ...props} = this.props;
-    const {snack, alert, confirm, meta_loaded, doc_ram_loaded, nom_prices_step, page, user, couch_direct, offline, title, idle} = props;
+    const {snack, alert, confirm, meta_loaded, doc_ram_loaded, nom_prices_step, page, user, couch_direct, offline, title, idle, iface_kind} = props;
     const iprops = item_props();
 
 
@@ -101,17 +102,15 @@ class AppView extends Component {
       return <Component {...props} {...routeProps}/>;
     };
 
-    return [
-
-      <Header key="header" items={items} {...props} />,
+    const app = [
 
       // основной layout
       // основной контент или заставка загрузки или приглашение к авторизации
       need_auth || idle ?
         (
           (need_auth && page) ?
-          <NeedAuth {...auth_props} ComponentLogin={FrmLogin}/>
-          :
+            <NeedAuth {...auth_props} ComponentLogin={FrmLogin}/>
+            :
             <NeedAuth {...auth_props} ComponentLogin={FrmLogin}/>
         )
         :
@@ -155,12 +154,26 @@ class AppView extends Component {
 
       // диалог сообщений пользователю
       alert && alert.open &&
-        <Alert key="alert" open text={alert.text} title={alert.title} handleOk={this.handleAlertClose}/>,
+      <Alert key="alert" open text={alert.text} title={alert.title} handleOk={this.handleAlertClose}/>,
 
       // диалог вопросов пользователю (да, нет)
       confirm && confirm.open &&
-        <Confirm key="confirm" open text={confirm.text} title={confirm.title} handleOk={confirm.handleOk} handleCancel={confirm.handleCancel}/>,
+      <Confirm key="confirm" open text={confirm.text} title={confirm.title} handleOk={confirm.handleOk} handleCancel={confirm.handleCancel}/>,
     ];
+
+    if(iface_kind === 'quick') {
+      return <Fullscreenable
+        title={title}
+        handleNavigate={props.handleNavigate}
+      >
+        {app}
+      </Fullscreenable>
+    }
+    else {
+      app.splice(0, 0, <Header key="header" items={items} {...props} />);
+    }
+
+    return app;
   }
 }
 
