@@ -18,11 +18,24 @@ const lazy = {
   DataObj: stub,
   FrmReport: stub,
 };
-import(/* webpackChunkName: "metadata-react" */ 'metadata-react/DynList').then(module => lazy.DataList = module.default);
-import(/* webpackChunkName: "metadata-react" */ 'metadata-react/DataTree').then(module => lazy.DataTree = module.default);
-import(/* webpackChunkName: "metadata-react" */ 'metadata-react/FrmObj').then(module => lazy.DataObj = module.default);
-import(/* webpackChunkName: "metadata-react" */ 'metadata-react/FrmReport').then(module => lazy.FrmReport = module.default);
-import(/* webpackChunkName: "metadata-react" */ 'metadata-react/styles/react-data-grid.css');
+
+import(/* webpackChunkName: "metadata-react" */ 'metadata-react/DynList')
+  .then(module => {
+    lazy.DataList = module.default;
+    return import(/* webpackChunkName: "metadata-react" */ 'metadata-react/DataTree');
+  })
+  .then(module => {
+    lazy.DataTree = module.default;
+    return import(/* webpackChunkName: "metadata-react" */ 'metadata-react/FrmObj');
+  })
+  .then(module => {
+    lazy.DataObj = module.default;
+    return import(/* webpackChunkName: "metadata-react" */ 'metadata-react/FrmReport');
+  })
+  .then(module => {
+    lazy.FrmReport = module.default
+    import(/* webpackChunkName: "metadata-react" */ 'metadata-react/styles/react-data-grid.css');
+  });
 
 class DataRoute extends React.Component {
 

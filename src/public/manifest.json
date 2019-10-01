@@ -5,13 +5,13 @@
   "description": "Расчет и заказ изделий онлайн",
   "icons": [
     {
-      "src": "./light/imgs/fav-okn144.png",
+      "src": "./imgs/fav-okn144.png",
       "sizes": "144x144",
       "type": "image/png"
     }],
   "background_color": "#ffffff",
   "splash_screens": [{
-    "src": "./light/imgs/splash.gif",
+    "src": "./imgs/splash.gif",
     "sizes": "256x64"
   }],
   "scope": "/light",

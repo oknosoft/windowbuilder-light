@@ -44,7 +44,7 @@ export default function BuilderToolbar(props) {
       <IconButton><i className="tb_icon-arrow-white" /></IconButton>
     </Tip>
     <Tip title="Вписать в окно">
-      <IconButton><i className="tb_cursor-zoom" /></IconButton>
+      <IconButton onClick={() => editor && editor.project.zoom_fit && editor.project.zoom_fit()}><i className="tb_cursor-zoom" /></IconButton>
     </Tip>
     <div className={classes.title} />
     <CloseBtn handleClose={handleClose}/>

@@ -60,7 +60,7 @@ class AppView extends Component {
 
   handleReset(reset) {
     const {handleNavigate, first_run} = this.props;
-    (first_run || reset) ? location.replace('/') : handleNavigate('/');
+    (first_run || reset) ? location.replace(path('')) : handleNavigate(path(''));
   }
 
   handleDrawerToggle = () => {
@@ -125,7 +125,7 @@ class AppView extends Component {
             :
             <Switch key="switch">
               <Route exact path={path('')} render={() => <Redirect to={path('doc.calc_order/list')}/>}/>
-              <Route path="/builder/:ref([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})" render={(props) => wraper(Builder, props)}/>
+              <Route path={`${path('builder')}/:ref([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})`} render={(props) => wraper(Builder, props)}/>
               <Route path={`${path('')}:area(doc|cat|ireg|cch|rep).:name`} render={(props) => wraper(DataRoute, props)}/>
               <Route path={path('login')} render={(props) => <Login {...props} {...auth_props} />}/>
               <Route path={path('settings')} render={(props) => wraper(Settings, props)}/>

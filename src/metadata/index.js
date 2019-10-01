@@ -46,11 +46,14 @@ export function init(store) {
 
     // сообщяем адаптерам пути, суффиксы и префиксы
     const {wsql, job_prm, classes, adapters: {pouch}} = $p;
-    if(wsql.get_user_param('couch_path') !== job_prm.couch_local && process.env.NODE_ENV !== 'development') {
-      wsql.set_user_param('couch_path', job_prm.couch_local);
+    if(wsql.get_user_param('couch_path') !== job_prm.couch_path && process.env.NODE_ENV !== 'development') {
+      wsql.set_user_param('couch_path', job_prm.couch_path);
     }
     classes.PouchDB.plugin(proxy_login());
     pouch.init(wsql, job_prm);
+    if(!pouch.props._auth_provider) {
+      pouch.props._auth_provider = wsql.get_user_param('auth_provider') || 'couchdb';
+    }
 
     // выполняем модификаторы
     modifiers($p, dispatch);

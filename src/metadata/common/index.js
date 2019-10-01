@@ -12,7 +12,7 @@ export default function ($p) {
 
   // iface_kind
   if(!$p.wsql.get_user_param('iface_kind')) {
-    $p.wsql.set_user_param('iface_kind', 'quick');
+    $p.wsql.set_user_param('iface_kind', 'normal');
   }
 
   Object.assign($p.utils, {scale_svg, randomId});
