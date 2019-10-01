@@ -12,16 +12,16 @@ import {withNavigateAndMeta} from 'metadata-redux';
 import withWindowSize from 'metadata-react/WindowSize';
 
 import DumbScreen from '../DumbScreen';             // заставка "загрузка занных"
-import DataRoute from './DataRoute';               // вложенный маршрутизатор страниц с данными
-import MarkdownRoute from '../Markdown/Route';       // вложенный маршрутизатор страниц с Markdown, 404 живёт внутри Route
+import DataRoute from './DataRoute';                // вложенный маршрутизатор страниц с данными
+import MarkdownRoute from '../Markdown/Route';      // вложенный маршрутизатор страниц с Markdown, 404 живёт внутри Route
 import Settings from '../Settings';                 // страница настроек приложения
+import Builder from '../Builder';                   // графический редактор
 
 
 import withStyles from './styles';
 import {compose} from 'redux';
 
-import items, {item_props, path} from './menu_items';
-import Fullscreenable from './Fullscreenable'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
+import items, {item_props, path} from './menu_items'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
 
 // основной layout
 class AppView extends Component {
@@ -102,16 +102,15 @@ class AppView extends Component {
       return <Component {...props} {...routeProps}/>;
     };
 
-    const app = [
+    return [
+
+      iface_kind !== 'quick' && <Header key="header" items={items} {...props} />,
 
       // основной layout
       // основной контент или заставка загрузки или приглашение к авторизации
       need_auth || idle ?
         (
-          (need_auth && page) ?
-            <NeedAuth {...auth_props} ComponentLogin={FrmLogin}/>
-            :
-            <NeedAuth {...auth_props} ComponentLogin={FrmLogin}/>
+          <NeedAuth {...auth_props} ComponentLogin={FrmLogin}/>
         )
         :
         (
@@ -126,22 +125,12 @@ class AppView extends Component {
             :
             <Switch key="switch">
               <Route exact path={path('')} render={() => <Redirect to={path('doc.calc_order/list')}/>}/>
+              <Route path="/builder/:ref([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})" render={(props) => wraper(Builder, props)}/>
               <Route path={`${path('')}:area(doc|cat|ireg|cch|rep).:name`} render={(props) => wraper(DataRoute, props)}/>
-              <Route path={path('login')} component={(tprops) => <Login {...tprops} {...auth_props} />}/>
+              <Route path={path('login')} render={(props) => <Login {...props} {...auth_props} />}/>
               <Route path={path('settings')} render={(props) => wraper(Settings, props)}/>
               <Route render={(props) => wraper(MarkdownRoute, props)}/>
             </Switch>
-          // <Switch key="switch">
-          //   <Route exact path="/" component={CalcOrderList}/>
-          //   <Route path="/builder/:ref([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})" component={Builder} />
-          //   <Route path="/:area(doc|cat|ireg|cch|rep).:name" component={DataRoute} />
-          //   <Route path="/about" component={AboutPage} />
-          //   <Route path="/meta" component={MetaTreePage} />
-          //   <Route path="/login" component={(tprops) => <Login {...tprops} {...auth_props} />} />
-          //   <Route path="/settings" component={Settings} />
-          //   <Route path="/waiting" component={(tprops) => <DumbScreen {...tprops} repl={props.repl} />} />
-          //   <Route component={NotFoundPage} />
-          // </Switch>
         ),
 
       // всплывающтй snackbar оповещений пользователя
@@ -160,20 +149,6 @@ class AppView extends Component {
       confirm && confirm.open &&
       <Confirm key="confirm" open text={confirm.text} title={confirm.title} handleOk={confirm.handleOk} handleCancel={confirm.handleCancel}/>,
     ];
-
-    if(iface_kind === 'quick') {
-      return <Fullscreenable
-        title={title}
-        handleNavigate={props.handleNavigate}
-      >
-        {app}
-      </Fullscreenable>
-    }
-    else {
-      app.splice(0, 0, <Header key="header" items={items} {...props} />);
-    }
-
-    return app;
   }
 }
 

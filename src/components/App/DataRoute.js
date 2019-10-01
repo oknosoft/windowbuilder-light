@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {Switch, Route} from 'react-router';
 import qs from 'qs';
@@ -24,7 +24,7 @@ import(/* webpackChunkName: "metadata-react" */ 'metadata-react/FrmObj').then(mo
 import(/* webpackChunkName: "metadata-react" */ 'metadata-react/FrmReport').then(module => lazy.FrmReport = module.default);
 import(/* webpackChunkName: "metadata-react" */ 'metadata-react/styles/react-data-grid.css');
 
-class DataRoute extends Component {
+class DataRoute extends React.Component {
 
   render() {
     const {match, handlers, windowHeight, windowWidth, disablePermanent, couch_direct, offline, user} = this.props;

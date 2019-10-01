@@ -16,14 +16,12 @@ import EditIcon from '@material-ui/icons/Edit';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import {path} from '../../App/menu_items';
-import Fullscreenable from '../../App/Fullscreenable';
+import Wrapper from '../../App/Wrapper';
 
 const styles = ({spacing}) => ({
-  root: {
-    padding: spacing(1),
-  },
-  paddingTop: {
-    paddingTop: spacing(2),
+  content: {
+    padding: spacing(),
+    //paddingTop: spacing(2),
   },
   padding: {
     paddingLeft: spacing(),
@@ -51,10 +49,10 @@ class Quick extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
-    return [
-      <Typography>Можно создать новый заказ, либо открыть ранее созданный, если известен его номер или идентификатор</Typography>,
-      <Grid container spacing={3} className={classes.paddingTop}>
+    const {classes, handlers} = this.props;
+    return <Wrapper title={ltitle} handlers={handlers} className={classes.content}>
+      <Typography>Можно создать новый заказ, либо открыть ранее созданный, если известен его номер или идентификатор</Typography>
+      <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <Button
             variant="contained"
@@ -72,14 +70,15 @@ class Quick extends React.Component {
         <Grid item xs={12} sm={6}>
           <SearchField/>
         </Grid>
-      </Grid>,
-    ];
+      </Grid>
+    </Wrapper>;
   }
 
 }
 
 Quick.propTypes = {
   handlers: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Quick);

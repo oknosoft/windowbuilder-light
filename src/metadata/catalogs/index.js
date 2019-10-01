@@ -1,8 +1,7 @@
 // модификаторы справочников
 
-//import cat_cashboxes from './cat_cashboxes';
+import cat_templates from './cat_templates';
 
-/* eslint-disable-next-line */
 export default function ($p) {
-  //cat_cashboxes($p);
+  cat_templates($p);
 }

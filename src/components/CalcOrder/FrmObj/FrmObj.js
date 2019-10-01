@@ -9,15 +9,15 @@
 import React from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import DataField from 'metadata-react/DataField';
-import TabularSection from 'metadata-react/TabularSection';
 import DataObj from 'metadata-react/FrmObj/DataObj';
 import withStyles from 'metadata-react/styles/paper600';
 import {withIface} from 'metadata-redux';
+import OrderRow from './OrderRow';
 
 class CalcOrderObj extends DataObj {
 
   renderFields() {
-    const {state: {_meta: {fields}, _obj}, props: {classes}} = this;
+    const {state: {_obj}, props: {classes}} = this;
 
     return [
       <FormGroup row key="group_sys">
@@ -41,14 +41,11 @@ class CalcOrderObj extends DataObj {
   }
 
   renderTabularSections() {
-    const {_obj} = this.state;
-
-    return [
-      <FormGroup key="rows" style={{height: 300}}>
-        <TabularSection _obj={_obj} _tabular="production"/>
-      </FormGroup>,
-      <DataField key="note" _obj={_obj} _fld="note"/>
-    ];
+    const {state: {_obj}, props: {handlers}}  = this;
+    const res = [];
+    _obj.production.forEach((row) => res.push(<OrderRow key={`or-${row.row}`} row={row} handlers={handlers}/>));
+    res.push(<DataField key="note" _obj={_obj} _fld="note"/>);
+    return res;
   }
 }
 

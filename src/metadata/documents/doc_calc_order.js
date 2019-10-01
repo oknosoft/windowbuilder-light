@@ -7,7 +7,7 @@ import {FrmObj, FrmObjCompact} from '../../components/CalcOrder/FrmObj';
 import ListQuick from '../../components/CalcOrder/FrmList/Quick';
 
 export default function ($p) {
-
+  /* eslint-disable-next-line */
   const {DocCalc_order: {prototype}, doc: {calc_order}, wsql} = $p;
 
   if(wsql.get_user_param('iface_kind') === 'quick') {

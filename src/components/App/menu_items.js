@@ -1,10 +1,12 @@
 import React from 'react';
 import IconChart from '@material-ui/icons/InsertChart';
 import IconDoc from '@material-ui/icons/EventNote';
+import qs from 'qs';
+
 import IconInfo from '@material-ui/icons/Info';
+import IconSettings from '@material-ui/icons/Settings';
 //import IconHelp from '@material-ui/icons/Help';
 //import IconPerson from '@material-ui/icons/Person';
-import IconSettings from '@material-ui/icons/Settings';
 //import IconDrafts from '@material-ui/icons/Drafts';
 //import IconList from '@material-ui/icons/List';
 //import IconBusinessCenter from '@material-ui/icons/BusinessCenter';
@@ -16,6 +18,10 @@ export const base = process.env.NODE_ENV === 'production' ? '/light' : '';
 
 export function path(url) {
   return `${base}/${url}`;
+}
+
+export function prm() {
+  return qs.parse(location.search.replace('?',''));
 }
 
 const items = [
@@ -100,7 +106,7 @@ export function item_props(path) {
   if(!res && path.indexOf('/') !== -1) {
     res = with_recursion(path.substr(0, path.lastIndexOf('/')), items);
   }
-  if(!res && path.match(/\/(doc|cat|ireg|cch|rep)\./)){
+  if(!res && (path.match(/\/(doc|cat|ireg|cch|rep)\./) || path.match(/\/builder\//))){
     res = {need_meta: true, need_user: true};
   }
   return res || {};

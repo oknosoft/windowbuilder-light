@@ -1,9 +1,5 @@
 /**
- *
- *
- * @module MoneyDoc
- *
- * Created by Evgeniy Malyarov on 03.05.2019.
+ * doc.calc_order/d0e56670-d129-11e9-a38f-c343d95aab02
  */
 
 import React from 'react';
@@ -13,6 +9,10 @@ import TabularSection from 'metadata-react/TabularSection';
 import DataObj from 'metadata-react/FrmObj/DataObj';
 import withStyles from 'metadata-react/styles/paper600';
 import {withIface} from 'metadata-redux';
+import Wrapper from '../../App/Wrapper';
+import OrderRow from './OrderRow';
+import Toolbar from './ToolbarCompact';
+import CloseBtn from './CloseBtn';
 
 class CalcOrderObj extends DataObj {
 
@@ -31,14 +31,22 @@ class CalcOrderObj extends DataObj {
   }
 
   renderTabularSections() {
-    const {_obj} = this.state;
+    const {state: {_obj}, props: {handlers}}  = this;
+    const res = [<Toolbar _obj={_obj} handlers={handlers}/>];
+    _obj.production.forEach((row) => res.push(<OrderRow key={`or-${row.row}`} row={row} handlers={handlers}/>));
+    res.push(<DataField key="note" _obj={_obj} _fld="note"/>);
+    return res;
+  }
 
-    return [
-      <FormGroup key="rows" style={{height: 300}}>
-        <TabularSection _obj={_obj} _tabular="production"/>
-      </FormGroup>,
-      <DataField key="note" _obj={_obj} _fld="note"/>
-    ];
+  get Toolbar() {
+    return () => null;
+  }
+
+  render() {
+    const {props: {title, handlers}, _handlers} = this;
+    return <Wrapper title={title} handlers={handlers} CustomBtn={<CloseBtn handleClose={_handlers.handleClose}/>}>
+      {super.render()}
+    </Wrapper>;
   }
 }
 

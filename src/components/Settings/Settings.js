@@ -148,7 +148,7 @@ class Settings extends React.Component {
     return (
       <div className={classes.root}>
 
-        <Typography variant="h6" style={{paddingTop: 16}}>Подключение к базе данных</Typography>
+        <Typography variant="subtitle2" style={{paddingTop: 16}}>Подключение к базе данных</Typography>
 
         <TextField
           fullWidth
@@ -191,7 +191,7 @@ class Settings extends React.Component {
 
         </FormGroup>
 
-        <Typography variant="h6" style={{paddingTop: 16}}>Вариант интерфейса</Typography>
+        <Typography variant="subtitle2" style={{paddingTop: 16}}>Вариант интерфейса</Typography>
         <Typography>Настройка видимости элементов управления в документе &quot;Расчет&quot; и графическом построителе</Typography>
         <RadioGroup
           className={classes.group}
@@ -203,7 +203,7 @@ class Settings extends React.Component {
 
         </RadioGroup>
 
-        {iface_kind !== 'quisk' && <Typography variant="h6" style={{paddingTop: 16}}>Колонки цен</Typography>}
+        {iface_kind !== 'quisk' && <Typography variant="subtitle2" style={{paddingTop: 16}}>Колонки цен</Typography>}
         {iface_kind !== 'quisk' && <Typography>Настройка видимости колонок в документе &quot;Расчет&quot; и графическом построителе</Typography>}
         {iface_kind !== 'quisk' && <RadioGroup
           className={classes.group}
@@ -216,7 +216,7 @@ class Settings extends React.Component {
 
         </RadioGroup>}
 
-        <Typography variant="h6" style={{paddingTop: 16}}>Наценки и скидки</Typography>
+        <Typography variant="subtitle2" style={{paddingTop: 16}}>Наценки и скидки</Typography>
         <Typography>Значения наценки и скидки по умолчанию, которые дилер предоставляет своим (конечным) покупателям</Typography>
 
         <TextField
