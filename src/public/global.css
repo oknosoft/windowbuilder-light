@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'GOST type B';
-  src: url('./gost_b.ttf');
+  src: url('./imgs/gost_b.ttf');
   font-weight: normal;
   font-style: normal;
 }
@@ -56,17 +56,41 @@ body {
 }
 @media (max-width: 640px) {
   .splash {
-    width: 256px;
+    width: 290px;
     height: 64px;
-    margin-left: -128px;
-    margin-top: 80px;
+    margin-left: -150px;
+    margin-top: 72px;
     background-size: cover;
   }
   .description {
-    padding-left: 50px;
+    padding-left: 64px;
   }
 }
 .fullscreen {
   background-color: #fafafa;
   overflow: auto;
 }
+
+[class*="tb_"] {
+  background-repeat: no-repeat;
+  background-position: 4px;
+  width: 24px;
+  height: 24px;
+}
+
+.tb_icon-hand { background-image: url(/imgs/icon-hand.png);}
+.tb_icon-arrow-white { background-image: url(/imgs/icon-arrow-white.png);}
+.tb_cursor-zoom { background-image: url(/imgs/cursor-zoom.png);}
+.tb_cursor-pen-freehand { background-image: url(/imgs/cursor-pen-freehand.png);}
+.tb_cursor-lay-impost { background-image: url(/imgs/cursor-lay-impost.png);}
+.tb_cursor-arc-r { background-image: url(/imgs/cursor-arc-r.png);}
+.tb_cursor-cut { background-image: url(/imgs/cursor-cut.png);}
+.tb_cursor-uncut { background-image: url(/imgs/cursor-uncut.png);}
+.tb_cursor-hv { background-image: url(/imgs/cursor-hv.png);}
+.tb_cursor-vh { background-image: url(/imgs/cursor-vh.png);}
+.tb_cursor-diagonal { background-image: url(/imgs/cursor-diagonal.png);}
+.tb_ruler_ui { background-image: url(/imgs/ruler_ui.png);}
+.tb_stamp { background-image: url(/imgs/stamp.png);}
+.tb_grid { background-image: url(/imgs/grid.png);}
+.tb_line { background-image: url(/imgs/line.png);}
+.tb_text { background-image: url(/imgs/text.png);}
