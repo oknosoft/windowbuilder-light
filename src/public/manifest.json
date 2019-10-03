@@ -14,7 +14,7 @@
     "src": "./imgs/splash.gif",
     "sizes": "256x64"
   }],
-  "scope": "/light",
+  "scope": "/",
   "start_url": "/light",
   "display": "fullscreen"
 }

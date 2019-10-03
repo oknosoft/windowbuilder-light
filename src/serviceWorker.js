@@ -56,7 +56,7 @@ export function register(config) {
 
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
-    .register(swUrl)
+    .register(swUrl, {scope: '/'})
     .then(registration => {
 
       //setTimeout(() => registration.sync.register('reload'), 3000);

@@ -61,5 +61,5 @@ serviceWorker.register({
   onUpdate() {
     $p && $p.record_log('Доступен новый контент, обновите страницу');
   },
-  scope: base || '/',
+  scope: '/',
 });
