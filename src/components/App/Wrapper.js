@@ -53,6 +53,7 @@ export default function Wrapper({title = 'Быстрые окна', handlers, ch
 
 Wrapper.propTypes = {
   title: PropTypes.string,
+  className: PropTypes.string,
   handlers: PropTypes.object,
   CustomBtn: PropTypes.node,
   children: PropTypes.node,

@@ -31,8 +31,10 @@ module.exports = function settings(prm = {}) {
       password: '1gNjzYQKBlcD',
     }],
 
-    // расположение couchdb для сайта
-    couch_path: process.env.COUCHPATH || "/couchdb/wb_",
+    // расположение couchdb для браузера
+    get couch_path() {
+      return is_node ? this.couch_local : '/couchdb/wb_';
+    },
 
     // расположение couchdb для nodejs
     couch_local: process.env.COUCHLOCAL || 'http://cou221:5984/wb_',
@@ -45,6 +47,9 @@ module.exports = function settings(prm = {}) {
 
     // объявляем номер демо-зоны
     zone_demo: 1,
+
+    // традиционный ram не используем - тянем в озу через сервисворкер
+    use_ram: false,
 
     // если use_meta === false, не используем базу meta в рантайме
     // см.: https://github.com/oknosoft/metadata.js/issues/255

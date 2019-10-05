@@ -10,11 +10,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Typography from '@material-ui/core/Typography';
 import {Prompt} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
-import {path} from '../App/menu_items';
 import Wrapper from '../App/Wrapper';
 import Builder from './Builder';
 import Toolbar from './Toolbar';
@@ -118,6 +116,8 @@ Frame.propTypes = {
   match: PropTypes.object.isRequired,
   windowHeight: PropTypes.number.isRequired,
   windowWidth: PropTypes.number.isRequired,
+  iface_kind: PropTypes.string,
+  title: PropTypes.string,
 };
 
 export default withStyles(styles)(Frame);

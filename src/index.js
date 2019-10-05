@@ -19,9 +19,6 @@ import RootView from 'metadata-react/App/RootView';
 // sw для оффлайна и прочих дел
 import * as serviceWorker from './serviceWorker';
 
-import {base} from './components/App/menu_items'
-
-
 class RootProvider extends React.Component {
 
   componentDidMount() {

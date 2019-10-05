@@ -19,22 +19,22 @@ const lazy = {
   FrmReport: stub,
 };
 
-import(/* webpackChunkName: "metadata-react" */ 'metadata-react/DynList')
+import('metadata-react/DynList')
   .then(module => {
     lazy.DataList = module.default;
-    return import(/* webpackChunkName: "metadata-react" */ 'metadata-react/DataTree');
+    return import('metadata-react/DataTree');
   })
   .then(module => {
     lazy.DataTree = module.default;
-    return import(/* webpackChunkName: "metadata-react" */ 'metadata-react/FrmObj');
+    return import('metadata-react/FrmObj');
   })
   .then(module => {
     lazy.DataObj = module.default;
-    return import(/* webpackChunkName: "metadata-react" */ 'metadata-react/FrmReport');
+    return import('metadata-react/FrmReport');
   })
   .then(module => {
-    lazy.FrmReport = module.default
-    import(/* webpackChunkName: "metadata-react" */ 'metadata-react/styles/react-data-grid.css');
+    lazy.FrmReport = module.default;
+    import('metadata-react/styles/react-data-grid.css');
   });
 
 class DataRoute extends React.Component {

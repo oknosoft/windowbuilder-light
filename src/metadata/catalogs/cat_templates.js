@@ -5,11 +5,7 @@
 //import {handleIfaceState} from '../../redux';
 import {FrmObj, FrmList} from '../../components/Templates';
 
-export default function ($p) {
-
-  const {templates} = $p.cat;
-
+export default function ({cat: {templates}}) {
   templates.FrmObj = FrmObj;
   templates.FrmList = FrmList;
-
 }
