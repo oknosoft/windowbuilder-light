@@ -30,7 +30,7 @@ export default function CalcOrderList({_mgr, handlers}) {
 
   return <Wrapper title={title} handlers={handlers} CustomBtn={<CloseBtn handleClose={handleClose}/>}>
     {
-      data.map((row) => <TemplateRow row={row} handlers={handlers}/>)
+      data.map((row, index) => <TemplateRow key={`r-${index}`} row={row} handlers={handlers}/>)
     }
   </Wrapper>;
 }

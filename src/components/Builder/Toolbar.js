@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 import IconSave from '@material-ui/icons/Save';
 import IconDone from '@material-ui/icons/Done';
 
 import CloseBtn from '../CalcOrder/FrmObj/CloseBtn';
+import Tip from './Tip';
 import {path} from '../App/menu_items';
 
 export default function BuilderToolbar(props) {
@@ -17,17 +16,6 @@ export default function BuilderToolbar(props) {
     const {calc_order} = editor.project.ox;
     const order = calc_order.empty() ? 'list' : calc_order.ref;
     handlers.handleNavigate(path(`doc.calc_order/${order}`));
-  }
-
-  function Tip({title, children}) {
-    return <Tooltip
-      title={title}
-      classes={{tooltip: classes.tooltip}}
-      enterTouchDelay={600}
-      leaveTouchDelay={2000}
-    >
-      {children}
-    </Tooltip>
   }
 
   return <Toolbar disableGutters variant="dense">

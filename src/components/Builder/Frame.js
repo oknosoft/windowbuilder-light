@@ -12,13 +12,13 @@ import PropTypes from 'prop-types';
 
 import {Prompt} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Wrapper from '../App/Wrapper';
 import Builder from './Builder';
 import Toolbar from './Toolbar';
 import Controls from './Controls';
 
-const styles = ({spacing, typography}) => ({
+const styles = ({spacing}) => ({
   content: {
     padding: spacing(),
   },
@@ -28,13 +28,6 @@ const styles = ({spacing, typography}) => ({
   },
   title: {
     flexGrow: 1,
-  },
-  tooltip: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
-    maxWidth: 220,
-    fontSize: typography.pxToRem(12),
-    border: '1px solid #dadde9',
   },
   padding: {
     paddingLeft: spacing(),

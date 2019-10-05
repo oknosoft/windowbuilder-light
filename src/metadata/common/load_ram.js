@@ -72,5 +72,5 @@ function stream_load(md) {
         part && load(part);
       }
     }
-  }
+  };
 }

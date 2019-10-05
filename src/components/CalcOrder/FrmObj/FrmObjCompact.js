@@ -32,8 +32,8 @@ class CalcOrderObj extends DataObj {
 
   renderTabularSections() {
     const {state: {_obj}, props: {handlers}}  = this;
-    const res = [<Toolbar _obj={_obj} handlers={handlers}/>];
-    _obj.production.forEach((row) => res.push(<OrderRow key={`or-${row.row}`} row={row} handlers={handlers}/>));
+    const res = [<Toolbar key="toolbar" _obj={_obj} handlers={handlers}/>];
+    _obj.production.forEach((row) => res.push(<OrderRow key={`r-${row.row}`} row={row} handlers={handlers}/>));
     res.push(<DataField key="note" _obj={_obj} _fld="note"/>);
     return res;
   }
