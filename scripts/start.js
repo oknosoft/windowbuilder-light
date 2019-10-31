@@ -41,7 +41,7 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 // Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3023;
 const HOST = process.env.HOST || '0.0.0.0';
 
 if (process.env.HOST) {
@@ -79,6 +79,7 @@ checkBrowsers(paths.appPath, isInteractive)
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const appName = require(paths.appPackageJson).name;
     const useTypeScript = fs.existsSync(paths.appTsConfig);
+    const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true';
     const urls = prepareUrls(protocol, HOST, port);
     const devSocket = {
       warnings: warnings =>
@@ -94,6 +95,7 @@ checkBrowsers(paths.appPath, isInteractive)
       urls,
       useYarn,
       useTypeScript,
+      tscCompileOnError,
       webpack,
     });
     // Load proxy config

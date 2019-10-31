@@ -22,7 +22,11 @@ const theme = createMuiTheme({
 
   typography: {
     useNextVariants: true,
+    subtitle2: {
+      fontSize: '0.95rem',
+    },
   },
+
 
   // overrides: {
   //   MuiToolbar: {

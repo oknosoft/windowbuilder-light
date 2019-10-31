@@ -15,7 +15,7 @@ const styles = theme => ({
     marginTop: -theme.spacing(1.5),
   },
   groupTitle: {
-    fontWeight: 'bold',
+    fontWeight: 500,
   },
   listitem: {
     paddingTop: theme.spacing(),

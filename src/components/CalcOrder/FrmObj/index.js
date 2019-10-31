@@ -1,13 +1,4 @@
-import Lazy from 'metadata-react/DumbLoader/Lazy';
+import FrmObj from './FrmObj';
 
-export class FrmObj extends Lazy {
-  componentDidMount() {
-    import('./FrmObj').then((module) => this.setState({Component: module.default}));
-  }
-}
+export default FrmObj;
 
-export class FrmObjCompact extends Lazy {
-  componentDidMount() {
-    import('./FrmObjCompact').then((module) => this.setState({Component: module.default}));
-  }
-}

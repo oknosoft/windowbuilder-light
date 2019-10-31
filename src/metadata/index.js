@@ -6,14 +6,16 @@ import plugin_ui from 'metadata-abstract-ui';
 import plugin_ui_tabulars from 'metadata-abstract-ui/tabulars';
 import plugin_react from 'metadata-react/plugin';
 import proxy_login from 'metadata-superlogin/proxy';
-import adapter_memory from 'pouchdb-adapter-memory';
 
 // функция установки параметров сеанса
 import settings from '../../config/app.settings';
+// принудительный редирект и установка зоны для абонентов с выделенными серверами
+import {patch_prm, patch_cnn} from '../../config/patch_cnn';
 
 // читаем скрипт инициализации метаданных, полученный в результате выполнения meta:prebuild
 import meta_init from 'windowbuilder/public/dist/init';
 import modifiers from './modifiers';
+import {workers} from '../drawer/workers';
 import {load_ram, load_common} from './common/load_ram';
 
 // генераторы действий и middleware для redux
@@ -32,7 +34,8 @@ MetaEngine
 const $p = global.$p = new MetaEngine();
 
 // параметры сеанса инициализируем сразу
-$p.wsql.init(settings);
+$p.wsql.init(patch_prm(settings));
+patch_cnn();
 
 // со скрипом инициализации метаданных, так же - не затягиваем
 meta_init($p);
@@ -51,14 +54,10 @@ export function init(store) {
     if(wsql.get_user_param('couch_path') !== job_prm.couch_path && process.env.NODE_ENV !== 'development') {
       wsql.set_user_param('couch_path', job_prm.couch_path);
     }
-    classes.PouchDB
-      //.plugin(adapter_memory)
-      .plugin(proxy_login());
+    classes.PouchDB.plugin(proxy_login());
 
     pouch.init(wsql, job_prm);
-    if(!pouch.props._auth_provider) {
-      pouch.props._auth_provider = wsql.get_user_param('auth_provider') || 'couchdb';
-    }
+    pouch.props._auth_provider = 'couchdb';
     const opts = {auto_compaction: true, revs_limit: 3, owner: pouch};
     pouch.remote.ram = new classes.PouchDB(pouch.dbpath('ram'), opts);
 
@@ -68,12 +67,18 @@ export function init(store) {
     // информируем хранилище о готовности MetaEngine
     dispatch(metaActions.META_LOADED($p));
 
+    import('../redux')
+      .then(({handleIfaceState}) => {
+        if(handleIfaceState.handleIfaceState) {
+          handleIfaceState = handleIfaceState.handleIfaceState;
+        }
+        $p.ui.dialogs.init({handleIfaceState});
+      });
+
     pouch.on({
       on_log_in() {
-        return load_ram($p);
-      },
-      pouch_doc_ram_loaded() {
-        //pouch.emit('pouch_complete_loaded');
+        return load_ram($p)
+          .then(() => workers.create($p));
       },
     });
 

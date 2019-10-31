@@ -16,5 +16,5 @@
   }],
   "scope": "/",
   "start_url": "/light",
-  "display": "fullscreen"
+  "display": "standalone"
 }

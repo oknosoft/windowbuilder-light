@@ -24,7 +24,7 @@ class Settings extends React.Component {
 
   constructor(props) {
     super(props);
-    let {zone, couch_path, couch_direct, ram_indexer, iface_kind} = props;
+    let {zone, couch_path, couch_direct, ram_indexer} = props;
     const {wsql, cat, current_user, pricing} = $p;
 
     let hide_price;
@@ -41,10 +41,6 @@ class Settings extends React.Component {
     let surcharge_internal = wsql.get_user_param('surcharge_internal', 'number');
     let discount_percent_internal = wsql.get_user_param('discount_percent_internal', 'number');
     let surcharge_disabled = false;
-
-    if(!iface_kind ){
-      wsql.set_user_param('iface_kind', iface_kind = 'normal');
-    }
 
     if(current_user && current_user.partners_uids.length) {
 
@@ -71,7 +67,7 @@ class Settings extends React.Component {
     }
 
     this.state = {
-      zone, couch_path, couch_direct, ram_indexer, hide_price, iface_kind,
+      zone, couch_path, couch_direct, ram_indexer, hide_price,
       confirm_reset: false, surcharge_internal, discount_percent_internal, surcharge_disabled
     };
   }
@@ -117,9 +113,6 @@ class Settings extends React.Component {
     this.setState({hide_price: value});
   };
 
-  handleIfaseChange = (event, value) => {
-    this.setState({iface_kind: value});
-  };
 
   openConfirm = () => this.setState({confirm_reset: true});
 
@@ -141,7 +134,7 @@ class Settings extends React.Component {
   render() {
     const {classes} = this.props;
     const {
-      zone, couch_path, couch_direct, ram_indexer, confirm_reset, hide_price, iface_kind,
+      zone, couch_path, couch_direct, ram_indexer, confirm_reset, hide_price,
       surcharge_internal, discount_percent_internal, surcharge_disabled
     } = this.state;
 
@@ -179,33 +172,11 @@ class Settings extends React.Component {
             <FormHelperText style={{marginTop: -4}}>{couch_direct ? "Оффлайн не используется" : "Автономный режим при недоступности сервера"}</FormHelperText>
           </FormControl>
 
-          <FormControl>
-            <FormControlLabel
-              control={<Switch
-                onChange={(event, checked) => this.setState({ram_indexer: checked})}
-                checked={Boolean(ram_indexer)}/>}
-              label="Использовать Indexer Postgres"
-            />
-            <FormHelperText style={{marginTop: -4}}>Новый источник данных для динсписков</FormHelperText>
-          </FormControl>
-
         </FormGroup>
 
-        <Typography variant="subtitle2" style={{paddingTop: 16}}>Вариант интерфейса</Typography>
-        <Typography>Настройка видимости элементов управления в документе &quot;Расчет&quot; и графическом построителе</Typography>
+        <Typography variant="subtitle2" style={{paddingTop: 16}}>Колонки цен</Typography>
+        <Typography>Настройка видимости колонок в документе &quot;Расчет&quot; и графическом построителе</Typography>
         <RadioGroup
-          className={classes.group}
-          value={iface_kind}
-          onChange={this.handleIfaseChange}
-        >
-          <FormControlLabel value="normal" control={<Radio/>} label="Обычный режим"/>
-          <FormControlLabel value="quick" control={<Radio/>} label="Быстрые окна"/>
-
-        </RadioGroup>
-
-        {iface_kind !== 'quisk' && <Typography variant="subtitle2" style={{paddingTop: 16}}>Колонки цен</Typography>}
-        {iface_kind !== 'quisk' && <Typography>Настройка видимости колонок в документе &quot;Расчет&quot; и графическом построителе</Typography>}
-        {iface_kind !== 'quisk' && <RadioGroup
           className={classes.group}
           value={hide_price}
           onChange={this.handleHidePriceChange}
@@ -214,7 +185,7 @@ class Settings extends React.Component {
           <FormControlLabel value="dealer" control={<Radio/>} label="Скрыть цены дилера"/>
           <FormControlLabel value="manufacturer" control={<Radio/>} label="Скрыть цены завода"/>
 
-        </RadioGroup>}
+        </RadioGroup>
 
         <Typography variant="subtitle2" style={{paddingTop: 16}}>Наценки и скидки</Typography>
         <Typography>Значения наценки и скидки по умолчанию, которые дилер предоставляет своим (конечным) покупателям</Typography>
@@ -264,7 +235,6 @@ Settings.propTypes = {
   title: PropTypes.string,
   couch_direct: PropTypes.bool,
   ram_indexer: PropTypes.bool,
-  iface_kind: PropTypes.string,
   handleSetPrm: PropTypes.func.isRequired,
   handleIfaceState: PropTypes.func.isRequired,
   classes: PropTypes.object,

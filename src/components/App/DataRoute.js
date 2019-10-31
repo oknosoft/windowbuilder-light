@@ -99,6 +99,7 @@ class DataRoute extends React.Component {
     return <Switch>
       <Route path={`${match.url}/:ref([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})`} render={(props) => wraper(lazy.DataObj, props, 'obj')}/>
       <Route path={`${match.url}/list`} render={(props) => wraper(lazy.DataList, props, 'list')}/>
+      <Route path={`${match.url}/:num([A-Z0-9]{6})`} render={(props) => wraper(lazy.DataObj, props, 'obj')}/>
       <Route component={NotFound}/>
     </Switch>;
   }

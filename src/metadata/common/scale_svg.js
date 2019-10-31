@@ -15,11 +15,11 @@
  * @return {String} - отмасштабированная строка svg
  */
 export default function scale_svg(svg_current, size, padding){
-  var j, k, svg_head, svg_body, head_ind, vb_ind, svg_head_str, vb_str, viewBox, svg_j = {};
+  let j, k, svg_head, svg_body, head_ind, svg_head_str, viewBox, svg_j = {};
 
-  var height = typeof size == "number" ? size : size.height,
-    width = typeof size == "number" ? (size * 1.5).round(0) : size.width,
-    max_zoom = typeof size == "number" ? Infinity : (size.zoom || Infinity);
+  let height = typeof size == 'number' ? size : size.height,
+    width = typeof size == 'number' ? (size * 1.5).round(0) : size.width,
+    max_zoom = typeof size == 'number' ? Infinity : (size.zoom || Infinity);
 
   head_ind = svg_current.indexOf(">");
   svg_head_str = svg_current.substring(5, head_ind);
@@ -34,22 +34,17 @@ export default function scale_svg(svg_current, size, padding){
     }));
 
   // получаем w, h и формируем viewBox="0 0 400 100"
-  for(j in svg_head){
-    svg_current = svg_head[j].split("=");
-    if("width,height,x,y".indexOf(svg_current[0]) != -1){
-      svg_current[1] = Number(svg_current[1].replace(/"/g, ""));
+  for (j in svg_head) {
+    svg_current = svg_head[j].split('=');
+    if('width,height,x,y'.indexOf(svg_current[0]) != -1) {
+      svg_current[1] = Number(svg_current[1].replace(/"/g, ''));
       svg_j[svg_current[0]] = svg_current[1];
     }
   }
 
-  if((vb_ind = svg_head_str.indexOf("viewBox="))!=-1){
-    vb_str = svg_head_str.substring(vb_ind+9);
-    viewBox = 'viewBox="' + vb_str.substring(0, vb_str.indexOf('"')) + '"';
-  }else{
-    viewBox = 'viewBox="' + (svg_j.x || 0) + ' ' + (svg_j.y || 0) + ' ' + (svg_j.width - padding) + ' ' + (svg_j.height - padding) + '"';
-  }
+  viewBox = 'viewBox="' + (svg_j.x || 0) + ' ' + (svg_j.y || 0) + ' ' + (svg_j.width - padding) + ' ' + (svg_j.height - padding) + '"';
 
-  var init_height = svg_j.height,
+  let init_height = svg_j.height,
     init_width = svg_j.width;
 
   k = (height - padding) / init_height;

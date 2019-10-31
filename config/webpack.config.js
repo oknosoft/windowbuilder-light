@@ -18,6 +18,7 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 //const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+const WorkerPlugin = require('worker-plugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
 const modules = require('./modules');
@@ -55,6 +56,11 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 module.exports = function(webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
+
+  // Variable used for enabling profiling in Production
+  // passed into alias object. Uses a flag if passed into the build command
+  const isEnvProductionProfile =
+    isEnvProduction && process.argv.includes('--profile');
 
   // Webpack uses `publicPath` to determine where the app is being served from.
   // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -192,6 +198,9 @@ module.exports = function(webpackEnv) {
       // Prevents conflicts when multiple Webpack runtimes (from different apps)
       // are used on the same page.
       jsonpFunction: `webpackJsonp${appPackageJson.name}`,
+      // this defaults to 'window', but by setting it to 'this' then
+      // module chunks which are built will work in web workers as well.
+      globalObject: 'this',
     },
     optimization: {
       minimize: isEnvProduction,
@@ -220,11 +229,14 @@ module.exports = function(webpackEnv) {
               // Pending further investigation:
               // https://github.com/terser-js/terser/issues/120
               inline: 2,
-              keep_fnames: true,
+              //keep_fnames: true,
             },
             mangle: {
               safari10: false,
             },
+            // Added for profiling in devtools
+            keep_classnames: isEnvProductionProfile,
+            keep_fnames: isEnvProductionProfile,
             output: {
               ecma: 7,
               comments: false,
@@ -294,6 +306,12 @@ module.exports = function(webpackEnv) {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
+        // Allows for better profiling with ReactDevTools
+        ...(isEnvProductionProfile && {
+          'react-dom$': 'react-dom/profiling',
+          'scheduler/tracing': 'scheduler/tracing-profiling',
+        }),
+        ...(modules.webpackAliases || {}),
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -360,6 +378,7 @@ module.exports = function(webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
+              //exclude: path.resolve(paths.appSrc, './metadata/init.js'),
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
@@ -541,7 +560,7 @@ module.exports = function(webpackEnv) {
         new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
       // Makes some environment variables available in index.html.
       // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
-      // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+      // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
       // In production, it will be an empty string unless you specify "homepage"
       // in `package.json`, in which case it will be the pathname of that URL.
       // In development, this will be an empty string.
@@ -574,20 +593,27 @@ module.exports = function(webpackEnv) {
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
-      // Generate a manifest file which contains a mapping of all asset filenames
-      // to their corresponding output file so that tools can pick it up without
-      // having to parse `index.html`.
+      // Generate an asset manifest file with the following content:
+      // - "files" key: Mapping of all asset filenames to their corresponding
+      //   output file so that tools can pick it up without having to parse
+      //   `index.html`
+      // - "entrypoints" key: Array of files which are included in `index.html`,
+      //   can be used to reconstruct the HTML if necessary
       new ManifestPlugin({
         fileName: 'asset-manifest.json',
         publicPath: publicPath,
-        generate: (seed, files) => {
-          const manifestFiles = files.reduce(function(manifest, file) {
+        generate: (seed, files, entrypoints) => {
+          const manifestFiles = files.reduce((manifest, file) => {
             manifest[file.name] = file.path;
             return manifest;
           }, seed);
+          const entrypointFiles = entrypoints.main.filter(
+            fileName => !fileName.endsWith('.map')
+          );
 
           return {
             files: manifestFiles,
+            entrypoints: entrypointFiles,
           };
         },
       }),
@@ -603,20 +629,22 @@ module.exports = function(webpackEnv) {
         new WorkboxWebpackPlugin.GenerateSW({
           clientsClaim: true,
           skipWaiting: true,
+          cleanupOutdatedCaches: true,
           exclude: [/\.map$/, /asset-manifest\.json$/],
           importWorkboxFrom: 'cdn',
           navigateFallback: publicUrl + '/index.html',
           navigateFallbackBlacklist: [
             // Exclude URLs starting with /_, as they're likely an API call
-            new RegExp('^(/_|/auth|/user|/couchdb|/r/)'),
+            new RegExp('^(/_|/index|/auth/|/adm/|/user/|/couchdb/|/r/)'),
             // Exclude any URLs whose last part seems to be a file extension
             // as they're likely a resource and not a SPA route.
             // URLs containing a "?" character won't be blacklisted as they're likely
             // a route with query params (e.g. auth callbacks).
             new RegExp('/[^/?]+\\.[^/]+$'),
+            new RegExp('^/$'),
           ],
           // дополнительные скрипты сервисворкера
-          //importScripts: ['sw-ext.js'],
+          importScripts: ['sw-ext.js'],
         }),
       // TypeScript type checking
       useTypeScript &&
@@ -645,6 +673,8 @@ module.exports = function(webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
+      // поддержка import в воркерах
+      new WorkerPlugin(),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.

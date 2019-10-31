@@ -5,7 +5,7 @@ import Snack from 'metadata-react/App/Snack';       // сообщения в в�
 import Alert from 'metadata-react/App/Alert';       // диалог сообщения пользователю
 import Confirm from 'metadata-react/App/Confirm';   // диалог вопросов пользователю (да, нет)
 import Login, {FrmLogin} from 'metadata-react/FrmLogin/Proxy';  // логин и свойства подключения
-import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "необхлдима авторизация"
+import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "необходима авторизация"
 import Header from 'metadata-react/Header';         // навигация
 
 import {withNavigateAndMeta} from 'metadata-redux';
@@ -75,7 +75,7 @@ class AppView extends Component {
   render() {
     /* eslint-disable-next-line */
     const {classes, ...props} = this.props;
-    const {snack, alert, confirm, meta_loaded, doc_ram_loaded, nom_prices_step, page, user, couch_direct, offline, title, idle, iface_kind} = props;
+    const {snack, alert, confirm, meta_loaded, doc_ram_loaded, nom_prices_step, page, user, couch_direct, offline, title, idle} = props;
     const iprops = item_props();
 
 
@@ -96,6 +96,7 @@ class AppView extends Component {
       title,
       idle,
       disable: ['google'],
+      ret_url: path(''),
     };
 
     const wraper = (Component, routeProps) => {
@@ -104,7 +105,7 @@ class AppView extends Component {
 
     return [
 
-      iface_kind !== 'quick' && <Header key="header" items={items} {...props} />,
+      <Header key="header" items={items} {...props} />,
 
       // основной layout
       // основной контент или заставка загрузки или приглашение к авторизации
@@ -114,17 +115,16 @@ class AppView extends Component {
         )
         :
         (
-          (!props.path_log_in && ((iprops.need_meta && !meta_loaded) || (iprops.need_user && !props.complete_loaded))) ?
+          (((iprops.need_meta && !meta_loaded) || (iprops.need_user && !props.complete_loaded))) ?
             <DumbScreen
               key="dumb"
-              title={doc_ram_loaded ? 'Подготовка данных в памяти...' : 'Загрузка из IndexedDB...'}
-              page={{text: doc_ram_loaded ? `Цены и характеристики${nom_prices_step ? ` (такт №${nom_prices_step})` : ''}...` :
-                  `${(page && page.synonym) || 'Почти готово'}...`}}
-              top={92}
+              title={doc_ram_loaded ? 'Подготовка данных в памяти...' : 'Загрузка справочников...'}
+              page={page && page.docs_written < page.total_rows ? page : {text: `${(page && page.synonym) || 'Почти готово'}...`}}
             />
             :
             <Switch key="switch">
               <Route exact path={path('')} render={() => <Redirect to={path('doc.calc_order/list')}/>}/>
+              <Route path={path('o/')} render={() => <Redirect to={location.pathname.replace('/o/', '/doc.calc_order/')}/>}/>
               <Route path={`${path('builder')}/:ref([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})`} render={(props) => wraper(Builder, props)}/>
               <Route path={`${path('')}:area(doc|cat|ireg|cch|rep).:name`} render={(props) => wraper(DataRoute, props)}/>
               <Route path={path('login')} render={(props) => <Login {...props} {...auth_props} />}/>
@@ -143,11 +143,11 @@ class AppView extends Component {
 
       // диалог сообщений пользователю
       alert && alert.open &&
-      <Alert key="alert" open text={alert.text} title={alert.title} handleOk={this.handleAlertClose}/>,
+      <Alert key="alert" {...alert} handleOk={this.handleAlertClose}/>,
 
       // диалог вопросов пользователю (да, нет)
       confirm && confirm.open &&
-      <Confirm key="confirm" open text={confirm.text} title={confirm.title} handleOk={confirm.handleOk} handleCancel={confirm.handleCancel}/>,
+      <Confirm key="confirm" {...confirm}/>,
     ];
   }
 }

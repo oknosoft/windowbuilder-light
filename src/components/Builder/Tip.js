@@ -9,6 +9,7 @@ const styles = ({typography}) => ({
     color: 'rgba(0, 0, 0, 0.87)',
     maxWidth: 220,
     fontSize: typography.pxToRem(12),
+    fontWeight: 400,
     border: '1px solid #dadde9',
   },
 });
@@ -20,7 +21,7 @@ function Tip({title, children, classes}) {
     enterTouchDelay={600}
     leaveTouchDelay={2000}
   >
-    {children}
+    <span>{children}</span>
   </Tooltip>;
 }
 

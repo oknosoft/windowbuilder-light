@@ -26,10 +26,7 @@ module.exports = function settings(prm = {}) {
     local_storage_prefix: 'wb_',
 
     // гостевые пользователи для демо-режима
-    guests: [{
-      username: 'Дилер',
-      password: '1gNjzYQKBlcD',
-    }],
+    guests: [],
 
     // расположение couchdb для браузера
     get couch_path() {
