@@ -5,7 +5,7 @@ import plugin_pouchdb from 'metadata-pouchdb';
 import plugin_ui from 'metadata-abstract-ui';
 import plugin_ui_tabulars from 'metadata-abstract-ui/tabulars';
 import plugin_react from 'metadata-react/plugin';
-import proxy_login from 'metadata-superlogin/proxy';
+import proxy_login, {load_ram, load_common} from 'metadata-superlogin/proxy';
 
 // функция установки параметров сеанса
 import settings from '../../config/app.settings';
@@ -15,7 +15,7 @@ import {patch_prm, patch_cnn} from '../../config/patch_cnn';
 // читаем скрипт инициализации метаданных, полученный в результате выполнения meta:prebuild
 import meta_init from 'windowbuilder/public/dist/init';
 import modifiers from './modifiers';
-import {load_ram, load_common} from './common/load_ram';
+
 
 // генераторы действий и middleware для redux
 //import {combineReducers} from 'redux';

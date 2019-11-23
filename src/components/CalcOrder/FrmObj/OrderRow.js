@@ -31,7 +31,7 @@ function OrderRow({row, classes, handlers}) {
       handlers.handleNavigate(path(`builder/${ox.ref}`));
     }
     else {
-      $p.ui.dialogs.alert({text: `Нельзя редактировать изделия, когда заказ в статусе '${sending_stage}'`, title: 'Статус отправки'});
+      dialogs.alert({text: `Нельзя редактировать изделия, когда заказ в статусе '${sending_stage}'`, title: 'Статус отправки'});
     }
   }
 
@@ -69,7 +69,7 @@ function OrderRow({row, classes, handlers}) {
               disabled={!editable}
               onClick={() => dialogs
                 .confirm({title: 'Удалить изделие?', text: `Подтвердите удаление изделия ${ox.prod_name(true)}`})
-                .then(() => _owner.delRow(row))
+                .then(() => _owner.del(row))
                 .catch(() => null)
               }
             >
