@@ -61,7 +61,7 @@ function stream_load(md, pouch) {
     const reader = body.getReader();
     const decoder = new TextDecoder("utf-8");
 
-    page.add(JSON.parse(headers.get('ETag')));
+    page.add(JSON.parse(headers.get('manifest')));
     page.page && pouch.emit('pouch_load_start', page);
 
     let chunks = '';

@@ -13,7 +13,7 @@ import filling from './filling';
 
 export default function ($p) {
 
-  // вормируем в $p конструктор стандартной рисовалки
+  // формируем в $p конструктор стандартной рисовалки
   drawer({$p, paper});
 
   const {EditorInvisible} = $p;

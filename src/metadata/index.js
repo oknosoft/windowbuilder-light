@@ -15,7 +15,6 @@ import {patch_prm, patch_cnn} from '../../config/patch_cnn';
 // читаем скрипт инициализации метаданных, полученный в результате выполнения meta:prebuild
 import meta_init from 'windowbuilder/public/dist/init';
 import modifiers from './modifiers';
-import {workers} from '../drawer/workers';
 import {load_ram, load_common} from './common/load_ram';
 
 // генераторы действий и middleware для redux
@@ -50,14 +49,12 @@ export function init(store) {
     addMiddleware(metaMiddleware($p));
 
     // сообщяем адаптерам пути, суффиксы и префиксы
-    const {wsql, job_prm, classes, adapters: {pouch}} = $p;
+    const {wsql, job_prm, classes, adapters: {pouch}, md} = $p;
     if(wsql.get_user_param('couch_path') !== job_prm.couch_path && process.env.NODE_ENV !== 'development') {
       wsql.set_user_param('couch_path', job_prm.couch_path);
     }
     classes.PouchDB.plugin(proxy_login());
-
     pouch.init(wsql, job_prm);
-    pouch.props._auth_provider = 'couchdb';
     const opts = {auto_compaction: true, revs_limit: 3, owner: pouch};
     pouch.remote.ram = new classes.PouchDB(pouch.dbpath('ram'), opts);
 
@@ -77,10 +74,11 @@ export function init(store) {
 
     pouch.on({
       on_log_in() {
-        return load_ram($p)
-          .then(() => workers.create($p));
+        return load_ram($p);
       },
     });
+
+    md.once('predefined_elmnts_inited', () => pouch.emit('pouch_complete_loaded'));
 
     // читаем общие данные в ОЗУ
     return load_common($p);

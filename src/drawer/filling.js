@@ -13,5 +13,5 @@ export default function (Filling) {
     for(const profile of this.layer.profiles) {
       profile.selected = selection;
     }
-  }
+  };
 }

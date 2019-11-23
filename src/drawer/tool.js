@@ -11,7 +11,7 @@ export default function tool (Editor) {
   const {Tool, Point, PointText, EditableText, Rectangle} = Editor.prototype;
   const {ProfileItem, Filling, DimensionLine, Sectional} = Editor;
 
-  Editor.ToolSelectNode = class ToolSelectNode extends Editor.prototype.Tool {
+  Editor.ToolSelectNode = class ToolSelectNode extends Tool {
 
     constructor() {
 
@@ -40,8 +40,8 @@ export default function tool (Editor) {
 
     }
 
-    resetHot(type, event, mode) {
-    }
+    // resetHot(type, event, mode) {
+    // }
 
     testHot(type, event, mode) {
       if (mode == 'tool-direct-select'){
@@ -145,7 +145,7 @@ export default function tool (Editor) {
       if (this.hitItem && !modifiers.alt) {
 
         if(this.hitItem.item instanceof PointText) {
-          return
+          return;
         }
 
         let item = this.hitItem.item.parent;
@@ -266,7 +266,7 @@ export default function tool (Editor) {
               else{
                 path.selected = !path.selected;
               }
-            })
+            });
           }
         }
       }
@@ -314,7 +314,7 @@ export default function tool (Editor) {
       }
 
     }
-  }
+  };
 
 }
 

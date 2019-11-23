@@ -24,7 +24,7 @@ class Settings extends React.Component {
 
   constructor(props) {
     super(props);
-    let {zone, couch_path, couch_direct, ram_indexer} = props;
+    let {zone, couch_path, couch_direct} = props;
     const {wsql, cat, current_user, pricing} = $p;
 
     let hide_price;
@@ -67,7 +67,7 @@ class Settings extends React.Component {
     }
 
     this.state = {
-      zone, couch_path, couch_direct, ram_indexer, hide_price,
+      zone, couch_path, couch_direct, hide_price,
       confirm_reset: false, surcharge_internal, discount_percent_internal, surcharge_disabled
     };
   }
@@ -134,7 +134,7 @@ class Settings extends React.Component {
   render() {
     const {classes} = this.props;
     const {
-      zone, couch_path, couch_direct, ram_indexer, confirm_reset, hide_price,
+      zone, couch_path, couch_direct, confirm_reset, hide_price,
       surcharge_internal, discount_percent_internal, surcharge_disabled
     } = this.state;
 
@@ -234,7 +234,6 @@ Settings.propTypes = {
   couch_path: PropTypes.string,
   title: PropTypes.string,
   couch_direct: PropTypes.bool,
-  ram_indexer: PropTypes.bool,
   handleSetPrm: PropTypes.func.isRequired,
   handleIfaceState: PropTypes.func.isRequired,
   classes: PropTypes.object,

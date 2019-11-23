@@ -6,6 +6,8 @@
  * @module  wnd_oaddress
  */
 
+/* global google */
+
 export default function ($p) {
 
   function get_aatributes(ca){
@@ -105,7 +107,7 @@ export default function ($p) {
      * @return {string}
      */
     assemble_addr(with_flat){
-      const {country, region, city, street, postal_code, house, flat} = this;
+      const {region, city, street, house, flat} = this;
       const res = (region && region !== city ? (region + ', ') : '') +
         (city ? (city + ', ') : '') +
         (street ? (street.replace(/,/g, ' ') + ', ') : '') +
@@ -149,7 +151,7 @@ export default function ($p) {
         fields += '\n<Улица>' + (v.street.replace(/,/g," ")) + '</Улица>';
       }
 
-      let suffix, index, house_type, flat_type;
+      let index, house_type, flat_type;
 
       let house = v.house;
       if(house){
