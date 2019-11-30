@@ -15,6 +15,8 @@ import Button from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tip from '../../Builder/Tip';
+import Quantity from './Quantity';
+import Amount from './Amount';
 
 import {path} from '../../App/menu_items';
 import withStyles from './styles';
@@ -45,38 +47,48 @@ function OrderRow({row, classes, handlers}) {
             }
           }}/>
         </Grid>
-        <Grid item xs={7} sm={8}>
+        <Grid item xs={4} sm={3}>
           <Grid container direction="column" justify="space-between" className={classes.height}>
             <Grid item>
               <Typography variant="h6">{nom.name}</Typography>
-              <Typography variant="subtitle1">{`Ширина: ${ox.x}, Высота: ${ox.y}`}</Typography>
+              <Typography variant="body2">{`Ширина: ${ox.x}, Высота: ${ox.y}`}</Typography>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={1}>
-          <Tip title="Изменить размеры и форму изделия">
-            <Button
-              color="primary"
-              disabled={!editable}
-              onClick={edit}
-            >
-              <EditIcon />
-            </Button>
-          </Tip>
-          <Tip title="Удалить изделие из заказа">
-            <Button
-              variant="contained"
-              disabled={!editable}
-              onClick={() => dialogs
-                .confirm({title: 'Удалить изделие?', text: `Подтвердите удаление изделия ${ox.prod_name(true)}`})
-                .then(() => _owner.del(row))
-                .catch(() => null)
-              }
-            >
-              <DeleteIcon />
-            </Button>
-          </Tip>
+        <Grid item xs={4} sm={6}>
+          <Grid container direction="row" justify="space-between">
+            <Grid item>
+              <Quantity row={row}/>
+            </Grid>
+            <Grid item>
+              <Amount row={row}/>
+            </Grid>
+            <Grid item>
+              <Tip title="Изменить размеры и форму изделия">
+                <Button
+                  color="primary"
+                  disabled={!editable}
+                  onClick={edit}
+                >
+                  <EditIcon />
+                </Button>
+              </Tip>
+              <Tip title="Удалить изделие из заказа">
+                <Button
+                  variant="contained"
+                  disabled={!editable}
+                  onClick={() => dialogs
+                    .confirm({title: 'Удалить изделие?', text: `Подтвердите удаление изделия ${ox.prod_name(true)}`})
+                    .then(() => _owner.del(row))
+                    .catch(() => null)
+                  }
+                >
+                  <DeleteIcon />
+                </Button>
+              </Tip>
 
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </ListItem>

@@ -80,6 +80,18 @@ export function init(store) {
 
     md.once('predefined_elmnts_inited', () => pouch.emit('pouch_complete_loaded'));
 
+    // начинаем слушать события сервера
+    const evt_src = new EventSource('/couchdb/events');
+    evt_src.onmessage = function(e) {
+      pouch.emit('sse', JSON.parse(e.data));
+    };
+    evt_src.onerror = function (e) {
+      console.log('sse: error');
+      if(this.readyState == EventSource.CONNECTING) {
+        console.log(`Переподключение (readyState=${this.readyState})...`);
+      }
+    };
+
     // читаем общие данные в ОЗУ
     return load_common($p);
 

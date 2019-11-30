@@ -33,7 +33,7 @@ class DumbScreen extends Component {
     return <div className='splash' style={{marginTop: top}}>
       <div className="description">
         {[
-          <h1 key="name" itemProp="name">Быстрые окна</h1>,
+          <h1 key="name" itemProp="name">Заказ дилера</h1>,
           <p key="category">Категория: <span itemProp="applicationSubCategory">CRM, CAD, E-Commerce</span></p>,
           <p key="platform">Платформа: <i className="fa fa-chrome" aria-hidden="true"></i> браузер Chrome для <span
             itemProp="operatingSystem">Windows 8, 10 | Android | Mac | iOS</span>

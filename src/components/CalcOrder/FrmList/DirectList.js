@@ -62,11 +62,11 @@ class DirectList extends MDNRComponent {
 
     const direct_load = _mgr._direct_loaded ? Promise.resolve() : pouch.find_rows(_mgr, {
       _mango: true,
-      limit: 5000,
+      limit: 10000,
       selector: {
         $and: [
           {class_name: _mgr.class_name},
-          {date: {$gte: moment().subtract(3, 'month').format()}},
+          {date: {$gte: moment().subtract(6, 'month').format()}},
           {date: {$lte: moment().add(1, 'month').format()}},
           {search: {$gt: null}},
         ]
@@ -596,7 +596,7 @@ DirectList.propTypes = {
 DirectList.defaultProps = {
   denyAddDel: false,
   read_only: false,
-  minHeight: 220,
+  minHeight: 240,
 };
 
 DirectList.contextTypes = {

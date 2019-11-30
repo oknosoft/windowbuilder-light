@@ -9,7 +9,7 @@ import {routerReducer as router, routerMiddleware} from 'react-router-redux';
 
 // асинхронные действия
 import thunk from 'redux-thunk';
-import {metaReducer, ifaceReducer, dispatchIface} from 'metadata-redux';
+import {metaReducer, ifaceReducer, dispatchIface, ifaceActions} from 'metadata-redux';
 import ifaceInitialState from './metadata/reducers/iface';
 
 
@@ -36,6 +36,8 @@ export default function configureStore(preloadedState) {
     ),
   );
 }
+
+export {ifaceActions};
 
 // создаём redux-store
 export const store = configureStore();

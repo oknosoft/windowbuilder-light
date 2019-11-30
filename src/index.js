@@ -5,7 +5,7 @@ import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 
 // метод инициализации хранилища состояния приложения
-import {history, store} from './redux';
+import {history, store, ifaceActions} from './redux';
 
 // заставка "загрузка занных"
 import DumbScreen from './components/DumbScreen';
@@ -56,7 +56,12 @@ render(<RootProvider/>, document.getElementById('root'));
 
 serviceWorker.register({
   onUpdate() {
-    $p && $p.record_log('Доступен новый контент, обновите страницу');
+    //$p && $p.record_log('Доступен новый контент, обновите страницу');
+    store.dispatch(ifaceActions.IFACE_STATE({
+      component: '',
+      name: 'snack',
+      value: {open: true, reset: true, message: 'Доступна новая версия программы, обновите страницу'},
+    }));
   },
   scope: '/',
 });
