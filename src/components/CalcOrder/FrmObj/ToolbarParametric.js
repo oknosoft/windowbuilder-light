@@ -7,6 +7,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
+import Filter1 from '@material-ui/icons/Filter1';
+import Filter9Plus from '@material-ui/icons/Filter9Plus';
 import RemoveIcon from '@material-ui/icons/DeleteOutline';
 import RemoveAllIcon from '@material-ui/icons/DeleteSweep';
 import CopyIcon from '@material-ui/icons/FileCopy';
@@ -20,13 +22,13 @@ class ToolbarParametric extends TabularSectionToolbar {
 
   render() {
     const {props, state} = this;
-    const {handleUp, handleDown, denyReorder, classes, width, settings_open, menu_items} = props;
+    const {handleUp, handleDown, denyReorder, classes, btns, width, settings_open, menu_items} = props;
 
     return (
       <Toolbar disableGutters className={classes.toolbar} style={{width: width || '100%'}}>
         {[
-          <IconButton key="btn_standart" title="Стандартные параметры" onClick={props.handleAdd}><AddIcon /></IconButton>,
-          <IconButton key="btn_extend" title="Расширенные параметры" onClick={props.handleAdd}><AddIcon /></IconButton>,
+          <IconButton key="btn_standart" title="Стандартные параметры" onClick={btns.setStandart}><Filter1 /></IconButton>,
+          <IconButton key="btn_extend" title="Расширенные параметры" onClick={btns.setExtend}><Filter9Plus /></IconButton>,
           <IconButton key="btn_del" title="Удалить строку" onClick={props.handleRemove}><RemoveIcon /></IconButton>,
           <IconButton key="btn_clear" title="Удалить все строки" onClick={props.handleClear}><RemoveAllIcon /></IconButton>,
 

@@ -22,7 +22,7 @@ import DataObj from 'metadata-react/FrmObj/DataObj';
 import withStyles600 from 'metadata-react/styles/paper600';
 
 import OrderRow from './OrderRow';
-import ToolbarParametric from './ToolbarParametric';
+import Parametric from './Parametric';
 
 const AntTabs = withStyles({
   root: {
@@ -49,7 +49,9 @@ class CalcOrderObj extends DataObj {
   }
 
   renderFields() {
-    const {state: {_obj, tab}, props: {handlers, classes}}  = this;
+    const {state: {_obj, tab}, props: {handlers, classes, height}}  = this;
+    let h1 = height < 420 ? 420 : height;
+    h1 -= 146;
 
     return <div style={{width: 'calc(100vw - 8px)', paddingBottom: 32}}>
       <AntTabs
@@ -67,8 +69,8 @@ class CalcOrderObj extends DataObj {
       </AntTabs>
       {tab === 0 && this.renderHead(_obj, classes)}
       {tab === 1 && this.renderProd(_obj, handlers)}
-      {tab === 2 && this.renderParametric(_obj)}
-      {tab === 3 && this.renderNom(_obj)}
+      {tab === 2 && <Parametric _obj={_obj} height={h1} scheme={this.scheme_parametric}/>}
+      {tab === 3 && this.renderNom(_obj, h1)}
     </div>;
   }
 
@@ -128,17 +130,6 @@ class CalcOrderObj extends DataObj {
     return res;
   }
 
-  renderParametric(_obj) {
-    return <div>
-      <Typography variant="h6" color="primary">Параметрические изделия</Typography>
-      {this.scheme_parametric &&
-      <TabularSection _obj={_obj} _tabular="production" scheme={this.scheme_parametric} Toolbar={ToolbarParametric}/>}
-      {!this.scheme_parametric && <Typography key="err-parametric" color="error">
-        {`Не найден элемент scheme_settings {obj: "doc.calc_order.production", name: "production.parametric"}`}
-      </Typography>}
-    </div>;
-  }
-
   filterParametric = (collection) => {
     const res = [];
     collection.forEach((row) => {
@@ -157,17 +148,14 @@ class CalcOrderObj extends DataObj {
     return res;
   };
 
-  renderNom(_obj) {
-    const res = [<Typography key="title-nom" variant="h6" color="primary">Товары и услуги без спецификации</Typography>];
-    if(this.scheme_nom) {
-      res.push(<TabularSection key="ts-nom" _obj={_obj} _tabular="production" scheme={this.scheme_nom} denyReorder/>);
-    }
-    else {
-      res.push(<Typography key="err-nom" color="error">
+  renderNom(_obj, height) {
+    return <div style={{height}}>
+      <Typography key="title-nom" variant="h6" color="primary">Товары и услуги без спецификации</Typography>
+      {this.scheme_nom && <TabularSection key="ts-nom" _obj={_obj} _tabular="production" scheme={this.scheme_nom} denyReorder/>}
+      {!this.scheme_nom && <Typography key="err-nom" color="error">
         {`Не найден элемент scheme_settings {obj: "doc.calc_order.production", name: "production.nom"}`}
-      </Typography>);
-    }
-    return res;
+      </Typography>}
+    </div>
   }
 
   filterNom = (collection) => {
