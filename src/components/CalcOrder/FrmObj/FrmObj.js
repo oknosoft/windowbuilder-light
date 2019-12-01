@@ -22,6 +22,7 @@ import DataObj from 'metadata-react/FrmObj/DataObj';
 import withStyles600 from 'metadata-react/styles/paper600';
 
 import OrderRow from './OrderRow';
+import ToolbarParametric from './ToolbarParametric';
 
 const AntTabs = withStyles({
   root: {
@@ -130,7 +131,8 @@ class CalcOrderObj extends DataObj {
   renderParametric(_obj) {
     return <div>
       <Typography variant="h6" color="primary">Параметрические изделия</Typography>
-      {this.scheme_parametric && <TabularSection _obj={_obj} _tabular="production" scheme={this.scheme_parametric}/>}
+      {this.scheme_parametric &&
+      <TabularSection _obj={_obj} _tabular="production" scheme={this.scheme_parametric} Toolbar={ToolbarParametric}/>}
       {!this.scheme_parametric && <Typography key="err-parametric" color="error">
         {`Не найден элемент scheme_settings {obj: "doc.calc_order.production", name: "production.parametric"}`}
       </Typography>}
@@ -156,9 +158,9 @@ class CalcOrderObj extends DataObj {
   };
 
   renderNom(_obj) {
-    const res = [<Typography key="title-nom" variant="h6" color="primary">Материалы и услуги без спецификации</Typography>];
+    const res = [<Typography key="title-nom" variant="h6" color="primary">Товары и услуги без спецификации</Typography>];
     if(this.scheme_nom) {
-      res.push(<TabularSection key="ts-nom" _obj={_obj} _tabular="production" scheme={this.scheme_nom}/>);
+      res.push(<TabularSection key="ts-nom" _obj={_obj} _tabular="production" scheme={this.scheme_nom} denyReorder/>);
     }
     else {
       res.push(<Typography key="err-nom" color="error">
