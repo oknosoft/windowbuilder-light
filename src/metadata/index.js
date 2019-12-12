@@ -85,12 +85,12 @@ export function init(store) {
     evt_src.onmessage = function(e) {
       pouch.emit('sse', JSON.parse(e.data));
     };
-    evt_src.onerror = function (e) {
-      console.log('sse: error');
-      if(this.readyState == EventSource.CONNECTING) {
-        console.log(`Переподключение (readyState=${this.readyState})...`);
-      }
-    };
+    // evt_src.onerror = function (e) {
+    //   console.log('sse: error');
+    //   if(this.readyState == EventSource.CONNECTING) {
+    //     console.log(`Переподключение (readyState=${this.readyState})...`);
+    //   }
+    // };
 
     // читаем общие данные в ОЗУ
     return load_common($p);

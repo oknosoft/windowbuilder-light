@@ -22,7 +22,7 @@ export default function BuilderToolbar({editor, handleClose, classes}) {
       <IconButton><i className="tb_icon-arrow-white" /></IconButton>
     </Tip>
     <Tip title="Вписать в окно">
-      <IconButton onClick={() => editor && editor.project.zoom_fit && editor.project.zoom_fit()}><i className="tb_cursor-zoom" /></IconButton>
+      <IconButton onClick={() => editor.project.zoom_fit && editor.project.zoom_fit()}><i className="tb_cursor-zoom" /></IconButton>
     </Tip>
     <div className={classes.title} />
     {handleClose && <CloseBtn handleClose={handleClose}/>}

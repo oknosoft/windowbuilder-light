@@ -168,7 +168,7 @@ export default function tool (Editor) {
             this.mouseStartPos = point.clone();
 
             if(item.layer){
-              this.eve.emit("layer_activated", item.layer);
+              item.layer.activate();
             }
           }
 

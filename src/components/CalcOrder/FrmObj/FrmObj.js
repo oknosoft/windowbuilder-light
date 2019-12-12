@@ -1,11 +1,3 @@
-/**
- *
- *
- * @module MoneyDoc
- *
- * Created by Evgeniy Malyarov on 03.05.2019.
- */
-
 import React from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import Tabs from '@material-ui/core/Tabs';
@@ -24,7 +16,7 @@ import withStyles600 from 'metadata-react/styles/paper600';
 import OrderRow from './OrderRow';
 import Parametric from './Parametric';
 
-const AntTabs = withStyles({
+export const AntTabs = withStyles({
   root: {
     borderBottom: '1px solid #e8e8e8',
     marginBottom: 8,
@@ -60,7 +52,6 @@ class CalcOrderObj extends DataObj {
         indicatorColor="primary"
         textColor="primary"
         variant="scrollable"
-        aria-label="full width tabs example"
       >
         <Tab label="Шапка" />
         <Tab label="Окна" />
@@ -155,7 +146,7 @@ class CalcOrderObj extends DataObj {
       {!this.scheme_nom && <Typography key="err-nom" color="error">
         {`Не найден элемент scheme_settings {obj: "doc.calc_order.production", name: "production.nom"}`}
       </Typography>}
-    </div>
+    </div>;
   }
 
   filterNom = (collection) => {
@@ -176,9 +167,6 @@ class CalcOrderObj extends DataObj {
     // handlers.handleNavigate(path(`cat.templates/list?order=${_obj.ref}&ref=new`));
   };
 
-  handleChangeIndex = (tab) => {
-    this.setState({tab});
-  };
 
   handleChangeTab = (event, tab) => {
     this.setState({tab});

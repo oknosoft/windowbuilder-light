@@ -75,7 +75,7 @@ class AppView extends Component {
   render() {
     /* eslint-disable-next-line */
     const {classes, ...props} = this.props;
-    const {snack, alert, confirm, meta_loaded, doc_ram_loaded, nom_prices_step, page, user, couch_direct, offline, title, idle} = props;
+    const {snack, alert, confirm, meta_loaded, doc_ram_loaded, page, user, couch_direct, offline, title, idle} = props;
     const iprops = item_props();
 
 

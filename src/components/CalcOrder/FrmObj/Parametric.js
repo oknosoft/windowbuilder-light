@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import TabularSection from 'metadata-react/TabularSection';
 import ToolbarParametric from './ToolbarParametric';
@@ -20,7 +21,7 @@ class Parametric extends React.Component {
 
   setExtend = () => {
     this.setState({mode: 'extend'});
-  }
+  };
 
   render() {
     const {props: {_obj, height, scheme}, state: {mode}, setStandart, setExtend}  = this;
@@ -35,7 +36,7 @@ class Parametric extends React.Component {
     if(mode === 'extend') {
       return <Typography key="err-nom" color="error">
         Форма расширенного параметрика пока не подключена
-      </Typography>
+      </Typography>;
     }
     return <div style={{height}}>
       <Typography variant="h6" color="primary">Параметрические изделия</Typography>
@@ -49,5 +50,11 @@ class Parametric extends React.Component {
     </div>;
   }
 }
+
+Parametric.propTypes = {
+  _obj: PropTypes.object.isRequired,
+  height: PropTypes.number,
+  scheme: PropTypes.object,
+};
 
 export default Parametric;

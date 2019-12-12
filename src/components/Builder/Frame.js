@@ -140,7 +140,7 @@ class Frame extends React.Component {
     }
     return <div>
       <Prompt when message={this.prompt} />
-      <Toolbar classes={classes} editor={editor} handleClose={this.handleClose}/>
+      {editor && <Toolbar classes={classes} editor={editor} handleClose={this.handleClose}/>}
       <Grid container>
         <Grid item xs={12} sm={12} lg={8} xl={9}>
           <Builder
