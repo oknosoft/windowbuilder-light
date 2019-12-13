@@ -156,7 +156,7 @@ export function find_inset(insert_type) {
   return this._inset;
 }
 
-function mapStateToProps(state, props) {
+function mapStateToProps(/*state, props*/) {
   return {
     handleCalck() {
       const {dp} = this.additions;

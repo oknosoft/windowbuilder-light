@@ -9,21 +9,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import FormGroup from '@material-ui/core/FormGroup';
-import Button from '@material-ui/core/Button';
-import EditIcon from '@material-ui/icons/Edit';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import DataField from 'metadata-react/DataField';
 import Tip from './Tip';
 import Params from './Params/Params';
+import ToolWnd from './ToolWnd';
 import {AntTabs} from '../CalcOrder/FrmObj/FrmObj';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = (theme) => ({
+const styles = () => ({
   tabRoot: {
     '@media (min-width: 600px)': {
       minWidth: 72
@@ -56,8 +49,8 @@ class Controls extends React.Component {
   };
 
   render() {
-    const {props: {handlers, editor, classes}, state: {tab}}  = this;
-    const {_dp} = editor ? editor.project : {};
+    const {props: {editor, classes}, state: {tab}}  = this;
+    //const {_dp} = editor ? editor.project : {};
     return <div>
       <AntTabs
         value={tab}
@@ -104,6 +97,7 @@ class Controls extends React.Component {
       </AntTabs>
       {tab === 2 && <Params editor={editor}/>}
       {tab === 3 && <Params editor={editor} root/>}
+      {tab === 4 && <ToolWnd editor={editor}/>}
     </div>;
   }
 }
@@ -111,7 +105,6 @@ class Controls extends React.Component {
 
 Controls.propTypes = {
   editor: PropTypes.object,
-  handlers: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
 };
 

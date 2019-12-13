@@ -8,19 +8,12 @@
 
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Backdrop from '@material-ui/core/Backdrop';
 import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
-import SaveIcon from '@material-ui/icons/Save';
-import PrintIcon from '@material-ui/icons/Print';
-import ShareIcon from '@material-ui/icons/Share';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import IconButton from '@material-ui/core/IconButton';
+import PropTypes from 'prop-types';
 
-const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles(() => ({
   root: {
     transform: 'translateZ(0px)',
     flexGrow: 1,
@@ -29,12 +22,26 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     top: 2,
   },
+  left: {
+    left: 188,
+  },
   fab: {
     boxShadow: 'none',
-    background: 'none',
+    backgroundColor: 'transparent'
   },
   staticTooltipLabel: {
     width: 160,
+  },
+  ibtn: {
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    userSelect: 'none',
+    verticalAlign: 'middle',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    webkitAppearance: 'none',
+    webkitTaphighlightColor: 'transparent',
   }
 }));
 
@@ -44,13 +51,25 @@ const useStyles = makeStyles(theme => ({
     </Tip>
 */
 
+export const IBtn = ({children, css}) => {
+  const classes = useStyles();
+  return css ?
+    <div className={classes.ibtn}><i className={css}/></div> :
+    <div className={classes.ibtn}>{children}</div>;
+};
+
+IBtn.propTypes = {
+  css: PropTypes.string,
+  children: PropTypes.node,
+};
+
 const actions = [
-  { icon: <IconButton><i className="tb_icon-arrow-white" /></IconButton>, name: 'Элемент и узел' },
-  { icon: <IconButton><i className="tb_icon-hand" /></IconButton>, name: 'Панорама' },
-  { icon: <IconButton><i className="tb_cursor-zoom" /></IconButton>, name: 'Вписать в окно' },
-  { icon: <IconButton><i className="tb_cursor-pen-freehand" /></IconButton>, name: '+ Профиль' },
-  { icon: <IconButton><i className="tb_cursor-lay-impost"/></IconButton>, name: 'Раскладка' },
-  { icon: <IconButton><i className="tb_cursor-arc-r"/></IconButton>, name: 'Арка' },
+  { icon: <IBtn css="tb_icon-arrow-white" />, name: 'Элемент и узел' },
+  { icon: <IBtn css="tb_icon-hand" />, name: 'Панорама' },
+  { icon: <IBtn css="tb_cursor-zoom" />, name: 'Вписать в окно' },
+  { icon: <IBtn css="tb_cursor-pen-freehand" />, name: '+ Профиль' },
+  { icon: <IBtn css="tb_cursor-lay-impost" />, name: 'Раскладка' },
+  { icon: <IBtn css="tb_cursor-arc-r" />, name: 'Арка' },
 ];
 
 export default function SelectTool() {
@@ -72,7 +91,7 @@ export default function SelectTool() {
         ariaLabel="SpeedDial tool select"
         direction="down"
         className={classes.speedDial}
-        icon={<IconButton><i className="tb_icon-arrow-white" /></IconButton>}
+        icon={<IBtn css="tb_icon-arrow-white" />}
         onClose={handleClose}
         onOpen={handleOpen}
         open={open}

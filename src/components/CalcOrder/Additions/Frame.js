@@ -71,7 +71,7 @@ class ParametricFrame extends React.Component {
       </Dialog>}
       {queryClose && <Dialog
         open
-        title={`Закрыть ${title.toLowerCase()}?`}
+        title={`Закрыть параметрические изделия?`}
         onClose={handleErrClose}
         actions={[
           <Button key="ok" onClick={handleCancel} color="primary">Ок</Button>,

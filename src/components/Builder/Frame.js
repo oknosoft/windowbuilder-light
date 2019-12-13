@@ -133,14 +133,14 @@ class Frame extends React.Component {
   }
 
   render() {
-    const {editor, props: {classes, handleNavigate, windowHeight, windowWidth}} = this;
+    const {editor, props: {classes, windowHeight, windowWidth}} = this;
     let height = (windowWidth > 720 ? (windowHeight - 48 - 8) : windowWidth * 0.7) - 50;
     if(height < 320) {
       height = 320;
     }
     return <div>
       <Prompt when message={this.prompt} />
-      {editor && <Toolbar classes={classes} editor={editor} handleClose={this.handleClose}/>}
+      {editor && <Toolbar classes={classes} editor={editor} handleClose={this.handleClose} handleNavigate={this.handleNavigate}/>}
       <Grid container>
         <Grid item xs={12} sm={12} lg={8} xl={9}>
           <Builder
@@ -150,7 +150,7 @@ class Frame extends React.Component {
           />
         </Grid>
         <Grid item xs={12} sm={12} lg={4} xl={3}>
-          {editor && <Controls editor={editor} handlers={{handleNavigate}}/>}
+          {editor && <Controls editor={editor}/>}
         </Grid>
       </Grid>
 
