@@ -4,6 +4,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseBtn from './CloseBtn';
 import Tip from './Tip';
+import SelectTool from './SelectTool';
+import SelectTool2 from './SelectTool2';
 //import {path} from '../App/menu_items';
 
 export default function BuilderToolbar({editor, handleClose, classes}) {
@@ -18,12 +20,8 @@ export default function BuilderToolbar({editor, handleClose, classes}) {
     <Tip title="Загрузить из типового блока">
       <IconButton><i className="tb_stamp" /></IconButton>
     </Tip>
-    <Tip title="Элементы и узлы">
-      <IconButton><i className="tb_icon-arrow-white" /></IconButton>
-    </Tip>
-    <Tip title="Вписать в окно">
-      <IconButton onClick={() => editor.project.zoom_fit && editor.project.zoom_fit()}><i className="tb_cursor-zoom" /></IconButton>
-    </Tip>
+    <SelectTool editor={editor} />
+    <SelectTool2 editor={editor} />
     <div className={classes.title} />
     {handleClose && <CloseBtn handleClose={handleClose}/>}
   </Toolbar>;

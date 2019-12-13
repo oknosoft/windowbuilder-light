@@ -66,10 +66,41 @@ class Controls extends React.Component {
         textColor="primary"
         variant="scrollable"
       >
-        <Tab classes={{root: classes.tabRoot}} icon={<i className="fa fa-sitemap fa-fw"></i>} title="Слои изделия"/>
-        <Tab classes={{root: classes.tabRoot}} icon={<i className="fa fa-puzzle-piece fa-fw"></i>} title="Свойства элемента" />
-        <Tab classes={{root: classes.tabRoot}} icon={<i className="fa fa-object-ungroup fa-fw"></i>} title="Свойства створки" />
-        <Tab classes={{root: classes.tabRoot}} icon={<i className="fa fa-picture-o fa-fw"></i>} title="Свойства изделия"  />
+        <Tab
+          classes={{root: classes.tabRoot}}
+          label={
+            <Tip title="Слои изделия" placement="top">
+              <i className="fa fa-sitemap fa-fw"></i>
+            </Tip>
+          }/>
+        <Tab
+          classes={{root: classes.tabRoot}}
+          label={
+            <Tip title="Свойства элемента" placement="top">
+              <i className="fa fa-puzzle-piece fa-fw"></i>
+            </Tip>
+          }/>
+        <Tab
+          classes={{root: classes.tabRoot}}
+          label={
+            <Tip title="Свойства створки" placement="top">
+              <i className="fa fa-object-ungroup fa-fw"></i>
+            </Tip>
+          }/>
+        <Tab
+          classes={{root: classes.tabRoot}}
+          label={
+            <Tip title="Свойства изделия" placement="top">
+              <i className="fa fa-picture-o fa-fw"></i>
+            </Tip>
+          }/>
+        <Tab
+          classes={{root: classes.tabRoot}}
+          label={
+            <Tip title="Свойства инструмента" placement="top">
+              <i className="fa fa-cogs fa-fw"></i>
+            </Tip>
+          }/>
       </AntTabs>
       {tab === 2 && <Params editor={editor}/>}
       {tab === 3 && <Params editor={editor} root/>}

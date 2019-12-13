@@ -15,6 +15,7 @@ import withStyles600 from 'metadata-react/styles/paper600';
 
 import OrderRow from './OrderRow';
 import Parametric from './Parametric';
+import Tip from '../../Builder/Tip';
 
 export const AntTabs = withStyles({
   root: {
@@ -53,10 +54,10 @@ class CalcOrderObj extends DataObj {
         textColor="primary"
         variant="scrollable"
       >
-        <Tab label="Шапка" />
-        <Tab label="Окна" />
-        <Tab label="Доп" />
-        <Tab label="Ном"  />
+        <Tab label={<Tip title="Реквизиты заказа"><i className="fa fa-file-text-o fa-fw"></i></Tip>}/>
+        <Tab label={<Tip title="Изделия построителя"><i className="fa fa-object-ungroup fa-fw"></i></Tip>}/>
+        <Tab label={<Tip title="Параметрические изделия"><i className="fa fa-gavel fa-fw"></i></Tip>}/>
+        <Tab label={<Tip title="Материалы и услуги без спецификации"><i className="fa fa-cube fa-fw"></i></Tip>}/>
       </AntTabs>
       {tab === 0 && this.renderHead(_obj, classes)}
       {tab === 1 && this.renderProd(_obj, handlers)}

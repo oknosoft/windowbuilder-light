@@ -14,12 +14,13 @@ const styles = ({typography}) => ({
   },
 });
 
-function Tip({title, children, classes}) {
+function Tip({title, children, classes, ...others}) {
   return <Tooltip
     title={title}
     classes={{tooltip: classes.tooltip}}
     enterTouchDelay={600}
     leaveTouchDelay={2000}
+    {...others}
   >
     <span>{children}</span>
   </Tooltip>;

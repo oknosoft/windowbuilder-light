@@ -30,7 +30,7 @@
 
 [class*="tb_"] {
   background-repeat: no-repeat;
-  background-position: 4px;
+  background-position-top: 4px;
   width: 24px;
   height: 24px;
 }

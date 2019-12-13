@@ -9,7 +9,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import DialogActions from '@material-ui/core/DialogActions';
+import Toolbar from '@material-ui/core/Toolbar';
 import Dialog from 'metadata-react/App/Dialog';
 import AdditionsGroups from './AdditionsGroups';
 
@@ -51,13 +51,12 @@ class ParametricFrame extends React.Component {
 
     const {handleCancel, handleErrClose, props: {_obj}, state: {msg, queryClose}} = this;
 
-    return <div
-      actions={[
-        <Button key="ok" onClick={this.handleOk} color="primary">Рассчитать и закрыть</Button>,
-        <Button key="calck" onClick={this.handleCalck} color="primary">Рассчитать</Button>,
+    return <div>
+      <Toolbar>
+        <Button key="ok" onClick={this.handleOk} color="primary">Рассчитать и закрыть</Button>
+        <Button key="calck" onClick={this.handleCalck} color="primary">Рассчитать</Button>
         <Button key="cancel" onClick={handleCancel} color="primary">Закрыть</Button>
-      ]}
-    >
+      </Toolbar>
       <AdditionsGroups ref={(el) => this.additions = el} _obj={_obj}/>
       {msg && <Dialog
         open

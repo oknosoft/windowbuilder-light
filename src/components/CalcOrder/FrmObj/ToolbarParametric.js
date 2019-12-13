@@ -6,7 +6,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AddIcon from '@material-ui/icons/AddCircleOutline';
 import Filter1 from '@material-ui/icons/Filter1';
 import Filter9Plus from '@material-ui/icons/Filter9Plus';
 import RemoveIcon from '@material-ui/icons/DeleteOutline';
@@ -22,7 +21,7 @@ class ToolbarParametric extends TabularSectionToolbar {
 
   render() {
     const {props, state} = this;
-    const {handleUp, handleDown, denyReorder, classes, btns, width, settings_open, menu_items} = props;
+    const {classes, btns, width, settings_open, menu_items} = props;
 
     return (
       <Toolbar disableGutters className={classes.toolbar} style={{width: width || '100%'}}>
