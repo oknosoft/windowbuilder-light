@@ -17,7 +17,7 @@ export default class Builder extends React.Component {
         this.editor = new $p.Editor(el);
         this.props.registerChild(this.editor);
         window.paper = this.editor;
-        new $p.Editor.ToolSelectNode();
+        this.editor.create_tools();
       }
     }
     this.editor && this.props.registerChild(this.editor);

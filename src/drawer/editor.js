@@ -8,7 +8,7 @@
 
 import paper from 'paper/dist/paper-core';
 import drawer from 'windowbuilder/public/dist/drawer';
-import tool from './tool';
+import tools from './tools';
 import filling from './filling';
 
 export default function ($p) {
@@ -17,12 +17,12 @@ export default function ($p) {
   drawer({$p, paper});
 
   const {EditorInvisible} = $p;
-  $p.Editor = class Editor extends EditorInvisible {
+  class Editor extends EditorInvisible {
 
     constructor(canvas) {
       super();
       this._canvas = canvas;
-      new $p.EditorInvisible.Scheme(this._canvas, this, typeof window === 'undefined');
+      new EditorInvisible.Scheme(this._canvas, this, typeof window === 'undefined');
       //this.create_scheme();
       this.project._dp.value_change = this.dp_value_change.bind(this);
       this._recalc_timer = 0;
@@ -42,7 +42,7 @@ export default function ($p) {
       evt.preventDefault();
       evt.stopPropagation();
       const touch = evt.touches.length && evt.touches[0];
-      const {view, tool, project: {bounds}} = this;
+      const {view, tool} = this;
       const point = view.viewToProject([touch.clientX, touch.clientY]).add([-50, -158]);
       const event = {point, modifiers: {}};
       tool.hitTest(event);
@@ -92,7 +92,7 @@ export default function ($p) {
      * @param template {cat.templates}
      */
     apply_template(base_block, template) {
-
+      base_block = template;
     }
 
     unload() {
@@ -102,10 +102,11 @@ export default function ($p) {
       clearTimeout(this._recalc_timer);
     }
 
-  };
+  }
+  $p.Editor = Editor;
 
   if(typeof window !== 'undefined') {
-    tool($p.Editor);
+    tools(Editor);
     filling(EditorInvisible.Filling);
   }
 }

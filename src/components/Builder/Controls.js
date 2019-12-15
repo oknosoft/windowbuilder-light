@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 import Tip from './Tip';
 import Params from './Params/Params';
-import ToolWnd from './ToolWnd';
+import ToolWnd from './ToolWnds/ToolWnd';
 import {AntTabs} from '../CalcOrder/FrmObj/FrmObj';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';

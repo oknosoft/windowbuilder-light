@@ -7,11 +7,15 @@
  */
 
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Backdrop from '@material-ui/core/Backdrop';
-import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import PropTypes from 'prop-types';
+
+import { makeStyles } from '@material-ui/core/styles';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
+import Tip from './Tip';
 
 export const useStyles = makeStyles(() => ({
   root: {
@@ -45,17 +49,10 @@ export const useStyles = makeStyles(() => ({
   }
 }));
 
-/*
-    <Tip title="Вписать в окно">
-      <IconButton onClick={() => editor.project.zoom_fit && editor.project.zoom_fit()}><i className="tb_cursor-zoom" /></IconButton>
-    </Tip>
-*/
-
 export const IBtn = ({children, css}) => {
-  const classes = useStyles();
   return css ?
-    <div className={classes.ibtn}><i className={css}/></div> :
-    <div className={classes.ibtn}>{children}</div>;
+    <ListItemIcon><i className={css}/></ListItemIcon> :
+    <ListItemIcon>{children}</ListItemIcon>;
 };
 
 IBtn.propTypes = {
@@ -63,53 +60,90 @@ IBtn.propTypes = {
   children: PropTypes.node,
 };
 
+export const select_tool = (editor, id) => {
+  switch (id) {
+  case 'm1':
+    editor.project.magnetism.m1();
+    break;
+
+  default:
+    editor.tools.some((tool) => {
+      if(tool.options.name == id){
+        tool.activate();
+        return true;
+      }
+    });
+  }
+};
+
 const actions = [
-  { icon: <IBtn css="tb_icon-arrow-white" />, name: 'Элемент и узел' },
-  { icon: <IBtn css="tb_icon-hand" />, name: 'Панорама' },
-  { icon: <IBtn css="tb_cursor-zoom" />, name: 'Вписать в окно' },
-  { icon: <IBtn css="tb_cursor-pen-freehand" />, name: '+ Профиль' },
-  { icon: <IBtn css="tb_cursor-lay-impost" />, name: 'Раскладка' },
-  { icon: <IBtn css="tb_cursor-arc-r" />, name: 'Арка' },
+  {icon: <IBtn css="tb_icon-arrow-white"/>, name: 'Элемент и узел', id: 'select_node'},
+  {icon: <IBtn css="tb_icon-hand"/>, name: 'Панорама', id: 'pan'},
+  {icon: <IBtn css="tb_cursor-zoom"/>, name: 'Вписать в окно', id: 'zoom'},
+  {icon: <IBtn css="tb_cursor-pen-freehand"/>, name: 'Добавить профиль'},
+  {icon: <IBtn css="tb_cursor-lay-impost"/>, name: 'Раскладка'},
+  {icon: <IBtn css="tb_cursor-arc-r"/>, name: 'Арка'},
+  {icon: <IBtn><small><i className="fa fa-magnet"></i><sub>1</sub></small></IBtn>, name: 'Импост по 0-штапику'},
+  {icon: <IBtn><small><i className="fa fa-magnet"></i><sub>2</sub></small></IBtn>, name: 'T в угол'},
+  {icon: <IBtn css="tb_cursor-cut"/>, name: 'Тип соединения'},
+  {icon: <IBtn css="tb_ruler_ui"/>, name: 'Позиция и сдвиг'},
+  {icon: <IBtn css="tb_grid"/>, name: 'Координаты'},
+  {icon: <IBtn css="tb_text"/>, name: 'Текст'},
 ];
 
-export default function SelectTool() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+export default function SelectTool({editor}) {
 
-  const handleOpen = () => {
-    setOpen(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setAnchorEl(null);
   };
 
   return (
-    <div >
-      <Backdrop open={open} />
-      <SpeedDial
-        ariaLabel="SpeedDial tool select"
-        direction="down"
-        className={classes.speedDial}
-        icon={<IBtn css="tb_icon-arrow-white" />}
-        onClose={handleClose}
-        onOpen={handleOpen}
+    <div>
+      <Tip title="Выбор инструмента">
+        <IconButton
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <i className="fa fa-cogs fa-fw" />
+        </IconButton>
+      </Tip>
+
+      <Menu
+        id="long-menu"
+        anchorEl={anchorEl}
+        keepMounted
         open={open}
-        FabProps={{size: 'small', color: 'inherit', classes: {root: classes.fab}, disableRipple: true, disableFocusRipple: true}}
+        onClose={handleClose}
       >
         {actions.map((action, index) => (
-          <SpeedDialAction
+          <MenuItem
             key={`act-${index}`}
-            icon={action.icon}
-            tooltipTitle={action.name}
-            tooltipPlacement="right"
-            tooltipOpen
-            onClick={handleClose}
-            classes={{staticTooltipLabel: classes.staticTooltipLabel}}
-          />
+            selected={action.id === 'pan'}
+            onClick={() => {
+              if(action.id === 'zoom') {
+                editor.project.zoom_fit && editor.project.zoom_fit();
+              }
+              else {
+                select_tool(editor, action.id);
+              }
+              handleClose();
+            }}>
+            {action.icon}
+            {action.name}
+          </MenuItem>
         ))}
-      </SpeedDial>
+      </Menu>
     </div>
   );
+
 }
 

@@ -254,7 +254,6 @@ export default function ($p) {
 
       const v = this;
       const {obj} = this.owner;
-      const {ipinfo, msg} = $p;
       const {fias} = WndAddressData;
 
       if(obj.address_fields){
@@ -347,7 +346,7 @@ export default function ($p) {
     assemble_lat_lng(str) {
       //simple coordinates
       const simpleMatches = [];
-      simpleMatches[0] = /^\s*?(-?[0-9]+\.?[0-9]+?)\s*\,\s*(-?[0-9]+\.?[0-9]+?)\s*$/.exec(str);
+      simpleMatches[0] = /^\s*?(-?[0-9]+\.?[0-9]+?)\s*,\s*(-?[0-9]+\.?[0-9]+?)\s*$/.exec(str);
       simpleMatches[2] = /^\s*?(-?[0-9]+[,.]?[0-9]+?)\s*;?\s*(-?[0-9]+[,.]?[0-9]+?)\s*$/.exec(str);
       const simpleMatch = simpleMatches.find(match => match && match.length === 3);
       //complex coordinates
@@ -450,7 +449,7 @@ export default function ($p) {
     "10600000": {name: "Гаражно-строительный кооператив"},
     "10700000": {name: "Территория"},
 
-  }
+  };
 
   /**
    * Конструктор структуры адреса

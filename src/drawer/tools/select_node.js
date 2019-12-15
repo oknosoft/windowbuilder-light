@@ -1,17 +1,17 @@
 /**
  * Основной инструмент рисовалки - выделяет элементы
  *
- * @module Tool
+ * @module ToolSelectNode
  *
  * Created by Evgeniy Malyarov on 28.10.2019.
  */
 
-export default function tool (Editor) {
+export default function select_node (Editor) {
 
-  const {Tool, Point, PointText, EditableText, Rectangle} = Editor.prototype;
-  const {ProfileItem, Filling, DimensionLine, Sectional} = Editor;
+  const {Point, PointText, EditableText, Rectangle} = Editor.prototype;
+  const {ToolElement, ProfileItem, Filling, DimensionLine, Sectional} = Editor;
 
-  Editor.ToolSelectNode = class ToolSelectNode extends Tool {
+  Editor.ToolSelectNode = class ToolSelectNode extends ToolElement {
 
     constructor() {
 

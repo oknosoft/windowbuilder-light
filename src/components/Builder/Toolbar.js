@@ -5,7 +5,6 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseBtn from './CloseBtn';
 import Tip from './Tip';
 import SelectTool from './SelectTool';
-import SelectTool2 from './SelectTool2';
 //import {path} from '../App/menu_items';
 
 export default function BuilderToolbar({editor, handleClose, classes}) {
@@ -21,7 +20,6 @@ export default function BuilderToolbar({editor, handleClose, classes}) {
       <IconButton><i className="tb_stamp" /></IconButton>
     </Tip>
     <SelectTool editor={editor} />
-    <SelectTool2 editor={editor} />
     <div className={classes.title} />
     {handleClose && <CloseBtn handleClose={handleClose}/>}
   </Toolbar>;
