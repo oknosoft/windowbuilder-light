@@ -80,7 +80,7 @@ const actions = [
   {icon: <IBtn css="tb_icon-arrow-white"/>, name: 'Элемент и узел', id: 'select_node'},
   {icon: <IBtn css="tb_icon-hand"/>, name: 'Панорама', id: 'pan'},
   {icon: <IBtn css="tb_cursor-zoom"/>, name: 'Вписать в окно', id: 'zoom'},
-  {icon: <IBtn css="tb_cursor-pen-freehand"/>, name: 'Добавить профиль'},
+  {icon: <IBtn css="tb_cursor-pen-freehand"/>, name: 'Добавить профиль', id: 'pen'},
   {icon: <IBtn css="tb_cursor-lay-impost"/>, name: 'Раскладка'},
   {icon: <IBtn css="tb_cursor-arc-r"/>, name: 'Арка'},
   {icon: <IBtn><small><i className="fa fa-magnet"></i><sub>1</sub></small></IBtn>, name: 'Импост по 0-штапику'},
@@ -146,4 +146,8 @@ export default function SelectTool({editor}) {
   );
 
 }
+
+SelectTool.propTypes = {
+  editor: PropTypes.object.isRequired,
+};
 
