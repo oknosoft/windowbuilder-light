@@ -134,7 +134,7 @@ class Frame extends React.Component {
 
   render() {
     const {editor, props: {classes, windowHeight, windowWidth}} = this;
-    let height = (windowWidth > 720 ? (windowHeight - 48 - 8) : windowWidth * 0.7) - 50;
+    let height = (windowWidth > 720 ? (windowHeight - 56) : windowWidth * 0.7) - 50;
     if(height < 320) {
       height = 320;
     }

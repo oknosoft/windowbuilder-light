@@ -26,6 +26,7 @@ class RootProvider extends React.Component {
     import('metadata-react/styles/roboto/font.css');
     import('font-awesome/css/font-awesome.min.css');
     import('./styles/global.css');
+    import('./styles/windowbuilder.css');
 
     // скрипт инициализации структуры метаданных и модификаторы
     import('./metadata')

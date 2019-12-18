@@ -56,9 +56,8 @@ export default function tool_element (Editor) {
      */
     on_activate(cursor) {
 
-      //this._scope.tb_left.select(this.options.name);
-
       this._scope.canvas_cursor(cursor);
+      this.eve.emit_async('tool_activated', this);
 
       // для всех инструментов, кроме select_node...
       if (this.options.name != "select_node") {

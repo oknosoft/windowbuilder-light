@@ -11,7 +11,6 @@ export default class Builder extends React.Component {
       if(this.editor && this.editor._canvas === el) {
         const {project} = this.editor;
         project.resize_canvas(width, height);
-        project.zoom_fit();
       }
       else {
         this.editor = new $p.Editor(el);
@@ -28,6 +27,7 @@ export default class Builder extends React.Component {
       this.editor.unload();
       this.props.registerChild(this.editor = null);
       window.paper = null;
+
     }
   }
 

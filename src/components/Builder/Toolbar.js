@@ -19,6 +19,9 @@ export default function BuilderToolbar({editor, handleClose, classes}) {
     <Tip title="Загрузить из типового блока">
       <IconButton><i className="tb_stamp" /></IconButton>
     </Tip>
+    <Tip title="Вписать в окно">
+      <IconButton onClick={() => editor.project.zoom_fit && editor.project.zoom_fit()}><i className="tb_cursor-zoom" /></IconButton>
+    </Tip>
     <SelectTool editor={editor} />
     <div className={classes.title} />
     {handleClose && <CloseBtn handleClose={handleClose}/>}

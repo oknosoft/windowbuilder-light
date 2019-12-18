@@ -10,6 +10,7 @@ import paper from 'paper/dist/paper-core';
 import drawer from 'windowbuilder/public/dist/drawer';
 import tools from './tools';
 import filling from './filling';
+import StableZoom from './StableZoom';
 
 export default function ($p) {
 
@@ -26,8 +27,10 @@ export default function ($p) {
       //this.create_scheme();
       this.project._dp.value_change = this.dp_value_change.bind(this);
       this._recalc_timer = 0;
+      this._stable_zoom = new StableZoom(this);
       this.eve.on('coordinates_calculated', this.coordinates_calculated);
       this._canvas.addEventListener('touchstart', this.canvas_touchstart, false);
+      this._canvas.addEventListener('mousewheel', this._stable_zoom.mousewheel, false);
     }
 
     coordinates_calculated = () => {
@@ -95,9 +98,79 @@ export default function ($p) {
       base_block = template;
     }
 
+    purge_selection(){
+      this.project.selectedItems
+        .filter((path) => path.parent instanceof EditorInvisible.ProfileItem && path != path.parent.generatrix)
+        .forEach((selected) => selected.selected = false);
+    }
+
+    // Returns serialized contents of selected items.
+    capture_selection_state() {
+
+      const originalContent = [];
+
+      this.project.selectedItems.forEach((item) => {
+        if (item instanceof paper.Path && !item.guide){
+          originalContent.push({
+            id: item.id,
+            json: item.exportJSON({asString: false}),
+            selectedSegments: []
+          });
+        }
+      });
+
+      return originalContent;
+    }
+
+    // Restore the state of selected items.
+    restore_selection_state(originalContent) {
+      originalContent.forEach((orig) => {
+        const item = this.project.getItem({id: orig.id});
+        if (item){
+          // HACK: paper does not retain item IDs after importJSON,
+          // store the ID here, and restore after deserialization.
+          const id = item.id;
+          item.importJSON(orig.json);
+          item._id = id;
+        }
+      });
+    }
+
+    /**
+     * Create pixel perfect dotted rectable for drag selections
+     * @param p1
+     * @param p2
+     * @return {paper.CompoundPath}
+     */
+    drag_rect(p1, p2) {
+      const {view} = this;
+      const half = new paper.Point(0.5 / view.zoom, 0.5 / view.zoom);
+      const start = p1.add(half);
+      const end = p2.add(half);
+      const rect = new paper.CompoundPath();
+
+      rect.moveTo(start);
+      rect.lineTo(new paper.Point(start.x, end.y));
+      rect.lineTo(end);
+      rect.moveTo(start);
+      rect.lineTo(new paper.Point(end.x, start.y));
+      rect.lineTo(end);
+      rect.strokeColor = 'black';
+      rect.strokeWidth = 1.0 / view.zoom;
+      rect.dashOffset = 0.5 / view.zoom;
+      rect.dashArray = [1.0 / view.zoom, 1.0 / view.zoom];
+      rect.removeOn({
+        drag: true,
+        up: true
+      });
+      rect.guide = true;
+      return rect;
+    }
+
     unload() {
       this.project._dp._manager.off('update');
       this._canvas.removeEventListener("touchstart", this.canvas_touchstart);
+      this._canvas.removeEventListener('mousewheel', this._stable_zoom.mousewheel);
       super.unload();
       clearTimeout(this._recalc_timer);
     }

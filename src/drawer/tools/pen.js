@@ -511,18 +511,19 @@ export default function pen (Editor) {
               for (const {profile} of inner.concat(outer)) {
                 profile.rays.clear();
               }
+              /* eslint-disable-next-line */
               for (const {_attr, elm} of rama.joined_nearests()) {
                 _attr._rays && _attr._rays.clear();
               }
               const {_attr, layer} = rama;
               _attr._rays && _attr._rays.clear();
-              layer && layer.notify && layer.notify({profiles: [rama], points: []}, consts.move_points);
+              layer && layer.notify && layer.notify({profiles: [rama], points: []}, this._scope.consts.move_points);
             });
           }
         }
         else if(this.mode == 'create' && this.path) {
 
-          if (this.path.length < consts.sticking){
+          if (this.path.length < this._scope.consts.sticking){
             return;
           }
 
@@ -666,7 +667,7 @@ export default function pen (Editor) {
               invert = false,
               handlePos;
 
-            if (delta.length < consts.sticking){
+            if (delta.length < this._scope.consts.sticking){
               return;
             }
 
@@ -690,7 +691,7 @@ export default function pen (Editor) {
             }
 
             if (dragIn || dragOut) {
-              let i, res, element, bind = this.profile.bind_node ? "node_" : "";
+              let res, bind = this.profile.bind_node ? "node_" : "";
 
               if(this.profile.bind_generatrix){
                 bind += "generatrix";
@@ -894,7 +895,8 @@ export default function pen (Editor) {
 
         if (this.hitItem) {
 
-          if(this.hitItem.item.layer == project.activeLayer &&  this.hitItem.item.parent instanceof ProfileItem && !(this.hitItem.item.parent instanceof Onlay)){
+          if(this.hitItem.item.layer == project.activeLayer &&
+              this.hitItem.item.parent instanceof ProfileItem && !(this.hitItem.item.parent instanceof Onlay)){
             // для профиля, определяем внешнюю или внутреннюю сторону и ближайшее примыкание
 
             const hit = {

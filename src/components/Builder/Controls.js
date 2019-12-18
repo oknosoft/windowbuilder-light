@@ -32,10 +32,28 @@ class Controls extends React.Component {
     const {editor} = this.props;
     editor.project._dp._manager.on('update', this.onDataChange);
     editor.eve.on('layer_activated', this.layer_activated);
+    editor.eve.on('tool_activated', this.tool_activated);
   }
 
   layer_activated = (contour, custom) => {
     !custom && this.forceUpdate();
+  };
+
+  tool_activated = (tool) => {
+    if(tool.ToolWnd) {
+      if(this.state.tab !== 4) {
+        this.setState({tab: 4});
+      }
+      else {
+        this.forceUpdate();
+      }
+    }
+    else {
+      if(this.state.tab === 4) {
+        this.setState({tab: 1});
+      }
+    }
+
   };
 
   onDataChange = (obj, fields) => {

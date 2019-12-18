@@ -79,13 +79,12 @@ export const select_tool = (editor, id) => {
 const actions = [
   {icon: <IBtn css="tb_icon-arrow-white"/>, name: 'Элемент и узел', id: 'select_node'},
   {icon: <IBtn css="tb_icon-hand"/>, name: 'Панорама', id: 'pan'},
-  {icon: <IBtn css="tb_cursor-zoom"/>, name: 'Вписать в окно', id: 'zoom'},
   {icon: <IBtn css="tb_cursor-pen-freehand"/>, name: 'Добавить профиль', id: 'pen'},
   {icon: <IBtn css="tb_cursor-lay-impost"/>, name: 'Раскладка'},
-  {icon: <IBtn css="tb_cursor-arc-r"/>, name: 'Арка'},
+  {icon: <IBtn css="tb_cursor-arc-r"/>, name: 'Арка', id: 'arc'},
   {icon: <IBtn><small><i className="fa fa-magnet"></i><sub>1</sub></small></IBtn>, name: 'Импост по 0-штапику'},
   {icon: <IBtn><small><i className="fa fa-magnet"></i><sub>2</sub></small></IBtn>, name: 'T в угол'},
-  {icon: <IBtn css="tb_cursor-cut"/>, name: 'Тип соединения'},
+  {icon: <IBtn css="tb_cursor-cut"/>, name: 'Тип соединения', id: 'cut'},
   {icon: <IBtn css="tb_ruler_ui"/>, name: 'Позиция и сдвиг'},
   {icon: <IBtn css="tb_grid"/>, name: 'Координаты'},
   {icon: <IBtn css="tb_text"/>, name: 'Текст'},
@@ -95,6 +94,8 @@ export default function SelectTool({editor}) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const cid = editor.tool && editor.tool.options.name;
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -127,14 +128,9 @@ export default function SelectTool({editor}) {
         {actions.map((action, index) => (
           <MenuItem
             key={`act-${index}`}
-            selected={action.id === 'pan'}
+            selected={action.id === cid}
             onClick={() => {
-              if(action.id === 'zoom') {
-                editor.project.zoom_fit && editor.project.zoom_fit();
-              }
-              else {
-                select_tool(editor, action.id);
-              }
+              select_tool(editor, action.id);
               handleClose();
             }}>
             {action.icon}

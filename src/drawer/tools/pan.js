@@ -37,11 +37,11 @@ export default function pan (Editor) {
 
       this.on({
 
-        activate: function() {
+        activate() {
           this.on_activate('cursor-hand');
         },
 
-        deactivate: function() {
+        deactivate() {
         },
 
         mousedown: this.mousedown,
