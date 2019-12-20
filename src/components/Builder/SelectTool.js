@@ -80,6 +80,7 @@ const actions = [
   {icon: <IBtn css="tb_icon-arrow-white"/>, name: 'Элемент и узел', id: 'select_node'},
   {icon: <IBtn css="tb_icon-hand"/>, name: 'Панорама', id: 'pan'},
   {icon: <IBtn css="tb_cursor-pen-freehand"/>, name: 'Добавить профиль', id: 'pen'},
+  {icon: <IBtn css="tb_stulp_flap"/>, name: 'Добавить штульп-створки', id: 'stulp_flap'},
   {icon: <IBtn css="tb_cursor-lay-impost"/>, name: 'Раскладка'},
   {icon: <IBtn css="tb_cursor-arc-r"/>, name: 'Арка', id: 'arc'},
   {icon: <IBtn><small><i className="fa fa-magnet"></i><sub>1</sub></small></IBtn>, name: 'Импост по 0-штапику'},

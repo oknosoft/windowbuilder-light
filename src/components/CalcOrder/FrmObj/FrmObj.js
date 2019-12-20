@@ -140,16 +140,6 @@ class CalcOrderObj extends DataObj {
     return res;
   };
 
-  renderNom(_obj, height) {
-    return <div style={{height}}>
-      <Typography key="title-nom" variant="h6" color="primary">Товары и услуги без спецификации</Typography>
-      {this.scheme_nom && <TabularSection key="ts-nom" _obj={_obj} _tabular="production" scheme={this.scheme_nom} denyReorder/>}
-      {!this.scheme_nom && <Typography key="err-nom" color="error">
-        {`Не найден элемент scheme_settings {obj: "doc.calc_order.production", name: "production.nom"}`}
-      </Typography>}
-    </div>;
-  }
-
   filterNom = (collection) => {
     const res = [];
     collection.forEach((row) => {
@@ -161,6 +151,16 @@ class CalcOrderObj extends DataObj {
     });
     return res;
   };
+
+  renderNom(_obj, height) {
+    return <div style={{height}}>
+      <Typography key="title-nom" variant="h6" color="primary">Товары и услуги без спецификации</Typography>
+      {this.scheme_nom && <TabularSection key="ts-nom" _obj={_obj} _tabular="production" scheme={this.scheme_nom} denyReorder/>}
+      {!this.scheme_nom && <Typography key="err-nom" color="error">
+        {`Не найден элемент scheme_settings {obj: "doc.calc_order.production", name: "production.nom"}`}
+      </Typography>}
+    </div>;
+  }
 
   openTemplates = () => {
     $p.ui.dialogs.alert({text: `Не реализовано`, title: 'Выбор шаблона'});

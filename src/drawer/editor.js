@@ -179,7 +179,7 @@ export default function ($p) {
   $p.Editor = Editor;
 
   if(typeof window !== 'undefined') {
-    tools(Editor);
+    tools(Editor, $p);
     filling(EditorInvisible.Filling);
   }
 }

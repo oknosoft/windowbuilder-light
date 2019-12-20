@@ -9,33 +9,8 @@ import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "нео�
 import NotFound from '../Markdown/NotFound';
 
 /* eslint-disable-next-line */
-import {path} from './menu_items'; // метод для вычисления base path
-
-const stub = () => null;
-const lazy = {
-  DataList: stub,
-  DataTree: stub,
-  DataObj: stub,
-  FrmReport: stub,
-};
-
-import('metadata-react/DynList')
-  .then(module => {
-    lazy.DataList = module.default;
-    return import('metadata-react/DataTree');
-  })
-  .then(module => {
-    lazy.DataTree = module.default;
-    return import('metadata-react/FrmObj');
-  })
-  .then(module => {
-    lazy.DataObj = module.default;
-    return import('metadata-react/FrmReport');
-  })
-  .then(module => {
-    lazy.FrmReport = module.default;
-    import('metadata-react/styles/react-data-grid.css');
-  });
+import {path} from './menu_items';                  // метод для вычисления base path
+import {lazy} from './lazy';                        // конструкторы для контекста
 
 class DataRoute extends React.Component {
 
@@ -104,9 +79,6 @@ class DataRoute extends React.Component {
     </Switch>;
   }
 
-  getChildContext() {
-    return {components: lazy};
-  }
 }
 
 DataRoute.propTypes = {
@@ -118,10 +90,6 @@ DataRoute.propTypes = {
   couch_direct: PropTypes.bool,
   offline: PropTypes.bool,
   user: PropTypes.object,
-};
-
-DataRoute.childContextTypes = {
-  components: PropTypes.object,
 };
 
 export default withObj(DataRoute);

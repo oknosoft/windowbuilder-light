@@ -7,7 +7,7 @@ import Confirm from 'metadata-react/App/Confirm';   // диалог вопрос
 import Login, {FrmLogin} from 'metadata-react/FrmLogin/Proxy';  // логин и свойства подключения
 import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "необходима авторизация"
 import Header from 'metadata-react/Header';         // навигация
-
+import {compose} from 'redux';
 import {withNavigateAndMeta} from 'metadata-redux';
 import withWindowSize from 'metadata-react/WindowSize';
 
@@ -16,10 +16,10 @@ import DataRoute from './DataRoute';                // вложенный мар
 import MarkdownRoute from '../Markdown/Route';      // вложенный маршрутизатор страниц с Markdown, 404 живёт внутри Route
 import Settings from '../Settings';                 // страница настроек приложения
 import Builder from '../Builder';                   // графический редактор
-
+import {lazy} from './lazy';                        // конструкторы для контекста
 
 import withStyles from './styles';
-import {compose} from 'redux';
+
 
 import items, {item_props, path} from './menu_items'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
 
@@ -150,6 +150,10 @@ class AppView extends Component {
       <Confirm key="confirm" {...confirm}/>,
     ];
   }
+
+  getChildContext() {
+    return {components: lazy};
+  }
 }
 
 AppView.propTypes = {
@@ -160,6 +164,10 @@ AppView.propTypes = {
   classes: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
+};
+
+AppView.childContextTypes = {
+  components: PropTypes.object,
 };
 
 export default compose(withStyles, withWindowSize, withNavigateAndMeta)(AppView);

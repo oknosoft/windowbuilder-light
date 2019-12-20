@@ -99,6 +99,10 @@
   background-image: url(imgs/text.png);
 }
 
+.tb_stulp_flap {
+  background-image: url(imgs/stulp-flap.png);
+}
+
 /* курсоры построителя*/
 .cursor-pen-freehand    { cursor: url(imgs/cursor-pen-freehand.png) 5 2, default; }
 .cursor-lay-impost      { cursor: url(imgs/cursor-lay-impost.png) 7 7, default; }
@@ -127,3 +131,4 @@
 .cursor-text            { cursor: url(imgs/cursor-text.png) 2 2, default; }
 .cursor-text-add        { cursor: url(imgs/cursor-text-add.png) 2 2, default; }
 .cursor-text-select     { cursor: url(imgs/cursor-text-select.png) 2 2, default; }
+.cursor-stulp-flap     { cursor: url(imgs/cursor-stulp-flap.png) 1 1, default; }
