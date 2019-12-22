@@ -66,11 +66,8 @@ export default function tool_element (Editor) {
 
         // проверяем заполненность системы
         if (this.project._dp.sys.empty()) {
-          $p.msg.show_msg({
-            type: "alert-warning",
-            text: $p.msg.bld_not_sys,
-            title: $p.msg.bld_title
-          });
+          const {msg, ui} = $p;
+          ui.dialogs.alert({text: msg.bld_not_sys, title: msg.bld_title});
         }
       }
     }

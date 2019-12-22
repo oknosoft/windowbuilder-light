@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import TabularSection from 'metadata-react/TabularSection';
 import ToolbarParametric from './ToolbarParametric';
 import CalcOrderAdditions from '../Additions';
+import CalcOrderAdditionsExt from '../AdditionsExt';
 
 class Parametric extends React.Component {
 
@@ -34,9 +35,7 @@ class Parametric extends React.Component {
       return <CalcOrderAdditions _obj={_obj} handleCancel={this.setTabular}/>;
     }
     if(mode === 'extend') {
-      return <Typography key="err-nom" color="error">
-        Форма расширенного параметрика пока не подключена
-      </Typography>;
+      return <CalcOrderAdditionsExt _obj={_obj} handleCancel={this.setTabular}/>;
     }
     return <div style={{height}}>
       <Typography variant="h6" color="primary">Параметрические изделия</Typography>

@@ -126,7 +126,7 @@ class CalcOrderObj extends DataObj {
     const res = [];
     collection.forEach((row) => {
       const {owner, calc_order} = row.characteristic;
-      if(row.characteristic.empty() || calc_order.empty() || owner.is_procedure || owner.is_accessory) {
+      if(row.characteristic.empty() || calc_order.empty() || !row.ordn.empty()) {
         return;
       }
       else if(row.characteristic.coordinates.count() > 0) {
@@ -143,8 +143,7 @@ class CalcOrderObj extends DataObj {
   filterNom = (collection) => {
     const res = [];
     collection.forEach((row) => {
-      const {owner, calc_order} = row.characteristic;
-      if(row.characteristic.empty() || calc_order.empty() || owner.is_procedure || owner.is_accessory) {
+      if(row.ordn.empty() && (row.characteristic.empty() || row.characteristic.calc_order.empty())) {
         // это обычная номенклатура
         res.push(row);
       }

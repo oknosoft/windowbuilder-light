@@ -98,17 +98,13 @@ export function handleAdd() {
     }
   }
   else {
-    $p.msg.show_msg({
-      type: 'alert-info',
-      text: `Нет вставки подходящего типа (${props.group})`,
-      title: 'Новая строка'
-    });
+    $p.ui.dialogs.alert({text: `Нет вставки подходящего типа (${props.group})`, title: 'Новая строка'});
   }
 }
 
 export function handleRemove() {
   const {props, tabular, state, selectedRow} = this;
-  if(tabular && selectedRow){
+  if(tabular && selectedRow) {
     const {calc_order_row} = selectedRow.characteristic;
     selectedRow._owner.del(selectedRow);
     this.selectedRow = null;
@@ -118,17 +114,13 @@ export function handleRemove() {
         count: state.count - 1,
       });
     }
-    if(calc_order_row){
+    if(calc_order_row) {
       calc_order_row._owner.del(calc_order_row);
     }
     props.onSelect && props.onSelect(null);
   }
-  else{
-    $p.msg.show_msg({
-      type: 'alert-info',
-      text: `Укажите строку для удаления (${props.group})`,
-      title: 'Удаление строки'
-    });
+  else {
+    $p.ui.dialogs.alert({text: `Укажите строку для удаления (${props.group})`, title: 'Удаление строки'});
   }
 }
 
