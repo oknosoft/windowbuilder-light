@@ -74,6 +74,7 @@ export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builde
       Object.assign(this, {
         options: {name: 'stulp_flap'},
         ToolWnd: StulpFlapWnd,
+        _obj: null,
       });
 
       this.on({

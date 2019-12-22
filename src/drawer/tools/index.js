@@ -13,6 +13,7 @@ import pen from './pen';
 import arc from './arc';
 import cut from './cut';
 import stulp_flap from './stulp_flap';
+import lay_impost from './lay_impost';
 
 export default function tools (Editor, $p) {
   tool_element(Editor);
@@ -22,6 +23,7 @@ export default function tools (Editor, $p) {
   arc(Editor);
   cut(Editor);
   stulp_flap(Editor, $p);
+  lay_impost(Editor, $p);
 
   Editor.prototype.create_tools = function create_tools() {
     new Editor.ToolSelectNode();
@@ -30,6 +32,7 @@ export default function tools (Editor, $p) {
     new Editor.ToolArc();
     new Editor.ToolCut();
     new Editor.ToolStulpFlap();
+    new Editor.ToolLayImpost();
     this.tools[0].activate();
   };
 }
