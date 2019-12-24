@@ -60,12 +60,10 @@ export default function tool_element (Editor) {
       this.eve.emit_async('tool_activated', this);
 
       // для всех инструментов, кроме select_node...
-      if (this.options.name != "select_node") {
-
+      if(this.options.name != 'select_node') {
         this.check_layer();
-
         // проверяем заполненность системы
-        if (this.project._dp.sys.empty()) {
+        if(this.project._dp.sys.empty()) {
           const {msg, ui} = $p;
           ui.dialogs.alert({text: msg.bld_not_sys, title: msg.bld_title});
         }

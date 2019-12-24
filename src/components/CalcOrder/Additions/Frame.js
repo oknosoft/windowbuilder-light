@@ -88,6 +88,7 @@ ParametricFrame.propTypes = {
   _obj: PropTypes.object,
   handleCalck: PropTypes.func,
   handleCancel: PropTypes.func,
+  Content: PropTypes.func,
 };
 
 export default connect(ParametricFrame);

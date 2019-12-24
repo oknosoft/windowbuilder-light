@@ -16,6 +16,7 @@ import withStyles600 from 'metadata-react/styles/paper600';
 import OrderRow from './OrderRow';
 import Parametric from './Parametric';
 import Tip from '../../Builder/Tip';
+import {path} from '../../App/menu_items';
 
 export const AntTabs = withStyles({
   root: {
@@ -125,7 +126,7 @@ class CalcOrderObj extends DataObj {
   filterParametric = (collection) => {
     const res = [];
     collection.forEach((row) => {
-      const {owner, calc_order} = row.characteristic;
+      const {calc_order} = row.characteristic;
       if(row.characteristic.empty() || calc_order.empty() || !row.ordn.empty()) {
         return;
       }
@@ -162,9 +163,8 @@ class CalcOrderObj extends DataObj {
   }
 
   openTemplates = () => {
-    $p.ui.dialogs.alert({text: `Не реализовано`, title: 'Выбор шаблона'});
-    // const {state: {_obj}, props: {handlers, _mgr}} = this;
-    // handlers.handleNavigate(path(`cat.templates/list?order=${_obj.ref}&ref=new`));
+    const {state: {_obj}, props: {handlers}} = this;
+    handlers.handleNavigate(path(`templates/?order=${_obj.ref}&ref=new`));
   };
 
 

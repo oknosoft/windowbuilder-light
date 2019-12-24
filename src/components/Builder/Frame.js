@@ -40,9 +40,6 @@ const ltitle = 'Редактор';
 
 class Frame extends React.Component {
 
-  constructor(props, context) {
-    super(props, context);
-  }
 
   componentDidMount() {
     const {props, editor} = this;
@@ -83,7 +80,6 @@ class Frame extends React.Component {
           console.log(err);
         });
     }
-
   }
 
   handleClose = () => {
@@ -95,26 +91,15 @@ class Frame extends React.Component {
     }
   };
 
-  handleNext = () => {
-    const {editor} = this;
+  openTemplate = () => {
+    const {editor, props: {handleNavigate}} = this;
     if(editor) {
-      const {purpose} = editor.project.ox.calc_order;
-      if(!purpose || purpose.empty()) {
-        const {ui: {dialogs}, cat: {templates}} = $p;
-        dialogs.alert({
-          title: 'Выбор варианта',
-          text: <React.Fragment>
-            Укажите назначение использования<br/>
-            {templates.alatable.filter(v => v.name).map(v => `'${v.name}'`).join(', ')}
-          </React.Fragment>
-        });
+      const {ox} = editor.project;
+      if(ox.empty() || ox.calc_order.empty()) {
+        $p.ui.dialogs.alert({text: `Пустая ссылка изделия или заказа`, title: 'Ошибка данных'});
       }
       else {
-        editor.project.save_coordinates({save: true, close: true, _from_service: true})
-          .then(this.handleClose)
-          .catch((err) => {
-            console.log(err);
-          });
+        handleNavigate(path(`templates/?order=${ox.calc_order.ref}&ref=${ox.ref}`));
       }
     }
   };
@@ -125,7 +110,7 @@ class Frame extends React.Component {
    */
   prompt = (loc) => {
     const {editor} = this;
-    if(!editor || !editor.project || loc.pathname.includes('cat.templates/list')) {
+    if(!editor || !editor.project || loc.pathname.includes('templates')) {
       return true;
     }
     const {ox} = editor.project;
@@ -140,7 +125,12 @@ class Frame extends React.Component {
     }
     return <div>
       <Prompt when message={this.prompt} />
-      {editor && <Toolbar classes={classes} editor={editor} handleClose={this.handleClose} handleNavigate={this.handleNavigate}/>}
+      {editor && <Toolbar
+        classes={classes}
+        editor={editor}
+        handleClose={this.handleClose}
+        openTemplate={this.openTemplate}
+      />}
       <Grid container>
         <Grid item xs={12} sm={12} lg={8} xl={9}>
           <Builder

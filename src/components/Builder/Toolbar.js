@@ -7,7 +7,7 @@ import Tip from './Tip';
 import SelectTool from './SelectTool';
 //import {path} from '../App/menu_items';
 
-export default function BuilderToolbar({editor, handleClose, classes}) {
+export default function BuilderToolbar({editor, handleClose, openTemplate, classes}) {
 
   return <Toolbar disableGutters variant="dense">
     <Tip title="Рассчитать, записать и закрыть редактор">
@@ -17,7 +17,7 @@ export default function BuilderToolbar({editor, handleClose, classes}) {
       <IconButton><i className="fa fa-calculator" /></IconButton>
     </Tip>
     <Tip title="Загрузить из типового блока">
-      <IconButton><i className="tb_stamp" /></IconButton>
+      <IconButton onClick={openTemplate}><i className="tb_stamp" /></IconButton>
     </Tip>
     <Tip title="Вписать в окно">
       <IconButton onClick={() => editor.project.zoom_fit && editor.project.zoom_fit()}><i className="tb_cursor-zoom" /></IconButton>
@@ -31,5 +31,6 @@ export default function BuilderToolbar({editor, handleClose, classes}) {
 BuilderToolbar.propTypes = {
   editor: PropTypes.object.isRequired,
   handleClose: PropTypes.func,
+  openTemplate: PropTypes.func,
   classes: PropTypes.object.isRequired,
 };

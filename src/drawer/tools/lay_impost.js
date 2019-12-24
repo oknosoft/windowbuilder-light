@@ -445,7 +445,7 @@ export default function lay_impost (Editor) {
     }
 
     add_profiles() {
-      const {_obj, project} = this;
+      const {_obj, project, _scope: {consts}} = this;
 
       if (_obj.inset_by_y.empty() && _obj.inset_by_x.empty()) {
         return;
@@ -454,8 +454,6 @@ export default function lay_impost (Editor) {
       if (!this.hitItem && (_obj.elm_type == $p.enm.elm_types.Раскладка || !_obj.w || !_obj.h)) {
         return;
       }
-
-      this.check_layer();
 
       const layer = this.hitItem ? this.hitItem.layer : this.project.activeLayer;
       const lgeneratics = layer.profiles.map((p) => {

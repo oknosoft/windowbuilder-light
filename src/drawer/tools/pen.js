@@ -484,8 +484,6 @@ export default function pen (Editor) {
           return this.on_keydown({key: 'escape'});
         }
 
-        this.check_layer();
-
         let whas_select;
 
         if(this.addl_hit){

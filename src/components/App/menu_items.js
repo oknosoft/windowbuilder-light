@@ -106,7 +106,7 @@ export function item_props(path) {
   if(!res && path.indexOf('/') !== -1) {
     res = with_recursion(path.substr(0, path.lastIndexOf('/')), items);
   }
-  if(!res && (path.match(/\/(doc|cat|ireg|cch|rep)\./) || path.match(/\/builder\//))){
+  if(!res && (path.match(/\/(doc|cat|ireg|cch|rep)\./) || path.match(/\/builder/) || path.match(/\/templates/))){
     res = {need_meta: true, need_user: true};
   }
   return res || {};

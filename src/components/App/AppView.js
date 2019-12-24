@@ -13,9 +13,10 @@ import withWindowSize from 'metadata-react/WindowSize';
 
 import DumbScreen from '../DumbScreen';             // заставка "загрузка занных"
 import DataRoute from './DataRoute';                // вложенный маршрутизатор страниц с данными
-import MarkdownRoute from '../Markdown/Route';      // вложенный маршрутизатор страниц с Markdown, 404 живёт внутри Route
+import MarkdownRoute from '../Markdown';            // вложенный маршрутизатор страниц с Markdown, 404 живёт внутри Route
 import Settings from '../Settings';                 // страница настроек приложения
 import Builder from '../Builder';                   // графический редактор
+import Templates from '../Templates';               // stepper выбора шаблона изделия
 import {lazy} from './lazy';                        // конструкторы для контекста
 
 import withStyles from './styles';
@@ -125,10 +126,12 @@ class AppView extends Component {
             <Switch key="switch">
               <Route exact path={path('')} render={() => <Redirect to={path('doc.calc_order/list')}/>}/>
               <Route path={path('o/')} render={() => <Redirect to={location.pathname.replace('/o/', '/doc.calc_order/')}/>}/>
-              <Route path={`${path('builder')}/:ref([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})`} render={(props) => wraper(Builder, props)}/>
-              <Route path={`${path('')}:area(doc|cat|ireg|cch|rep).:name`} render={(props) => wraper(DataRoute, props)}/>
+              <Route path={`${path('builder')}/:ref([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})`}
+                     render={(props) => wraper(Builder, props)}/>
+              <Route path={path('templates')} render={(props) => wraper(Templates, props)}/>
               <Route path={path('login')} render={(props) => <Login {...props} {...auth_props} />}/>
               <Route path={path('settings')} render={(props) => wraper(Settings, props)}/>
+              <Route path={`${path('')}:area(doc|cat|ireg|cch|rep).:name`} render={(props) => wraper(DataRoute, props)}/>
               <Route render={(props) => wraper(MarkdownRoute, props)}/>
             </Switch>
         ),
