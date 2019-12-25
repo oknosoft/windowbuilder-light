@@ -4,7 +4,7 @@ import SelectFigure from './SelectFigure';
 import SelectSys from './SelectSys';
 import SelectTemplate from './SelectTemplate';
 
-export const steps = ['Выбор заказа', 'Выбор формы изделия', 'Уточнить систему', 'Уточнить шаблон'];
+export const steps = ['Выбор заказа', 'Выбор формы изделия', 'Уточнить систему' /*, 'Уточнить шаблон' */];
 
 export function stepContent(step, props) {
   switch (step) {

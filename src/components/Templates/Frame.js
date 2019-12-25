@@ -5,8 +5,6 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 
 import {steps, stepContent} from './stepContent';
 import {path, prm} from '../App/menu_items';
@@ -28,72 +26,77 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-
 function TemplatesFrame(props) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
+    const {cat: {templates}, ui: {dialogs}, utils} = $p;
+    if(activeStep === 0 && templates._select_template.calc_order.empty()) {
+      return dialogs.alert({text: `Не выбран заказ-шаблон`, title: 'Пустой заказ'});
+    }
+    if(activeStep === 1 && templates._select_template.base_block.empty()) {
+      return dialogs.alert({text: `Не выбрано изделие-шаблон`, title: 'Пустой шаблон'});
+    }
+    if(activeStep === steps.length - 1) {
+      if(templates._select_template.refill && templates._select_template.base_block.empty()) {
+        return dialogs.alert({text: `Взведён признак перезаполнить по системе, но система не выбрана`, title: 'Пустая система'});
+      }
+      let {order, ref, action = 'refill'} = prm();
+      if(!order) {
+        return dialogs.alert({text: `Не задан заказ назначения в url`, title: 'Пустой заказ'});
+      }
+      if(!utils.is_guid(ref)) {
+        action = 'new';
+        ref = utils.generate_guid();
+      }
+      props.handleNavigate(path(`builder/${ref}?order=${order}&action=${action}`));
+    }
     setActiveStep(prevStep => prevStep + 1);
   };
 
   const handleBack = () => {
     if(activeStep === 0) {
-      props.history.goBack();
+      return props.history.goBack();
     }
-    else {
-      setActiveStep(prevStep => prevStep - 1);
-    }
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
+    setActiveStep(prevStep => prevStep - 1);
   };
 
   return (
-    <div className={classes.root}>
-      <Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-            <StepContent>
-              {stepContent(index, props)}
-              <div className={classes.actionsContainer}>
-                <div>
-                  <Button
-                    onClick={handleBack}
-                    className={classes.button}
-                  >
-                    {activeStep === 0 ? 'Отмена' : 'Назад'}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? 'Завершить' : 'Далее'}
-                  </Button>
-                </div>
+    <Stepper activeStep={activeStep} orientation="vertical">
+      {steps.map((label, index) => (
+        <Step key={label}>
+          <StepLabel>{label}</StepLabel>
+          <StepContent>
+            {stepContent(index, Object.assign({handleNext, handleBack, props}))}
+            <div className={classes.actionsContainer}>
+              <div>
+                <Button
+                  onClick={handleBack}
+                  className={classes.button}
+                >
+                  {activeStep === 0 ? 'Отмена' : 'Назад'}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleNext}
+                  className={classes.button}
+                >
+                  {activeStep === steps.length - 1 ? 'Завершить' : 'Далее'}
+                </Button>
               </div>
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-      {activeStep === steps.length && (
-        <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>
-            Reset
-          </Button>
-        </Paper>
-      )}
-    </div>
+            </div>
+          </StepContent>
+        </Step>
+      ))}
+    </Stepper>
   );
 }
 
 TemplatesFrame.propTypes = {
   history: PropTypes.object.isRequired,
+  handleNavigate: PropTypes.func.isRequired,
 };
 
 export default TemplatesFrame;
