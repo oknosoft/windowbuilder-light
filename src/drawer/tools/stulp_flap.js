@@ -9,9 +9,9 @@
 
 import StulpFlapWnd from '../../components/Builder/ToolWnds/StulpFlapWnd';
 
-export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builder_pen}, cat: {characteristics}, utils}) {
+export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builder_pen}, cat: {characteristics}, utils, ui: {dialogs}}) {
 
-  const {ToolElement, Filling} = Editor;
+  const {ToolElement, Filling, Profile} = Editor;
 
   class FakeStulpFlap extends BaseDataObj {
 
@@ -27,6 +27,10 @@ export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builde
       const furn2 = this._meta.fields.furn2 = utils._clone(furn);
       furn1.synonym += ' лев';
       furn2.synonym += ' прав';
+
+      for(const fld of ['inset', 'furn1', 'furn2']) {
+        this._meta.fields[fld].mandatory = true;
+      }
 
     }
 
@@ -57,11 +61,51 @@ export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builde
     }
 
     /**
-     * Заполняет умолчания по системе и корректируем отбор в метаданных
+     * Заполняет умолчания по системе и корректирует отбор в метаданных
      * @param sys
      */
-    by_sys(sys) {
+    by_sys({_dp, ox}) {
+      const {inset, furn1, furn2} = this._meta.fields;
+      const {Штульп: elm_type} = $p.enm.elm_types;
 
+      inset.choice_params = [{
+        name: 'ref',
+        path: {'in': []}
+      }];
+      _dp.sys.elmnts.find_rows({elm_type}, ({nom, by_default}) => {
+        inset.choice_params[0].path.in.push(nom);
+        if(by_default && this.inset.empty()) {
+          this.inset = nom;
+        }
+      });
+      if(this.inset.empty() && inset.choice_params[0].path.in.length) {
+        this.inset = inset.choice_params[0].path.in[0];
+      }
+
+      const furns = _dp.sys.furns(ox).filter(({furn}) => furn.shtulp_kind()).map(({furn}) => furn);
+      furn1.choice_params = [{
+        name: 'ref',
+        path: {'in': furns}
+      }];
+      furn2.choice_params = [{
+        name: 'ref',
+        path: {'in': furns}
+      }];
+      furns.some((furn) => {
+        if(this.furn1.empty()) {
+          if(furn.shtulp_kind() === 2) {
+            this.furn1 = furn;
+          }
+        }
+        else if(this.furn2.empty()) {
+          if(furn.shtulp_kind() === 1) {
+            this.furn2 = furn;
+          }
+        }
+        else {
+          return true;
+        }
+      });
     }
   }
 
@@ -94,6 +138,7 @@ export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builde
     on_activate() {
       super.on_activate('cursor-text-select');
       this._obj = new FakeStulpFlap();
+      this._obj.by_sys(this.project);
     }
 
     on_deactivate() {
@@ -122,7 +167,56 @@ export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builde
     }
 
     mousedown(event) {
-
+      const {hitItem: filling, _scope, _obj: {inset, furn1, furn2}, project} = this;
+      if(!filling) {
+        return;
+      }
+      if(inset.empty()) {
+        return dialogs.alert({text: `Не указан штульп`, title: 'Штульповые створки'});
+      }
+      if(furn1.empty()) {
+        return dialogs.alert({text: `Не указана фурнитура слева`, title: 'Штульповые створки'});
+      }
+      if(furn2.empty()) {
+        return dialogs.alert({text: `Не указана фурнитура справа`, title: 'Штульповые створки'});
+      }
+      if(furn2.shtulp_kind() === furn1.shtulp_kind()) {
+        return dialogs.alert({text: `Неверное сочетание типов фурнитур (две активных, либо две пассивных)`, title: 'Штульповые створки'});
+      }
+      // проверки закончены, строим вертикальный путь в середине заполнения
+      const {top, bottom} = filling.profiles_by_side();
+      const pt = filling.interiorPoint();
+      const path = new _scope.Path([pt.add([0, 2000]), pt.add([0, -2000])]);
+      const pb = path.intersect_point(bottom.profile.generatrix);
+      const pe = path.intersect_point(top.profile.generatrix);
+      if(!pe || !pb) {
+        return dialogs.alert({text: `Не найдено пересечение вертикальной линии через центр заполнения с профилями (сложная форма)`, title: 'Штульповые створки'});
+      }
+      path.firstSegment.point = pb;
+      path.lastSegment.point = pe;
+      const {layer} = top.profile;
+      const shtulp = new Profile({
+        generatrix: path,
+        proto: {
+          inset,
+          clr: top.clr,
+          parent: layer,
+        }
+      });
+      project.redraw();
+      const {Левое, Правое} = $p.enm.open_directions;
+      const flaps = {l: null, r: null};
+      for(const glass of layer.glasses(false, true)) {
+        if(glass.profiles.some((segm) => segm.profile === shtulp)) {
+          const line = new _scope.Line(pb, pe);
+          if(line.getSide(glass.interiorPoint()) > 0 && !flaps.l) {
+            flaps.l = glass.create_leaf(furn1, Левое);
+          }
+          else if(!flaps.r) {
+            flaps.r = glass.create_leaf(furn2, Правое);
+          }
+        }
+      };
     }
 
 
