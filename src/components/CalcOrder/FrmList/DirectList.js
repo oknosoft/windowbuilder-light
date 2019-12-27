@@ -223,8 +223,22 @@ class DirectList extends MDNRComponent {
         }
         selector[name] = cond;
       }
+      // подмешиваем отбор по параметрам
+      const {comparison_types: ct} = $p.enm;
       scheme.selection.find_rows({use: true, left_value_type: 'path'}, (srow) => {
-        selector[srow.left_value] = srow.right_value;
+        switch (srow.comparison_type) {
+        case ct.in:
+        case ct.inh:
+        case ct.nin:
+        case ct.ninh:
+          selector[srow.left_value] = {[srow.comparison_type.valueOf()]: srow.right_value.split(',')};
+          break;
+
+        default:
+          selector[srow.left_value] = srow.right_value;
+        }
+
+
       });
 
       // если указано начальное значение списка, первый запрос делаем со ссылкой
