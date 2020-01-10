@@ -167,6 +167,9 @@ AppView.propTypes = {
   classes: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
+  snack: PropTypes.object,
+  alert: PropTypes.object,
+  confirm: PropTypes.object,
 };
 
 AppView.childContextTypes = {

@@ -9,10 +9,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Tip from './Tip';
-import Params from './Params/Params';
-import ToolWnd from './ToolWnds/ToolWnd';
-import {AntTabs} from '../CalcOrder/FrmObj/FrmObj';
+import Tip from '../Tip';
+import Params from './Params';
+import TreeLayers from './TreeLayers';
+import ElmProps from './ElmProps';
+import ToolWnd from '../ToolWnds/ToolWnd';
+import {AntTabs} from '../../CalcOrder/FrmObj/FrmObj';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -113,6 +115,8 @@ class Controls extends React.Component {
             </Tip>
           }/>
       </AntTabs>
+      {tab === 0 && <TreeLayers editor={editor}/>}
+      {tab === 1 && <ElmProps editor={editor}/>}
       {tab === 2 && <Params editor={editor}/>}
       {tab === 3 && <Params editor={editor} root/>}
       {tab === 4 && <ToolWnd editor={editor}/>}
