@@ -27,6 +27,7 @@
   "homepage": "https://tmk-online.ru/light/",
   "proxy": "http://localhost:3016/",
   "dependencies": {
+    "@material-ui/lab": "^4.0.0-alpha.39",
     "metadata-abstract-ui": "2.0.21-beta.5",
     "metadata-core": "2.0.21-beta.5",
     "metadata-pouchdb": "2.0.21-beta.5",
@@ -34,7 +35,7 @@
     "metadata-redux": "2.0.21-beta.5",
     "metadata-superlogin": "2.0.21-beta.5",
     "paper-jsdom-canvas": "^0.12.4",
-    "windowbuilder": "github:oknosoft/windowbuilder#951c27ad67cd8dd6fd9fe4ec4cb0f9d927fbb838"
+    "windowbuilder": "github:oknosoft/windowbuilder#2570c96d52f310f45337fa75640eaeb6ff235941"
   },
   "devDependencies": {
     "@babel/core": "7.6.0",
