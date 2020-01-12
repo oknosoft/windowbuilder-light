@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import TabularSection from 'metadata-react/TabularSection';
 import ToolbarParametric from './ToolbarParametric';
-import CalcOrderAdditions from '../Additions';
-import CalcOrderAdditionsExt from '../AdditionsExt';
+import Additions from '../Additions';
+import AdditionsExt from '../AdditionsExt';
+import AdditionsHttp from '../AdditionsHttp';
 
 class Parametric extends React.Component {
 
@@ -24,18 +25,25 @@ class Parametric extends React.Component {
     this.setState({mode: 'extend'});
   };
 
+  setHttp = () => {
+    this.setState({mode: 'http'});
+  };
+
   render() {
-    const {props: {_obj, height, scheme}, state: {mode}, setStandart, setExtend}  = this;
+    const {props: {_obj, height, scheme}, state: {mode}, setStandart, setExtend, setHttp}  = this;
     if(!scheme) {
       return <Typography key="err-parametric" color="error">
         {`Не найден элемент scheme_settings {obj: "doc.calc_order.production", name: "production.parametric"}`}
       </Typography>;
     }
     if(mode === 'standart') {
-      return <CalcOrderAdditions _obj={_obj} handleCancel={this.setTabular}/>;
+      return <Additions _obj={_obj} handleCancel={this.setTabular}/>;
     }
     if(mode === 'extend') {
-      return <CalcOrderAdditionsExt _obj={_obj} handleCancel={this.setTabular}/>;
+      return <AdditionsExt _obj={_obj} handleCancel={this.setTabular}/>;
+    }
+    if(mode === 'http') {
+      return <AdditionsHttp _obj={_obj} handleCancel={this.setTabular}/>;
     }
     return <div style={{height}}>
       <Typography variant="h6" color="primary">Параметрические изделия</Typography>
@@ -44,7 +52,7 @@ class Parametric extends React.Component {
         _tabular="production"
         scheme={scheme}
         Toolbar={ToolbarParametric}
-        btns={{setStandart, setExtend}}
+        btns={{setStandart, setExtend, setHttp}}
       />
     </div>;
   }
