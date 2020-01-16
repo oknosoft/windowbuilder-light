@@ -16,6 +16,8 @@ import {patch_prm, patch_cnn} from '../../config/patch_cnn';
 import meta_init from 'windowbuilder/public/dist/init';
 import modifiers from './modifiers';
 
+// конструкторы ui
+import {lazy} from '../components/App/lazy';
 
 // генераторы действий и middleware для redux
 //import {combineReducers} from 'redux';
@@ -69,7 +71,7 @@ export function init(store) {
         if(handleIfaceState.handleIfaceState) {
           handleIfaceState = handleIfaceState.handleIfaceState;
         }
-        $p.ui.dialogs.init({handleIfaceState});
+        $p.ui.dialogs.init({handleIfaceState, lazy});
       });
 
     pouch.on({

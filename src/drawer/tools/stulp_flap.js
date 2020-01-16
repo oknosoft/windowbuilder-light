@@ -166,7 +166,7 @@ export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builde
       return true;
     }
 
-    mousedown(event) {
+    mousedown(/*event*/) {
       const {hitItem: filling, _scope, _obj: {inset, furn1, furn2}, project} = this;
       if(!filling) {
         return;
@@ -190,7 +190,10 @@ export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builde
       const pb = path.intersect_point(bottom.profile.generatrix);
       const pe = path.intersect_point(top.profile.generatrix);
       if(!pe || !pb) {
-        return dialogs.alert({text: `Не найдено пересечение вертикальной линии через центр заполнения с профилями (сложная форма)`, title: 'Штульповые створки'});
+        return dialogs.alert({
+          text: `Не найдено пересечение вертикальной линии через центр заполнения с профилями (сложная форма)`,
+          title: 'Штульповые створки'
+        });
       }
       path.firstSegment.point = pb;
       path.lastSegment.point = pe;
@@ -216,9 +219,8 @@ export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builde
             flaps.r = glass.create_leaf(furn2, Правое);
           }
         }
-      };
+      }
     }
-
 
   };
 

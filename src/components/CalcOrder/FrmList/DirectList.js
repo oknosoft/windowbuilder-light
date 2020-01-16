@@ -62,7 +62,7 @@ class DirectList extends MDNRComponent {
 
     const direct_load = _mgr._direct_loaded ? Promise.resolve() : pouch.find_rows(_mgr, {
       _mango: true,
-      limit: 10000,
+      limit: 6000,
       selector: {
         $and: [
           {class_name: _mgr.class_name},
@@ -70,7 +70,8 @@ class DirectList extends MDNRComponent {
           {date: {$lte: moment().add(1, 'month').format()}},
           {search: {$gt: null}},
         ]
-      }
+      },
+      sort: [{class_name: 'desc'}, {date: 'desc'}],
     }, pouch.local.doc)
       .then(() => _mgr._direct_loaded = true);
 
@@ -485,6 +486,7 @@ class DirectList extends MDNRComponent {
 
     const {state, props, context, sizes, handleFilterChange, handleSchemeChange, Toolbar} = this;
     const {columns, scheme, confirm_text, info_text, settings_open, rowCount} = state;
+    /* eslint-disable-next-line */
     const {_mgr, title, registerFilterChange, width, height, rowHeight, ...others} = props;
     const {RepParams} = _mgr;
 

@@ -224,7 +224,11 @@ export default function lay_impost (Editor) {
 
             const pts = get_points([by_x[i], bounds.bottom], [by_x[i], bounds.top]);
             if(pts) {
-              get_path([[pts.p1.x - w2x, pts.p1.y], [pts.p2.x - w2x, pts.p2.y], [pts.p2.x + w2x, pts.p2.y], [pts.p1.x + w2x, pts.p1.y]], pts.p1, pts.p2);
+              get_path([
+                [pts.p1.x - w2x, pts.p1.y],
+                [pts.p2.x - w2x, pts.p2.y],
+                [pts.p2.x + w2x, pts.p2.y],
+                [pts.p1.x + w2x, pts.p1.y]], pts.p1, pts.p2);
             }
           }
           else {
@@ -233,19 +237,31 @@ export default function lay_impost (Editor) {
               if (j === 0) {
                 const pts = get_points([by_x[i], bounds.bottom], [by_x[i], by_y[j]]);
                 if(hit && pts) {
-                  get_path([[pts.p1.x - w2x, pts.p1.y], [pts.p2.x - w2x, pts.p2.y + w2x], [pts.p2.x + w2x, pts.p2.y + w2x], [pts.p1.x + w2x, pts.p1.y]], pts.p1, pts.p2);
+                  get_path([
+                    [pts.p1.x - w2x, pts.p1.y],
+                    [pts.p2.x - w2x, pts.p2.y + w2x],
+                    [pts.p2.x + w2x, pts.p2.y + w2x],
+                    [pts.p1.x + w2x, pts.p1.y]], pts.p1, pts.p2);
                 }
               }
               else {
                 const pts = get_points([by_x[i], by_y[j - 1]], [by_x[i], by_y[j]]);
                 if(pts) {
-                  get_path([[pts.p1.x - w2x, pts.p1.y - w2x], [pts.p2.x - w2x, pts.p2.y + w2x], [pts.p2.x + w2x, pts.p2.y + w2x], [pts.p1.x + w2x, pts.p1.y - w2x]], pts.p1, pts.p2);
+                  get_path([
+                    [pts.p1.x - w2x, pts.p1.y - w2x],
+                    [pts.p2.x - w2x, pts.p2.y + w2x],
+                    [pts.p2.x + w2x, pts.p2.y + w2x],
+                    [pts.p1.x + w2x, pts.p1.y - w2x]], pts.p1, pts.p2);
                 }
               }
               if (j === by_y.length - 1) {
                 const pts = get_points([by_x[i], by_y[j]], [by_x[i], bounds.top]);
                 if(hit && pts) {
-                  get_path([[pts.p1.x - w2x, pts.p1.y - w2x], [pts.p2.x - w2x, pts.p2.y], [pts.p2.x + w2x, pts.p2.y], [pts.p1.x + w2x, pts.p1.y - w2x]], pts.p1, pts.p2);
+                  get_path([
+                    [pts.p1.x - w2x, pts.p1.y - w2x],
+                    [pts.p2.x - w2x, pts.p2.y],
+                    [pts.p2.x + w2x, pts.p2.y],
+                    [pts.p1.x + w2x, pts.p1.y - w2x]], pts.p1, pts.p2);
                 }
               }
             }
@@ -262,7 +278,11 @@ export default function lay_impost (Editor) {
             _obj.split == $p.enm.lay_split_types.КрестПересечение) {
             const pts = get_points([bounds.left, by_y[i]], [bounds.right, by_y[i]]);
             if(pts) {
-              get_path([[pts.p1.x, pts.p1.y - w2y], [pts.p2.x, pts.p2.y - w2y], [pts.p2.x, pts.p2.y + w2y], [pts.p1.x, pts.p1.y + w2y]], pts.p1, pts.p2);
+              get_path([
+                [pts.p1.x, pts.p1.y - w2y],
+                [pts.p2.x, pts.p2.y - w2y],
+                [pts.p2.x, pts.p2.y + w2y],
+                [pts.p1.x, pts.p1.y + w2y]], pts.p1, pts.p2);
             }
           }
           else {
@@ -271,19 +291,31 @@ export default function lay_impost (Editor) {
               if (j === 0) {
                 const pts = get_points([bounds.left, by_y[i]], [by_x[j], by_y[i]]);
                 if(hit && pts) {
-                  get_path([[pts.p1.x, pts.p1.y - w2y], [pts.p2.x - w2y, pts.p2.y - w2y], [pts.p2.x - w2y, pts.p2.y + w2y], [pts.p1.x, pts.p1.y + w2y]], pts.p1, pts.p2);
+                  get_path([
+                    [pts.p1.x, pts.p1.y - w2y],
+                    [pts.p2.x - w2y, pts.p2.y - w2y],
+                    [pts.p2.x - w2y, pts.p2.y + w2y],
+                    [pts.p1.x, pts.p1.y + w2y]], pts.p1, pts.p2);
                 }
               }
               else {
                 const pts = get_points([by_x[j - 1], by_y[i]], [by_x[j], by_y[i]]);
                 if(pts) {
-                  get_path([[pts.p1.x + w2y, pts.p1.y - w2y], [pts.p2.x - w2y, pts.p2.y - w2y], [pts.p2.x - w2y, pts.p2.y + w2y], [pts.p1.x + w2y, pts.p1.y + w2y]], pts.p1, pts.p2);
+                  get_path([
+                    [pts.p1.x + w2y, pts.p1.y - w2y],
+                    [pts.p2.x - w2y, pts.p2.y - w2y],
+                    [pts.p2.x - w2y, pts.p2.y + w2y],
+                    [pts.p1.x + w2y, pts.p1.y + w2y]], pts.p1, pts.p2);
                 }
               }
               if (j === by_x.length - 1) {
                 const pts = get_points([by_x[j], by_y[i]], [bounds.right, by_y[i]]);
                 if(hit && pts) {
-                  get_path([[pts.p1.x + w2y, pts.p1.y - w2y], [pts.p2.x, pts.p2.y - w2y], [pts.p2.x, pts.p2.y + w2y], [pts.p1.x + w2y, pts.p1.y + w2y]], pts.p1, pts.p2);
+                  get_path([
+                    [pts.p1.x + w2y, pts.p1.y - w2y],
+                    [pts.p2.x, pts.p2.y - w2y],
+                    [pts.p2.x, pts.p2.y + w2y],
+                    [pts.p1.x + w2y, pts.p1.y + w2y]], pts.p1, pts.p2);
                 }
               }
             }
@@ -705,7 +737,7 @@ export default function lay_impost (Editor) {
         }, 100);
     }
 
-  }
+  };
 
 }
 
