@@ -58,7 +58,7 @@ export function init(store) {
     classes.PouchDB.plugin(proxy_login());
     pouch.init(wsql, job_prm);
 
-    pouch.remote.ram = new classes.PouchDB(pouch.dbpath('ram'), {auto_compaction: true, revs_limit: 3, owner: pouch, fetch: pouch.fetch});
+    pouch.remote.ram = new classes.PouchDB(pouch.dbpath('ram'), {skip_setup: true, owner: pouch, fetch: pouch.fetch});
 
     // выполняем модификаторы
     modifiers($p, dispatch);
