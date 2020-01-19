@@ -7,7 +7,7 @@
  */
 
 import paper from 'paper/dist/paper-core';
-import drawer from 'windowbuilder/public/dist/drawer';
+import drawer from 'windowbuilder/dist/drawer';
 import tools from './tools';
 import filling from './filling';
 import StableZoom from './StableZoom';
