@@ -20,7 +20,8 @@ module.exports = function settings(prm = {}) {
 
     is_node,
 
-    base: process.env.NODE_ENV === 'production' ? '/light' : '',
+    //base: process.env.NODE_ENV === 'production' ? '/light' : '',
+    base: '',
 
     // разделитель для localStorage
     local_storage_prefix: 'wb_',

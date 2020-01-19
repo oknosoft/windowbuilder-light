@@ -14,7 +14,8 @@ import IconSettings from '@material-ui/icons/Settings';
 export const stitle = 'Заказ дилера';
 export const description = 'Расчет изделий и подготовка производства';
 
-export const base = process.env.NODE_ENV === 'production' ? '/light' : '';
+//export const base = process.env.NODE_ENV === 'production' ? '/light' : '';
+export const base = '';
 
 export function path(url) {
   return `${base}/${url}`;
