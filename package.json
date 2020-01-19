@@ -27,6 +27,7 @@
   "homepage": "https://light.oknosoft.ru/",
   "proxy": "http://localhost:3016/",
   "dependencies": {
+    "@turf/points-within-polygon": "^5.1.5",
     "@material-ui/lab": "^4.0.0-alpha.39",
     "metadata-abstract-ui": "2.0.22-beta.1",
     "metadata-core": "2.0.22-beta.1",
@@ -35,7 +36,8 @@
     "metadata-redux": "2.0.22-beta.1",
     "metadata-superlogin": "2.0.22-beta.1",
     "paper-jsdom-canvas": "^0.12.4",
-    "windowbuilder": "github:oknosoft/windowbuilder-core#695c2a11f46af0084335bc28d70883606511dff3"
+    "react-highlight-words": "^0.16.0",
+    "windowbuilder": "github:oknosoft/windowbuilder-core#d76bd4357cef56caafd8075e7fb9965bde087c01"
   },
   "devDependencies": {
     "@babel/core": "7.6.0",
