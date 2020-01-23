@@ -77,6 +77,7 @@ export function init(store) {
     pouch.on({
       on_log_in() {
         return load_ram($p);
+          //.then(() => load_templates($p));
       },
     });
 

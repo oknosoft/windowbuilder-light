@@ -30,9 +30,6 @@ export default function ({classes, cat: {characteristics, templates, params_link
     }
     set calc_order(v) {
       this._setter('calc_order', v);
-      if(this.base_block.calc_order !== this.calc_order) {
-        this.base_block = '';
-      }
     }
 
     get base_block() {
@@ -62,6 +59,17 @@ export default function ({classes, cat: {characteristics, templates, params_link
     }
     set template_props(v) {
       this._setter('template_props', v);
+    }
+
+    value_change(field, type, value) {
+      if(field == 'calc_order' && this[field] != value) {
+        this[field] = value;
+        const {calc_order} = this;
+        calc_order.load_templates();
+        if(this.base_block.calc_order !== calc_order) {
+          this.base_block = '';
+        }
+      }
     }
 
   }
