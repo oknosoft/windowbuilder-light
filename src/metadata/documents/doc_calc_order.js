@@ -27,9 +27,9 @@ export default function ($p) {
           cat.characteristics.load_array(rows);
           this._data._templates_loaded = true;
         })
-        .catch(() => null);
+        .catch(console.log);
     }
     return this.load_production();
-  }
+  };
 }
 

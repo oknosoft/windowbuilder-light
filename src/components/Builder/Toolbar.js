@@ -11,10 +11,16 @@ export default function BuilderToolbar({editor, handleClose, openTemplate, class
 
   return <Toolbar disableGutters variant="dense">
     <Tip title="Рассчитать, записать и закрыть редактор">
-      <IconButton><i className="fa fa-floppy-o" /></IconButton>
+      <IconButton onClick={() => {
+        editor.project && editor.project.save_coordinates({save: true, _from_service: true})
+          .then(handleClose)
+          .catch(console.log);
+      }}><i className="fa fa-floppy-o" /></IconButton>
     </Tip>
     <Tip title="Рассчитать и записать изделие">
-      <IconButton><i className="fa fa-calculator" /></IconButton>
+      <IconButton onClick={() => {
+        editor.project && editor.project.save_coordinates({save: true, _from_service: true}).catch(console.log);
+      }}><i className="fa fa-calculator" /></IconButton>
     </Tip>
     <Tip title="Загрузить из типового блока">
       <IconButton onClick={openTemplate}><i className="tb_stamp" /></IconButton>

@@ -50,7 +50,7 @@ class Frame extends React.Component {
     });
     if(editor) {
       const {project} = editor;
-      const {order, template} = prm();
+      const {order, action} = prm();
       project.load(props.match.params.ref)
         .then(() => {
           const {ox} = project;
@@ -67,8 +67,11 @@ class Frame extends React.Component {
             const row = ox.calc_order.production.add({characteristic: ox});
             ox.product = row.row;
           }
-          if(template && ox.base_block != template) {
-            return project.load_stamp(template);
+          if(action === 'refill' || action === 'new') {
+            const {base_block} = $p.cat.templates._select_template;
+            if(ox.base_block != base_block && !base_block.empty()) {
+              return project.load_stamp(base_block);
+            }
           }
         })
         .then(() => props.handleIfaceState({
@@ -76,17 +79,15 @@ class Frame extends React.Component {
           name: 'title',
           value: project.ox.prod_name(true),
         }))
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(console.log);
     }
   }
 
   handleClose = () => {
     const {editor, props} = this;
     if(editor) {
-      const {calc_order} = editor.project.ox;
-      const order = calc_order.empty() ? 'list' : calc_order.ref;
+      const {calc_order, ref} = editor.project.ox;
+      const order = calc_order.empty() ? 'list' : `${calc_order.ref}?ref=${ref}`;
       props.handleNavigate(path(`doc.calc_order/${order}`));
     }
   };

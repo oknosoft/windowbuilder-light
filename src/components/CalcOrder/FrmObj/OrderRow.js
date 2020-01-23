@@ -80,7 +80,7 @@ function OrderRow({row, classes, handlers}) {
                   onClick={() => dialogs
                     .confirm({title: 'Удалить изделие?', text: `Подтвердите удаление изделия ${ox.prod_name(true)}`})
                     .then(() => _owner.del(row))
-                    .catch(() => null)
+                    .catch(console.log)
                   }
                 >
                   <DeleteIcon />

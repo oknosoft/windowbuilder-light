@@ -16,7 +16,7 @@ import withStyles600 from 'metadata-react/styles/paper600';
 import OrderRow from './OrderRow';
 import Parametric from './Parametric';
 import Tip from '../../Builder/Tip';
-import {path} from '../../App/menu_items';
+import {path, prm} from '../../App/menu_items';
 
 export const AntTabs = withStyles({
   root: {
@@ -29,7 +29,8 @@ class CalcOrderObj extends DataObj {
 
   constructor(props, context) {
     super(props, context);
-    this.state.tab = 0;
+    const {ref} = prm();
+    this.state.tab = ref ? 1 : 0;
     $p.cat.scheme_settings.find_rows({obj: 'doc.calc_order.production'}, (scheme) => {
       if(scheme.name.endsWith('parametric')) {
         this.scheme_parametric = scheme;
