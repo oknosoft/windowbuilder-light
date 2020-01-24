@@ -60,22 +60,7 @@ class DirectList extends MDNRComponent {
     const newState = {ref: _ref || '', scrollSetted: false};
     this.setState(newState);
 
-    const direct_load = _mgr._direct_loaded ? Promise.resolve() : pouch.find_rows(_mgr, {
-      _mango: true,
-      limit: 6000,
-      selector: {
-        $and: [
-          {class_name: _mgr.class_name},
-          {date: {$gte: moment().subtract(6, 'month').format()}},
-          {date: {$lte: moment().add(1, 'month').format()}},
-          {search: {$gt: null}},
-        ]
-      },
-      sort: [{class_name: 'desc'}, {date: 'desc'}],
-    }, pouch.local.doc)
-      .then(() => _mgr._direct_loaded = true);
-
-    direct_load
+    (_mgr.direct_load ? _mgr.direct_load() : Promise.resolve())
       .then(() => cat.scheme_settings.get_scheme(class_name))
       .then(this.handleSchemeChange);
 
