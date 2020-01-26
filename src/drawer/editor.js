@@ -9,7 +9,6 @@
 import paper from 'paper/dist/paper-core';
 import drawer from 'windowbuilder/dist/drawer';
 import tools from './tools';
-import filling from './filling';
 import StableZoom from './StableZoom';
 
 export default function ($p) {
@@ -46,7 +45,14 @@ export default function ($p) {
       evt.stopPropagation();
       const touch = evt.touches.length && evt.touches[0];
       const {view, tool} = this;
-      const point = view.viewToProject([touch.clientX, touch.clientY]).add([-50, -158]);
+      let {element} = view;
+      const offsets = {x: element.offsetLeft, y: element.offsetTop};
+      while (element.offsetParent) {
+        element = element.offsetParent;
+        offsets.x += element.offsetLeft;
+        offsets.y += element.offsetTop;
+      }
+      const point = view.viewToProject([touch.pageX - offsets.x, touch.pageY - offsets.y]);
       const event = {point, modifiers: {}};
       tool.hitTest(event);
       tool.mousedown(event);
@@ -180,6 +186,5 @@ export default function ($p) {
 
   if(typeof window !== 'undefined') {
     tools(Editor, $p);
-    filling(EditorInvisible.Filling);
   }
 }

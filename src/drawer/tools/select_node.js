@@ -183,7 +183,7 @@ export default function select_node (Editor) {
       }
       else if (this.mode == 'box-select') {
 
-        var box = new Rectangle(this.mouseStartPos, event.point);
+        const box = new Rectangle(this.mouseStartPos, event.point);
 
         if (!event.modifiers.shift){
           project.deselectAll();
