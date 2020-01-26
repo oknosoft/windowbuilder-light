@@ -3,6 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AutoSizer from 'react-virtualized/dist/es/AutoSizer';
+import Arrows from './Arrows';
 
 export default class Builder extends React.Component {
 
@@ -31,6 +32,15 @@ export default class Builder extends React.Component {
     }
   }
 
+  arrowClick = (btn) => (evt) => {
+    if(this.editor && this.editor.tool) {
+      this.editor.tool.emit('keydown', {
+        key: btn,
+        modifiers: {}
+      });
+    }
+  };
+
   render() {
     const {height, classes} = this.props;
     return <AutoSizer disableHeight>
@@ -39,12 +49,16 @@ export default class Builder extends React.Component {
           width = 320;
         }
         width -= 8;
-        return <canvas
-          className={classes.canvas}
-          ref={(el) => this.createEditor(el, width, height)}
-          width={width}
-          height={height}
-        />;
+        return [
+          <canvas
+            key="canvas"
+            className={classes.canvas}
+            ref={(el) => this.createEditor(el, width, height)}
+            width={width}
+            height={height}
+          />,
+          <Arrows key="arrows" handleClick={this.arrowClick}/>,
+        ];
       }}
     </AutoSizer>;
   }
