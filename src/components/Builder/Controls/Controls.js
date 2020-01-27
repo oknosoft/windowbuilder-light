@@ -50,9 +50,12 @@ class Controls extends React.Component {
   };
 
   elm_activated = (elm, shift) => {
-    const {elm1} = this.state;
+    const {elm1, elm2} = this.state;
     if(!elm1 || !shift || elm1 === elm) {
       this.setState({elm1: elm, elm2: null});
+    }
+    else if((shift && elm2 === elm)) {
+      this.setState({elm1: elm1, elm2: null});
     }
     else {
       this.setState({elm2: elm});

@@ -66,6 +66,7 @@ export default function select_node (Editor) {
     mousedown(event) {
 
       const {project, _scope: {consts}} = this;
+      const {shift, space, alt} = event.modifiers;
 
       this.mode = null;
       this.changed = false;
@@ -74,22 +75,22 @@ export default function select_node (Editor) {
         //
       }
 
-      if (this.hitItem && !event.modifiers.alt) {
+      if (this.hitItem && !alt) {
 
         if(this.hitItem.item instanceof PointText) {
           return;
         }
 
         let item = this.hitItem.item.parent;
-        if (event.modifiers.space && item.nearest && item.nearest()) {
+        if (space && item.nearest && item.nearest()) {
           item = item.nearest();
         }
 
         if (item && (this.hitItem.type == 'fill' || this.hitItem.type == 'stroke')) {
-
-          if (event.modifiers.shift) {
+          if(shift) {
             item.selected = !item.selected;
-          } else {
+          }
+          else {
             project.deselectAll();
             item.selected = true;
           }
@@ -106,7 +107,7 @@ export default function select_node (Editor) {
 
         }
         else if (this.hitItem.type == 'segment') {
-          if (event.modifiers.shift) {
+          if (shift) {
             this.hitItem.segment.selected = !this.hitItem.segment.selected;
           } else {
             if (!this.hitItem.segment.selected){
@@ -141,7 +142,7 @@ export default function select_node (Editor) {
         // подключаем диадог свойств элемента
         if(item instanceof ProfileItem || item instanceof Filling){
           this.profile = item;
-          this.eve.emit('elm_activated', item, event.modifiers.shift);
+          this.eve.emit('elm_activated', item, shift);
         }
 
         this._scope.clear_selection_bounds();
@@ -151,8 +152,8 @@ export default function select_node (Editor) {
         this.mouseStartPos = event.point.clone();
         this.mode = 'box-select';
 
-        if(!event.modifiers.shift && this.profile){
-          this.eve.emit('elm_activated', null);
+        if(!shift && this.profile){
+          this.eve.emit('elm_activated', null, shift);
           delete this.profile;
         }
 
