@@ -100,7 +100,7 @@ export default function select_node (Editor) {
             this.originalContent = this._scope.capture_selection_state();
 
             if(item.layer){
-              this.eve.emit("layer_activated", item.layer);
+              this.eve.emit('layer_activated', item.layer);
             }
           }
 
@@ -141,7 +141,7 @@ export default function select_node (Editor) {
         // подключаем диадог свойств элемента
         if(item instanceof ProfileItem || item instanceof Filling){
           this.profile = item;
-          this.eve.emit('elm_activated', item);
+          this.eve.emit('elm_activated', item, event.modifiers.shift);
         }
 
         this._scope.clear_selection_bounds();
@@ -415,17 +415,22 @@ export default function select_node (Editor) {
         return false;
 
       }
-      else if (key == 'left') {
-        project.move_points(new Point(-step, 0));
-      }
-      else if (key == 'right') {
-        project.move_points(new Point(step, 0));
-      }
-      else if (key == 'up') {
-        project.move_points(new Point(0, -step));
-      }
-      else if (key == 'down') {
-        project.move_points(new Point(0, step));
+      else if(['left', 'right', 'up', 'down'].includes(key)) {
+        if(!project.selectedItems.length && !event.event) {
+          $p.ui.dialogs.alert({text: `Для сдвига профиля, его сначала нужно выделить на эскизе`, title: 'Сдвиг элемента'});
+        }
+        if (key == 'left') {
+          project.move_points(new Point(-step, 0));
+        }
+        else if (key == 'right') {
+          project.move_points(new Point(step, 0));
+        }
+        else if (key == 'up') {
+          project.move_points(new Point(0, -step));
+        }
+        else if (key == 'down') {
+          project.move_points(new Point(0, step));
+        }
       }
     }
 

@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function ElmProps(props) {
+export default function ElmProps({elm1, elm2}) {
   return <div>
-    Дерево свойств элемента
+    {`Дерево свойств ${elm2 ? 'элементов' : 'элемента'} ${elm1 ? elm1.elm : '---'}${elm2 ? ` и ${elm2.elm}` : ''}  `}
   </div>;
 }
 
 ElmProps.propTypes = {
-  editor: PropTypes.object.isRequired,
+  elm1: PropTypes.object,
+  elm2: PropTypes.object,
 };

@@ -28,19 +28,34 @@ const styles = () => ({
 
 class Controls extends React.Component {
 
-  state = {tab: 0};
+  state = {
+    tab: 0,
+    elm1: null,
+    elm2: null,
+  };
 
   componentDidMount() {
     const {editor} = this.props;
     editor.project._dp._manager.on('update', this.onDataChange);
     editor.eve.on('layer_activated', this.layer_activated);
     editor.eve.on('tool_activated', this.tool_activated);
+    editor.eve.on('elm_activated', this.elm_activated);
   }
 
   layer_activated = (contour, custom) => {
     if(!custom) {
       contour && contour.project.activeLayer !== contour && contour.activate();
       this.forceUpdate();
+    }
+  };
+
+  elm_activated = (elm, shift) => {
+    const {elm1} = this.state;
+    if(!elm1 || !shift || elm1 === elm) {
+      this.setState({elm1: elm, elm2: null});
+    }
+    else {
+      this.setState({elm2: elm});
     }
   };
 
@@ -72,7 +87,7 @@ class Controls extends React.Component {
   };
 
   render() {
-    const {props: {editor, classes}, state: {tab}}  = this;
+    const {props: {editor, classes}, state: {tab, elm1, elm2}}  = this;
     //const {_dp} = editor ? editor.project : {};
     return <div>
       <AntTabs
@@ -119,7 +134,7 @@ class Controls extends React.Component {
           }/>
       </AntTabs>
       {tab === 0 && <TreeLayers editor={editor}/>}
-      {tab === 1 && <ElmProps editor={editor}/>}
+      {tab === 1 && <ElmProps elm1={elm1} elm2={elm2}/>}
       {tab === 2 && <Params editor={editor}/>}
       {tab === 3 && <Params editor={editor} root/>}
       {tab === 4 && <ToolWnd editor={editor}/>}
