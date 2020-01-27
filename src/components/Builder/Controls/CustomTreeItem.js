@@ -4,15 +4,18 @@ import TreeItem from '@material-ui/lab/TreeItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
+import cn from 'classnames';
 
 function itemStyles({palette, spacing}) {
   return {
     root: {
       color: palette.text.secondary,
-      // '&:focus > $content': {
-      //   backgroundColor: `var(--tree-view-bg-color, ${palette.grey[400]})`,
-      //   color: 'var(--tree-view-color)',
-      // },
+      '&:focus > $content': {
+        backgroundColor: 'transparent',
+      },
+    },
+    selected: {
+      backgroundColor: `${palette.grey[400]} !important;`,
     },
     content: {
       color: palette.text.secondary,
@@ -50,13 +53,22 @@ function itemStyles({palette, spacing}) {
 }
 
 function CustomTreeItem(props) {
-  const { labelText, LabelIcon, labelInfo, checked, handleChange, classes, ...other } = props;
+  const { labelText, LabelIcon, labelInfo, contour, selected, classes, ...other } = props;
+
+  const [hidden, setHidden] = contour ? React.useState(contour.hidden) : [false, null];
+  const setChecked = () => {
+    contour.hidden = !hidden;
+    setHidden(contour.hidden);
+  };
+  const handleSelect = ({target}) => {
+    target.tagName !== 'INPUT' && contour.project._scope.eve.emit('layer_activated', contour);
+  }
 
   return (
     <TreeItem
       label={
         <div className={classes.labelRoot}>
-          {typeof checked === 'boolean' && <Checkbox color="primary" checked={checked} onChange={handleChange}/>}
+          {contour && <Checkbox color="primary" checked={!hidden} onChange={setChecked}/>}
           {LabelIcon && <LabelIcon color="inherit" className={classes.labelIcon} />}
           <Typography variant="body2" className={classes.labelText}>
             {labelText}
@@ -66,11 +78,12 @@ function CustomTreeItem(props) {
       }
       classes={{
         root: classes.root,
-        content: classes.content,
+        content: cn(classes.content, selected && classes.selected),
         expanded: classes.expanded,
         group: classes.group,
         label: classes.label,
       }}
+      onClick={handleSelect}
       {...other}
     />
   );
@@ -80,8 +93,7 @@ CustomTreeItem.propTypes = {
   labelText: PropTypes.string,
   LabelIcon: PropTypes.node,
   labelInfo: PropTypes.string,
-  checked: PropTypes.bool,
-  handleChange: PropTypes.func,
+  contour: PropTypes.object,
   classes: PropTypes.object.isRequired,
 };
 

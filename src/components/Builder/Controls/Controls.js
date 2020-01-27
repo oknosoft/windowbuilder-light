@@ -38,7 +38,10 @@ class Controls extends React.Component {
   }
 
   layer_activated = (contour, custom) => {
-    !custom && this.forceUpdate();
+    if(!custom) {
+      contour && contour.project.activeLayer !== contour && contour.activate();
+      this.forceUpdate();
+    }
   };
 
   tool_activated = (tool) => {

@@ -11,11 +11,13 @@ function addLayers(contours, activeLayer) {
   return contours.length ?
     contours.map((contour) => {
       const key = `l-${contour.cnstr}`;
+      const {hidden} = contour;
       return <CustomTreeItem
         key={key}
         nodeId={key}
         labelText={`${contour.layer ? 'Створка' : 'Рама'} №${contour.cnstr}`}
-        checked={activeLayer === contour}
+        contour={contour}
+        selected={contour === activeLayer}
       >
         {addLayers(contour.contours, activeLayer)}
       </CustomTreeItem>;
