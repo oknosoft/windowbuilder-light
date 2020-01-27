@@ -11,7 +11,6 @@ function addLayers(contours, activeLayer) {
   return contours.length ?
     contours.map((contour) => {
       const key = `l-${contour.cnstr}`;
-      const {hidden} = contour;
       return <CustomTreeItem
         key={key}
         nodeId={key}
@@ -26,10 +25,20 @@ function addLayers(contours, activeLayer) {
     null;
 }
 
+const bprops = {
+  auto_lines: "Авторазмерные линии",
+  custom_lines: "Доп. размерные линии",
+  cnns: "Соединители",
+  visualization: "Визуализация",
+  txts: "Комментарии",
+};
 
-export default function TreeLayers(props) {
-  const {contours, ox, activeLayer} = props.editor.project;
+
+export default function TreeLayers({editor: {project}}) {
+  const {contours, ox, activeLayer} = project;
   const defaultExpanded = ['root'];
+  const [builder_props, setProps] = React.useState(project.builder_props);
+
   contours.forEach(({cnstr}) => defaultExpanded.push(`l-${cnstr}`));
 
   return <TreeView
@@ -43,11 +52,20 @@ export default function TreeLayers(props) {
     </CustomTreeItem>
 
     <Divider/>
-    <CustomTreeItem nodeId="auto_lines" labelText="Авторазмерные линии" checked={true} />
-    <CustomTreeItem nodeId="custom_lines" labelText="Доп. размерные линии" checked={true} />
-    <CustomTreeItem nodeId="cnns" labelText="Соединители" checked={true} />
-    <CustomTreeItem nodeId="visualization" labelText="Визуализация" checked={true} />
-    <CustomTreeItem nodeId="txts" labelText="Комментарии" checked={true} />
+    {
+      Object.keys(bprops).map((key) => <CustomTreeItem
+        key={key}
+        nodeId={key}
+        labelText={bprops[key]}
+        checked={builder_props[key]}
+        setChecked={() => {
+          builder_props[key] = !builder_props[key];
+          ox.builder_props = {[key]: builder_props[key]};
+          project.register_change();
+          setProps(Object.assign({}, builder_props));
+        }}
+      />)
+    }
   </TreeView>;
 }
 

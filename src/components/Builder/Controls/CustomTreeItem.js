@@ -53,22 +53,25 @@ function itemStyles({palette, spacing}) {
 }
 
 function CustomTreeItem(props) {
-  const { labelText, LabelIcon, labelInfo, contour, selected, classes, ...other } = props;
+  let { labelText, LabelIcon, labelInfo, contour, selected, checked, setChecked, classes, ...other } = props;
 
-  const [hidden, setHidden] = contour ? React.useState(contour.hidden) : [false, null];
-  const setChecked = () => {
-    contour.hidden = !hidden;
-    setHidden(contour.hidden);
-  };
-  const handleSelect = ({target}) => {
-    target.tagName !== 'INPUT' && contour.project._scope.eve.emit('layer_activated', contour);
+  if(!setChecked && contour) {
+    const [hidden, setHidden] = React.useState(contour.hidden);
+    checked = !hidden;
+    setChecked = () => {
+      contour.hidden = !hidden;
+      setHidden(contour.hidden);
+    };
   }
+  const handleSelect = ({target}) => {
+    contour && target.tagName !== 'INPUT' && contour.project._scope.eve.emit('layer_activated', contour);
+  };
 
   return (
     <TreeItem
       label={
         <div className={classes.labelRoot}>
-          {contour && <Checkbox color="primary" checked={!hidden} onChange={setChecked}/>}
+          {typeof checked === 'boolean' && <Checkbox color="primary" checked={checked} onChange={setChecked}/>}
           {LabelIcon && <LabelIcon color="inherit" className={classes.labelIcon} />}
           <Typography variant="body2" className={classes.labelText}>
             {labelText}
@@ -91,9 +94,12 @@ function CustomTreeItem(props) {
 
 CustomTreeItem.propTypes = {
   labelText: PropTypes.string,
-  LabelIcon: PropTypes.node,
+  LabelIcon: PropTypes.object,
   labelInfo: PropTypes.string,
   contour: PropTypes.object,
+  checked: PropTypes.bool,
+  selected: PropTypes.bool,
+  setChecked: PropTypes.func,
   classes: PropTypes.object.isRequired,
 };
 
