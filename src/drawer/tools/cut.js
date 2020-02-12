@@ -137,16 +137,16 @@ export default function arc (Editor) {
           }
         }
 
-        this.cont = new $p.iface.OTooolBar({
-          wrapper: this._scope._wrapper,
-          top: `${pt.y + 10}px`,
-          left: `${pt.x - 20}px`,
-          name: 'tb_cut',
-          height: '28px',
-          width: `${29 * buttons.length + 1}px`,
-          buttons,
-          onclick: this.tb_click.bind(this),
-        });
+        // this.cont = new $p.iface.OTooolBar({
+        //   wrapper: this._scope._wrapper,
+        //   top: `${pt.y + 10}px`,
+        //   left: `${pt.x - 20}px`,
+        //   name: 'tb_cut',
+        //   height: '28px',
+        //   width: `${29 * buttons.length + 1}px`,
+        //   buttons,
+        //   onclick: this.tb_click.bind(this),
+        // });
 
         this.square = new paper.Path.Rectangle({
           point: point.add([-50, -50]),

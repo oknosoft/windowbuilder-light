@@ -46,6 +46,9 @@ export default function tool_element (Editor) {
         // оповещаем мир о новых слоях
         eve.emit_async('rows', project.ox, {constructions: true});
       }
+      else if(!(project.activeLayer instanceof Editor.Contour)) {
+        project.contours[0].activate();
+      }
     }
 
     /**

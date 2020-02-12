@@ -38,9 +38,6 @@ const bprops = {
 
 export default function TreeLayers({editor, classes}) {
   const {project} = editor;
-  if(!project) {
-    return '...';
-  }
   const {contours, ox, activeLayer} = project;
   const defaultExpanded = ['root'];
   const [builder_props, setProps] = React.useState(project.builder_props);
@@ -53,6 +50,10 @@ export default function TreeLayers({editor, classes}) {
     else if(expand_view_props && !nodeIds.includes('view_props')) {
       setExpandViewProps(false);
     }
+  };
+
+  const handleRoot = () => {
+    editor.eve.emit('layer_activated', project.layers[0]);
   };
 
   contours.forEach((contour) => {
@@ -74,7 +75,13 @@ export default function TreeLayers({editor, classes}) {
       defaultEndIcon={<div style={{ width: 24 }} />}
       onNodeToggle={onNodeToggle}
     >
-      <CustomTreeItem nodeId="root" labelText={ox.prod_name(true)} LabelIcon={AccountTreeIcon}>
+      <CustomTreeItem
+        nodeId="root"
+        labelText={ox.prod_name(true)}
+        LabelIcon={AccountTreeIcon}
+        handleRoot={handleRoot}
+        selected={project.layers[0] === activeLayer}
+      >
         {addLayers(contours, activeLayer)}
       </CustomTreeItem>
 

@@ -53,7 +53,7 @@ function itemStyles({palette, spacing}) {
 }
 
 function CustomTreeItem(props) {
-  let { labelText, LabelIcon, labelInfo, contour, selected, checked, setChecked, classes, ...other } = props;
+  let { labelText, LabelIcon, labelInfo, contour, selected, checked, setChecked, handleRoot, classes, ...other } = props;
 
   if(!setChecked && contour) {
     const [hidden, setHidden] = React.useState(contour.hidden);
@@ -86,7 +86,7 @@ function CustomTreeItem(props) {
         group: classes.group,
         label: classes.label,
       }}
-      onClick={handleSelect}
+      onClick={handleRoot || handleSelect}
       {...other}
     />
   );
