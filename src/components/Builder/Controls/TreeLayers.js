@@ -5,7 +5,9 @@ import Divider from '@material-ui/core/Divider';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import CustomTreeItem from './CustomTreeItem';
+import LayersToolbar from './LayersToolbar';
 
 function addLayers(contours, activeLayer) {
   return contours.length ?
@@ -34,39 +36,66 @@ const bprops = {
 };
 
 
-export default function TreeLayers({editor: {project}}) {
+export default function TreeLayers({editor, classes}) {
+  const {project} = editor;
+  if(!project) {
+    return '...';
+  }
   const {contours, ox, activeLayer} = project;
   const defaultExpanded = ['root'];
   const [builder_props, setProps] = React.useState(project.builder_props);
+  const [expand_view_props, setExpandViewProps] = React.useState(false);
 
-  contours.forEach(({cnstr}) => defaultExpanded.push(`l-${cnstr}`));
-
-  return <TreeView
-    expanded={defaultExpanded}
-    defaultCollapseIcon={<ArrowDropDownIcon />}
-    defaultExpandIcon={<ArrowRightIcon />}
-    defaultEndIcon={<div style={{ width: 24 }} />}
-  >
-    <CustomTreeItem nodeId="root" labelText={ox.prod_name(true)} LabelIcon={AccountTreeIcon}>
-      {addLayers(contours, activeLayer)}
-    </CustomTreeItem>
-
-    <Divider/>
-    {
-      Object.keys(bprops).map((key) => <CustomTreeItem
-        key={key}
-        nodeId={key}
-        labelText={bprops[key]}
-        checked={builder_props[key]}
-        setChecked={() => {
-          builder_props[key] = !builder_props[key];
-          ox.builder_props = {[key]: builder_props[key]};
-          project.register_change();
-          setProps(Object.assign({}, builder_props));
-        }}
-      />)
+  const onNodeToggle = (event, nodeIds) => {
+    if(nodeIds.includes('view_props') && !expand_view_props) {
+      setExpandViewProps(true);
     }
-  </TreeView>;
+    else if(expand_view_props && !nodeIds.includes('view_props')) {
+      setExpandViewProps(false);
+    }
+  };
+
+  contours.forEach((contour) => {
+    defaultExpanded.push(`l-${contour.cnstr}`);
+    contour.contours.forEach((contour) => {
+      defaultExpanded.push(`l-${contour.cnstr}`);
+    });
+  });
+  expand_view_props && defaultExpanded.push('view_props');
+
+  return [
+    <LayersToolbar key="toolbar" editor={editor} classes={classes}/>,
+    //<Divider/>,
+    <TreeView
+      key="tree"
+      expanded={defaultExpanded}
+      defaultCollapseIcon={<ArrowDropDownIcon />}
+      defaultExpandIcon={<ArrowRightIcon />}
+      defaultEndIcon={<div style={{ width: 24 }} />}
+      onNodeToggle={onNodeToggle}
+    >
+      <CustomTreeItem nodeId="root" labelText={ox.prod_name(true)} LabelIcon={AccountTreeIcon}>
+        {addLayers(contours, activeLayer)}
+      </CustomTreeItem>
+
+      <CustomTreeItem nodeId="view_props" labelText="Параметры отображения" LabelIcon={MoreHorizIcon}>
+        {
+          Object.keys(bprops).map((key) => <CustomTreeItem
+            key={key}
+            nodeId={key}
+            labelText={bprops[key]}
+            checked={builder_props[key]}
+            setChecked={() => {
+              builder_props[key] = !builder_props[key];
+              ox.builder_props = {[key]: builder_props[key]};
+              project.register_change();
+              setProps(Object.assign({}, builder_props));
+            }}
+          />)
+        }
+      </CustomTreeItem>
+    </TreeView>
+  ];
 }
 
 TreeLayers.propTypes = {

@@ -38,7 +38,7 @@
     "paper-jsdom-canvas": "^0.12.4",
     "react-highlight-words": "^0.16.0",
     "redux-dynamic-middlewares": "^2.0.0",
-    "windowbuilder": "github:oknosoft/windowbuilder-core#9c4f7124953b522891a746f445cd31f481bdb18f"
+    "windowbuilder": "github:oknosoft/windowbuilder-core#4f8928bd26e4e64c9b2b0ab095fe7db7e1064436"
   },
   "devDependencies": {
     "@babel/core": "7.6.0",
