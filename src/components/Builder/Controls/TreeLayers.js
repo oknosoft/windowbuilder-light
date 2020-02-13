@@ -8,6 +8,7 @@ import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import CustomTreeItem from './CustomTreeItem';
 import LayersToolbar from './LayersToolbar';
+import DopInsets from './DopInsets';
 
 function addLayers(contours, activeLayer) {
   return contours.length ?
@@ -66,7 +67,6 @@ export default function TreeLayers({editor, classes}) {
 
   return [
     <LayersToolbar key="toolbar" editor={editor} classes={classes}/>,
-    //<Divider/>,
     <TreeView
       key="tree"
       expanded={defaultExpanded}
@@ -101,7 +101,14 @@ export default function TreeLayers({editor, classes}) {
           />)
         }
       </CustomTreeItem>
-    </TreeView>
+    </TreeView>,
+    <Divider/>,
+    <DopInsets
+      editor={editor}
+      ox={ox}
+      cnstr={activeLayer.cnstr || 0}
+      kind={activeLayer.cnstr ? (activeLayer.layer ? 'Створку' : 'Раму') : 'Изделие'}
+    />
   ];
 }
 
