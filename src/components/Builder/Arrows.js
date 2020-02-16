@@ -48,16 +48,59 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const btns = [['left', ArrowBackIcon], ['right', ArrowForwardIcon], ['up', ArrowUpwardIcon], ['down', ArrowDownwardIcon]];
+const interval = 800;
 
 export default function Arrows({handleClick}) {
   const classes = useStyles();
+  let timer = 0;
+  let shift = 0;
+  let last = 0;
+
+  const handleTick = (name, interval) => {
+    if(interval > 50) {
+      interval /= 2;
+    }
+    shift = 1;
+    handleClick(name)();
+    if(interval && timer) {
+      timer = setTimeout(handleTick.bind(null, name, interval), interval);
+    }
+  };
+
+  const mouseDown = (name) => () => {
+    const delta = Date.now() - last;
+    if(delta < 200) {
+      return;
+    }
+    last = Date.now();
+    shift = 0;
+    timer && clearTimeout(timer);
+    timer = setTimeout(handleTick.bind(null, name, interval), interval);
+  };
+
+  const mouseUp = (name) => () => {
+    if(!timer) {
+      return;
+    }
+    clearTimeout(timer);
+    timer = 0;
+    if(!shift) {
+      handleTick(name, 0);
+    }
+  };
+
   return btns.map(([name, Icon]) => <Fab
     key={name}
     size="small"
     title="Сдвиг выделенного элемента"
     tabIndex={-1}
     className={cn(classes.btn, classes[name])}
-    onClick={handleClick(name)}><Icon/></Fab>);
+    onMouseDown={mouseDown(name)}
+    onTouchStart={mouseDown(name)}
+    onMouseUp={mouseUp(name)}
+    onTouchCancel={mouseUp(name)}
+    onTouchEnd={mouseUp(name)}
+  ><Icon/></Fab>);
 }
 
 Arrows.propTypes = {
