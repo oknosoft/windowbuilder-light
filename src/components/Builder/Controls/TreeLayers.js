@@ -102,8 +102,9 @@ export default function TreeLayers({editor, classes}) {
         }
       </CustomTreeItem>
     </TreeView>,
-    <Divider/>,
+    <Divider key="divider"/>,
     <DopInsets
+      key="insets"
       editor={editor}
       ox={ox}
       cnstr={activeLayer.cnstr || 0}

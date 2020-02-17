@@ -417,8 +417,8 @@ export default function select_node (Editor) {
 
       }
       else if(['left', 'right', 'up', 'down'].includes(key)) {
-        if(!project.selectedItems.length && !event.event) {
-          $p.ui.dialogs.alert({text: `Для сдвига профиля, его сначала нужно выделить на эскизе`, title: 'Сдвиг элемента'});
+        if(!project.selected_profiles().length && !event.event) {
+          $p.ui.dialogs.snack({message: 'Для сдвига профиля, его сначала нужно выделить на эскизе'});
         }
         if (key == 'left') {
           project.move_points(new Point(-step, 0));
