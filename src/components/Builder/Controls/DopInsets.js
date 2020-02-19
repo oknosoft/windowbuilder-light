@@ -52,6 +52,7 @@ class DopInsets extends React.Component {
 
   handleAdd = () => {
     const {ox, cnstr} = this.props;
+    /* eslint-disable-next-line */
     const row = ox.inserts.add({cnstr});
     this.defferedUpdate();
   };
@@ -109,6 +110,8 @@ class DopInsets extends React.Component {
 DopInsets.propTypes = {
   ox: PropTypes.object.isRequired,
   cnstr: PropTypes.number.isRequired,
+  editor: PropTypes.object,
+  kind: PropTypes.string,
 };
 
 export default DopInsets;

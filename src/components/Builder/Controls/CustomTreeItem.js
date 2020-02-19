@@ -100,6 +100,7 @@ CustomTreeItem.propTypes = {
   checked: PropTypes.bool,
   selected: PropTypes.bool,
   setChecked: PropTypes.func,
+  handleRoot: PropTypes.func,
   classes: PropTypes.object.isRequired,
 };
 
