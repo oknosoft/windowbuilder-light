@@ -12,7 +12,7 @@ import MDNRComponent from 'metadata-react/common/MDNRComponent';
 import {withIface} from 'metadata-redux';
 import ReactDataGrid from 'react-data-grid';
 import LoadingMessage from 'metadata-react/DumbLoader/LoadingMessage';
-import DataListToolbar from 'metadata-react/DataList/DataListToolbar';
+import DataListToolbar from 'metadata-react/DynList/DataListToolbar';
 import SchemeSettingsTabs from 'metadata-react/SchemeSettings/SchemeSettingsTabs';
 import Confirm from 'metadata-react/App/Confirm';
 import Helmet from 'react-helmet';

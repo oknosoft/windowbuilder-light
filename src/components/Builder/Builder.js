@@ -32,8 +32,7 @@ export default class Builder extends React.Component {
     }
   }
 
-  arrowClick = (btn) => (evt) => {
-    evt.target && evt.target.blur();
+  arrowClick = (btn) => () => {
     if(this.editor && this.editor.tool) {
       this.editor.tool.emit('keydown', {
         key: btn,

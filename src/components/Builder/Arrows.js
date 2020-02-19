@@ -56,18 +56,18 @@ let last = 0;
 export default function Arrows({handleClick}) {
   const classes = useStyles();
 
-  const handleTick = (name, interval, target) => {
+  const handleTick = (name, interval) => {
     if(interval > 50) {
       interval /= 2;
     }
     shift = 1;
-    handleClick(name)({target});
+    handleClick(name)();
     if(interval && timer) {
       timer = setTimeout(handleTick.bind(null, name, interval), interval);
     }
   };
 
-  const mouseDown = (name) => (evt) => {
+  const mouseDown = (name) => () => {
     const delta = Date.now() - last;
     if(delta < 200) {
       return;
@@ -75,17 +75,18 @@ export default function Arrows({handleClick}) {
     last = Date.now();
     shift = 0;
     timer && clearTimeout(timer);
-    timer = setTimeout(handleTick.bind(null, name, interval, evt.target), interval);
+    timer = setTimeout(handleTick.bind(null, name, interval), interval);
   };
 
   const mouseUp = (name) => (evt) => {
+    evt.target.blur();
     if(!timer) {
       return;
     }
     clearTimeout(timer);
     timer = 0;
     if(!shift) {
-      handleTick(name, 0, evt.target);
+      handleTick(name, 0);
     }
   };
 
