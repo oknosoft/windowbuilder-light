@@ -12,6 +12,7 @@ import StulpFlapWnd from '../../components/Builder/ToolWnds/StulpFlapWnd';
 export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builder_pen}, cat: {characteristics}, utils, ui: {dialogs}}) {
 
   const {ToolElement, Filling, Profile} = Editor;
+  const {Path} = Object.getPrototypeOf(Editor).prototype;
 
   class FakeStulpFlap extends BaseDataObj {
 
@@ -151,7 +152,7 @@ export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builde
 
       // Hit test items.
       if(event.point) {
-        this.hitItem = this.project.hitTest(event.point, {fill: true, class: paper.Path});
+        this.hitItem = this.project.hitTest(event.point, {fill: true, class: Path});
       }
 
       if(this.hitItem && this.hitItem.item.parent instanceof Filling) {
@@ -186,7 +187,7 @@ export default function stulp_flap (Editor, {classes: {BaseDataObj}, dp: {builde
       // проверки закончены, строим вертикальный путь в середине заполнения
       const {top, bottom} = filling.profiles_by_side();
       const pt = filling.interiorPoint();
-      const path = new _scope.Path([pt.add([0, 2000]), pt.add([0, -2000])]);
+      const path = new Path([pt.add([0, 2000]), pt.add([0, -2000])]);
       const pb = path.intersect_point(bottom.profile.generatrix);
       const pe = path.intersect_point(top.profile.generatrix);
       if(!pe || !pb) {

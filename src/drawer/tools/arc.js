@@ -11,6 +11,7 @@
 export default function arc (Editor) {
 
   const {ToolElement, ProfileItem, Filling} = Editor;
+  const {Point} = Object.getPrototypeOf(Editor).prototype;
 
   /**
    * ### Манипуляции с арками (дуги правильных окружностей)
@@ -29,7 +30,7 @@ export default function arc (Editor) {
 
       Object.assign(this, {
         options: {name: 'arc'},
-        mouseStartPos: new paper.Point(),
+        mouseStartPos: new Point(),
         mode: null,
         hitItem: null,
         originalContent: null,

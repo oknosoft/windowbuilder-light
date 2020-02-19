@@ -11,27 +11,32 @@
 
 import PenWnd from '../../components/Builder/ToolWnds/PenWnd';
 
-/**
- * ### Элементы управления рядом с указателем мыши инструмента `ToolPen`
- *
- * @class PenControls
- * @constructor
- */
-class PenControls {
+export default function pen (Editor) {
 
-  constructor(tool) {
+  const {Contour, ProfileItem, Profile, ProfileAddl, ProfileConnective, Sectional, Onlay, Filling, BaseLine} = Editor;
+  const {Point, Path} = Object.getPrototypeOf(Editor).prototype;
 
-    const t = this;
-    const _cont = this._cont = document.createElement('div');
+  /**
+   * ### Элементы управления рядом с указателем мыши инструмента `ToolPen`
+   *
+   * @class PenControls
+   * @constructor
+   */
+  class PenControls {
 
-    this._tool = tool;
-    this.mousemove = this.mousemove.bind(this);
-    this.create_click = this.create_click.bind(this);
+    constructor(tool) {
 
-    function input_change() {
-      let p;
+      const t = this;
+      const _cont = this._cont = document.createElement('div');
 
-      switch(this.name) {
+      this._tool = tool;
+      this.mousemove = this.mousemove.bind(this);
+      this.create_click = this.create_click.bind(this);
+
+      function input_change() {
+        let p;
+
+        switch(this.name) {
 
         case 'x':
         case 'y':
@@ -50,7 +55,7 @@ class PenControls {
             return false;
           }
 
-          p = new paper.Point();
+          p = new Point();
           p.length = parseFloat(t._l.value || 0);
           p.angle = parseFloat(t._a.value || 0);
           p.y = -p.y;
@@ -59,130 +64,126 @@ class PenControls {
 
           input_change.call({name: "x"});
           break;
+        }
+      }
+
+      tool.view.element.parentNode.appendChild(_cont);
+      _cont.className = "pen_cont";
+
+      tool.project.view.on('mousemove', this.mousemove);
+
+      _cont.innerHTML = "<table><tr><td>x:</td><td><input type='number' name='x' /></td><td>y:</td><td><input type='number' name='y' /></td></tr>" +
+        "<tr><td>l:</td><td><input type='number' name='l' /></td><td>α:</td><td><input type='number' name='a' /></td></tr>" +
+        "<tr><td colspan='4'><input type='button' name='click' value='Создать точку' /></td></tr></table>";
+
+      this._x = _cont.querySelector("[name=x]");
+      this._y = _cont.querySelector("[name=y]");
+      this._l = _cont.querySelector("[name=l]");
+      this._a = _cont.querySelector("[name=a]");
+
+      this._x.onchange = input_change;
+      this._y.onchange = input_change;
+      this._l.onchange = input_change;
+      this._a.onchange = input_change;
+
+      _cont.querySelector("[name=click]").onclick = this.create_click;
+
+    }
+
+    get point(){
+      const {bounds} = this._tool.project,
+        x = parseFloat(this._x.value || 0) + (bounds ? bounds.x : 0),
+        y = (bounds ? (bounds.height + bounds.y) : 0) - parseFloat(this._y.value || 0);
+      return new Point([x, y]);
+    }
+
+    blur() {
+      const focused = document.activeElement;
+      if(focused == this._x) {
+        this._x.blur();
+      }
+      else if(focused == this._y) {
+        this._y.blur();
+      }
+      else if(focused == this._l) {
+        this._l.blur();
+      }
+      else if(focused == this._a) {
+        this._a.blur();
       }
     }
 
-    tool.view.element.parentNode.appendChild(_cont);
-    _cont.className = "pen_cont";
+    mousemove(event, ignore_pos) {
 
-    tool.project.view.on('mousemove', this.mousemove);
+      const {project: {bounds, view}, profile} = this._tool;
 
-    _cont.innerHTML = "<table><tr><td>x:</td><td><input type='number' name='x' /></td><td>y:</td><td><input type='number' name='y' /></td></tr>" +
-      "<tr><td>l:</td><td><input type='number' name='l' /></td><td>α:</td><td><input type='number' name='a' /></td></tr>" +
-      "<tr><td colspan='4'><input type='button' name='click' value='Создать точку' /></td></tr></table>";
+      if(!profile){
+        return;
+      }
 
-    this._x = _cont.querySelector("[name=x]");
-    this._y = _cont.querySelector("[name=y]");
-    this._l = _cont.querySelector("[name=l]");
-    this._a = _cont.querySelector("[name=a]");
+      const pos = ignore_pos || view.projectToView(event.point);
 
-    this._x.onchange = input_change;
-    this._y.onchange = input_change;
-    this._l.onchange = input_change;
-    this._a.onchange = input_change;
-
-    _cont.querySelector("[name=click]").onclick = this.create_click;
-
-  }
-
-  get point(){
-    const {bounds} = this._tool.project,
-      x = parseFloat(this._x.value || 0) + (bounds ? bounds.x : 0),
-      y = (bounds ? (bounds.height + bounds.y) : 0) - parseFloat(this._y.value || 0);
-    return new paper.Point([x, y]);
-  }
-
-  blur() {
-    const focused = document.activeElement;
-    if(focused == this._x) {
-      this._x.blur();
-    }
-    else if(focused == this._y) {
-      this._y.blur();
-    }
-    else if(focused == this._l) {
-      this._l.blur();
-    }
-    else if(focused == this._a) {
-      this._a.blur();
-    }
-  }
-
-  mousemove(event, ignore_pos) {
-
-    const {project: {bounds, view}, profile} = this._tool;
-
-    if(!profile){
-      return;
-    }
-
-    const pos = ignore_pos || view.projectToView(event.point);
-
-    const {elm_type} = profile;
-    if(elm_type == $p.enm.elm_types.Добор || elm_type == $p.enm.elm_types.Соединитель){
-      this._cont.style.display = "none";
-      return;
-    }
-    else{
-      this._cont.style.display = "";
-    }
-
-    if (!ignore_pos) {
-      this._cont.style.top = pos.y + 16 + "px";
-      this._cont.style.left = pos.x - 20 + "px";
-
-    }
-
-    if (bounds) {
-      this._x.value = (event.point.x - bounds.x).toFixed(0);
-      this._y.value = (bounds.height + bounds.y - event.point.y).toFixed(0);
+      const {elm_type} = profile;
+      if(elm_type == $p.enm.elm_types.Добор || elm_type == $p.enm.elm_types.Соединитель){
+        this._cont.style.display = "none";
+        return;
+      }
+      else{
+        this._cont.style.display = "";
+      }
 
       if (!ignore_pos) {
+        this._cont.style.top = pos.y + 16 + "px";
+        this._cont.style.left = pos.x - 20 + "px";
 
-        if (this._tool.path) {
-          this._l.value = this._tool.point1.getDistance(this.point).round(1);
-          const p = this.point.subtract(this._tool.point1);
-          p.y = -p.y;
-          let angle = p.angle;
-          if (angle < 0){
-            angle += 360;
+      }
+
+      if (bounds) {
+        this._x.value = (event.point.x - bounds.x).toFixed(0);
+        this._y.value = (bounds.height + bounds.y - event.point.y).toFixed(0);
+
+        if (!ignore_pos) {
+
+          if (this._tool.path) {
+            this._l.value = this._tool.point1.getDistance(this.point).round(1);
+            const p = this.point.subtract(this._tool.point1);
+            p.y = -p.y;
+            let angle = p.angle;
+            if (angle < 0){
+              angle += 360;
+            }
+            this._a.value = angle.round(1);
           }
-          this._a.value = angle.round(1);
-        }
-        else {
-          this._l.value = 0;
-          this._a.value = 0;
+          else {
+            this._l.value = 0;
+            this._a.value = 0;
+          }
         }
       }
     }
-  }
 
-  create_click() {
-    setTimeout(() => {
-      this._tool.emit('mousedown', {
-        modifiers: {}
-      });
+    create_click() {
       setTimeout(() => {
-        this._tool.emit('mouseup', {
-          point: this.point,
+        this._tool.emit('mousedown', {
           modifiers: {}
         });
+        setTimeout(() => {
+          this._tool.emit('mouseup', {
+            point: this.point,
+            modifiers: {}
+          });
+        });
       });
-    });
+    }
+
+    unload() {
+      const {_scope} = this._tool;
+      _scope.project.view.off('mousemove', this.mousemove);
+      this._cont.parentNode.removeChild(this._cont);
+      this._cont = null;
+    }
+
   }
-
-  unload() {
-    const {_scope} = this._tool;
-    _scope.project.view.off('mousemove', this.mousemove);
-    this._cont.parentNode.removeChild(this._cont);
-    this._cont = null;
-  }
-
-}
-
-export default function pen (Editor) {
-
-  const {Contour, ProfileItem, Profile, ProfileAddl, ProfileConnective, Sectional, Onlay, Filling, BaseLine} = Editor;
 
   /**
    * ### Добавление (рисование) профилей
@@ -213,7 +214,7 @@ export default function pen (Editor) {
               clr: ''
             }
           },
-          point1: new paper.Point(),
+          point1: new Point(),
           last_profile: null,
           mode: null,
           hitItem: null,
@@ -607,7 +608,7 @@ export default function pen (Editor) {
           this.point1 = this._controls.point;
 
           if (!this.path){
-            this.path = new paper.Path({
+            this.path = new Path({
               strokeColor: 'black',
               segments: [this.point1]
             });
@@ -638,7 +639,7 @@ export default function pen (Editor) {
         if(this.addl_hit){
 
           if (!this.path){
-            this.path = new paper.Path({
+            this.path = new Path({
               strokeColor: 'black',
               fillColor: 'white',
               strokeScaling: false,
@@ -847,7 +848,7 @@ export default function pen (Editor) {
 
         // получаем generatrix
         if(!this.addl_hit.generatrix){
-          this.addl_hit.generatrix = new paper.Path({insert: false});
+          this.addl_hit.generatrix = new Path({insert: false});
         }
         p1 = prev.profile.generatrix.getNearestPoint(p1);
         p2 = next.profile.generatrix.getNearestPoint(p2);
@@ -864,7 +865,7 @@ export default function pen (Editor) {
 
         // получаем generatrix
         if(!this.addl_hit.generatrix){
-          this.addl_hit.generatrix = new paper.Path({insert: false});
+          this.addl_hit.generatrix = new Path({insert: false});
         }
         this.addl_hit.generatrix.removeSegments();
         this.addl_hit.generatrix.addSegments(sub_path.segments);
@@ -1056,7 +1057,7 @@ export default function pen (Editor) {
         const profiles = [];
         points.forEach((segments) => {
           profiles.push(new Profile({
-            generatrix: new paper.Path({
+            generatrix: new Path({
               strokeColor: 'black',
               segments: segments
             }), proto: this.profile

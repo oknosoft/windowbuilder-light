@@ -11,6 +11,8 @@
 
 export default function pan (Editor) {
 
+  const {Point} = Object.getPrototypeOf(Editor).prototype;
+
   /**
    * ### Панорама и масштабирование с колёсиком и без колёсика
    *
@@ -30,7 +32,7 @@ export default function pan (Editor) {
         options: {name: 'pan'},
         distanceThreshold: 10,
         minDistance: 10,
-        mouseStartPos: new paper.Point(),
+        mouseStartPos: new Point(),
         mode: 'pan',
         zoomFactor: 1.1,
       });
@@ -153,16 +155,16 @@ export default function pan (Editor) {
       const rootLayer = this._scope.project.rootLayer();
       switch (event.key) {
       case 'left':
-        rootLayer.move(new paper.Point(-10, 0));
+        rootLayer.move(new Point(-10, 0));
         break;
       case 'right':
-        rootLayer.move(new paper.Point(10, 0));
+        rootLayer.move(new Point(10, 0));
         break;
       case 'up':
-        rootLayer.move(new paper.Point(0, -10));
+        rootLayer.move(new Point(0, -10));
         break;
       case 'down':
-        rootLayer.move(new paper.Point(0, 10));
+        rootLayer.move(new Point(0, 10));
         break;
       }
     }

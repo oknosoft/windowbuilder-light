@@ -88,7 +88,7 @@ const actions = [
   {css: 'tb_cursor-cut', name: 'Тип соединения', id: 'cut'},
   {css: 'tb_ruler_ui', name: 'Позиция и сдвиг'},
   {css: 'tb_grid', name: 'Координаты'},
-  {css: 'tb_text', name: 'Текст'},
+  {css: 'tb_text', name: 'Текст', id: 'text'},
 ];
 
 export default function SelectTool({editor}) {

@@ -2,7 +2,8 @@ import LayImpostWnd from '../../components/Builder/ToolWnds/LayImpostWnd';
 
 export default function lay_impost (Editor) {
 
-  const {ToolElement, BuilderElement, Profile, Onlay, Filling, constructor: {Point, Path}} = Editor;
+  const {ToolElement, BuilderElement, Profile, Onlay, Filling} = Editor;
+  const {Point, Path, Group} = Object.getPrototypeOf(Editor).prototype;
 
   /**
    * ### Вставка раскладок и импостов
@@ -20,9 +21,7 @@ export default function lay_impost (Editor) {
       super();
 
       Object.assign(this, {
-        options: {
-          name: 'lay_impost',
-        },
+        options: {name: 'lay_impost'},
         ToolWnd: LayImpostWnd,
         mode: null,
         hitItem: null,
@@ -538,7 +537,7 @@ export default function lay_impost (Editor) {
       function rectification() {
         // получаем таблицу расстояний профилей от рёбер габаритов
         const ares = [];
-        const group = new paper.Group({insert: false});
+        const group = new Group({insert: false});
 
         function reverce(p) {
           const s = p.segments.map(function (s) {

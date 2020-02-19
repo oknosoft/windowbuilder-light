@@ -8,6 +8,7 @@
 export default function arc (Editor) {
 
   const {ToolElement, ProfileItem, Profile} = Editor;
+  const {Point, Path} = Object.getPrototypeOf(Editor).prototype;
 
   /**
    * ### Изменяет тип соединения
@@ -25,7 +26,7 @@ export default function arc (Editor) {
 
       Object.assign(this, {
         options: {name: 'cut'},
-        mouseStartPos: new paper.Point(),
+        mouseStartPos: new Point(),
         nodes: null,
         hitItem: null,
         cont: null,
@@ -148,7 +149,7 @@ export default function arc (Editor) {
         //   onclick: this.tb_click.bind(this),
         // });
 
-        this.square = new paper.Path.Rectangle({
+        this.square = new Path.Rectangle({
           point: point.add([-50, -50]),
           size: [100, 100],
           strokeColor: 'blue',
