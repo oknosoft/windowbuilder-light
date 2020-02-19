@@ -20,7 +20,7 @@ export default function tools (Editor, $p) {
   tool_element(Editor);
   select_node(Editor);
   pan(Editor);
-  pen(Editor);
+  pen(Editor, $p);
   arc(Editor);
   cut(Editor);
   stulp_flap(Editor, $p);

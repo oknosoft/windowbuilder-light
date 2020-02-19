@@ -91,7 +91,6 @@ export default function text (Editor) {
     }
 
     mousedown(event) {
-      this.text = null;
       this.changed = false;
 
       this.project.deselectAll();
@@ -116,6 +115,10 @@ export default function text (Editor) {
         this.textStartPos = this.text.point;
 
       }
+      else {
+        this.text = null;
+      }
+      this.eve.emit_async('tool_activated', this);
 
     }
 

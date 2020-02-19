@@ -11,7 +11,7 @@
 
 import PenWnd from '../../components/Builder/ToolWnds/PenWnd';
 
-export default function pen (Editor) {
+export default function pen (Editor, {enm, msg, dp, cat, utils}) {
 
   const {Contour, ProfileItem, Profile, ProfileAddl, ProfileConnective, Sectional, Onlay, Filling, BaseLine} = Editor;
   const {Point, Path} = Object.getPrototypeOf(Editor).prototype;
@@ -124,7 +124,7 @@ export default function pen (Editor) {
       const pos = ignore_pos || view.projectToView(event.point);
 
       const {elm_type} = profile;
-      if(elm_type == $p.enm.elm_types.Добор || elm_type == $p.enm.elm_types.Соединитель){
+      if(elm_type == enm.elm_types.Добор || elm_type == enm.elm_types.Соединитель){
         this._cont.style.display = "none";
         return;
       }
@@ -133,9 +133,14 @@ export default function pen (Editor) {
       }
 
       if (!ignore_pos) {
+        if(pos.x > (view.viewSize.width - 140)) {
+          pos.x = view.viewSize.width - 140;
+        }
+        if(pos.y > (view.viewSize.height - 77)) {
+          pos.y = view.viewSize.height - 77;
+        }
         this._cont.style.top = pos.y + 16 + "px";
-        this._cont.style.left = pos.x - 20 + "px";
-
+        this._cont.style.left = pos.x - 8 + "px";
       }
 
       if (bounds) {
@@ -226,7 +231,7 @@ export default function pen (Editor) {
         this.on({
           activate: this.on_activate,
           deactivate: this.on_deactivate,
-          mousedown: this.on_mousedown,
+          mousedown: this.mousedown,
           mouseup: this.on_mouseup,
           mousemove: this.on_mousemove,
           keydown: this.on_keydown,
@@ -241,13 +246,13 @@ export default function pen (Editor) {
       tool_wnd() {
 
         // создаём экземпляр обработки
-        this.profile = $p.dp.builder_pen.create();
+        this.profile = dp.builder_pen.create();
 
         const {project, profile} = this;
         this.sys = project._dp.sys;
 
         // восстанавливаем сохранённые параметры
-        $p.wsql.restore_options('editor', this.options);
+        //wsql.restore_options('editor', this.options);
         this.options.wnd.on_close = this.on_close;
 
         ['elm_type', 'inset', 'bind_generatrix', 'bind_node'].forEach((prop) => {
@@ -257,17 +262,17 @@ export default function pen (Editor) {
         });
 
         // если в текущем слое есть профили, выбираем импост
-        if((profile.elm_type.empty() || profile.elm_type == $p.enm.elm_types.Рама) &&
+        if((profile.elm_type.empty() || profile.elm_type == enm.elm_types.Рама) &&
           project.activeLayer instanceof Contour && project.activeLayer.profiles.length) {
-          profile.elm_type = $p.enm.elm_types.Импост;
+          profile.elm_type = enm.elm_types.Импост;
         }
-        else if((profile.elm_type.empty() || profile.elm_type == $p.enm.elm_types.Импост) &&
+        else if((profile.elm_type.empty() || profile.elm_type == enm.elm_types.Импост) &&
           project.activeLayer instanceof Contour && !project.activeLayer.profiles.length) {
-          profile.elm_type = $p.enm.elm_types.Рама;
+          profile.elm_type = enm.elm_types.Рама;
         }
 
         // вставку по умолчанию получаем эмулируя событие изменения типа элемента
-        $p.dp.builder_pen.emit('value_change', {field: 'elm_type'}, profile);
+        dp.builder_pen.emit('value_change', {field: 'elm_type'}, profile);
 
         // цвет по умолчанию
         profile.clr = project.clr;
@@ -276,7 +281,7 @@ export default function pen (Editor) {
         profile._metadata('inset').choice_links = [{
           name: ['selection', 'ref'],
           path: [(o) => {
-            if($p.utils.is_data_obj(o)){
+            if(utils.is_data_obj(o)){
               return profile.rama_impost.indexOf(o) != -1;
             }
             else{
@@ -293,7 +298,7 @@ export default function pen (Editor) {
         }];
 
         // дополняем свойства поля цвет отбором по служебным цветам
-        $p.cat.clrs.selection_exclude_service(profile._metadata('clr'), this);
+        cat.clrs.selection_exclude_service(profile._metadata('clr'), this);
 
         // this.wnd = $p.iface.dat_blank(this._scope._dxw, this.options.wnd);
         // this._grid = this.wnd.attachHeadFields({
@@ -450,7 +455,7 @@ export default function pen (Editor) {
         }
       }
 
-      on_mousedown(event) {
+      mousedown(event) {
         this.project.deselectAll();
 
         if(event.event && event.event.which && event.event.which > 1){
@@ -459,7 +464,7 @@ export default function pen (Editor) {
 
         this.last_profile = null;
 
-        if(this.profile.elm_type == $p.enm.elm_types.Добор || this.profile.elm_type == $p.enm.elm_types.Соединитель) {
+        if(this.profile.elm_type == enm.elm_types.Добор || this.profile.elm_type == enm.elm_types.Соединитель) {
 
           // для доборов и соединителей, создаём элемент, если есть addl_hit
           // if(this.addl_hit) {
@@ -490,7 +495,7 @@ export default function pen (Editor) {
         if(this.addl_hit){
 
           // рисуем доборный профиль
-          if(this.addl_hit.glass && this.profile.elm_type == $p.enm.elm_types.Добор && !this.profile.inset.empty()){
+          if(this.addl_hit.glass && this.profile.elm_type == enm.elm_types.Добор && !this.profile.inset.empty()){
             new ProfileAddl({
               generatrix: this.addl_hit.generatrix,
               proto: this.profile,
@@ -499,7 +504,7 @@ export default function pen (Editor) {
             });
           }
           // рисуем соединительный профиль
-          else if(this.profile.elm_type == $p.enm.elm_types.Соединитель && !this.profile.inset.empty()){
+          else if(this.profile.elm_type == enm.elm_types.Соединитель && !this.profile.inset.empty()){
             const connective = new ProfileConnective({
               generatrix: this.addl_hit.generatrix,
               proto: this.profile,
@@ -527,7 +532,7 @@ export default function pen (Editor) {
           }
 
           switch (this.profile.elm_type) {
-          case $p.enm.elm_types.Раскладка:
+          case enm.elm_types.Раскладка:
             // находим заполнение под линией
             this.project.activeLayer.glasses(false, true).some((glass) => {
               if(glass.contains(this.path.firstSegment.point) && glass.contains(this.path.lastSegment.point)){
@@ -542,12 +547,12 @@ export default function pen (Editor) {
             });
             break;
 
-          case $p.enm.elm_types.Водоотлив:
+          case enm.elm_types.Водоотлив:
             // рисуем разрез
             this.last_profile = new Sectional({generatrix: this.path, proto: this.profile});
             break;
 
-          case $p.enm.elm_types.Линия:
+          case enm.elm_types.Линия:
             // рисуем линию
             this.last_profile = new BaseLine({generatrix: this.path, proto: this.profile});
             break;
@@ -559,7 +564,7 @@ export default function pen (Editor) {
 
           this.path = null;
 
-          if(this.profile.elm_type == $p.enm.elm_types.Рама){
+          if(this.profile.elm_type == enm.elm_types.Рама){
             setTimeout(() => {
               if(this.last_profile){
                 this._controls.mousemove({point: this.last_profile.e}, true);
@@ -729,7 +734,7 @@ export default function pen (Editor) {
                 // попытаемся привязать начало пути к профилям (и или заполнениям - для раскладок) контура
                 if(!this.start_binded){
 
-                  if(this.profile.elm_type == $p.enm.elm_types.Раскладка){
+                  if(this.profile.elm_type == enm.elm_types.Раскладка){
 
                     res = Onlay.prototype.bind_node(this.path.firstSegment.point, project.activeLayer.glasses(false, true));
                     if(res.binded){
@@ -738,7 +743,7 @@ export default function pen (Editor) {
 
                   }
                   // привязка к узлам для рамы уже случилась - вяжем для импоста
-                  else if(this.profile.elm_type == $p.enm.elm_types.Импост){
+                  else if(this.profile.elm_type == enm.elm_types.Импост){
 
                     res = {distance: Infinity};
                     project.activeLayer.profiles.some((element) => {
@@ -763,14 +768,14 @@ export default function pen (Editor) {
                 }
 
                 // попытаемся привязать конец пути к профилям (и или заполнениям - для раскладок) контура
-                if(this.profile.elm_type == $p.enm.elm_types.Раскладка){
+                if(this.profile.elm_type == enm.elm_types.Раскладка){
 
                   res = Onlay.prototype.bind_node(this.path.lastSegment.point, project.activeLayer.glasses(false, true));
                   if(res.binded)
                     this.path.lastSegment.point = res.point;
 
                 }
-                else if(this.profile.elm_type == $p.enm.elm_types.Импост){
+                else if(this.profile.elm_type == enm.elm_types.Импост){
 
                   res = {distance: Infinity};
                   project.activeLayer.profiles.some((element) => {
@@ -1002,10 +1007,10 @@ export default function pen (Editor) {
         this.addl_hit = null;
         this.hitItem = null;
 
-        if(this.profile.elm_type == $p.enm.elm_types.Добор){
+        if(this.profile.elm_type == enm.elm_types.Добор){
           this.hitTest_addl(event);
         }
-        else if(this.profile.elm_type == $p.enm.elm_types.Соединитель){
+        else if(this.profile.elm_type == enm.elm_types.Соединитель){
           this.hitTest_connective(event);
         }
         else{
@@ -1045,7 +1050,7 @@ export default function pen (Editor) {
           this.project.zoom_fit();
         }
         else {
-          name !== 'standard_form' && $p.msg.show_not_implemented();
+          name !== 'standard_form' && msg.show_not_implemented();
         }
       }
 
