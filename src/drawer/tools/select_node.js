@@ -8,8 +8,8 @@
 
 export default function select_node (Editor) {
 
-  const {Point, PointText, EditableText, Rectangle, Path, Segment} = Editor.prototype;
-  const {ToolElement, ProfileItem, Profile, ProfileAddl, Filling, DimensionLine, DimensionLineCustom, Sectional, GeneratrixElement} = Editor;
+  const {Point, PointText, Rectangle, Path, Segment} = Editor.prototype;
+  const {ToolElement, ProfileItem, EditableText, Profile, ProfileAddl, Filling, DimensionLine, DimensionLineCustom, Sectional, GeneratrixElement} = Editor;
 
   Editor.ToolSelectNode = class ToolSelectNode extends ToolElement {
 
