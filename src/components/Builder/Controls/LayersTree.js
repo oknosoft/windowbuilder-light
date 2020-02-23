@@ -37,7 +37,7 @@ const bprops = {
 };
 
 
-export default function TreeLayers({editor, classes}) {
+export default function LayersTree({editor, classes}) {
   const {project} = editor;
   const {contours, ox, activeLayer} = project;
   const defaultExpanded = ['root'];
@@ -113,7 +113,7 @@ export default function TreeLayers({editor, classes}) {
   ];
 }
 
-TreeLayers.propTypes = {
+LayersTree.propTypes = {
   editor: PropTypes.object.isRequired,
 };
 

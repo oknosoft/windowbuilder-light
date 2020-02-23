@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 import Tip from '../Tip';
 import Params from './Params';
-import TreeLayers from './TreeLayers';
+import LayersTree from './LayersTree';
 import ElmProps from './ElmProps';
 import ToolWnd from '../ToolWnds/ToolWnd';
 import {AntTabs} from '../../CalcOrder/FrmObj/FrmObj';
@@ -136,8 +136,8 @@ class Controls extends React.Component {
             </Tip>
           }/>
       </AntTabs>
-      {tab === 0 && <TreeLayers editor={editor}/>}
-      {tab === 1 && <ElmProps elm1={elm1} elm2={elm2}/>}
+      {tab === 0 && <LayersTree editor={editor}/>}
+      {tab === 1 && <ElmProps editor={editor} elm1={elm1} elm2={elm2}/>}
       {tab === 2 && <Params editor={editor}/>}
       {tab === 3 && <Params editor={editor} root/>}
       {tab === 4 && <ToolWnd editor={editor}/>}

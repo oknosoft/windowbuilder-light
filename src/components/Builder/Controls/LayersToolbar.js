@@ -5,7 +5,7 @@ import {withStyles} from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Tip from '../Tip';
 
-const styles = () => ({
+export const useStyles = withStyles({
   title: {
     flexGrow: 1,
   },
@@ -42,15 +42,16 @@ function dropLayer(editor) {
 }
 
 function LayersToolbar({editor, classes}) {
+  const {msg} = $p;
   return <Toolbar disableGutters variant="dense">
-    <Tip title="Добавить рамный контур">
+    <Tip title={msg.bld_new_layer}>
       <IconButton onClick={() => addLayer(editor)}><i className="fa fa-file-o" /></IconButton>
     </Tip>
-    <Tip title="Добавить створку">
+    <Tip title={msg.bld_new_stv}>
       <IconButton onClick={() => addFlap(editor)}><i className="fa fa-file-code-o" /></IconButton>
     </Tip>
     <div className={classes.title} />
-    <Tip title="Удалить слой">
+    <Tip title={msg.del_layer}>
       <IconButton onClick={() => dropLayer(editor)}><i className="fa fa-trash-o" /></IconButton>
     </Tip>
   </Toolbar>;
@@ -61,4 +62,4 @@ LayersToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default  withStyles(styles)(LayersToolbar);
+export default useStyles(LayersToolbar);

@@ -105,6 +105,8 @@ class Frame extends React.Component {
     }
   };
 
+  registerChild = (el) => this.editor = el;
+
   /**
    * проверка, можно ли покидать страницу
    * @return {String|Boolean}
@@ -116,7 +118,7 @@ class Frame extends React.Component {
     }
     const {ox} = editor.project;
     return ox && ox._modified ? `Изделие ${ox.prod_name(true)} изменено.\n\nЗакрыть без сохранения?` : true;
-  }
+  };
 
   render() {
     const {editor, props: {classes, windowHeight, windowWidth}} = this;
@@ -137,7 +139,7 @@ class Frame extends React.Component {
           <Builder
             height={height}
             classes={classes}
-            registerChild={(el) => this.editor = el}
+            registerChild={this.registerChild}
           />
         </Grid>
         <Grid item xs={12} sm={12} lg={4} xl={3}>

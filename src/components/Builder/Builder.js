@@ -7,6 +7,15 @@ import Arrows from './Arrows';
 
 export default class Builder extends React.Component {
 
+  componentWillUnmount() {
+    if(this.editor) {
+      this.editor.unload();
+      this.props.registerChild(this.editor = null);
+      window.paper = null;
+
+    }
+  }
+
   createEditor(el, width, height){
     if(el) {
       if(this.editor && this.editor._canvas === el) {
@@ -21,15 +30,6 @@ export default class Builder extends React.Component {
       }
     }
     this.editor && this.props.registerChild(this.editor);
-  }
-
-  componentWillUnmount() {
-    if(this.editor) {
-      this.editor.unload();
-      this.props.registerChild(this.editor = null);
-      window.paper = null;
-
-    }
   }
 
   arrowClick = (btn) => () => {
