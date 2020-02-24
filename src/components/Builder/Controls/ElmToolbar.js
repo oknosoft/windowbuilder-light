@@ -24,6 +24,10 @@ const btnClick = (editor, name) => {
     });
   }
 
+  if(['left', 'right', 'top', 'bottom', 'all'].includes(name)) {
+    return () => editor.profile_align(name);
+  }
+
   return () => $p.msg.show_not_implemented();
 
   // switch (name) {
@@ -33,8 +37,6 @@ const btnClick = (editor, name) => {
   // case 'glass_spec':
   //   return () => editor.glass_inserts();
   //
-  // default:
-  //   return () => editor.profile_align(name);
   // }
 };
 
@@ -42,18 +44,19 @@ function ElmToolbar({editor, elm, classes}) {
   const {msg} = $p;
   const {ProfileItem, Filling} = editor.constructor;
   const show_divider = elm instanceof ProfileItem || elm instanceof Filling;
-  return <Toolbar disableGutters variant="dense" className={!elm && 'gl disabled'}>
+  const disabled = elm ? '' : 'gl disabled';
+  return <Toolbar disableGutters variant="dense">
     <Tip title={msg.align_node_left}>
-      <IconButton onClick={btnClick(editor, 'left')}><i className="tb_align_left" /></IconButton>
+      <IconButton onClick={btnClick(editor, 'left')} className={disabled}><i className="tb_align_left" /></IconButton>
     </Tip>
     <Tip title={msg.align_node_bottom}>
-      <IconButton onClick={btnClick(editor, 'bottom')}><i className="tb_align_bottom" /></IconButton>
+      <IconButton onClick={btnClick(editor, 'bottom')} className={disabled}><i className="tb_align_bottom" /></IconButton>
     </Tip>
     <Tip title={msg.align_node_top}>
-      <IconButton onClick={btnClick(editor, 'top')}><i className="tb_align_top" /></IconButton>
+      <IconButton onClick={btnClick(editor, 'top')} className={disabled}><i className="tb_align_top" /></IconButton>
     </Tip>
     <Tip title={msg.align_node_right}>
-      <IconButton onClick={btnClick(editor, 'right')}><i className="tb_align_right" /></IconButton>
+      <IconButton onClick={btnClick(editor, 'right')} className={disabled}><i className="tb_align_right" /></IconButton>
     </Tip>
     <Tip title={msg.align_all}>
       <IconButton onClick={btnClick(editor, 'all')}><i className="fa fa-arrows-alt" /></IconButton>
@@ -67,7 +70,7 @@ function ElmToolbar({editor, elm, classes}) {
     </Tip>}
     <div className={classes.title} />
     <Tip title={msg.del_elm}>
-      <IconButton onClick={btnClick(editor, 'delete')}><i className="fa fa-trash-o" /></IconButton>
+      <IconButton onClick={btnClick(editor, 'delete')} className={disabled}><i className="fa fa-trash-o" /></IconButton>
     </Tip>
   </Toolbar>;
 }

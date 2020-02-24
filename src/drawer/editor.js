@@ -9,6 +9,7 @@
 import paper from 'paper/dist/paper-core';
 import drawer from 'windowbuilder/dist/drawer';
 import tools from './tools';
+import align from './align';
 import StableZoom from './StableZoom';
 
 export default function ($p) {
@@ -186,5 +187,6 @@ export default function ($p) {
 
   if(typeof window !== 'undefined') {
     tools(Editor, $p);
+    align(Editor, $p);
   }
 }
