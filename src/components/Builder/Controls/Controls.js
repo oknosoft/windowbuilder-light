@@ -40,25 +40,13 @@ class Controls extends React.Component {
     editor.eve.on('layer_activated', this.layer_activated);
     editor.eve.on('tool_activated', this.tool_activated);
     editor.eve.on('elm_activated', this.elm_activated);
+    editor.eve.on('contour_redrawed', this.contour_redrawed);
   }
 
   layer_activated = (contour, custom) => {
     if(!custom) {
       contour && contour.project.activeLayer !== contour && contour.activate();
       this.forceUpdate();
-    }
-  };
-
-  elm_activated = (elm, shift) => {
-    const {elm1, elm2} = this.state;
-    if(!elm1 || !shift || elm1 === elm) {
-      this.setState({elm1: elm, elm2: null});
-    }
-    else if((shift && elm2 === elm)) {
-      this.setState({elm1: elm1, elm2: null});
-    }
-    else {
-      this.setState({elm2: elm});
     }
   };
 
@@ -77,6 +65,37 @@ class Controls extends React.Component {
       }
     }
 
+  };
+
+  elm_activated = (elm, shift) => {
+    const {elm1, elm2} = this.state;
+    if(!elm1 || !shift || elm1 === elm) {
+      this.setState({elm1: elm, elm2: null});
+    }
+    else if((shift && elm2 === elm)) {
+      this.setState({elm1: elm1, elm2: null});
+    }
+    else {
+      this.setState({elm2: elm});
+    }
+  };
+
+  contour_redrawed = () => {
+    const {props, _reflect_id} = this;
+    if(props.editor){
+      _reflect_id && clearTimeout(_reflect_id);
+      this._reflect_id = setTimeout(this.reflect_changes, 100);
+    }
+  };
+
+  reflect_changes = () => {
+    const {props: {editor}} = this;
+    if(editor && editor.project) {
+      const {_dp, bounds, area} = editor.project;
+      _dp.len = bounds.width.round();
+      _dp.height = bounds.height.round();
+      _dp.s = area;
+    }
   };
 
   onDataChange = (obj, fields) => {
