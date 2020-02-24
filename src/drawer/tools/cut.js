@@ -87,7 +87,7 @@ export default function arc (Editor) {
       const {nodes} = this;
       if(!this.cont && nodes.length) {
         const point = nodes[0].profile[nodes[0].point];
-        const pt = this.project.view.projectToView(point);
+        //const pt = this.project.view.projectToView(point);
 
         // определим, какие нужны кнопки
         const buttons = [];

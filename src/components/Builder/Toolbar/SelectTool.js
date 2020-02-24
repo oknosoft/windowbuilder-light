@@ -15,39 +15,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
-import Tip from './Tip';
-
-export const useStyles = makeStyles(() => ({
-  root: {
-    transform: 'translateZ(0px)',
-    flexGrow: 1,
-  },
-  speedDial: {
-    position: 'absolute',
-    top: 2,
-  },
-  left: {
-    left: 188,
-  },
-  fab: {
-    boxShadow: 'none',
-    backgroundColor: 'transparent'
-  },
-  staticTooltipLabel: {
-    width: 160,
-  },
-  ibtn: {
-    cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    userSelect: 'none',
-    verticalAlign: 'middle',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    webkitAppearance: 'none',
-    webkitTaphighlightColor: 'transparent',
-  },
-}));
+import Tip from '../Tip';
 
 const useIndicator = makeStyles(({palette}) => ({
   indicator: {
@@ -144,7 +112,6 @@ export default function SelectTool({editor}) {
       <Tip title={title}>
         <IconButton
           aria-label="more"
-          aria-controls="long-menu"
           aria-haspopup="true"
           onClick={handleClick}
         >
@@ -154,7 +121,6 @@ export default function SelectTool({editor}) {
       </Tip>
 
       <Menu
-        id="long-menu"
         anchorEl={anchorEl}
         keepMounted
         open={open}

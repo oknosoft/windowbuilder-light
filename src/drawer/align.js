@@ -551,7 +551,7 @@ export default function align(Editor, {enm, msg, ui}) {
       }
 
       // получаем ширину строки или столбца
-      const width = (orientation === enm.orientations.vert ? bounds.width : bounds.height) / links.length;
+      //const width = (orientation === enm.orientations.vert ? bounds.width : bounds.height) / links.length;
       // получаем шаг между осями накладок без учета ширины элементов раскладки
       const step = ((orientation === enm.orientations.vert ? bounds.width : bounds.height) - widthNom * links.length) / (links.length + 1);
       // накопительная переменная

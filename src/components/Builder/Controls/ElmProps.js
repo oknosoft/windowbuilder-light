@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DataField from 'metadata-react/DataField';
 import PropField from './PropField';
 import ElmToolbar from './ElmToolbar';
 

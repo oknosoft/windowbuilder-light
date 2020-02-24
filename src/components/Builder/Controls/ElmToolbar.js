@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Tip from '../Tip';
-import {useStyles} from './LayersToolbar'
+import {useStyles} from './LayersToolbar';
 
 const btnClick = (editor, name) => {
 

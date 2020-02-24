@@ -1,22 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DataField from 'metadata-react/DataField';
-import withStyles, {extClasses} from 'metadata-react/DataField/stylesPropertyGrid';
+import PropField from '../Controls/PropField';
 
-function TextWnd({editor, classes}) {
+function TextWnd({editor}) {
   const {tool} = editor;
   const {text} = tool;
-  const ext = extClasses(classes);
   return text ? <div>
-    <DataField _obj={text} _fld="text" extClasses={ext} fullWidth/>
-    <DataField _obj={text} _fld="font_family" extClasses={ext} fullWidth/>
-    <DataField _obj={text} _fld="bold" extClasses={ext} fullWidth ctrl_type="cb"/>
-    <DataField _obj={text} _fld="font_size" extClasses={ext} fullWidth/>
-    <DataField _obj={text} _fld="angle" extClasses={ext} fullWidth/>
-    <DataField _obj={text} _fld="align" extClasses={ext} fullWidth ctrl_type="oselect"/>
-    <DataField _obj={text} _fld="clr" extClasses={ext} fullWidth/>
-    <DataField _obj={text} _fld="x" extClasses={ext} fullWidth/>
-    <DataField _obj={text} _fld="y" extClasses={ext} fullWidth/>
+    <PropField _obj={text} _fld="text"/>
+    <PropField _obj={text} _fld="font_family"/>
+    <PropField _obj={text} _fld="bold" ctrl_type="cb"/>
+    <PropField _obj={text} _fld="font_size"/>
+    <PropField _obj={text} _fld="angle"/>
+    <PropField _obj={text} _fld="align" ctrl_type="oselect"/>
+    <PropField _obj={text} _fld="clr"/>
+    <PropField _obj={text} _fld="x"/>
+    <PropField _obj={text} _fld="y"/>
   </div> :
     <div>Элемент текста не выбран</div>;
 }
@@ -25,4 +23,4 @@ TextWnd.propTypes = {
   editor: PropTypes.object.isRequired,
 };
 
-export default withStyles(TextWnd);
+export default TextWnd;

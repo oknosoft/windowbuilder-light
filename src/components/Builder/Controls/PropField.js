@@ -7,12 +7,16 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import DataField from 'metadata-react/DataField';
 import withStyles, {extClasses} from 'metadata-react/DataField/stylesPropertyGrid';
 
 function PropField({classes, ...props}) {
-  const ext = extClasses(classes);
-  return <DataField extClasses={ext} fullWidth isTabular={false} {...props}/>
+  return <DataField extClasses={extClasses(classes)} fullWidth isTabular={false} {...props}/>;
 }
+
+PropField.propTypes = {
+  classes: PropTypes.object,
+};
 
 export default withStyles(PropField);
