@@ -46,6 +46,17 @@ export const useStyles = makeStyles(() => ({
     backgroundColor: 'transparent',
     webkitAppearance: 'none',
     webkitTaphighlightColor: 'transparent',
+  },
+}));
+
+const useIndicator = makeStyles(({palette}) => ({
+  indicator: {
+    width: 48,
+    bottom: 4,
+    height: 2,
+    position: 'absolute',
+    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    backgroundColor: palette.text.secondary,// palette.grey[400],
   }
 }));
 
@@ -60,7 +71,7 @@ IBtn.propTypes = {
   children: PropTypes.node,
 };
 
-export const select_tool = (editor, id) => {
+export const select_tool = (editor, id, set_select_node) => {
   switch (id) {
   case 'm1':
     editor.project.magnetism.m1();
@@ -74,10 +85,11 @@ export const select_tool = (editor, id) => {
       }
     });
   }
+  set_select_node(id === 'select_node');
 };
 
 const actions = [
-  {css: 'tb_icon-arrow-white', name: 'Элемент и узел', id: 'select_node'},
+  //{css: 'tb_icon-arrow-white', name: 'Элемент и узел', id: 'select_node'},
   {css: 'tb_icon-hand', name: 'Панорама', id: 'pan'},
   {css: 'tb_cursor-pen-freehand', name: 'Добавить профиль', id: 'pen'},
   {css: 'tb_stulp_flap', name: 'Добавить штульп-створки', id: 'stulp_flap'},
@@ -97,6 +109,7 @@ export default function SelectTool({editor}) {
   const open = Boolean(anchorEl);
 
   const cid = editor.tool && editor.tool.options.name;
+  const [is_select_node, set_select_node] = React.useState(cid === 'select_node');
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -116,8 +129,18 @@ export default function SelectTool({editor}) {
     }
   });
 
+  const classes = useIndicator();
+
   return (
     <div>
+      <IconButton
+        title="Элемент и узел"
+        onClick={() => select_tool(editor, 'select_node', set_select_node)}
+      >
+        <i className="tb_icon-arrow-white"/>
+        {is_select_node && <span className={classes.indicator}/>}
+      </IconButton>
+
       <Tip title={title}>
         <IconButton
           aria-label="more"
@@ -126,6 +149,7 @@ export default function SelectTool({editor}) {
           onClick={handleClick}
         >
           {ibtn}
+          {!is_select_node && <span className={classes.indicator}/>}
         </IconButton>
       </Tip>
 
@@ -141,7 +165,7 @@ export default function SelectTool({editor}) {
             key={`act-${index}`}
             selected={action.id === cid}
             onClick={() => {
-              select_tool(editor, action.id);
+              select_tool(editor, action.id, set_select_node);
               handleClose();
             }}>
             {<IBtn css={action.css}>{action.children}</IBtn>}
