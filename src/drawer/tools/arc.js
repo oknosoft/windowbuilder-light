@@ -158,7 +158,7 @@ export default function arc (Editor) {
         setTimeout(() => {
           r.layer.redraw();
           this.eve.emit('layer_activated', r.layer);
-          this.eve.emit('elm_activated', r);
+          r.parent instanceof ProfileItem && this.eve.emit('elm_activated', r.parent);
         }, 10);
 
       }

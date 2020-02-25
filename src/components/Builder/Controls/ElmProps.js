@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
 import PropField from './PropField';
 import ElmToolbar from './ElmToolbar';
 
@@ -13,7 +14,7 @@ function ElmProps({elm1, elm2, editor}) {
           <PropField _obj={elm1} _fld="inset" _meta={fields.inset} />
           <PropField _obj={elm1} _fld="clr" _meta={fields.clr} />
       </div>
-        : <div>Элемент не выбран</div>
+        : <Typography color="primary">Элемент не выбран</Typography>
     }
   </div>;
 }

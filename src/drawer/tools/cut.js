@@ -92,13 +92,13 @@ export default function arc (Editor) {
         // определим, какие нужны кнопки
         const buttons = [];
         if(nodes.length > 2) {
-          buttons.push({name: 'cut', float: 'left', css: 'tb_cursor-cut tb_disable', tooltip: 'Разорвать Т'});
+          buttons.push({name: 'cut', float: 'left', css: 'tb_cursor-cut gl disabled', tooltip: 'Разорвать Т'});
           buttons.push({name: 'uncut', float: 'left', css: 'tb_cursor-uncut', tooltip: 'Объединить разрыв в Т'});
         }
         // если есть T
         else if(nodes.some(({point}) => point === 't')) {
           buttons.push({name: 'cut', float: 'left', css: 'tb_cursor-cut', tooltip: 'Разорвать Т'});
-          buttons.push({name: 'uncut', float: 'left', css: 'tb_cursor-uncut tb_disable', tooltip: 'Объединить разрыв в Т'});
+          buttons.push({name: 'uncut', float: 'left', css: 'tb_cursor-uncut gl disabled', tooltip: 'Объединить разрыв в Т'});
         }
         else {
           buttons.push({name: 'diagonal', float: 'left', css: 'tb_cursor-diagonal', tooltip: 'Диагональное'});
@@ -120,20 +120,20 @@ export default function arc (Editor) {
           }
         }
         for(const btn of buttons) {
-          if(!btn.css.includes('tb_disable')) {
+          if(!btn.css.includes('disabled')) {
             if(btn.name === 'uncut' && !types.has($p.enm.cnn_types.t) ||
               btn.name === 'vh' && !types.has($p.enm.cnn_types.ah) ||
               btn.name === 'hv' && !types.has($p.enm.cnn_types.av) ||
               btn.name === 'diagonal' && !types.has($p.enm.cnn_types.ad)
             ){
-              btn.css += ' tb_disable';
+              btn.css += ' gl disabled';
             }
             else if(['diagonal', 'vh', 'hv'].includes(btn.name) && nodes.every(({profile, point}) => {
               const {cnn} = profile.rays[point];
               const type = btn.name === 'diagonal' ? $p.enm.cnn_types.ad : (btn.name === 'vh' ? $p.enm.cnn_types.ah : $p.enm.cnn_types.av);
               return cnn && cnn.cnn_type === type;
             })){
-              btn.css += ' tb_disable';
+              btn.css += ' gl disabled';
             }
           }
         }

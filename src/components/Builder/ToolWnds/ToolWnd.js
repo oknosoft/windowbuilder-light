@@ -9,7 +9,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 
-const Stub = () => <Typography>Текущий инструмент не имеет окна свойств</Typography>;
+const Stub = () => <Typography color="primary">Текущий инструмент не имеет окна свойств</Typography>;
 
 export default function ToolWnd({editor}) {
   const {tool} = editor;

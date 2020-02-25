@@ -9,6 +9,9 @@ export const useStyles = withStyles({
   title: {
     flexGrow: 1,
   },
+  sp: {
+    paddingLeft: 8,
+  },
 });
 
 // создаёт слой и оповещает мир о новых слоях

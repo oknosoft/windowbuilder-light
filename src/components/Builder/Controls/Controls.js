@@ -10,7 +10,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Tip from '../Tip';
-import Params from './Params';
+import Product from './Product';
+import Flap from './Flap';
 import LayersTree from './LayersTree';
 import ElmProps from './ElmProps';
 import ToolWnd from '../ToolWnds/ToolWnd';
@@ -157,8 +158,8 @@ class Controls extends React.Component {
       </AntTabs>
       {tab === 0 && <LayersTree editor={editor}/>}
       {tab === 1 && <ElmProps editor={editor} elm1={elm1} elm2={elm2}/>}
-      {tab === 2 && <Params editor={editor}/>}
-      {tab === 3 && <Params editor={editor} root/>}
+      {tab === 2 && <Flap editor={editor}/>}
+      {tab === 3 && <Product editor={editor}/>}
       {tab === 4 && <ToolWnd editor={editor}/>}
     </div>;
   }
