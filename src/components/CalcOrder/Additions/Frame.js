@@ -48,10 +48,10 @@ class ParametricFrame extends React.Component {
 
   render() {
 
-    const {handleCancel, handleErrClose, props: {_obj, Content}, state: {msg, queryClose}} = this;
+    const {handleCancel, handleErrClose, props: {_obj, Content, classes}, state: {msg, queryClose}} = this;
 
-    return <div>
-      <Toolbar>
+    return <div className={classes.pr}>
+      <Toolbar disableGutters>
         <Button key="ok" onClick={this.handleOk} color="primary">Рассчитать и закрыть</Button>
         <Button key="calck" onClick={this.handleCalck} color="primary">Рассчитать</Button>
         <Button key="cancel" onClick={handleCancel} color="primary">Закрыть</Button>
@@ -86,6 +86,7 @@ class ParametricFrame extends React.Component {
 
 ParametricFrame.propTypes = {
   _obj: PropTypes.object,
+  classes: PropTypes.object,
   handleCalck: PropTypes.func,
   handleCancel: PropTypes.func,
   Content: PropTypes.func,

@@ -13,6 +13,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import CustomToolbar from '../AdditionsExt/CustomToolbar';
+import Paper from '@material-ui/core/Paper';
 
 function Orders({_obj, row, setRow}) {
 
@@ -41,19 +42,19 @@ function Orders({_obj, row, setRow}) {
   };
 
   return <Grid item xs={12} md={2}>
-    <CustomToolbar handleAdd={handleAdd} handleRemove={handleRemove} count={orders.count()}/>
-    <List>
-      {orders._obj.map(({_row}) => {
-        return <ListItem
+    <Paper variant="outlined" style={{height: '100%'}} square>
+      <CustomToolbar handleAdd={handleAdd} handleRemove={handleRemove} count={orders.count()}/>
+      <List>
+        {orders._obj.map(({_row}) => <ListItem
           key={`or_${_row.row}`}
           button
           selected={_row === row}
           onClick={() => setRow(_row)}
         >
           <ListItemText primary={_row.is_supplier.name} />
-        </ListItem>
-      })}
-    </List>
+        </ListItem>)}
+      </List>
+    </Paper>
   </Grid>;
 }
 

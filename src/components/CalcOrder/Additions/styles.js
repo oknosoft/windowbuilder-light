@@ -20,7 +20,10 @@ const styles = theme => ({
   listitem: {
     paddingTop: theme.spacing(),
     paddingBottom: theme.spacing(),
-  }
+  },
+  pr: {
+    paddingRight: theme.spacing(),
+  },
 });
 
 export default withStyles(styles);

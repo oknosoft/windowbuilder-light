@@ -48,7 +48,7 @@ class CalcOrderObj extends DataObj {
     let h1 = height < 420 ? 420 : height;
     h1 -= 146;
 
-    return <div style={{width: 'calc(100vw - 8px)', paddingBottom: 32}}>
+    return <div style={{/*width: 'calc(100vw - 8px)',*/ paddingBottom: 32}}>
       <AntTabs
         value={tab}
         onChange={this.handleChangeTab}

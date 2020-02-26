@@ -10,7 +10,7 @@ export default function CustomToolbar({handleAdd, handleRemove, count}) {
     <IconButton title="Добавить строку" onClick={handleAdd}><AddIcon/></IconButton>
     <IconButton title="Удалить строку" disabled={!count} onClick={handleRemove}><RemoveIcon/></IconButton>
   </Toolbar>;
-};
+}
 
 CustomToolbar.propTypes = {
   handleAdd: PropTypes.func.isRequired,
