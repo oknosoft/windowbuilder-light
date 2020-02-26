@@ -29,7 +29,7 @@ class ToolbarParametric extends TabularSectionToolbar {
         {[
           <IconButton key="btn_standart" title="Стандартные параметры" onClick={btns.setStandart}><Filter1 /></IconButton>,
           <IconButton key="btn_extend" title="Расширенные параметры" onClick={btns.setExtend}><Filter9Plus /></IconButton>,
-          <IconButton key="btn_extend" title="Параметры из сервиса внешнего поставщика" onClick={btns.setHttp}><HttpIcon /></IconButton>,
+          <IconButton key="btn_http" title="Параметры из сервиса внешнего поставщика" onClick={btns.setHttp}><HttpIcon /></IconButton>,
           <IconButton key="btn_del" title="Удалить строку" onClick={props.handleRemove}><RemoveIcon /></IconButton>,
           <IconButton key="btn_clear" title="Удалить все строки" onClick={props.handleClear}><RemoveAllIcon /></IconButton>,
 
