@@ -21,13 +21,13 @@ class LVal {
     return this.name || '';
   }
   valueOf() {
-    return this.ref || '';
+    return this.ref || this.val || this.id || '';
   }
 }
 
 const meta = (supplier, sprms, _fld) => {
   let {type, values, name} = supplier.prm(_fld);
-  const sprm = sprms.find((v) => v.id === _fld);
+  const sprm = sprms.find((v) => v.alias === _fld || v.id === _fld);
   let options = [];
   if(Array.isArray(values) && Array.isArray(sprm.values) && type === 'object') {
     if(values.length && sprm.values.length) {
@@ -79,7 +79,7 @@ OrderProp.propTypes = {
   _obj: PropTypes.object,
   _fld: PropTypes.string,
   supplier: PropTypes.object,
-  sprms: PropTypes.object,
+  sprms: PropTypes.array,
 };
 
 export default withStyles(OrderProp);

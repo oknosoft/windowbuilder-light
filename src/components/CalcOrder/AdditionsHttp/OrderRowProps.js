@@ -34,16 +34,20 @@ function OrderRowProps({row, supplier}) {
         params = {};
       }
       for(const prm of sprms) {
-        if(!prm.id || ['nom','note'].includes(prm.id)) {
+        const id = prm.alias || prm.id;
+        if(!id || ['nom','note'].includes(id)) {
           continue;
         }
-        if(!params.hasOwnProperty(prm.id)) {
-          const {type, subtype, values} = supplier.prm(prm.id);
-          if(values && values.length) {
-            params[prm.id] = values[0].ref || values[0];
+        if(!params.hasOwnProperty(id)) {
+          const {type, subtype, values} = supplier.prm(id);
+          if(prm.values && prm.values.length) {
+            params[id] = prm.values[0].val || prm.values[0].ref || prm.values[0].id || prm.values[0];
+          }
+          else if(values && values.length) {
+            params[id] = values[0].val || values[0].ref || values[0].id || values[0];
           }
           else {
-            params[prm.id] = subtype === 'number' || type === 'number' ? 0 : '';
+            params[id] = subtype === 'number' || type === 'number' ? 0 : '';
           }
         }
       }
