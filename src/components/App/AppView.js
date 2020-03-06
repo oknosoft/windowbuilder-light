@@ -4,6 +4,7 @@ import {Switch, Route, Redirect} from 'react-router';
 import Snack from 'metadata-react/App/Snack';       // сообщения в верхней части страницы (например, обновить после первого запуска)
 import Alert from 'metadata-react/App/Alert';       // диалог сообщения пользователю
 import Confirm from 'metadata-react/App/Confirm';   // диалог вопросов пользователю (да, нет)
+import WindowPortal from 'metadata-react/App/WindowPortal';   // контент в новом окне (например, для печати)
 import Login, {FrmLogin} from 'metadata-react/FrmLogin/Proxy';  // логин и свойства подключения
 import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "необходима авторизация"
 import Header from 'metadata-react/Header';         // навигация
@@ -76,7 +77,7 @@ class AppView extends Component {
   render() {
     /* eslint-disable-next-line */
     const {classes, ...props} = this.props;
-    const {snack, alert, confirm, meta_loaded, doc_ram_loaded, page, user, couch_direct, offline, title, idle} = props;
+    const {snack, alert, confirm, wnd_portal, meta_loaded, doc_ram_loaded, page, user, couch_direct, offline, title, idle} = props;
     const iprops = item_props();
 
 
@@ -149,8 +150,9 @@ class AppView extends Component {
       <Alert key="alert" {...alert} handleOk={this.handleAlertClose}/>,
 
       // диалог вопросов пользователю (да, нет)
-      confirm && confirm.open &&
-      <Confirm key="confirm" {...confirm}/>,
+      confirm && confirm.open && <Confirm key="confirm" {...confirm}/>,
+
+      wnd_portal && wnd_portal.open && <WindowPortal key="wnd_portal" {...wnd_portal}/>,
     ];
   }
 
