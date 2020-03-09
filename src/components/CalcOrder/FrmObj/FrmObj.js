@@ -165,7 +165,9 @@ class CalcOrderObj extends DataObj {
 
   openTemplates = () => {
     const {state: {_obj}, props: {handlers}} = this;
-    handlers.handleNavigate(path(`templates/?order=${_obj.ref}&ref=new`));
+    ((_obj._modified || _obj.is_new()) ? _obj.save() : Promise.resolve())
+      .then(() => handlers.handleNavigate(path(`templates/?order=${_obj.ref}&ref=new`)))
+      .catch((err) => null);
   };
 
 
