@@ -23,7 +23,7 @@ class LinkedProps extends React.Component {
       }
       const _meta = Object.assign({}, fields.value);
       _meta.synonym = param.caption || param.name;
-      res.push(<PropField _obj={row} _fld="value" _meta={_meta}/>)
+      res.push(<PropField key={`prm-${row.row}`} _obj={row} _fld="value" _meta={_meta}/>);
     });
     return res;
   }

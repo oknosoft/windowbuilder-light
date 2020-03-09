@@ -23,6 +23,7 @@ function FlapToolbar({contour, disabled, classes}) {
 
 FlapToolbar.propTypes = {
   contour: PropTypes.object,
+  disabled: PropTypes.bool,
   classes: PropTypes.object.isRequired,
 };
 

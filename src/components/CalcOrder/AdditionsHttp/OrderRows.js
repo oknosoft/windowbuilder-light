@@ -15,7 +15,7 @@ import TabularSection from 'metadata-react/TabularSection';
 
 const stub = {
   goods: {
-    count() {return 0}
+    count() {return 0;}
   }
 };
 
@@ -24,7 +24,12 @@ const formatter = ({row, value}) => {
   const orow = orders.find({invoice: row._owner._owner});
   const prow = orow && orow.is_supplier.nom.find({identifier: value});
   return <div>{prow ? prow.name : value}</div>;
-}
+};
+
+formatter.propTypes = {
+  row: PropTypes.object,
+  value: PropTypes.any,
+};
 
 const columnsChange = ({scheme, columns}) => {
   for(const column of columns) {

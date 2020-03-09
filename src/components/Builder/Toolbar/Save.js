@@ -83,3 +83,8 @@ export default function Save({editor, handleClose}) {
     </Menu>
   </div>
 }
+
+Save.propTypes = {
+  editor: PropTypes.object.isRequired,
+  handleClose: PropTypes.func.isRequired,
+};

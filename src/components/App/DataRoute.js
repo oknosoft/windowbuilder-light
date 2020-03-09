@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Switch, Route} from 'react-router';
-import qs from 'qs';
 
 import {withObj} from 'metadata-redux';
 import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "необходима авторизация"
@@ -9,7 +8,7 @@ import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "нео�
 import NotFound from '../Markdown/NotFound';
 
 /* eslint-disable-next-line */
-import {path} from './menu_items';                  // метод для вычисления base path
+import {path, prm} from './menu_items';                  // метод для вычисления base path
 import {lazy} from './lazy';                        // конструкторы для контекста
 
 class DataRoute extends React.Component {
@@ -47,10 +46,10 @@ class DataRoute extends React.Component {
 
       // уточняем _mgr для MultiManagers
       if(type === 'obj' && _mgr._indexer) {
-        const prm = qs.parse(location.search.replace('?',''));
-        if(prm.area && _mgr.cachable !== prm.area){
+        const aprm = prm();
+        if(aprm.area && _mgr.cachable !== aprm.area){
           _mgr._indexer._mgrs.some((mgr) => {
-            if(mgr.cachable === prm.area){
+            if(mgr.cachable === aprm.area){
               return _mgr = mgr;
             }
           });
