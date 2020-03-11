@@ -7,8 +7,9 @@
  */
 
 import {prm} from '../../components/App/menu_items';
+import {load_ram} from 'metadata-superlogin/proxy';
 
-export default function ({wsql, adapters: {pouch}, cat}) {
+export default function ({wsql, md, adapters: {pouch}, cat}) {
 
   const onDoc = ({data}) => {
     const doc = JSON.parse(data);
@@ -32,8 +33,8 @@ export default function ({wsql, adapters: {pouch}, cat}) {
   };
 
   const onRam = ({data}) => {
-    const doc = JSON.parse(data);
-    pouch.load_changes({docs: [doc]});
+    load_ram({adapters: {pouch}, md}, JSON.parse(data))
+      .catch((err) => null);
   };
 
   pouch.on({

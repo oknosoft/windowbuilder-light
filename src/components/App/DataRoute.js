@@ -8,7 +8,7 @@ import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "нео�
 import NotFound from '../Markdown/NotFound';
 
 /* eslint-disable-next-line */
-import {path, prm} from './menu_items';                  // метод для вычисления base path
+import {path, prm} from './menu_items';             // метод для вычисления base path
 import {lazy} from './lazy';                        // конструкторы для контекста
 
 class DataRoute extends React.Component {
