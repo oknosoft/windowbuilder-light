@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import PropField from './PropField';
 import FlapToolbar from './FlapToolbar';
+import LinkedProps from './LinkedProps';
 
 function Flap({editor}) {
   const {project} = editor;
-  const {activeLayer: contour} = project;
+  const {activeLayer: contour, ox} = project;
   const is_flap = contour.layer;
   const disabled = contour.layer ? '' : 'gl disabled';
-  //const row = is_flap && ox.constructions.find({cnstr: contour.cnstr});
+  const {utils} = $p;
 
   return <div>
     <FlapToolbar contour={contour} disabled={disabled}/>
@@ -17,6 +18,7 @@ function Flap({editor}) {
       <PropField _obj={contour} _fld="direction" />
       <PropField _obj={contour} _fld="h_ruch" />
     </div>
+    {!disabled && <LinkedProps ts={ox.params} selection={{cnstr: contour.cnstr, inset: utils.blank.guid}}/>}
   </div>;
 }
 

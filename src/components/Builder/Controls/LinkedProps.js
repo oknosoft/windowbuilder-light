@@ -16,14 +16,66 @@ class LinkedProps extends React.Component {
     const {ts, selection} = this.props;
     const {fields} = ts._owner._metadata(ts._name);
     const res = [];
-    ts.find_rows(selection, (row) => {
-      const {param} = row;
-      if(param.is_calculated && !param.show_calculated) {
-        return;
-      }
+    const grid = {selection: {cnstr: selection.cnstr}};
+    let notify;
+
+    ts.find_rows(selection, (prow) => {
+      const {param} = prow;
+      const links = param.params_links({grid, obj: prow});
+      // вычисляемые скрываем всегда
+      let hide = !param.show_calculated && param.is_calculated;
+      // если для параметра есть связи - сокрытие по связям
+      if(!hide){
+        if(links.length) {
+          hide = links.some((link) => link.hide);
+        }
+        else {
+          hide = prow.hide;
+        }
+      };
+
       const _meta = Object.assign({}, fields.value);
       _meta.synonym = param.caption || param.name;
-      res.push(<PropField key={`prm-${row.row}`} _obj={row} _fld="value" _meta={_meta}/>);
+
+      const {types} = param.type;
+      let oselect = types.length === 1 && types[0] === 'cat.property_values';
+
+      // проверим вхождение значения в доступные и при необходимости изменим
+      if (links.length) {
+        const values = [];
+        if(param.linked_values(links, prow, values)) {
+          notify = true;
+        }
+        if(values.length) {
+          if(values.length < 50) {
+            oselect = true;
+          }
+          if(!_meta.choice_params) {
+            _meta.choice_params = [];
+          }
+          // дополняем отбор
+          _meta.choice_params.push({
+            name: 'ref',
+            path: {in: values.map((v) => v.value)}
+          });
+        }
+      }
+      if (prow.hide !== hide) {
+        prow.hide = hide;
+        notify = true;
+      }
+
+      if(hide) {
+        return;
+      }
+
+      res.push(<PropField
+        key={`prm-${prow.row}`}
+        _obj={prow}
+        _fld="value"
+        _meta={_meta}
+        ctrl_type={oselect ? 'oselect' : void 0}
+      />);
     });
     return res;
   }

@@ -18,11 +18,7 @@ function Product({editor}) {
     <PropField _obj={_dp} _fld="len" read_only/>
     <PropField _obj={_dp} _fld="height" read_only/>
     <PropField _obj={_dp} _fld="s" read_only/>
-    <LinkedProps ts={ox.params} selection={{
-      cnstr: 0,
-      inset: utils.blank.guid,
-      hide: {not: true}
-    }}/>
+    <LinkedProps ts={ox.params} selection={{cnstr: 0, inset: utils.blank.guid}}/>
     <PropField _obj={_dp} _fld="quantity" />
     {!hide_dealer && <PropField
       _obj={_dp}
