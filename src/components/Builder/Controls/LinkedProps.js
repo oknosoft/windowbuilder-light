@@ -13,13 +13,13 @@ import PropField from './PropField';
 class LinkedProps extends React.Component {
 
   render() {
-    const {ts, selection} = this.props;
+    const {ts, cnstr, inset} = this.props;
     const {fields} = ts._owner._metadata(ts._name);
     const res = [];
-    const grid = {selection: {cnstr: selection.cnstr}};
+    const grid = {selection: {cnstr, inset}};
     let notify;
 
-    ts.find_rows(selection, (prow) => {
+    ts.find_rows({cnstr, inset}, (prow) => {
       const {param} = prow;
       const links = param.params_links({grid, obj: prow});
       // вычисляемые скрываем всегда
@@ -84,7 +84,8 @@ class LinkedProps extends React.Component {
 
 LinkedProps.propTypes = {
   ts: PropTypes.object.isRequired,
-  selection: PropTypes.object.isRequired,
+  cnstr: PropTypes.numner,
+  inset: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
 
 export default LinkedProps;

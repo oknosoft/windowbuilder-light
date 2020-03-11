@@ -18,7 +18,7 @@ function Flap({editor}) {
       <PropField _obj={contour} _fld="direction" />
       <PropField _obj={contour} _fld="h_ruch" />
     </div>
-    {!disabled && <LinkedProps ts={ox.params} selection={{cnstr: contour.cnstr, inset: utils.blank.guid}}/>}
+    {!disabled && <LinkedProps ts={ox.params} cnstr={contour.cnstr} inset={utils.blank.guid} />}
   </div>;
 }
 

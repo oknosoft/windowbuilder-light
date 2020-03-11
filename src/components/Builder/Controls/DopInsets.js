@@ -13,7 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveIcon from '@material-ui/icons/DeleteOutline';
-import InsetsProps from './DopInsetsProps';
+import Toolbar from '@material-ui/core/Toolbar';
+import LinkedProps from './LinkedProps';
 
 class DopInsets extends React.Component {
 
@@ -21,14 +22,12 @@ class DopInsets extends React.Component {
     super(props, context);
     const {cat, utils} = $p;
     this._meta = utils._clone(cat.characteristics.metadata('inserts'));
-    // this._meta.fields.w.type.fraction = 0;
-    // this._meta.fields.h.type.fraction = 0;
-
     cat.scheme_settings.find_rows({obj: 'cat.characteristics.inserts'}, (scheme) => {
       if(scheme.name.endsWith('dop')) {
         this.scheme = scheme;
       }
     });
+    this.state = {row: null, inset: null};
   }
 
   filter = (collection) => {
@@ -43,6 +42,7 @@ class DopInsets extends React.Component {
   };
 
   defferedUpdate = () => {
+    this.rowUpdate();
     setTimeout(() => {
       const {editor} = this.props;
       editor && editor.project && editor.project.register_change();
@@ -66,6 +66,13 @@ class DopInsets extends React.Component {
     this._grid = el;
   };
 
+  rowUpdate = (sel, row) => {
+    if(!row && sel && sel.hasOwnProperty('rowIdx')) {
+      row = this._grid.rowGetter(sel.rowIdx);
+    }
+    this.setState({row, inset: (!row || row.inset.empty()) ? null : row.inset});
+  };
+
   btns() {
     return [
       <IconButton key="btn_add" title="Добавить вставку" onClick={this.handleAdd}><AddIcon /></IconButton>,
@@ -74,9 +81,8 @@ class DopInsets extends React.Component {
   }
 
   render() {
-    const {_grid, props: {ox, cnstr, kind}} = this;
-    const minHeight = 140;
-    const row = _grid && _grid.state.selected && _grid.state.selected.hasOwnProperty('rowIdx') && _grid.rowGetter(_grid.state.selected.rowIdx);
+    const {state: {row, inset}, props: {ox, cnstr, kind}} = this;
+    const minHeight = 170;
 
     return this.scheme ?
       <div>
@@ -93,11 +99,14 @@ class DopInsets extends React.Component {
             denyAddDel
             denyReorder
             btns={this.btns()}
-            //onCellSelected={this.defferedUpdate}
+            onCellSelected={this.rowUpdate}
             onRowUpdated={this.defferedUpdate}
           />
         </div>
-        <InsetsProps ox={ox} cnstr={cnstr} inset={row ? row.inset : {}}/>
+        {inset && <Toolbar disableGutters variant="dense">
+          <Typography color="primary">{`Параметры `}</Typography>&nbsp;<Typography color="secondary">{` ${inset.name}`}</Typography>
+        </Toolbar>}
+        {inset && <LinkedProps ts={ox.params} cnstr={cnstr} inset={inset} />}
       </div>
       :
       <Typography color="error">
