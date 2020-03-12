@@ -34,7 +34,6 @@ export function fill_data(_obj, items) {
   dp.calc_order.production.find_rows({ordn: $p.utils.blank.guid}, (row) => {
     const {characteristic} = row;
     const {origin} = characteristic;
-
     // фильтруем по типу вставки
     if(!characteristic.empty() && origin && !origin.empty() && items.indexOf(origin.insert_type) != -1) {
       const cmp = components.get(origin.insert_type);
