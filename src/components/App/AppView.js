@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {Switch, Route, Redirect} from 'react-router';
 import Snack from 'metadata-react/App/Snack';       // сообщения в верхней части страницы (например, обновить после первого запуска)
@@ -26,7 +26,7 @@ import withStyles from './styles';
 import items, {item_props, path} from './menu_items'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
 
 // основной layout
-class AppView extends Component {
+class AppView extends React.Component {
 
   constructor(props, context) {
     super(props, context);

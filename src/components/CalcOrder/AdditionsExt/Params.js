@@ -9,7 +9,7 @@
 import React from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import Typography from '@material-ui/core/Typography';
-import DataField from 'metadata-react/DataField';
+import ExtProp from './ExtProp';
 
 export default function Params({row, inset, meta}) {
   if(!row) {
@@ -27,28 +27,13 @@ export default function Params({row, inset, meta}) {
     struct.get(row.pos).push(row);
   });
 
-  const fld_props = {
-    _obj: row,
-    isTabular: false,
-  };
 
-  const fprops = (v) => {
-    const _fld = v.param.valueOf();
-    return Object.assign({
-      _fld,
-      _meta: meta.fields[_fld],
-      key: `f_${_fld}`,
-    }, fld_props);
-  };
 
   let frame = struct.get(elm_positions.top);
   if(frame) {
     res.push(<FormGroup key="top" row>
       {
-        frame.map((v) => {
-          /* eslint-disable react/jsx-key */
-          return <DataField {...fprops(v)} />;
-        })
+        frame.map((v, i) => <ExtProp key={`ep1-${i}`} row={row} param={v.param} meta={meta} />)
       }
     </FormGroup>);
   }
@@ -60,10 +45,7 @@ export default function Params({row, inset, meta}) {
         if(!column) return null;
         return <FormGroup key={`column${v}`}>
           {
-            column.map((v) => {
-              /* eslint-disable react/jsx-key */
-              return <DataField {...fprops(v)} />;
-            })
+            column.map((v, i) => <ExtProp key={`ep2-${i}`} row={row} param={v.param} meta={meta} />)
           }
         </FormGroup>;
       })}
@@ -74,9 +56,7 @@ export default function Params({row, inset, meta}) {
   if(frame) {
     res.push(<FormGroup key="bottom" row>
       {
-        frame.map((v) => {
-          return <DataField {...fprops(v)} />;
-        })
+        frame.map((v, i) => <ExtProp key={`ep3-${i}`} row={row} param={v.param} meta={meta} />)
       }
     </FormGroup>);
   }
