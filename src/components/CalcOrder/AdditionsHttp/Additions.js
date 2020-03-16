@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Orders from './Orders';
 import OrderRows from './OrderRows';
 import OrderRowProps from './OrderRowProps';
+import handleCalck from './handleCalck';
 
 class Additions extends React.Component {
 
@@ -28,6 +29,10 @@ class Additions extends React.Component {
         this.scheme = scheme;
       }
     });
+  }
+
+  handleCalck() {
+    return handleCalck(this.props._obj)
   }
 
   set_order(row) {

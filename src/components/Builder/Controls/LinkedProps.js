@@ -32,7 +32,7 @@ class LinkedProps extends React.Component {
         else {
           hide = prow.hide;
         }
-      };
+      }
 
       const _meta = Object.assign({}, fields.value);
       _meta.synonym = param.caption || param.name;

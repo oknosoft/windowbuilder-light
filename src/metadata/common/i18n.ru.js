@@ -62,6 +62,10 @@ export default function ({msg, ui}) {
       ui.dialogs.alert({text: this.not_implemented, title: this.main_title});
     },
 
+    show_msg (attr) {
+      ui.dialogs.alert(attr);
+    },
+
   });
 }
 

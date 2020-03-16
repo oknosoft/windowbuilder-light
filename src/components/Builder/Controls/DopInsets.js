@@ -81,6 +81,7 @@ class DopInsets extends React.Component {
   }
 
   render() {
+    /* eslint-disable-next-line */
     const {state: {row, inset}, props: {ox, cnstr, kind}} = this;
     const minHeight = 170;
 

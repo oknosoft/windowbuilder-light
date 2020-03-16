@@ -18,7 +18,7 @@ function PropField({row, param, meta, ...props}) {
   // если для параметра есть связи - сокрытие по связям
   if(!hide && links.length){
     hide = links.some((link) => link.hide);
-  };
+  }
   if(hide) {
     return null;
   }
@@ -26,7 +26,7 @@ function PropField({row, param, meta, ...props}) {
   // проверим вхождение значения в доступные и при необходимости изменим
   if (links.length) {
     const values = [];
-    if(param.linked_values(links, prow, values)) {
+    if(param.linked_values(links, row, values)) {
       notify = true;
     }
     if(values.length) {

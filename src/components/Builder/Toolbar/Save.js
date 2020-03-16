@@ -81,7 +81,7 @@ export default function Save({editor, handleClose}) {
         Прочитать последнюю сохраненную версию
       </MenuItem>
     </Menu>
-  </div>
+  </div>;
 }
 
 Save.propTypes = {

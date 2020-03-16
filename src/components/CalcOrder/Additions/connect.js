@@ -151,8 +151,8 @@ export function find_inset(insert_type) {
 function mapStateToProps(/*state, props*/) {
   return {
     handleCalck() {
-      const {dp} = this.additions;
-      return dp.calc_order.process_add_product_list(dp)
+      const {additions} = this;
+      return additions.dp ? additions.dp.calc_order.process_add_product_list(additions.dp) : additions.handleCalck()
         .then(() => {
           //dp.calc_order.production.sync_grid(props.dialog.wnd.elmnts.grids.production);
         });

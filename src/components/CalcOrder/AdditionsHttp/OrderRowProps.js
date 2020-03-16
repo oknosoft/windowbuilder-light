@@ -51,6 +51,9 @@ function OrderRowProps({row, supplier}) {
           }
         }
       }
+      if(!row.params) {
+        row.params = JSON.stringify(params);
+      }
       params = new Proxy(params, {
         set (target, fld, value) {
           const {type, subtype} = supplier.prm(fld);

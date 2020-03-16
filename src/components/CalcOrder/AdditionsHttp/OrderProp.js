@@ -31,7 +31,9 @@ const meta = (supplier, sprms, _fld) => {
   let options = [];
   if(Array.isArray(values) && Array.isArray(sprm.values) && type === 'object') {
     if(values.length && sprm.values.length) {
-      options = sprm.values.map((v) => new LVal(values[v]));
+      options = sprm.values.map((v) => {
+        return new LVal(values[v] || values.find((cval) => cval.ref === v));
+      });
     }
     else if(values.length) {
       options = values.map((v) => new LVal(v));
