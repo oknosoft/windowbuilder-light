@@ -11,55 +11,59 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Typography from '@material-ui/core/Typography';
 import ExtProp from './ExtProp';
 
-export default function Params({row, inset, meta}) {
-  if(!row) {
-    return <Typography variant="subtitle1" color="secondary">Нет параметров, либо не выбрана строка продукции</Typography>;
+export default class Params extends React.Component {
+
+  handleValueChange = (val) => {
+    this.timer && clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.forceUpdate(), 100);
+  };
+
+  componentWillUnmount() {
+    this.timer && clearTimeout(this.timer);
   }
-  const {product_params, presentation} = inset;
-  const res = [<Typography key="title" variant="subtitle1" color="primary">{`Параметры ${presentation}`}</Typography>];
-  const struct = new Map();
-  const {elm_positions} = $p.enm;
-  product_params.forEach((row) => {
-    if(row.pos.empty()) return;
-    if(!struct.get(row.pos)) {
-      struct.set(row.pos, []);
+
+  render() {
+    const {row, inset, meta} = this.props;
+    if(!row) {
+      return <Typography variant="subtitle1" color="secondary">Нет параметров, либо не выбрана строка продукции</Typography>;
     }
-    struct.get(row.pos).push(row);
-  });
 
-
-
-  let frame = struct.get(elm_positions.top);
-  if(frame) {
-    res.push(<FormGroup key="top" row>
-      {
-        frame.map((v, i) => <ExtProp key={`ep1-${i}`} row={row} param={v.param} meta={meta} />)
+    const {product_params, presentation} = inset;
+    const res = [<Typography key="title" variant="subtitle1" color="primary">{`Параметры ${presentation}`}</Typography>];
+    const struct = new Map();
+    const {elm_positions} = $p.enm;
+    product_params.forEach((row) => {
+      if(row.pos.empty()) return;
+      if(!struct.get(row.pos)) {
+        struct.set(row.pos, []);
       }
-    </FormGroup>);
-  }
+      struct.get(row.pos).push(row);
+    });
 
-  if([1,2,3].some((v) => struct.get(elm_positions[`column${v}`]))) {
-    res.push(<FormGroup key="columns" row>
-      {[1,2,3].map((v) => {
-        const column = struct.get(elm_positions[`column${v}`]);
-        if(!column) return null;
-        return <FormGroup key={`column${v}`}>
-          {
-            column.map((v, i) => <ExtProp key={`ep2-${i}`} row={row} param={v.param} meta={meta} />)
-          }
-        </FormGroup>;
-      })}
-    </FormGroup>);
-  }
+    const t = this.timer || 0;
+    const eProp = (v, i) => <ExtProp key={`${t}-${v.param.ref}-${i}`} row={row} param={v.param} meta={meta} handleValueChange={this.handleValueChange}/>;
 
-  frame = struct.get(elm_positions.bottom);
-  if(frame) {
-    res.push(<FormGroup key="bottom" row>
-      {
-        frame.map((v, i) => <ExtProp key={`ep3-${i}`} row={row} param={v.param} meta={meta} />)
-      }
-    </FormGroup>);
-  }
+    let frame = struct.get(elm_positions.top);
+    if(frame) {
+      res.push(<FormGroup key="top" row>{frame.map(eProp)}</FormGroup>);
+    }
 
-  return res;
+    if([1,2,3].some((v) => struct.get(elm_positions[`column${v}`]))) {
+      res.push(<FormGroup key="columns" row>
+        {[1,2,3].map((v) => {
+          const column = struct.get(elm_positions[`column${v}`]);
+          if(!column) return null;
+          return <FormGroup key={`column${v}`}>{column.map(eProp)}</FormGroup>;
+        })}
+      </FormGroup>);
+    }
+
+    frame = struct.get(elm_positions.bottom);
+    if(frame) {
+      res.push(<FormGroup key="bottom" row>{frame.map(eProp)}</FormGroup>);
+    }
+
+    return res;
+
+  }
 }

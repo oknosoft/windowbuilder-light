@@ -26,8 +26,9 @@ function PropField({row, param, meta, ...props}) {
   // проверим вхождение значения в доступные и при необходимости изменим
   if (links.length) {
     const values = [];
-    if(param.linked_values(links, row, values)) {
-      notify = true;
+    const prow = row._owner._owner.product_params.find({elm: row.row, param});
+    if(prow && param.linked_values(links, prow, values)) {
+      //notify = true;
     }
     if(values.length) {
       if(values.length < 50) {
