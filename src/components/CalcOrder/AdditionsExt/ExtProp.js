@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import DataField from 'metadata-react/DataField';
 //import withStyles, {extClasses} from 'metadata-react/DataField/stylesPropertyGrid';
 
-function PropField({row, param, meta, ...props}) {
+function PropField({row, param, meta, handleValueChange, ...props}) {
 
   const _fld = param.valueOf();
   const _meta = Object.assign({}, meta.fields[_fld]);
@@ -28,7 +28,7 @@ function PropField({row, param, meta, ...props}) {
     const values = [];
     const prow = row._owner._owner.product_params.find({elm: row.row, param});
     if(prow && param.linked_values(links, prow, values)) {
-      //notify = true;
+      handleValueChange();
     }
     if(values.length) {
       if(values.length < 50) {
@@ -50,14 +50,14 @@ function PropField({row, param, meta, ...props}) {
     _fld={_fld}
     _meta={_meta}
     ctrl_type={oselect ? 'oselect' : void 0}
-    //extClasses={extClasses(classes)}
+    handleValueChange={handleValueChange}
     isTabular={false}
     {...props}
   />;
 }
 
 PropField.propTypes = {
-  //classes: PropTypes.object,
+  handleValueChange: PropTypes.func,
   row: PropTypes.object,
   param: PropTypes.object,
   meta: PropTypes.object,
