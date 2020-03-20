@@ -7,15 +7,21 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import FormGroup from '@material-ui/core/FormGroup';
 import Typography from '@material-ui/core/Typography';
 import ExtProp from './ExtProp';
 
 export default class Params extends React.Component {
 
-  handleValueChange = (val) => {
+  _refs = {};
+
+  handleValueChange = (changed) => {
     this.timer && clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.forceUpdate(), 100);
+    this.timer = setTimeout(() => {
+      this._refs[changed] -= 1;
+      this.forceUpdate();
+    }, 100);
   };
 
   componentWillUnmount() {
@@ -40,8 +46,14 @@ export default class Params extends React.Component {
       struct.get(row.pos).push(row);
     });
 
-    const t = this.timer || 0;
-    const eProp = (v, i) => <ExtProp key={`${t}-${v.param.ref}-${i}`} row={row} param={v.param} meta={meta} handleValueChange={this.handleValueChange}/>;
+    const eProp = (v, i) => {
+      const id = `${v.param.ref}-${i}`;
+      if(!this._refs.hasOwnProperty(id)) {
+        this._refs[id] = 0;
+      }
+      this._refs[id] += 1;
+      return <ExtProp key={`${id}-${this._refs[id]}`} id={id} row={row} param={v.param} meta={meta} handleValueChange={this.handleValueChange}/>;
+    };
 
     let frame = struct.get(elm_positions.top);
     if(frame) {
@@ -67,3 +79,9 @@ export default class Params extends React.Component {
 
   }
 }
+
+Params.propTypes = {
+  row: PropTypes.object,
+  inset: PropTypes.object,
+  meta: PropTypes.object,
+};
