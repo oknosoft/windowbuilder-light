@@ -12,9 +12,6 @@ import {compose} from 'redux';
 import AdditionsItem from './AdditionsItem';
 const {ItemData} = $p.cat.inserts;
 
-// компилированный запрос для поиска настроек в ОЗУ
-export const alasql_schemas = $p.wsql.alasql.compile('select * from cat_scheme_settings where obj="dp.buyers_order.production" and not user');
-
 
 // заполняет компонент данными
 export function fill_data(_obj, items) {
@@ -61,12 +58,14 @@ export function fill_data(_obj, items) {
 
 // заполняет соответствие схем и типов вставок в state компонента
 export function fill_schemas(docs = []) {
+  if(!docs.length) {
+    docs = $p.cat.scheme_settings.find_rows({obj: 'dp.buyers_order.production', user: ''});
+  }
   const schemas = new Map();
-  const {scheme_settings} = $p.cat;
   for (const doc of docs) {
     for (const item of this.items) {
       if(item && doc.name == item.name) {
-        schemas.set(item, scheme_settings.get(doc));
+        schemas.set(item, doc);
         break;
       }
     }
