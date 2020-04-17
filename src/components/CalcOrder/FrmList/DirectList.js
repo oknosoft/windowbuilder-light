@@ -15,7 +15,7 @@ import LoadingMessage from 'metadata-react/DumbLoader/LoadingMessage';
 import DataListToolbar from 'metadata-react/DynList/DataListToolbar';
 import SchemeSettingsTabs from 'metadata-react/SchemeSettings/SchemeSettingsTabs';
 import Confirm from 'metadata-react/App/Confirm';
-import Helmet from 'react-helmet';
+import {Helmet} from 'react-helmet';
 
 const LIMIT = 200;
 const ROW_HEIGHT = 33;
