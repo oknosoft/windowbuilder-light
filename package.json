@@ -27,9 +27,9 @@
   "homepage": "https://light.oknosoft.ru/",
   "proxy": "http://localhost:3016/",
   "dependencies": {
-    "@material-ui/lab": "^4.0.0-alpha.49",
+    "@material-ui/lab": "^4.0.0-alpha.50",
     "@turf/points-within-polygon": "^5.1.5",
-    "md5-file": "^5.0.0",
+    "md5-file": "^4.0.0",
     "metadata-abstract-ui": "2.0.22-beta.6",
     "metadata-core": "2.0.22-beta.6",
     "metadata-pouchdb": "2.0.22-beta.6",
@@ -39,7 +39,7 @@
     "paper-jsdom-canvas": "^0.12.4",
     "react-highlight-words": "^0.16.0",
     "redux-dynamic-middlewares": "^2.0.0",
-    "windowbuilder": "github:oknosoft/windowbuilder-core#bec6c468dfe287f37edbb7e2a046fff2925abdbd"
+    "windowbuilder": "github:oknosoft/windowbuilder-core#f49c8247bb3656126a1591eb560c3720c77fbf27"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",

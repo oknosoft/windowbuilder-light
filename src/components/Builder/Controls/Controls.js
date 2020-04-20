@@ -41,6 +41,7 @@ class Controls extends React.Component {
     editor.eve.on('layer_activated', this.layer_activated);
     editor.eve.on('tool_activated', this.tool_activated);
     editor.eve.on('elm_activated', this.elm_activated);
+    editor.eve.on('elm_dblclick', this.elm_dblclick);
     editor.eve.on('contour_redrawed', this.contour_redrawed);
   }
 
@@ -80,6 +81,10 @@ class Controls extends React.Component {
       this.setState({elm2: elm});
     }
   };
+
+  elm_dblclick = (elm, event) => {
+    this.handleChangeTab(event, 1);
+  }
 
   contour_redrawed = () => {
     const {props, _reflect_id} = this;
