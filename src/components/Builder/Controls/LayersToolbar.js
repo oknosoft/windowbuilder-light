@@ -21,10 +21,10 @@ function addLayer(editor) {
   //editor.eve.emit_async('rows', editor.project.ox, {constructions: true});
 }
 
-function addFlap(editor) {
+function addFlap(editor, furn) {
   const fillings = editor.project.getItems({class: $p.EditorInvisible.Filling, selected: true});
   if(fillings.length){
-    fillings[0].create_leaf();
+    fillings[0].create_leaf(furn);
   }
   else{
     $p.ui.dialogs.alert({text: 'Перед добавлением створки, укажите заполнение, в которое поместить створку', title: 'Добавить створку'});
@@ -52,6 +52,12 @@ function LayersToolbar({editor, classes}) {
     </Tip>
     <Tip title={msg.bld_new_stv}>
       <IconButton onClick={() => addFlap(editor)}><i className="fa fa-file-code-o" /></IconButton>
+    </Tip>
+    <Tip title={msg.bld_new_nested}>
+      <IconButton onClick={() => addFlap(editor, 'nested')}><i className="fa fa-file-image-o" /></IconButton>
+    </Tip>
+    <Tip title={msg.bld_new_virtual}>
+      <IconButton onClick={() => addFlap(editor, 'virtual')}><i className="fa fa-file-excel-o" /></IconButton>
     </Tip>
     <div className={classes.title} />
     <Tip title={msg.del_layer}>

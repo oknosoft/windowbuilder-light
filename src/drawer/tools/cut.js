@@ -71,7 +71,7 @@ export default function arc (Editor) {
           this.project.deselectAll();
           item.selected = true;
         }
-        item.attache_wnd(this._scope._acc.elm);
+
         this.profile = item;
       }
       else {
@@ -200,7 +200,6 @@ export default function arc (Editor) {
     deselect() {
       const {project, profile} = this;
       if(profile) {
-        profile.detache_wnd();
         this.profile = null;
       }
       project.deselectAll();
