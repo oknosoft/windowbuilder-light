@@ -17,6 +17,8 @@ import SchemeSettingsTabs from 'metadata-react/SchemeSettings/SchemeSettingsTabs
 import Confirm from 'metadata-react/App/Confirm';
 import {Helmet} from 'react-helmet';
 
+import MenuPrint from 'metadata-react/DynList/MenuPrint';
+
 const LIMIT = 200;
 const ROW_HEIGHT = 33;
 //const OVERSCAN_ROW = 2;

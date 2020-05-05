@@ -23,49 +23,53 @@ self.addEventListener('sync', (event) => {
   }
 });
 
-self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
-  const delimiter = '/couchdb/mdm';
-  if(url.pathname.startsWith(delimiter)) {
-    event.respondWith(
-      caches.open('mdm.v1')
-        .then((cache) => {
-          const key = url.pathname.split(delimiter)[1];
+// self.addEventListener('fetch', (event) => {
+//   const url = new URL(event.request.url);
+//   if(url.pathname.startsWith(onFetch.delimiter)) {
+//     event.respondWith(onFetch(event, url));
+//   }
+// });
 
-          return checkTime(cache, key)
-            .then((ok) => {
-              return !ok && checkHead(cache, event.request, key);
-            })
+function onFetch(event, url) {
+  return caches.open('mdm.v1')
+    .then((cache) => {
+      const key = url.pathname.split(onFetch.delimiter)[1];
+
+      return checkTime(cache, key)
+        .then((ok) => {
+          return !ok && checkHead(cache, event.request, key);
+        })
+        .then(() => {
+          return cache.match(event.request);
+        })
+        .then((resp) => {
+          if(resp) {
+            return {resp, cached: true};
+          }
+          else {
+            return fetch(event.request)
+              .then((resp) => {
+                return {resp, cached: false};
+              });
+          }
+        })
+        .then(({resp, cached}) => {
+          return updateHead(cache, `time${key}`, Date.now())
+            .then(() => updateHead(cache, key, resp.headers.get('manifest')))
             .then(() => {
-              return cache.match(event.request);
-            })
-            .then((resp) => {
-              if(resp) {
-                return {resp, cached: true};
-              }
-              else {
-                return fetch(event.request)
-                  .then((resp) => {
-                    return {resp, cached: false};
-                  });
-              }
-            })
-            .then(({resp, cached}) => {
-              return updateHead(cache, `time${key}`, Date.now())
-                .then(() => updateHead(cache, key, resp.headers.get('manifest')))
-                .then(() => {
-                  return cached ?
-                    resp :
-                    cache.put(event.request, resp.clone())
-                      .then(() => resp);
-                });
-            })
-            .catch((err) => {
-              throw err;
+              return cached ?
+                resp :
+                cache.put(event.request, resp.clone())
+                  .then(() => resp);
             });
-        }));
-  }
-});
+        })
+        .catch((err) => {
+          throw err;
+        });
+    })
+}
+
+onFetch.delimiter = '/couchdb/mdm'
 
 // выясняет, надо ли анализировать head
 function checkTime(cache, key) {

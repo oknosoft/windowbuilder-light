@@ -38,22 +38,23 @@ export default function ($p) {
       return Promise.resolve();
     }
 
-    return this.adapter.find_rows(this, {
-      _mango: true,
+    return pouch.db(this).query('doc/by_date', {
+      startkey: [this.class_name, ...moment().add(1, 'month').format('YYYY-MM-DD').split('-').map(Number)],
+      endkey: [this.class_name, ...moment().subtract(5, 'month').format('YYYY-MM-DD').split('-').map(Number)],
+      descending: true,
+      include_docs: true,
       limit: 8000,
-      selector: {
-        $and: [
-          {class_name: this.class_name},
-          {date: {$gte: moment().subtract(5, 'month').format()}},
-          {date: {$lte: moment().add(1, 'month').format()}},
-          {search: {$gt: null}},
-        ]
-      },
-      sort: [{class_name: 'desc'}, {date: 'desc'}],
-    }, this.adapter.local.doc)
-      .then(() => this._direct_loaded = true);
-  };
-
-
+    })
+      .then(({rows}) => rows.map(({doc}) => {
+        doc.ref = doc._id.split('|')[1];
+        delete doc._id;
+        return doc;
+      }))
+      .then((docs) => this.load_array(docs))
+      .then(() => this._direct_loaded = true)
+      .catch((err) => {
+        $p.ui.dialogs.snack({message: `Чтение списка заказов: ${err.message}`});
+      });
+    };
 }
 

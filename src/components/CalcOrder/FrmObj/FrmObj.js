@@ -13,6 +13,7 @@ import TabularSection from 'metadata-react/TabularSection';
 import DataObj from 'metadata-react/FrmObj/DataObj';
 import withStyles600 from 'metadata-react/styles/paper600';
 
+import DataObjToolbar from './DataObjToolbar';
 import OrderRow from './OrderRow';
 import Parametric from './Parametric';
 import Tip from '../../Builder/Tip';
@@ -170,6 +171,9 @@ class CalcOrderObj extends DataObj {
       .catch((err) => null);
   };
 
+  get Toolbar() {
+    return DataObjToolbar;
+  }
 
   handleChangeTab = (event, tab) => {
     this.setState({tab});
