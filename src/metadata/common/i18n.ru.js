@@ -41,11 +41,14 @@ export default function ({msg, ui}) {
     del_elm: 'Удалить элемент',
     del_layer: 'Удалить слой',
 
+    elm_spec: 'Открыть спецификацию элемента',
     err_no_cnn: 'не найдено соединение',
     err_seam_len: 'длина шва',
 
     glass_spec: 'Состав заполнения',
     glass_invalid_elm: 'Укажите заполнение на эскизе',
+
+    layer_spec: 'Открыть спецификацию слоя',
 
     to_contour: 'в контур',
     to_elm: 'в элемент',

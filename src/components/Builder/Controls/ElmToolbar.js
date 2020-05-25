@@ -23,6 +23,12 @@ const btnClick = (editor, name) => {
       }
     });
   }
+  else if(name === 'spec') {
+    return () => {
+      const {selected_elm: elm} = editor.project;
+      editor.fragment_spec(elm ? elm.elm : 0, elm && elm.inset.toString());
+    }
+  }
 
   if(['left', 'right', 'top', 'bottom', 'all'].includes(name)) {
     return () => editor.profile_align(name);
@@ -69,6 +75,9 @@ function ElmToolbar({editor, elm, classes}) {
       <IconButton onClick={btnClick(editor, 'glass_spec')}><i className="fa fa-list-ul" /></IconButton>
     </Tip>}
     <div className={classes.title} />
+    <Tip title={msg.elm_spec}>
+      <IconButton onClick={btnClick(editor, 'spec')} className={disabled}><i className="fa fa-table" /></IconButton>
+    </Tip>
     <Tip title={msg.del_elm}>
       <IconButton onClick={btnClick(editor, 'delete')} className={disabled}><i className="fa fa-trash-o" /></IconButton>
     </Tip>

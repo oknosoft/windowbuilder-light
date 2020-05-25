@@ -15,7 +15,7 @@ export const useStyles = withStyles({
 });
 
 // создаёт слой и оповещает мир о новых слоях
-function addLayer(editor) {
+function addLayer(/*editor*/) {
   const l = new $p.EditorInvisible.Contour({parent: undefined});
   l.activate();
   //editor.eve.emit_async('rows', editor.project.ox, {constructions: true});

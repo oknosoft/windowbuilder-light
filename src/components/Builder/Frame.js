@@ -16,6 +16,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Builder from './Builder';
 import Toolbar from './Toolbar';
 import Controls from './Controls';
+import Characteristic from './Characteristic';
 import {path, prm} from '../App/menu_items';
 
 const styles = ({spacing}) => ({
@@ -40,9 +41,11 @@ const ltitle = 'Редактор';
 
 class Frame extends React.Component {
 
+  state = {ox_opened: false};
 
   componentDidMount() {
     const {props, editor} = this;
+
     props.handleIfaceState({
       component: '',
       name: 'title',
@@ -107,6 +110,9 @@ class Frame extends React.Component {
 
   registerChild = (el) => this.editor = el;
 
+  open_ox = () => this.setState({ox_opened: true});
+  close_ox = () => this.setState({ox_opened: false});
+
   /**
    * проверка, можно ли покидать страницу
    * @return {String|Boolean}
@@ -121,8 +127,8 @@ class Frame extends React.Component {
   };
 
   render() {
-    const {editor, props: {classes, windowHeight, windowWidth}} = this;
-    let height = (windowWidth > 720 ? (windowHeight - 56) : windowWidth * 0.7) - 50;
+    const {editor, props: {classes, windowHeight, windowWidth}, state} = this;
+    let height = (windowWidth > 720 ? (windowHeight - 56) : windowWidth * 0.7) - 60;
     if(height < 320) {
       height = 320;
     }
@@ -133,20 +139,21 @@ class Frame extends React.Component {
         editor={editor}
         handleClose={this.handleClose}
         openTemplate={this.openTemplate}
+        open_ox={this.open_ox}
       />}
       <Grid container>
-        <Grid item xs={12} sm={12} lg={8} xl={9}>
+        <Grid item xs={12} sm={12} lg={8}>
           <Builder
             height={height}
             classes={classes}
             registerChild={this.registerChild}
           />
         </Grid>
-        <Grid item xs={12} sm={12} lg={4} xl={3}>
+        <Grid item xs={12} sm={12} lg={4}>
           {editor && <Controls editor={editor}/>}
         </Grid>
       </Grid>
-
+      {editor && state.ox_opened && <Characteristic editor={editor} handleClose={this.close_ox} windowHeight={windowHeight} />}
     </div>;
   }
 

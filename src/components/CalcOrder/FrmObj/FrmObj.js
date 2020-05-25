@@ -1,7 +1,5 @@
 import React from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -13,18 +11,13 @@ import TabularSection from 'metadata-react/TabularSection';
 import DataObj from 'metadata-react/FrmObj/DataObj';
 import withStyles600 from 'metadata-react/styles/paper600';
 
+import Tip from '../../Builder/Tip';
+import {Tabs, Tab} from '../../Builder/AntTabs';
+
 import DataObjToolbar from './DataObjToolbar';
 import OrderRow from './OrderRow';
 import Parametric from './Parametric';
-import Tip from '../../Builder/Tip';
 import {path, prm} from '../../App/menu_items';
-
-export const AntTabs = withStyles({
-  root: {
-    borderBottom: '1px solid #e8e8e8',
-    marginBottom: 8,
-  },
-})(Tabs);
 
 class CalcOrderObj extends DataObj {
 
@@ -49,8 +42,8 @@ class CalcOrderObj extends DataObj {
     let h1 = height < 420 ? 420 : height;
     h1 -= 146;
 
-    return <div style={{/*width: 'calc(100vw - 8px)',*/ paddingBottom: 32}}>
-      <AntTabs
+    return <div style={{paddingBottom: 32}}>
+      <Tabs
         value={tab}
         onChange={this.handleChangeTab}
         indicatorColor="primary"
@@ -61,7 +54,7 @@ class CalcOrderObj extends DataObj {
         <Tab label={<Tip title="Изделия построителя"><i className="fa fa-object-ungroup fa-fw"></i></Tip>}/>
         <Tab label={<Tip title="Параметрические изделия"><i className="fa fa-gavel fa-fw"></i></Tip>}/>
         <Tab label={<Tip title="Материалы и услуги без спецификации"><i className="fa fa-cube fa-fw"></i></Tip>}/>
-      </AntTabs>
+      </Tabs>
       {tab === 0 && this.renderHead(_obj, classes)}
       {tab === 1 && this.renderProd(_obj, handlers)}
       {tab === 2 && <Parametric _obj={_obj} height={h1} scheme={this.scheme_parametric}/>}
@@ -93,6 +86,7 @@ class CalcOrderObj extends DataObj {
   }
 
   renderProd(_obj, handlers) {
+    const is_technologist = $p.current_user.role_available('ИзменениеТехнологическойНСИ');
     const res = [
       <Button
         key="add-prod"
@@ -114,12 +108,12 @@ class CalcOrderObj extends DataObj {
       else if(row.characteristic.coordinates.count() == 0) {
         // возможно, это подчиненное изделие рисовалки
         if(row.characteristic.leading_product.calc_order == calc_order) {
-          res.push(<OrderRow key={`or-${row.row}`} row={row} handlers={handlers}/>);
+          res.push(<OrderRow key={`or-${row.row}`} row={row} handlers={handlers} is_technologist={is_technologist}/>);
         }
       }
       else {
         // это изделие построителя
-        res.push(<OrderRow key={`or-${row.row}`} row={row} handlers={handlers}/>);
+        res.push(<OrderRow key={`or-${row.row}`} row={row} handlers={handlers} is_technologist={is_technologist}/>);
       }
     });
     return res;

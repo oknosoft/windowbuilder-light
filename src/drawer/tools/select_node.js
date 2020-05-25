@@ -6,6 +6,8 @@
  * Created by Evgeniy Malyarov on 28.10.2019.
  */
 
+import ToolWnd from '../../components/Builder/ToolWnds/SelectNodeWnd';
+
 export default function select_node (Editor) {
 
   const {Point, PointText, Rectangle, Path, Segment} = Editor.prototype;
@@ -32,7 +34,9 @@ export default function select_node (Editor) {
         originalHandleIn: null,
         originalHandleOut: null,
         changed: false,
-        minDistance: 10
+        minDistance: 10,
+        dp: $p.dp.builder_pen.create({grid: 50}),
+        ToolWnd: ToolWnd,
       });
 
       this.on({

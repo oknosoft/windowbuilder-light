@@ -9,7 +9,7 @@
  * @submodule tool_pen
  */
 
-import PenWnd from '../../components/Builder/ToolWnds/PenWnd';
+import ToolWnd from '../../components/Builder/ToolWnds/PenWnd';
 
 export default function pen (Editor, {enm, msg, dp, cat, utils}) {
 
@@ -225,7 +225,7 @@ export default function pen (Editor, {enm, msg, dp, cat, utils}) {
           hitItem: null,
           originalContent: null,
           start_binded: false,
-          ToolWnd: PenWnd,
+          ToolWnd: ToolWnd,
         });
 
         this.on({

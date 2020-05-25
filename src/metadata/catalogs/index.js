@@ -1,10 +1,15 @@
 // модификаторы справочников
 
+import CharacteristicsFrmObj from '../../components/CatCharacteristics/FrmObj';
+import SpecFragment from '../../components/CatCharacteristics/Spec';
 
-export default function ($p) {
-  $p.cat.forEach((mgr) => {
+export default function ({cat}) {
+  cat.forEach((mgr) => {
     if(mgr.cachable === 'doc' && mgr.class_name !== 'cat.characteristics') {
       mgr._cachable = 'ram';
     }
   });
+
+  cat.characteristics.FrmObj = CharacteristicsFrmObj;
+  cat.characteristics.SpecFragment = SpecFragment;
 }

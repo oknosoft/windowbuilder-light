@@ -6,7 +6,7 @@
  * Created by Evgeniy Malyarov on 10.01.2019.
  */
 
-import rnds from 'uuid/lib/rng-browser';
+import rnds from 'uuid/dist/rng-browser';
 
 const symbols = '123456789ADEFJGKLMNQRSTUVXYZ';
 let counter = 0;

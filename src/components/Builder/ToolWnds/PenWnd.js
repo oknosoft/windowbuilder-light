@@ -14,6 +14,7 @@ function PenWnd({editor, classes}) {
     <DataField _obj={profile} _fld="clr" extClasses={ext} fullWidth/>
     <DataField _obj={profile} _fld="bind_generatrix" extClasses={ext} fullWidth ctrl_type="cb"/>
     <DataField _obj={profile} _fld="bind_node" extClasses={ext} fullWidth ctrl_type="cb"/>
+    <DataField _obj={profile} _fld="grid" extClasses={ext} fullWidth/>
     <StandardForms editor={editor} />
   </div>;
 }

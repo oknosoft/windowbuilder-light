@@ -15,9 +15,6 @@ function Product({editor}) {
     <ProductToolbar project={project}/>
     <PropField _obj={_dp} _fld="sys" />
     <PropField _obj={_dp} _fld="clr" />
-    <PropField _obj={_dp} _fld="len" read_only/>
-    <PropField _obj={_dp} _fld="height" read_only/>
-    <PropField _obj={_dp} _fld="s" read_only/>
     <LinkedProps ts={ox.params} cnstr={0} inset={utils.blank.guid}/>
     <PropField _obj={_dp} _fld="quantity" />
     {!hide_dealer && <PropField

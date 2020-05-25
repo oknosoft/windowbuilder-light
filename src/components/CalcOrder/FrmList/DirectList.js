@@ -18,6 +18,7 @@ import Confirm from 'metadata-react/App/Confirm';
 import {Helmet} from 'react-helmet';
 
 import MenuPrint from 'metadata-react/DynList/MenuPrint';
+import QuickFilter from './QuickFilter';
 
 const LIMIT = 200;
 const ROW_HEIGHT = 33;
@@ -52,14 +53,14 @@ class DirectList extends MDNRComponent {
   }
 
   // при изменении менеджера данных
-  handleManagerChange({_mgr, _meta, _ref}) {
+  handleManagerChange({_mgr, _meta, _ref, scheme}) {
     const {class_name} = _mgr;
     this._meta = _meta || _mgr.metadata();
     const newState = {ref: _ref || '', scrollSetted: false};
     this.setState(newState);
 
     (_mgr.direct_load ? _mgr.direct_load() : Promise.resolve())
-      .then(() => $p.cat.scheme_settings.get_scheme(class_name))
+      .then(() => scheme || $p.cat.scheme_settings.get_scheme(class_name))
       .then(this.handleSchemeChange);
   }
 
@@ -72,9 +73,11 @@ class DirectList extends MDNRComponent {
     }
 
     if(scheme) {
-      scheme.set_standard_period(true);
-      scheme.set_default();
-      handlers.handleSchemeChange && handlers.handleSchemeChange(scheme);
+      if(!this.props.scheme) {
+        scheme.set_standard_period(true);
+        scheme.set_default();
+        handlers.handleSchemeChange && handlers.handleSchemeChange(scheme);
+      }
 
       // пересчитываем и перерисовываем динсписок
       const columns = scheme.rx_columns({mode: 'ts', fields, _mgr});
@@ -403,11 +406,7 @@ class DirectList extends MDNRComponent {
   handleEdit = () => {
     const {_meta, selectedRow: row, props: {handlers, _mgr}} = this;
     if(!row || $p.utils.is_empty_guid(row.ref)) {
-      handlers.handleIfaceState({
-        component: '',
-        name: 'alert',
-        value: {open: true, text: 'Укажите строку для редактирования', title: _meta.synonym}
-      });
+      $p.ui.dialogs.alert({text: 'Укажите строку для редактирования', title: _meta.synonym});
     }
     else if(handlers.handleEdit) {
       handlers.handleEdit({row, ref: row.ref, _mgr});
@@ -419,11 +418,7 @@ class DirectList extends MDNRComponent {
     const {_meta, selectedRow: row, props: {handlers, _mgr}} = this;
 
     if(!row || $p.utils.is_empty_guid(row.ref)) {
-      handlers.handleIfaceState({
-        component: '',
-        name: 'alert',
-        value: {open: true, text: 'Укажите строку для удаления', title: _meta.synonym}
-      });
+      $p.ui.dialogs.alert({text: 'Укажите строку для удаления', title: _meta.synonym});
     }
     else if(handlers.handleMarkDeleted) {
       this._handleRemove = () => {
@@ -440,8 +435,16 @@ class DirectList extends MDNRComponent {
 
   // обработчик печати теущей строки
   handlePrint = (model) => {
-    const {selectedRow: row, props: {_mgr}} = this;
-    row && _mgr.print(row.ref, model);
+    const {selectedRow: row, props: {_mgr}, _meta} = this;
+    if(!row) {
+      $p.ui.dialogs.alert({text: 'Укажите строку для печати', title: _meta.synonym});
+    }
+    else if(model instanceof React.Component) {
+      $p.ui.dialogs.alert({text: model.name, title: _meta.synonym});
+    }
+    else {
+      _mgr.print(row.ref, model);
+    }
   };
 
   // обработчик вложений теущей строки
@@ -488,20 +491,23 @@ class DirectList extends MDNRComponent {
 
     const toolbar_props = {
       scheme,
-      //btns: _mgr.metadata('partner') && <SearchPartner scheme={scheme} handleFilterChange={handleFilterChange}/>,
       ...others,
       settings_open,
+      setting_in_menu: true,
+      denyDel: true,
+      //btns: _mgr.metadata('partner') && <SearchPartner scheme={scheme} handleFilterChange={handleFilterChange}/>,
+      btns: <QuickFilter scheme={scheme} handleFilterChange={handleFilterChange}/>,
+      end_btns: <MenuPrint handlePrint={this.handlePrint} scheme={scheme} variant="button"/>,
       handleSelect: this.handleSelect,
       handleAdd: this.handleAdd,
       handleEdit: this.handleEdit,
       handleRemove: this.handleRemove,
-      handlePrint: this.handlePrint,
-      //handleAttachments: this.handleAttachments,
+      //handlePrint: this.handlePrint,
+      handleAttachments: this.handleAttachments,
       handleSettingsOpen: this.handleSettingsOpen,
       handleSettingsClose: this.handleSettingsClose,
       handleSchemeChange,
       handleFilterChange,
-      denyDel: true,
     };
 
     return <div>

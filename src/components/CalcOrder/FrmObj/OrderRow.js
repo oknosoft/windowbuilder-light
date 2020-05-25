@@ -22,11 +22,11 @@ import {path} from '../../App/menu_items';
 import withStyles from './styles';
 
 
-function OrderRow({row, classes, handlers}) {
+function OrderRow({row, classes, handlers, is_technologist}) {
   const {_owner, nom, characteristic: ox} = row;
   const {obj_delivery_state, sending_stage} = _owner._owner;
   const {utils: {scale_svg}, ui: {dialogs}} = $p;
-  const editable = obj_delivery_state == 'Черновик' && sending_stage.empty();
+  const editable = is_technologist || ((obj_delivery_state == 'Черновик' || obj_delivery_state == 'Отозван') && sending_stage.empty());
 
   function edit() {
     if(editable) {
@@ -99,6 +99,7 @@ OrderRow.propTypes = {
   row: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   handlers: PropTypes.object.isRequired,
+  is_technologist: PropTypes.bool,
 };
 
 export default withStyles(OrderRow);

@@ -42,16 +42,7 @@ export default function LayersTree({editor, classes}) {
   const {contours, ox, activeLayer} = project;
   const defaultExpanded = ['root'];
   const [builder_props, setProps] = React.useState(project.builder_props);
-  const [expand_view_props, setExpandViewProps] = React.useState(false);
 
-  const onNodeToggle = (event, nodeIds) => {
-    if(nodeIds.includes('view_props') && !expand_view_props) {
-      setExpandViewProps(true);
-    }
-    else if(expand_view_props && !nodeIds.includes('view_props')) {
-      setExpandViewProps(false);
-    }
-  };
 
   const handleRoot = () => {
     editor.eve.emit('layer_activated', project.layers[0]);
@@ -63,7 +54,6 @@ export default function LayersTree({editor, classes}) {
       defaultExpanded.push(`l-${contour.cnstr}`);
     });
   });
-  expand_view_props && defaultExpanded.push('view_props');
 
   return [
     <LayersToolbar key="toolbar" editor={editor} classes={classes}/>,
@@ -73,7 +63,7 @@ export default function LayersTree({editor, classes}) {
       defaultCollapseIcon={<ArrowDropDownIcon />}
       defaultExpandIcon={<ArrowRightIcon />}
       defaultEndIcon={<div style={{ width: 24 }} />}
-      onNodeToggle={onNodeToggle}
+      //onNodeToggle={onNodeToggle}
     >
       <CustomTreeItem
         nodeId="root"
@@ -85,22 +75,6 @@ export default function LayersTree({editor, classes}) {
         {addLayers(contours, activeLayer)}
       </CustomTreeItem>
 
-      <CustomTreeItem nodeId="view_props" labelText="Параметры отображения" LabelIcon={MoreHorizIcon}>
-        {
-          Object.keys(bprops).map((key) => <CustomTreeItem
-            key={key}
-            nodeId={key}
-            labelText={bprops[key]}
-            checked={builder_props[key]}
-            setChecked={() => {
-              builder_props[key] = !builder_props[key];
-              ox.builder_props = {[key]: builder_props[key]};
-              project.register_change();
-              setProps(Object.assign({}, builder_props));
-            }}
-          />)
-        }
-      </CustomTreeItem>
     </TreeView>,
     <Divider key="divider"/>,
     <DopInsets

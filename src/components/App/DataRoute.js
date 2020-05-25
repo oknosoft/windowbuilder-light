@@ -39,7 +39,9 @@ class DataRoute extends React.Component {
 
     const sizes = {
       height: windowHeight > 480 ? windowHeight - 52 : 428,
-      width: windowWidth > 800 ? windowWidth - (windowHeight < 480 ? 20 : dx) : 800
+      width: windowWidth > 800 ? windowWidth - (windowHeight < 480 ? 20 : dx) : 800,
+      windowHeight,
+      windowWidth,
     };
 
     const wraper = (Component, props, type) => {

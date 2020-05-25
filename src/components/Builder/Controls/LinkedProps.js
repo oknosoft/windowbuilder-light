@@ -38,7 +38,7 @@ class LinkedProps extends React.Component {
       _meta.synonym = param.caption || param.name;
 
       const {types} = param.type;
-      let oselect = types.length === 1 && types[0] === 'cat.property_values';
+      let oselect = types.length === 1 && ['cat.property_values', 'cat.characteristics'].includes(types[0]);
 
       // проверим вхождение значения в доступные и при необходимости изменим
       if (links.length) {
@@ -84,7 +84,7 @@ class LinkedProps extends React.Component {
 
 LinkedProps.propTypes = {
   ts: PropTypes.object.isRequired,
-  cnstr: PropTypes.numner,
+  cnstr: PropTypes.number,
   inset: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
 
