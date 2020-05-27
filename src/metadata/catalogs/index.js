@@ -1,7 +1,7 @@
 // модификаторы справочников
 
-import CharacteristicsFrmObj from '../../components/CatCharacteristics/FrmObj';
-import SpecFragment from '../../components/CatCharacteristics/Spec';
+import CharacteristicsFrmObj from 'windowbuilder-forms/dist/CatCharacteristics/FrmObj';
+import SpecFragment from 'windowbuilder-forms/dist/CatCharacteristics/Spec';
 
 export default function ({cat}) {
   cat.forEach((mgr) => {
