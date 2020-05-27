@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Toolbar from '@material-ui/core/Toolbar';
 import {withStyles} from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import Tip from '../Tip';
+import Tip from 'windowbuilder-forms/dist/Common/Tip';
 
 export const useStyles = withStyles({
   title: {

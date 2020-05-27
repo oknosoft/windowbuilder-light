@@ -15,7 +15,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
-import Tip from '../Tip';
+import Tip from 'windowbuilder-forms/dist/Common/Tip';
 
 const useIndicator = makeStyles(({palette}) => ({
   indicator: {

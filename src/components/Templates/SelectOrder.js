@@ -9,8 +9,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Tip from '../Builder/Tip';
-import CloseBtn from '../Builder/CloseBtn';
+import Tip from 'windowbuilder-forms/dist/Common/Tip';
+import CloseBtn from 'windowbuilder-forms/dist/Common/CloseBtn';
 import DirectList from '../CalcOrder/FrmList/DirectList'
 
 const _obj = $p.cat.templates._select_template;

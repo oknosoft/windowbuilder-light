@@ -14,7 +14,7 @@ import ListItem from '@material-ui/core/List';
 import Button from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Tip from '../../Builder/Tip';
+import Tip from 'windowbuilder-forms/dist/Common/Tip';
 import Quantity from './Quantity';
 import Amount from './Amount';
 

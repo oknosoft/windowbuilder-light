@@ -9,8 +9,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Tip from '../Tip';
-import {Tabs, Tab} from '../AntTabs';
+import Tip from 'windowbuilder-forms/dist/Common/Tip';
+import {Tabs, Tab} from 'windowbuilder-forms/dist/Common/AntTabs';
 import Product from './Product';
 import Flap from './Flap';
 import LayersTree from './LayersTree';
