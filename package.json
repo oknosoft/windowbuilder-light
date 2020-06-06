@@ -1,14 +1,14 @@
 {
   "name": "windowbuilder-light",
-  "version": "2.1.252",
+  "version": "2.1.253",
   "description": "Order dealer for windows and stained glass",
   "repository": {
     "type": "git",
     "url": "https://github.com/unpete/windowbuilder-light.git"
   },
   "engines": {
-    "node": "^8.15",
-    "npm": "^6.12"
+    "node": "^12.18",
+    "npm": "^6.14"
   },
   "keywords": [
     "metadata",
@@ -27,19 +27,19 @@
   "homepage": "https://light.oknosoft.ru/",
   "proxy": "http://localhost:3016/",
   "dependencies": {
-    "@material-ui/lab": "^4.0.0-alpha.54",
+    "@material-ui/lab": "^4.0.0-alpha.55",
     "@turf/points-within-polygon": "^5.1.5",
-    "md5-file": "^4.0",
+    "md5-file": "^5.0",
     "metadata-abstract-ui": "2.0.22-beta.7",
     "metadata-core": "2.0.22-beta.7",
     "metadata-pouchdb": "2.0.22-beta.7",
     "metadata-react": "2.0.22-beta.7",
     "metadata-redux": "2.0.22-beta.7",
     "metadata-superlogin": "2.0.22-beta.7",
-    "paper-jsdom-canvas": "^0.12.7",
+    "paper-jsdom-canvas": "^0.12.8",
     "react-highlight-words": "^0.16.0",
     "redux-dynamic-middlewares": "^2.0.0",
-    "windowbuilder": "github:oknosoft/windowbuilder-core#afc194466439700f652a5ca505a4d6a4c8738764",
+    "windowbuilder": "github:oknosoft/windowbuilder-core#5ff3ec794103eb8a4b271d6b4ed5e11058a0310c",
     "windowbuilder-forms": "github:oknosoft/windowbuilder-forms#9d499c3b17da97203d739cb3433df2faf5135b3f"
   },
   "devDependencies": {
