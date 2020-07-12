@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Divider from '@material-ui/core/Divider';
 import CloseBtn from 'windowbuilder-forms/dist/Common/CloseBtn';
 import Tip from 'windowbuilder-forms/dist/Common/Tip';
 import SelectTool from './SelectTool';

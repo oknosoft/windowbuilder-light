@@ -85,7 +85,7 @@ class DataObjToolbar extends React.Component {
       </Toolbar>
     );
   }
-};
+}
 
 DataObjToolbar.propTypes = {
   handleSave: PropTypes.func.isRequired,        // обработчик добавления объекта
@@ -96,11 +96,15 @@ DataObjToolbar.propTypes = {
   handleClose: PropTypes.func,                  // команда Закрыть форму
   handleSaveClose: PropTypes.func,
 
+  read_only: PropTypes.bool,
   postable: PropTypes.bool,                     // объект можно провести-распровести
   posted: PropTypes.bool,                       // объект проведён
   deletable: PropTypes.bool,                    // объект можно пометить на удаление или снять пометку
   showMenu: PropTypes.bool,
+  closeButton: PropTypes.bool,
   classes: PropTypes.object,
+  buttons: PropTypes.node,
+  menu_buttons: PropTypes.node,
 };
 
 export default withStyles(DataObjToolbar);

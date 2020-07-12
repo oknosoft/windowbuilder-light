@@ -25,6 +25,15 @@
 
 .gl.disabled { pointer-events: none; opacity: 0.4}
 
+.sz_input {
+  position: absolute;
+  background: white;
+  padding: 4px;
+  width: 4rem;
+  text-align: center;
+  border: none;
+}
+
 .fullscreen {
   background-color: #fafafa;
   overflow: auto;

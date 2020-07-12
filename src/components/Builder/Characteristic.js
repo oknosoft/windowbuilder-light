@@ -1,9 +1,10 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import Dialog from 'metadata-react/App/Dialog';
 import FrmObj from 'windowbuilder-forms/dist/CatCharacteristics/FrmObj';
 
-export default function ({editor, handleClose, windowHeight}) {
+export default function Characteristic({editor, handleClose, windowHeight}) {
 
   const {_dp} = editor.project;
   const {_manager, ref, name} = _dp.characteristic;
@@ -22,5 +23,11 @@ export default function ({editor, handleClose, windowHeight}) {
       handlers={{}}
       windowHeight={windowHeight}
     />
-  </Dialog>
+  </Dialog>;
 }
+
+Characteristic.propTypes = {
+  handleClose: PropTypes.func,
+  editor: PropTypes.object,
+  windowHeight: PropTypes.number,
+};

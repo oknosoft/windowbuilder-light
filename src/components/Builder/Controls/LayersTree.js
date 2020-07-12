@@ -5,7 +5,6 @@ import Divider from '@material-ui/core/Divider';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import CustomTreeItem from './CustomTreeItem';
 import LayersToolbar from './LayersToolbar';
 import DopInsets from './DopInsets';
@@ -28,21 +27,10 @@ function addLayers(contours, activeLayer) {
     null;
 }
 
-const bprops = {
-  auto_lines: "Авторазмерные линии",
-  custom_lines: "Доп. размерные линии",
-  cnns: "Соединители",
-  visualization: "Визуализация",
-  txts: "Комментарии",
-};
-
-
 export default function LayersTree({editor, classes}) {
   const {project} = editor;
   const {contours, ox, activeLayer} = project;
   const defaultExpanded = ['root'];
-  const [builder_props, setProps] = React.useState(project.builder_props);
-
 
   const handleRoot = () => {
     editor.eve.emit('layer_activated', project.layers[0]);

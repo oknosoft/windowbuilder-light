@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import PropField from './PropField';
+import PropField from 'metadata-react/DataField/PropField';
 import ElmToolbar from './ElmToolbar';
 
 function ElmProps({elm1, elm2, editor}) {

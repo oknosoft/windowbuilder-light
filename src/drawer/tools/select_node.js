@@ -37,6 +37,7 @@ export default function select_node (Editor) {
         minDistance: 10,
         dp: $p.dp.builder_pen.create({grid: 50}),
         ToolWnd: ToolWnd,
+        input: null,
       });
 
       this.on({
@@ -69,99 +70,110 @@ export default function select_node (Editor) {
 
     mousedown(event) {
 
-      const {project, _scope: {consts}} = this;
+      const {project, _scope: {consts}, hitItem} = this;
       const {shift, space, alt} = event.modifiers;
 
       this.mode = null;
       this.changed = false;
+      const select = [];
+      const deselect = [];
 
-      if(event.event && event.event.which && event.event.which > 1){
-        //
-      }
+      this.sz_fin();
 
-      if (this.hitItem && !alt) {
+      if (hitItem && !alt) {
 
-        if(this.hitItem.item instanceof PointText) {
+        if(hitItem.item instanceof PointText) {
+          if(hitItem.item.parent instanceof DimensionLine) {
+            this.sz_start(hitItem.item.parent);
+          }
           return;
         }
 
-        let item = this.hitItem.item.parent;
+        let item = hitItem.item.parent;
         if (space && item.nearest && item.nearest()) {
           item = item.nearest();
         }
 
-        if (item && (this.hitItem.type == 'fill' || this.hitItem.type == 'stroke')) {
+        if (item && (hitItem.type == 'fill' || hitItem.type == 'stroke')) {
           if(shift) {
-            item.selected = !item.selected;
+            if(item.selected) {
+              deselect.push({elm: item.elm, node: null, shift});
+            }
+            else {
+              select.push({elm: item.elm, node: null, shift});
+            }
           }
           else {
-            project.deselectAll();
-            item.selected = true;
+            deselect.push({elm: null, shift});
+            select.push({elm: item.elm, node: null, shift});
           }
-          if (item.selected) {
+          if (select.length) {
             this.mode = consts.move_shapes;
-            project.deselect_all_points();
             this.mouseStartPos = event.point.clone();
             this.originalContent = this._scope.capture_selection_state();
-
-            if(item.layer){
-              this.eve.emit('layer_activated', item.layer);
-            }
           }
 
         }
-        else if (this.hitItem.type == 'segment') {
+        else if (hitItem.type == 'segment') {
+          const node = item.generatrix.firstSegment.point.is_nearest(event.point, true) ? 'b' : 'e';
           if (shift) {
-            this.hitItem.segment.selected = !this.hitItem.segment.selected;
-          } else {
-            if (!this.hitItem.segment.selected){
-              project.deselect_all_points();
-              project.deselectAll();
+            if(hitItem.segment.selected) {
+              deselect.push({elm: item.elm, node, shift});
             }
-            this.hitItem.segment.selected = true;
+            else {
+              select.push({elm: item.elm, node, shift});
+            }
           }
-          if (this.hitItem.segment.selected) {
+          else {
+            if (!hitItem.segment.selected){
+              deselect.push({elm: null, shift});
+              select.push({elm: item.elm, node, shift});
+            }
+          }
+          if (select.length) {
             this.mode = consts.move_points;
             this.mouseStartPos = event.point.clone();
             this.originalContent = this._scope.capture_selection_state();
           }
         }
-        else if (this.hitItem.type == 'handle-in' || this.hitItem.type == 'handle-out') {
+        else if (hitItem.type == 'handle-in' || hitItem.type == 'handle-out') {
           this.mode = consts.move_handle;
           this.mouseStartPos = event.point.clone();
-          this.originalHandleIn = this.hitItem.segment.handleIn.clone();
-          this.originalHandleOut = this.hitItem.segment.handleOut.clone();
+          this.originalHandleIn = hitItem.segment.handleIn.clone();
+          this.originalHandleOut = hitItem.segment.handleOut.clone();
 
-          /* if (this.hitItem.type == 'handle-out') {
-           this.originalHandlePos = this.hitItem.segment.handleOut.clone();
-           this.originalOppHandleLength = this.hitItem.segment.handleIn.length;
+          /* if (hitItem.type == 'handle-out') {
+           this.originalHandlePos = hitItem.segment.handleOut.clone();
+           this.originalOppHandleLength = hitItem.segment.handleIn.length;
            } else {
-           this.originalHandlePos = this.hitItem.segment.handleIn.clone();
-           this.originalOppHandleLength = this.hitItem.segment.handleOut.length;
+           this.originalHandlePos = hitItem.segment.handleIn.clone();
+           this.originalOppHandleLength = hitItem.segment.handleOut.length;
            }
            this.originalContent = capture_selection_state(); // For some reason this does not work!
            */
         }
 
-        // подключаем диадог свойств элемента
+        // подключаем диалог свойств элемента
         if(item instanceof ProfileItem || item instanceof Filling){
           this.profile = item;
-          this.eve.emit('elm_activated', item, shift);
         }
 
         this._scope.clear_selection_bounds();
 
-      } else {
+      }
+      else {
         // Clicked on and empty area, engage box select.
         this.mouseStartPos = event.point.clone();
         this.mode = 'box-select';
 
         if(!shift && this.profile){
-          this.eve.emit('elm_activated', null, shift);
           delete this.profile;
         }
 
       }
+
+      deselect.length && this._scope.cmd('deselect', deselect);
+      select.length && this._scope.cmd('select', select);
     }
 
     mouseup(event) {
@@ -249,31 +261,32 @@ export default function select_node (Editor) {
 
     mousedrag(event) {
 
-      const {project, _scope: {consts}} = this;
+      const {project, _scope} = this;
+      const {consts} = _scope;
 
       this.changed = true;
 
       if (this.mode == consts.move_shapes) {
-        this._scope.canvas_cursor('cursor-arrow-small');
+        _scope.canvas_cursor('cursor-arrow-small');
 
         let delta = event.point.subtract(this.mouseStartPos);
         if (!event.modifiers.shift){
           delta = delta.snap_to_angle(Math.PI*2/4);
         }
-        this._scope.restore_selection_state(this.originalContent);
+        _scope.restore_selection_state(this.originalContent);
         project.move_points(delta, true);
-        this._scope.clear_selection_bounds();
+        _scope.clear_selection_bounds();
       }
       else if (this.mode == consts.move_points) {
-        this._scope.canvas_cursor('cursor-arrow-small');
+        _scope.canvas_cursor('cursor-arrow-small');
 
         let delta = event.point.subtract(this.mouseStartPos);
         if(!event.modifiers.shift) {
           delta = delta.snap_to_angle(Math.PI*2/4);
         }
-        this._scope.restore_selection_state(this.originalContent);
+        _scope.restore_selection_state(this.originalContent);
         project.move_points(delta);
-        this._scope.purge_selection();
+        _scope.purge_selection();
       }
       else if (this.mode == consts.move_handle) {
 
@@ -300,10 +313,10 @@ export default function select_node (Editor) {
         noti.profiles[0].rays.clear();
         noti.profiles[0].layer.notify(noti);
 
-        this._scope.purge_selection();
+        _scope.purge_selection();
       }
       else if (this.mode == 'box-select') {
-        this._scope.drag_rect(this.mouseStartPos, event.point);
+        _scope.drag_rect(this.mouseStartPos, event.point);
       }
     }
 
@@ -421,20 +434,30 @@ export default function select_node (Editor) {
 
       }
       else if(['left', 'right', 'up', 'down'].includes(key)) {
-        if(!project.selected_profiles().length && !event.event) {
-          $p.ui.dialogs.snack({message: 'Для сдвига профиля, его сначала нужно выделить на эскизе'});
+        const profiles = project.selected_profiles();
+
+        if(profiles.length) {
+          let delta;
+          if (key == 'left') {
+            delta = [-step, 0];
+          }
+          else if (key == 'right') {
+            delta = [step, 0];
+          }
+          else if (key == 'up') {
+            delta = [0, -step];
+          }
+          else if (key == 'down') {
+            delta = [0, step];
+          }
+          this._scope.cmd('move', delta);
+          if(event.event) {
+            event.event.preventDefault();
+            event.event.cancelBubble = true;
+          }
         }
-        if (key == 'left') {
-          project.move_points(new Point(-step, 0));
-        }
-        else if (key == 'right') {
-          project.move_points(new Point(step, 0));
-        }
-        else if (key == 'up') {
-          project.move_points(new Point(0, -step));
-        }
-        else if (key == 'down') {
-          project.move_points(new Point(0, step));
+        else if(!event.event) {
+            $p.ui.dialogs.snack({message: 'Для сдвига профиля, его сначала нужно выделить на эскизе', timeout: 10});
         }
       }
     }
@@ -449,6 +472,7 @@ export default function select_node (Editor) {
 
       const hitSize = 6;
       const {project} = this;
+      const canvas_cursor = this._scope.canvas_cursor.bind(this._scope);
       this.hitItem = null;
 
       if (point) {
@@ -485,26 +509,25 @@ export default function select_node (Editor) {
       const {hitItem} = this;
       if (hitItem) {
         if (hitItem.type == 'fill' || hitItem.type == 'stroke') {
-
           if (hitItem.item.parent instanceof DimensionLine) {
             // размерные линии сами разберутся со своими курсорами
           }
           else if (hitItem.item instanceof PointText) {
-            !(hitItem.item instanceof EditableText) && this._scope.canvas_cursor('cursor-text');     // указатель с черным Т
+            !(hitItem.item instanceof EditableText) && canvas_cursor('cursor-text');     // указатель с черным Т
           }
           else if (hitItem.item.selected) {
-            this._scope.canvas_cursor('cursor-arrow-small');
+            canvas_cursor('cursor-arrow-small');
           }
           else {
-            this._scope.canvas_cursor('cursor-arrow-white-shape');
+            canvas_cursor('cursor-arrow-white-shape');
           }
         }
         else if (hitItem.type == 'segment' || hitItem.type == 'handle-in' || hitItem.type == 'handle-out') {
           if (hitItem.segment.selected) {
-            this._scope.canvas_cursor('cursor-arrow-small-point');
+            canvas_cursor('cursor-arrow-small-point');
           }
           else {
-            this._scope.canvas_cursor('cursor-arrow-white-point');
+            canvas_cursor('cursor-arrow-white-point');
           }
         }
       }
@@ -513,14 +536,63 @@ export default function select_node (Editor) {
         const hit = project.hitTest(point, {stroke: true, visible: true, tolerance: 16});
         if (hit && hit.item.parent instanceof Sectional){
           this.hitItem = hit;
-          this._scope.canvas_cursor('cursor-arrow-white-shape');
+          canvas_cursor('cursor-arrow-white-shape');
         }
         else{
-          this._scope.canvas_cursor('cursor-arrow-white');
+          canvas_cursor('cursor-arrow-white');
         }
       }
 
       return true;
+    }
+
+    sz_start(item) {
+      this.sz_fin();
+      this.mode = 'sz_start';
+      this.profile = item;
+      const {view} = this.project;
+      const point = view.projectToView(item.children.text.bounds.center);
+      this.input = document.createElement('INPUT');
+      this.input.classList.add('sz_input');
+      this.input.style.top = `${point.y - 4}px`;
+      this.input.style.left = `${point.x - 16}px`;
+      this.input.type = 'number';
+      this.input.step = '10';
+      this.input.value = item.size;
+      view.element.parentNode.appendChild(this.input);
+      this.input.focus();
+      this.input.select();
+      this.input.onkeydown = this.sz_keydown.bind(this);
+    }
+
+    sz_keydown({key}) {
+      if(key === 'Escape' || key === 'Tab') {
+        this.sz_fin();
+      }
+      else if(key === 'Enter') {
+        const {input, profile} = this;
+        const attr = {
+          wnd: profile,
+          size: parseFloat(input.value),
+          name: 'auto',
+        };
+        this.sz_fin();
+        profile.sizes_wnd(attr);
+      }
+    }
+
+    sz_fin() {
+      const {input, profile, project, mode} = this;
+      if(input) {
+        project.view.element.parentNode.removeChild(input);
+        this.input = null;
+      }
+      if(profile instanceof DimensionLine) {
+        this.profile = null;
+      }
+      if(mode === 'sz_start') {
+        this.mode = null;
+      }
     }
 
   };

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PropField from './PropField';
+import PropField from 'metadata-react/DataField/PropField';
 import FlapToolbar from './FlapToolbar';
 import LinkedProps from './LinkedProps';
 

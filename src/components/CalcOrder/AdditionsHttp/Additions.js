@@ -32,7 +32,7 @@ class Additions extends React.Component {
   }
 
   handleCalck() {
-    return handleCalck(this.props._obj)
+    return handleCalck(this.props._obj);
   }
 
   set_order(row) {

@@ -3,13 +3,6 @@
 	color: #636773;
 }
 
-.md_otbnav {
-	position: fixed;
-	padding: 0;
-	margin: 0;
-	background: transparent;
-}
-
 .md-fa-lg {
 	font-size: 130%;
 	vertical-align: 25%;
@@ -19,7 +12,6 @@
 	padding-top: 12px !important;
 	/* border-bottom: 1px solid #ddd; */
 }
-
 
 .mousepos {
 	position: absolute;

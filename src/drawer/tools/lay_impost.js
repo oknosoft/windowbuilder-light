@@ -494,10 +494,7 @@ export default function lay_impost (Editor) {
           gen: p.nearest() ? rays.outer : generatrix,
         };
         if(addls.length) {
-          if(elm_type === $p.enm.elm_types.Импост) {
-
-          }
-          else {
+          if(elm_type !== $p.enm.elm_types.Импост) {
             res.inner = addls[0].rays.inner;
             res.gen = addls[0].rays.outer;
           }

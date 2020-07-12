@@ -1,6 +1,7 @@
 import React from 'react';
 import IconChart from '@material-ui/icons/InsertChart';
 import IconDoc from '@material-ui/icons/EventNote';
+import IconList from '@material-ui/icons/List';
 import qs from 'qs';
 
 import IconInfo from '@material-ui/icons/Info';
@@ -8,7 +9,7 @@ import IconSettings from '@material-ui/icons/Settings';
 //import IconHelp from '@material-ui/icons/Help';
 //import IconPerson from '@material-ui/icons/Person';
 //import IconDrafts from '@material-ui/icons/Drafts';
-//import IconList from '@material-ui/icons/List';
+
 //import IconBusinessCenter from '@material-ui/icons/BusinessCenter';
 
 export const stitle = 'Заказ дилера';
@@ -41,6 +42,13 @@ const items = [
         //icon: <IconBusinessCenter/>,
       },
     ]
+  },
+  {
+    text: 'Справочники',
+    icon: <IconList/>,
+    open: true,
+    id: 'catalogs',
+    items: []
   },
   {
     text: 'Отчеты',

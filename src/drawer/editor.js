@@ -11,7 +11,6 @@ import drawer from 'windowbuilder/dist/drawer';
 import tools from './tools';
 import align from './align';
 import StableZoom from './StableZoom';
-import History from './History';
 import Deformer from './Deformer';
 
 export default function ($p) {
@@ -28,9 +27,9 @@ export default function ($p) {
       new EditorInvisible.Scheme(this._canvas, this, typeof window === 'undefined');
 
       this._stable_zoom = new StableZoom(this);
-      this._undo = new History(this);
       this._deformer = new Deformer(this);
 
+      this.project._use_skeleton = true;
       this.project._dp.value_change = this.dp_value_change.bind(this);
       this._recalc_timer = 0;
 
@@ -99,18 +98,6 @@ export default function ($p) {
       }
       if(redraw) {
         this.deffered_recalc();
-      }
-    }
-
-    /**
-     * Выполняет команду редактирования
-     * @param type
-     * @param attr
-     */
-    cmd(type, ...attr) {
-      if(this._deformer[type]) {
-        this._undo.push(type, attr);
-        this._deformer[type](...attr);
       }
     }
 
