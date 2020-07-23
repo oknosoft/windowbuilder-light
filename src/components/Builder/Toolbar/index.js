@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import CloseBtn from 'windowbuilder-forms/dist/Common/CloseBtn';
-import Tip from 'windowbuilder-forms/dist/Common/Tip';
+import CloseBtn from 'wb-forms/dist/Common/CloseBtn';
+import Tip from 'wb-forms/dist/Common/Tip';
 import SelectTool from './SelectTool';
 import Save from './Save';
 

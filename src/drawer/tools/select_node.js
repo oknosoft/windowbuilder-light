@@ -110,7 +110,6 @@ export default function select_node (Editor) {
           if (select.length) {
             this.mode = consts.move_shapes;
             this.mouseStartPos = event.point.clone();
-            this.originalContent = this._scope.capture_selection_state();
           }
 
         }
@@ -133,7 +132,6 @@ export default function select_node (Editor) {
           if (select.length) {
             this.mode = consts.move_points;
             this.mouseStartPos = event.point.clone();
-            this.originalContent = this._scope.capture_selection_state();
           }
         }
         else if (hitItem.type == 'handle-in' || hitItem.type == 'handle-out') {
@@ -174,21 +172,32 @@ export default function select_node (Editor) {
 
       deselect.length && this._scope.cmd('deselect', deselect);
       select.length && this._scope.cmd('select', select);
+      //this.originalContent = this._scope.capture_selection_state();
     }
 
     mouseup(event) {
 
-      const {project, _scope: {consts}} = this;
+      const {project, _scope} = this;
+      const {consts} = _scope;
 
       if (this.mode == consts.move_shapes) {
         if (this.changed) {
-          this._scope.clear_selection_bounds();
+          const delta = project.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+          //_scope.restore_selection_state(this.originalContent);
+          //project.move_points(delta, true);
+          project.redraw();
+          _scope.clear_selection_bounds();
           //undo.snapshot("Move Shapes");
         }
       }
       else if (this.mode == consts.move_points) {
         if (this.changed) {
-          this._scope.clear_selection_bounds();
+          const delta = project.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+          //_scope.restore_selection_state(this.originalContent);
+          project.move_points(delta);
+          project.redraw();
+          project.deselect_all_points();
+          //_scope.purge_selection();
           //undo.snapshot("Move Points");
         }
       }
@@ -268,25 +277,12 @@ export default function select_node (Editor) {
 
       if (this.mode == consts.move_shapes) {
         _scope.canvas_cursor('cursor-arrow-small');
-
-        let delta = event.point.subtract(this.mouseStartPos);
-        if (!event.modifiers.shift){
-          delta = delta.snap_to_angle(Math.PI*2/4);
-        }
-        _scope.restore_selection_state(this.originalContent);
-        project.move_points(delta, true);
-        _scope.clear_selection_bounds();
+        project.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
       }
       else if (this.mode == consts.move_points) {
         _scope.canvas_cursor('cursor-arrow-small');
-
-        let delta = event.point.subtract(this.mouseStartPos);
-        if(!event.modifiers.shift) {
-          delta = delta.snap_to_angle(Math.PI*2/4);
-        }
-        _scope.restore_selection_state(this.originalContent);
-        project.move_points(delta);
         _scope.purge_selection();
+        project.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
       }
       else if (this.mode == consts.move_handle) {
 
@@ -459,6 +455,11 @@ export default function select_node (Editor) {
         else if(!event.event) {
             $p.ui.dialogs.snack({message: 'Для сдвига профиля, его сначала нужно выделить на эскизе', timeout: 10});
         }
+      }
+      else if (key == 'escape') {
+        this.mode = null;
+        project.hide_move_ribs(true);
+        project.deselect_all_points();
       }
     }
 

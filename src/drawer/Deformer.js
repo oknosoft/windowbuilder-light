@@ -28,6 +28,7 @@ export default class Deformer {
       if(item) {
         if(node) {
           item.generatrix[node === 'b' ? 'firstSegment' : 'lastSegment'].selected = true;
+          //item[node].selected = true;
         }
         else {
           deselect = true;

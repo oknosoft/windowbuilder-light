@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogActions from '@material-ui/core/DialogActions';
-import Tip from 'windowbuilder-forms/dist/Common/Tip';
+import Tip from 'wb-forms/dist/Common/Tip';
 import Params from './Params';
 
 

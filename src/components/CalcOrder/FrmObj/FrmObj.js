@@ -10,8 +10,8 @@ import TabularSection from 'metadata-react/TabularSection';
 import DataObj from 'metadata-react/FrmObj/DataObj';
 import withStyles600 from 'metadata-react/styles/paper600';
 
-import Tip from 'windowbuilder-forms/dist/Common/Tip';
-import {Tabs, Tab} from 'windowbuilder-forms/dist/Common/AntTabs';
+import Tip from 'wb-forms/dist/Common/Tip';
+import {Tabs, Tab} from 'wb-forms/dist/Common/AntTabs';
 
 import DataObjToolbar from './DataObjToolbar';
 import OrderRow from './OrderRow';

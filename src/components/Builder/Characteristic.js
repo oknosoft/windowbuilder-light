@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Dialog from 'metadata-react/App/Dialog';
-import FrmObj from 'windowbuilder-forms/dist/CatCharacteristics/FrmObj';
+import FrmObj from 'wb-forms/dist/CatCharacteristics/FrmObj';
 
 export default function Characteristic({editor, handleClose, windowHeight}) {
 

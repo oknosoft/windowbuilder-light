@@ -14,7 +14,7 @@ import settings from '../../config/app.settings';
 import {patch_prm, patch_cnn} from '../../config/patch_cnn';
 
 // читаем скрипт инициализации метаданных, полученный в результате выполнения meta:prebuild
-import meta_init from 'windowbuilder/dist/init';
+import meta_init from 'wb-core/dist/init';
 import modifiers from './modifiers';
 
 // конструкторы ui
