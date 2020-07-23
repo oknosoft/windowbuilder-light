@@ -16,7 +16,7 @@ import {Tabs, Tab} from 'wb-forms/dist/Common/AntTabs';
 import DataObjToolbar from './DataObjToolbar';
 import OrderRow from './OrderRow';
 import Parametric from './Parametric';
-import {path, prm} from '../../App/menu_items';
+import {prm} from '../../App/menu_items';
 
 class CalcOrderObj extends DataObj {
 
@@ -160,7 +160,7 @@ class CalcOrderObj extends DataObj {
   openTemplates = () => {
     const {state: {_obj}, props: {handlers}} = this;
     ((_obj._modified || _obj.is_new()) ? _obj.save() : Promise.resolve())
-      .then(() => handlers.handleNavigate(path(`templates/?order=${_obj.ref}&ref=new`)))
+      .then(() => handlers.handleNavigate(`/templates/?order=${_obj.ref}&ref=new`))
       .catch((err) => null);
   };
 

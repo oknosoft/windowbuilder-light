@@ -4,8 +4,8 @@
 
 //import {handleIfaceState} from '../../redux';
 import FrmObj from '../../components/CalcOrder/FrmObj/FrmObj';
-import FrmList from '../../components/CalcOrder/FrmList/DirectList';
-import RepParams from '../../components/CalcOrder/FrmList/Params';
+import FrmList from 'wb-forms/dist/CalcOrder/FrmList/DirectList';
+import RepParams from 'wb-forms/dist/CalcOrder/FrmList/Params';
 
 export default function ($p) {
   /* eslint-disable-next-line */

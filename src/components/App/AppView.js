@@ -11,13 +11,13 @@ import Header from 'metadata-react/Header';         // навигация
 import {compose} from 'redux';
 import {withNavigateAndMeta} from 'metadata-redux';
 import withWindowSize from 'metadata-react/WindowSize';
+import Templates from 'wb-forms/dist/CalcOrder/Templates';  // stepper выбора шаблона изделия
 
 import DumbScreen from '../DumbScreen';             // заставка "загрузка занных"
 import DataRoute from './DataRoute';                // вложенный маршрутизатор страниц с данными
 import MarkdownRoute from '../Markdown';            // вложенный маршрутизатор страниц с Markdown, 404 живёт внутри Route
 import Settings from '../Settings';                 // страница настроек приложения
 import Builder from '../Builder';                   // графический редактор
-import Templates from '../Templates';               // stepper выбора шаблона изделия
 import {lazy} from './lazy';                        // конструкторы для контекста
 
 import withStyles from './styles';

@@ -18,8 +18,7 @@ import Tip from 'wb-forms/dist/Common/Tip';
 import Quantity from './Quantity';
 import Amount from './Amount';
 
-import {path} from '../../App/menu_items';
-import withStyles from './styles';
+import withStyles from 'wb-forms/dist/CalcOrder/FrmObj/styles';
 
 
 function OrderRow({row, classes, handlers, is_technologist}) {
@@ -30,7 +29,7 @@ function OrderRow({row, classes, handlers, is_technologist}) {
 
   function edit() {
     if(editable) {
-      handlers.handleNavigate(path(`builder/${ox.ref}`));
+      handlers.handleNavigate(`/builder/${ox.ref}`);
     }
     else {
       dialogs.alert({text: `Нельзя редактировать изделия, когда заказ в статусе '${sending_stage}'`, title: 'Статус отправки'});
