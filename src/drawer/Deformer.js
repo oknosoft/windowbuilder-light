@@ -13,6 +13,10 @@ export default class Deformer {
     return this.editor._undo;
   }
 
+  get mover() {
+    return this.editor._mover;
+  }
+
   get project() {
     return this.editor.project;
   }

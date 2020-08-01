@@ -177,12 +177,12 @@ export default function select_node (Editor) {
 
     mouseup(event) {
 
-      const {project, _scope} = this;
+      const {_scope, project, mover} = this;
       const {consts} = _scope;
 
       if (this.mode == consts.move_shapes) {
         if (this.changed) {
-          const delta = project.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+          const delta = mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
           //_scope.restore_selection_state(this.originalContent);
           //project.move_points(delta, true);
           project.redraw();
@@ -192,7 +192,7 @@ export default function select_node (Editor) {
       }
       else if (this.mode == consts.move_points) {
         if (this.changed) {
-          const delta = project.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+          const delta = mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
           //_scope.restore_selection_state(this.originalContent);
           project.move_points(delta);
           project.redraw();
@@ -270,19 +270,19 @@ export default function select_node (Editor) {
 
     mousedrag(event) {
 
-      const {project, _scope} = this;
+      const {_scope, project, mover} = this;
       const {consts} = _scope;
 
       this.changed = true;
 
       if (this.mode == consts.move_shapes) {
         _scope.canvas_cursor('cursor-arrow-small');
-        project.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+        mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
       }
       else if (this.mode == consts.move_points) {
         _scope.canvas_cursor('cursor-arrow-small');
-        _scope.purge_selection();
-        project.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+        //_scope.purge_selection();
+        mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
       }
       else if (this.mode == consts.move_handle) {
 
@@ -318,7 +318,7 @@ export default function select_node (Editor) {
 
     keydown(event) {
 
-      const {project} = this;
+      const {project, mover} = this;
       const {key, modifiers} = event;
       const step = modifiers.shift ? 1 : 10;
       let j, segment, index, point, handle;
@@ -458,7 +458,7 @@ export default function select_node (Editor) {
       }
       else if (key == 'escape') {
         this.mode = null;
-        project.hide_move_ribs(true);
+        mover.hide_move_ribs(true);
         project.deselect_all_points();
       }
     }

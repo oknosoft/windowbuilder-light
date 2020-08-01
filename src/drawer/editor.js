@@ -12,6 +12,7 @@ import tools from './tools';
 import align from './align';
 import StableZoom from './StableZoom';
 import Deformer from './Deformer';
+import Mover from './Mover';
 
 export default function ($p) {
 
@@ -28,6 +29,7 @@ export default function ($p) {
 
       this._stable_zoom = new StableZoom(this);
       this._deformer = new Deformer(this);
+      this._mover = new Mover(this);
 
       this.project._use_skeleton = true;
       this.project._dp.value_change = this.dp_value_change.bind(this);

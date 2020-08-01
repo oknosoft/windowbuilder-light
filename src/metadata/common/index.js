@@ -3,7 +3,7 @@
 // строки интернационализации
 import i18ru from './i18n.ru';
 import wnd_oaddress from './wnd_oaddress';
-import select_template from './select_template';
+import select_template from 'wb-core/dist/select_template';
 import events from './events';
 
 import randomId from './ids';

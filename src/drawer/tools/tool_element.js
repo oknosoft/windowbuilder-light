@@ -81,6 +81,10 @@ export default function tool_element (Editor) {
       return this._scope.project;
     }
 
+    get mover() {
+      return this._scope._mover;
+    }
+
   };
 
 }
