@@ -182,9 +182,9 @@ export default function select_node (Editor) {
 
       if (this.mode == consts.move_shapes) {
         if (this.changed) {
-          const delta = mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+          const vertexes = mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
           //_scope.restore_selection_state(this.originalContent);
-          //project.move_points(delta, true);
+          mover.move_shapes(vertexes);
           project.redraw();
           _scope.clear_selection_bounds();
           //undo.snapshot("Move Shapes");

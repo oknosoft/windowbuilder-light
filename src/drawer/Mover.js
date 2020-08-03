@@ -49,8 +49,8 @@ export default class Mover {
         const de = e.add(delta);
         const line = new Path({insert: false, segments: [db, de]}).elongation(1000);
         // map узлов грава и структуры точек
-        vertexes.get(vb).push({skeleton, profile, line, pt: db, ribs: [], points: new Set()});
-        vertexes.get(ve).push({skeleton, profile, line, pt: de, ribs: [], points: new Set()});
+        vertexes.get(vb).push({skeleton, profile, line, pt: db, ribs: new Map(), points: new Set()});
+        vertexes.get(ve).push({skeleton, profile, line, pt: de, ribs: new Map(), points: new Set()});
         lines.set(line, {vb, ve, db, de});
       }
 
@@ -61,6 +61,9 @@ export default class Mover {
 
       // анализируем вариант T
       for(const [vertex, av] of vertexes) {
+        if(!vertex) {
+          break;
+        }
         // в ribs живут отрезки, а в points - концы подходящих для сдвига сегментов
         for(const v of av) {
           const {skeleton, profile, ribs, points, line, pt} = v;
@@ -70,12 +73,16 @@ export default class Mover {
             if(!edge.is_some_side(profile, vertex)) {
               continue;
             }
-            edge.profile !== profile && points.add(edge.endVertex.point);
-            // ribs.push({
-            //   profile: edge.profile,
-            //   path: edge.profile.generatrix.get_subpath(edge.endVertex.point, edge.startVertex.point),
-            // });
+
+            if(edge.profile.b.is_nearest(vertex.point, true)) {
+              ribs.set(edge.profile, 'b');
+            }
+            if(edge.profile.e.is_nearest(vertex.point, true)) {
+              ribs.set(edge.profile, 'e');
+            }
+
             if(edge.profile !== profile) {
+              points.add(edge.endVertex.point);
               candidates.add(edge);
             }
           }
@@ -83,12 +90,16 @@ export default class Mover {
             if(!edge.is_some_side(profile, vertex)) {
               continue;
             }
-            edge.profile !== profile && points.add(edge.startVertex.point);
-            // ribs.push({
-            //   profile: edge.profile,
-            //   path: edge.profile.generatrix.get_subpath(edge.startVertex.point, edge.endVertex.point),
-            // });
+
+            if(edge.profile.b.is_nearest(vertex.point, true)) {
+              ribs.set(edge.profile, 'b');
+            }
+            if(edge.profile.e.is_nearest(vertex.point, true)) {
+              ribs.set(edge.profile, 'e');
+            }
+
             if(edge.profile !== profile) {
+              points.add(edge.startVertex.point);
               for (const candidate of candidates) {
                 if(candidate.profile === edge.profile && !candidate.is_profile_outer(edge)) {
                   const path = edge.profile.generatrix
@@ -119,7 +130,10 @@ export default class Mover {
       }
 
       this.draw_move_ribs(vertexes);
+
+      return vertexes;
     }
+
     if(mode === move_points) {
       const vertexes = new Map();
       // в режиме move_points, обрабатываем только один узел
@@ -198,10 +212,11 @@ export default class Mover {
       }
 
       this.draw_move_ribs(vertexes);
+
+      return delta;
     }
 
 
-    return delta;
   }
 
   hide_move_ribs(withOpacity) {
@@ -275,5 +290,27 @@ export default class Mover {
         });
       }
     }
+  }
+
+  move_shapes(vertexes) {
+    const {project} = this;
+    for(const [vertex, av] of vertexes) {
+      for (const v of av) {
+        let {ribs, point, pt} = v;
+        if(!point) {
+          point = pt;
+        }
+        for(const [profile, node] of ribs) {
+          const node_point = profile[node];
+          if(!node_point.is_nearest(point, true)) {
+            project.deselectAll();
+            node_point.selected = true;
+            profile.move_points(point.subtract(node_point));
+            node_point.selected = false;
+          }
+        }
+      }
+    }
+    this.hide_move_ribs(true);
   }
 }
