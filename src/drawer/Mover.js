@@ -12,7 +12,7 @@ export default class Mover {
   }
 
   /**
-   * Возврвщает вектор, на который можно сдвинуть узлы
+   * Маршрутизация к привязке сдвигов
    * @param start
    * @param event
    * @return {Point}
@@ -25,198 +25,273 @@ export default class Mover {
       point = start.add(delta);
     }
 
-    const vertexes = new Map();
-
     if(mode === move_shapes) {
-      const lines = new Map();
-      // элементы двигаем перпендикулярно их образующим и следим за вершинами
-      // добавляем delta к узлам, строим через них линию, находим точки на примыкающих - они и будут конечными
-
-      // собираем узлы
-      for(const profile of this.project.selected_profiles()) {
-        const {skeleton, b, e} = profile;
-        // исходные точки
-        const vb = skeleton.vertexByPoint(b);
-        const ve = skeleton.vertexByPoint(e);
-        if(!vertexes.has(vb)) {
-          vertexes.set(vb, []);
-        }
-        if(!vertexes.has(ve)) {
-          vertexes.set(ve, []);
-        }
-        // смещенные точки и линия через них
-        const db = b.add(delta);
-        const de = e.add(delta);
-        const line = new Path({insert: false, segments: [db, de]}).elongation(1000);
-        // map узлов грава и структуры точек
-        vertexes.get(vb).push({skeleton, profile, line, pt: db, ribs: new Map(), points: new Set()});
-        vertexes.get(ve).push({skeleton, profile, line, pt: de, ribs: new Map(), points: new Set()});
-        lines.set(line, {vb, ve, db, de});
-      }
-
-      for(const [line, lv] of lines) {
-        const {vb, ve, db, de} = lv;
-        const {skeleton, profile, ribs, points} = vertexes.get(vb);
-      }
-
-      // анализируем вариант T
-      for(const [vertex, av] of vertexes) {
-        if(!vertex) {
-          break;
-        }
-        // в ribs живут отрезки, а в points - концы подходящих для сдвига сегментов
-        for(const v of av) {
-          const {skeleton, profile, ribs, points, line, pt} = v;
-          const candidates = new Set();
-          let edges = vertex.getEdges();
-          for (const edge of edges) {
-            if(!edge.is_some_side(profile, vertex)) {
-              continue;
-            }
-
-            if(edge.profile.b.is_nearest(vertex.point, true)) {
-              ribs.set(edge.profile, 'b');
-            }
-            if(edge.profile.e.is_nearest(vertex.point, true)) {
-              ribs.set(edge.profile, 'e');
-            }
-
-            if(edge.profile !== profile) {
-              points.add(edge.endVertex.point);
-              candidates.add(edge);
-            }
-          }
-          for (const edge of vertex.getEndEdges()) {
-            if(!edge.is_some_side(profile, vertex)) {
-              continue;
-            }
-
-            if(edge.profile.b.is_nearest(vertex.point, true)) {
-              ribs.set(edge.profile, 'b');
-            }
-            if(edge.profile.e.is_nearest(vertex.point, true)) {
-              ribs.set(edge.profile, 'e');
-            }
-
-            if(edge.profile !== profile) {
-              points.add(edge.startVertex.point);
-              for (const candidate of candidates) {
-                if(candidate.profile === edge.profile && !candidate.is_profile_outer(edge)) {
-                  const path = edge.profile.generatrix
-                    .get_subpath(edge.startVertex.point, candidate.endVertex.point)
-                    .elongation(-edge.profile.width / 2);
-                  const npoint = line.intersect_point(path, point);
-                  if(npoint) {
-                    point = npoint;
-                  }
-                  else {
-                    point = path.getNearestPoint(pt);
-                  }
-                  //delta = point.subtract(start);
-                  v.point = point;
-                  break;
-                }
-              }
-            }
-          }
-        }
-
-      }
-
-      for(const [line, lv] of lines) {
-        const {vb, ve, db, de} = lv;
-        const {skeleton, profile, ribs, points} = vertexes.get(vb);
-
-      }
-
-      this.draw_move_ribs(vertexes);
-
-      return vertexes;
+      return this.snap_shapes({start, point, delta});
     }
 
     if(mode === move_points) {
-      const vertexes = new Map();
-      // в режиме move_points, обрабатываем только один узел
+      return this.snap_points({start, point, delta});
+    }
+  }
 
-      // ищем первый узел
-      for(const profile of this.project.selected_profiles()) {
-        const {skeleton} = profile;
-        for(const vertex of skeleton.vertexesByProfile(profile)) {
-          if(vertex.selected) {
-            vertexes.set(vertex, [{skeleton, profile, ribs: [], points: new Set()}]);
-            break;
-          }
-        }
-        if(vertexes.size) {
+  /**
+   * Возврвщает вектор, на который можно сдвинуть узлы
+   * @param start
+   * @param point
+   * @return {Point}
+   */
+  snap_points({start, point, delta}) {
+    // в режиме move_points, обрабатываем только один узел
+    const {Path} = this.editor;
+    const vertexes = new Map();
+    const tvertexes = new Map();
+
+    // ищем первый узел
+    for(const profile of this.project.selected_profiles()) {
+      const {skeleton} = profile;
+      for(const vertex of skeleton.vertexesByProfile(profile)) {
+        if(vertex.selected) {
+          vertexes.set(vertex, [{skeleton, profile, ribs: new Map(), points: new Set()}]);
           break;
         }
       }
+      if(vertexes.size) {
+        break;
+      }
+    }
 
-      // анализируем вариант T
-      for(const [vertex, v] of vertexes) {
-        // в ribs живут отрезки, а в points - концы подходящих для сдвига сегментов
-        const {skeleton, profile, ribs, points} = v[0];
-        const candidates = new Set();
-        for(const edge of vertex.getEdges()) {
-          points.add(edge.endVertex.point);
-          ribs.push({
-            profile: edge.profile,
-            path: edge.profile.generatrix.get_subpath(edge.endVertex.point, edge.startVertex.point),
-          });
-          if(edge.profile !== profile) {
-            candidates.add(edge);
-          }
+    // анализируем вариант T
+    for(const [vertex, v] of vertexes) {
+      // в ribs живут отрезки, а в points - концы подходящих для сдвига сегментов
+      const {skeleton, profile, ribs, points} = v[0];
+      const corners = profile.is_corner();
+      const candidates = new Set();
+      for(const edge of vertex.getEdges()) {
+        points.add(edge.endVertex.point);
+        if(!ribs.has(edge.profile)) {
+          ribs.set(edge.profile, {paths: []});
         }
-        for(const edge of vertex.getEndEdges()) {
-          points.add(edge.startVertex.point);
-          ribs.push({
-            profile: edge.profile,
-            path: edge.profile.generatrix.get_subpath(edge.startVertex.point, edge.endVertex.point),
-          });
-          if(edge.profile !== profile) {
-            for(const candidate of candidates) {
-              if(candidate.profile === edge.profile && !candidate.is_profile_outer(edge)) {
-                const path = edge.profile.generatrix
-                  .get_subpath(edge.startVertex.point, candidate.endVertex.point)
-                  .elongation(-edge.profile.width / 2);
-                point = path.getNearestPoint(point);
-                delta = point.subtract(start);
-                v[0].point = point;
-                break;
-              }
+        const rv = ribs.get(edge.profile);
+        rv.paths.push(edge.profile.generatrix.get_subpath(edge.endVertex.point, edge.startVertex.point));
+        if(edge.profile.b.is_nearest(vertex.point, true)) {
+          rv.node = 'b';
+        }
+        if(edge.profile.e.is_nearest(vertex.point, true)) {
+          rv.node = 'e';
+        }
+
+        if(edge.profile !== profile) {
+          candidates.add(edge);
+        }
+      }
+      for(const edge of vertex.getEndEdges()) {
+        points.add(edge.startVertex.point);
+        if(!ribs.has(edge.profile)) {
+          ribs.set(edge.profile, {paths: []});
+        }
+        const rv = ribs.get(edge.profile);
+        rv.paths.push(edge.profile.generatrix.get_subpath(edge.startVertex.point, edge.endVertex.point));
+        if(edge.profile.b.is_nearest(vertex.point, true)) {
+          rv.node = 'b';
+        }
+        if(edge.profile.e.is_nearest(vertex.point, true)) {
+          rv.node = 'e';
+        }
+
+        if(edge.profile !== profile) {
+          for(const candidate of candidates) {
+            if(candidate.profile === edge.profile && !candidate.is_profile_outer(edge)) {
+              const path = edge.profile.generatrix
+                .get_subpath(edge.startVertex.point, candidate.endVertex.point)
+                .elongation(-edge.profile.width);
+              point = path.getNearestPoint(point);
+              delta = point.subtract(start);
+              v[0].point = point;
+              break;
             }
           }
         }
-        if(v[0].point) {
-          break;
-        }
-        // при любом раскладе, длина исходных сегментов не должна становиться < 0
-        for(const {path, profile: {width}} of ribs) {
+      }
+      if(v[0].point) {
+        break;
+      }
+
+      // при любом раскладе, длина исходных сегментов не должна становиться < 0
+      for(const [profile, rv] of ribs) {
+        const {paths, node} = rv;
+        const {width} = profile;
+        for(const path of paths) {
           const pt = path.getNearestPoint(point);
           const offset = path.getOffsetOf(pt);
-          if(offset < width / 2) {
-            point = path.getPointAt(width / 2);
+          if(offset < width) {
+            point = path.getPointAt(width);
             delta = point.subtract(start);
             v[0].point = point;
             break;
           }
         }
-        // крест или разрыв
-        if(ribs.length > 2) {
+      }
 
+      // угловое соединение
+      if(ribs.size <= 2) {
+        v[0].point = point;
+        points.clear();
+        for(const [profile, {node}] of ribs) {
+          if(node) {
+            const ppoint = node === 'b' ? profile.e : profile.b;
+            const {inner, outer} = profile.joined_imposts();
+            const imposts = inner.concat(outer);
+
+            if(imposts.length) {
+              const ppath = new Path({insert: false, segments: [point, ppoint]});
+              for(const impost of imposts) {
+                const {b, e} = impost.profile.rays;
+                const ipoint = b.profile === profile ? b.point : e.point;
+                const i0point = b.profile === profile ? e.point : b.point;
+                const gen = impost.profile.generatrix.clone({insert: false})
+                let mpoint = ppath.intersect_point(gen, ipoint, true);
+                if(!mpoint) {
+                  mpoint = ppath.intersect_point(gen.elongation(3000), mpoint, true);
+                }
+                if(mpoint) {
+                  const tv = {skeleton, profile: impost.profile, point: mpoint, ribs: new Map(), points: new Set()};
+                  tv.points.add(i0point);
+                  tvertexes.set(skeleton.vertexByPoint(i0point), [tv]);
+                }
+              }
+            }
+            points.add(ppoint);
+
+          }
         }
-        // угловое соединение
-        else {
+      }
+      // крест или разрыв
+      else {
 
+      }
+    }
+
+    for(const [k,v] of tvertexes) {
+      vertexes.set(k, v);
+    }
+    this.draw_move_ribs(vertexes);
+
+    return delta;
+  }
+
+  /**
+   * Возврвщает Map рёбер с координатами вершин
+   * @param start
+   * @param point
+   * @return {Point}
+   */
+  snap_shapes({start, point, delta}) {
+    const {Path} = this.editor;
+    const vertexes = new Map();
+    const lines = new Map();
+    // элементы двигаем перпендикулярно их образующим и следим за вершинами
+    // добавляем delta к узлам, строим через них линию, находим точки на примыкающих - они и будут конечными
+
+    // собираем узлы
+    for(const profile of this.project.selected_profiles()) {
+      const {skeleton, b, e} = profile;
+      // исходные точки
+      const vb = skeleton.vertexByPoint(b);
+      const ve = skeleton.vertexByPoint(e);
+      if(!vertexes.has(vb)) {
+        vertexes.set(vb, []);
+      }
+      if(!vertexes.has(ve)) {
+        vertexes.set(ve, []);
+      }
+      // смещенные точки и линия через них
+      const db = b.add(delta);
+      const de = e.add(delta);
+      const line = new Path({insert: false, segments: [db, de]}).elongation(1000);
+      // map узлов грава и структуры точек
+      vertexes.get(vb).push({skeleton, profile, line, pt: db, ribs: new Map(), points: new Set()});
+      vertexes.get(ve).push({skeleton, profile, line, pt: de, ribs: new Map(), points: new Set()});
+      lines.set(line, {vb, ve, db, de});
+    }
+
+    for(const [line, lv] of lines) {
+      const {vb, ve, db, de} = lv;
+      const {skeleton, profile, ribs, points} = vertexes.get(vb);
+    }
+
+    // анализируем вариант T
+    for(const [vertex, av] of vertexes) {
+      if(!vertex) {
+        break;
+      }
+      // в ribs живут отрезки, а в points - концы подходящих для сдвига сегментов
+      for(const v of av) {
+        const {skeleton, profile, ribs, points, line, pt} = v;
+        const candidates = new Set();
+        let edges = vertex.getEdges();
+        for (const edge of edges) {
+          if(!edge.is_some_side(profile, vertex)) {
+            continue;
+          }
+
+          if(edge.profile.b.is_nearest(vertex.point, true)) {
+            ribs.set(edge.profile, 'b');
+          }
+          if(edge.profile.e.is_nearest(vertex.point, true)) {
+            ribs.set(edge.profile, 'e');
+          }
+
+          if(edge.profile !== profile) {
+            points.add(edge.endVertex.point);
+            candidates.add(edge);
+          }
+        }
+        for (const edge of vertex.getEndEdges()) {
+          if(!edge.is_some_side(profile, vertex)) {
+            continue;
+          }
+
+          if(edge.profile.b.is_nearest(vertex.point, true)) {
+            ribs.set(edge.profile, 'b');
+          }
+          if(edge.profile.e.is_nearest(vertex.point, true)) {
+            ribs.set(edge.profile, 'e');
+          }
+
+          if(edge.profile !== profile) {
+            points.add(edge.startVertex.point);
+            for (const candidate of candidates) {
+              if(candidate.profile === edge.profile && !candidate.is_profile_outer(edge)) {
+                const path = edge.profile.generatrix
+                  .get_subpath(edge.startVertex.point, candidate.endVertex.point)
+                  .elongation(-edge.profile.width);
+                const npoint = line.intersect_point(path, point);
+                if(npoint) {
+                  point = npoint;
+                }
+                else {
+                  point = path.getNearestPoint(pt);
+                }
+                //delta = point.subtract(start);
+                v.point = point;
+                break;
+              }
+            }
+          }
         }
       }
 
-      this.draw_move_ribs(vertexes);
-
-      return delta;
     }
 
+    for(const [line, lv] of lines) {
+      const {vb, ve, db, de} = lv;
+      const {skeleton, profile, ribs, points} = vertexes.get(vb);
 
+    }
+
+    this.draw_move_ribs(vertexes);
+
+    return vertexes;
   }
 
   hide_move_ribs(withOpacity) {
@@ -234,6 +309,7 @@ export default class Mover {
 
   draw_move_ribs(vertexes) {
     this.hide_move_ribs();
+    const {Path} = this.editor;
     const ppoints = new Map();
 
     for(const [vertex, v] of vertexes) {
@@ -250,7 +326,7 @@ export default class Mover {
         pp.points.push(point);
 
         for(const pt of points) {
-          new paper.Path({
+          new Path({
             parent: l_visualization._move_ribs,
             strokeColor: 'blue',
             strokeWidth: 2,
@@ -260,7 +336,7 @@ export default class Mover {
             segments: [point, pt],
           });
         }
-        new paper.Path.Rectangle({
+        new Path.Rectangle({
           parent: l_visualization._move_ribs,
           fillColor: 'blue',
           center: point,
@@ -279,7 +355,7 @@ export default class Mover {
 
     for(const [profile, {parent, points}] of ppoints) {
       if(points.length > 1) {
-        new paper.Path({
+        new Path({
           parent,
           strokeColor: 'blue',
           strokeWidth: 2,
