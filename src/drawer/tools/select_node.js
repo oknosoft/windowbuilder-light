@@ -203,7 +203,7 @@ export default function select_node (Editor) {
       }
       else if (this.mode == consts.move_handle) {
         if (this.changed) {
-          this._scope.clear_selection_bounds();
+          _scope.clear_selection_bounds();
           //undo.snapshot("Move Handle");
         }
       }
@@ -219,7 +219,7 @@ export default function select_node (Editor) {
         if (event.modifiers.control) {
 
           const profiles = [];
-          this._scope.paths_intersecting_rect(box).forEach((path) => {
+          _scope.paths_intersecting_rect(box).forEach((path) => {
             if(path.parent instanceof ProfileItem){
               if(profiles.indexOf(path.parent) == -1){
                 profiles.push(path.parent);
@@ -233,7 +233,7 @@ export default function select_node (Editor) {
         }
         else {
 
-          const selectedSegments = this._scope.segments_in_rect(box);
+          const selectedSegments = _scope.segments_in_rect(box);
           if (selectedSegments.length > 0) {
             for (let i = 0; i < selectedSegments.length; i++) {
               selectedSegments[i].selected = !selectedSegments[i].selected;
@@ -241,7 +241,7 @@ export default function select_node (Editor) {
           }
           else {
             const profiles = [];
-            this._scope.paths_intersecting_rect(box).forEach((path) => {
+            _scope.paths_intersecting_rect(box).forEach((path) => {
               if(path.parent instanceof ProfileItem){
                 if(profiles.indexOf(path.parent) == -1){
                   profiles.push(path.parent);
@@ -256,14 +256,14 @@ export default function select_node (Editor) {
         }
       }
 
-      this._scope.clear_selection_bounds();
+      _scope.clear_selection_bounds();
 
       if (this.hitItem) {
         if (this.hitItem.item.selected || (this.hitItem.item.parent && this.hitItem.item.parent.selected)) {
-          this._scope.canvas_cursor('cursor-arrow-small');
+          _scope.canvas_cursor('cursor-arrow-small');
         }
         else {
-          this._scope.canvas_cursor('cursor-arrow-white-shape');
+          _scope.canvas_cursor('cursor-arrow-white-shape');
         }
       }
     }

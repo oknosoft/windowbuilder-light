@@ -508,7 +508,7 @@ export default function pen (Editor, {enm, msg, dp, cat, utils}) {
             const connective = new ProfileConnective({
               generatrix: this.addl_hit.generatrix,
               proto: this.profile,
-              parent: this.addl_hit.profile,
+              parent: this.project.l_connective,
             });
             connective.joined_nearests().forEach((rama) => {
               const {inner, outer} = rama.joined_imposts();
