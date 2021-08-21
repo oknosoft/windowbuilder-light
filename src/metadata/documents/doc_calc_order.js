@@ -4,7 +4,7 @@
 
 //import {handleIfaceState} from '../../redux';
 import FrmObj from '../../components/CalcOrder/FrmObj/FrmObj';
-import FrmList from 'wb-forms/dist/CalcOrder/FrmList/DirectList';
+import FrmList from 'wb-forms/dist/CalcOrder/FrmList/CalcOrderList';
 import RepParams from 'wb-forms/dist/CalcOrder/FrmList/Params';
 
 export default function ($p) {

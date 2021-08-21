@@ -1,6 +1,6 @@
 {
   "name": "windowbuilder-light",
-  "version": "2.1.253",
+  "version": "2.1.254",
   "description": "Order dealer for windows and stained glass",
   "repository": {
     "type": "git",
@@ -25,21 +25,24 @@
     "url": "https://github.com/oknosoft/windowbuilder/issues"
   },
   "homepage": "https://light.oknosoft.ru/",
-  "proxy": "http://localhost:3016/",
+  "proxy1": "https://develop.ecookna.ru/",
+  "proxy": "https://dvlp.ecookna.ru/",
+  "proxy3": "https://zakaz.kaleva.ru:2019/",
+  "proxy4": "https://info.tmk-online.ru/",
+  "proxy5": "http://localhost:3016/",
   "dependencies": {
-    "@material-ui/lab": "^4.0.0-alpha.56",
-    "@turf/points-within-polygon": "^5.1.5",
+    "@material-ui/lab": "^4.0.0-alpha.60",
+    "@turf/points-within-polygon": "^6.5",
     "md5-file": "^5.0",
-    "metadata-abstract-ui": "2.0.23-beta.3",
-    "metadata-core": "2.0.23-beta.3",
-    "metadata-pouchdb": "2.0.23-beta.3",
-    "metadata-react": "2.0.23-beta.3",
-    "metadata-redux": "2.0.23-beta.3",
-    "metadata-superlogin": "2.0.23-beta.3",
-    "paper-jsdom-canvas": "0.12.8",
-    "react-highlight-words": "^0.16.0",
-    "wb-core": "github:oknosoft/windowbuilder-core#f87a4482bde9c83cca968c0cfca4d32ef1dcef88",
-    "wb-forms": "github:oknosoft/windowbuilder-forms#015fe37b7d85b1123a3fc4b9b37a5e32232bb525"
+    "metadata-abstract-ui": "2.0.25-beta.4",
+    "metadata-core": "2.0.25-beta.4",
+    "metadata-pouchdb": "2.0.25-beta.4",
+    "metadata-react": "2.0.25-beta.4",
+    "metadata-redux": "2.0.25-beta.4",
+    "metadata-superlogin": "2.0.25-beta.4",
+    "react-highlight-words": "^0.17",
+    "wb-core": "file:../wb-core-skeleton",
+    "wb-forms": "github:oknosoft/windowbuilder-forms#7a27ed833a9ddabcc47564aa35cf3241c164ce7f"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",
@@ -84,10 +87,10 @@
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
     "raw-loader": "^3.1.0",
-    "react": "^16.13.1",
+    "react": "^16.14",
     "react-app-polyfill": "^1.0.6",
     "react-dev-utils": "^10.2.1",
-    "react-dom": "^16.13.1",
+    "react-dom": "^16.14",
     "resolve": "1.15.0",
     "resolve-url-loader": "3.1.1",
     "sass-loader": "8.0.2",
@@ -99,8 +102,13 @@
     "webpack": "4.42.0",
     "webpack-dev-server": "3.10.3",
     "webpack-manifest-plugin": "2.2.0",
-    "workbox-webpack-plugin": "4.3.1"
+    "workbox-webpack-plugin": "4.3.1",
+    "worker-plugin": "^3.2.0"
   },
+  "files": [
+    "LICENSE",
+    "LICENSE.ru.md"
+  ],
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",

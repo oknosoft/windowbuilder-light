@@ -2,14 +2,10 @@
 
 import CharacteristicsFrmObj from 'wb-forms/dist/CatCharacteristics/FrmObj';
 import SpecFragment from 'wb-forms/dist/CatCharacteristics/Spec';
+import select_template from 'wb-core/dist/select_template';
 
-export default function ({cat}) {
-  cat.forEach((mgr) => {
-    if(mgr.cachable === 'doc' && mgr.class_name !== 'cat.characteristics') {
-      mgr._cachable = 'ram';
-    }
-  });
-
-  cat.characteristics.FrmObj = CharacteristicsFrmObj;
-  cat.characteristics.SpecFragment = SpecFragment;
+export default function ($p) {
+  $p.cat.characteristics.FrmObj = CharacteristicsFrmObj;
+  $p.cat.characteristics.SpecFragment = SpecFragment;
+  select_template($p);
 }

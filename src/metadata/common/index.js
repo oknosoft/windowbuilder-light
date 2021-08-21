@@ -3,8 +3,9 @@
 // строки интернационализации
 import i18ru from './i18n.ru';
 import wnd_oaddress from './wnd_oaddress';
-import select_template from 'wb-core/dist/select_template';
-import events from './events';
+
+import {event_src} from 'metadata-superlogin/proxy/events';
+import qs from 'qs';
 
 import randomId from './ids';
 import scale_svg from './scale_svg';
@@ -12,8 +13,13 @@ import scale_svg from './scale_svg';
 export default function ($p) {
   i18ru($p);
   wnd_oaddress($p);
-  select_template($p);
-  events($p);
-  Object.assign($p.utils, {scale_svg, randomId});
-}
+  event_src($p);
+  Object.assign($p.utils, {
+    scale_svg,
+    randomId,
+    prm() {
+      return qs.parse(location.search.replace('?', ''));
+    },
+  });
+};
 
