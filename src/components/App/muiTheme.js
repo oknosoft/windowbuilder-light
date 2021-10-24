@@ -21,7 +21,6 @@ const theme = createTheme({
   // },
 
   typography: {
-    useNextVariants: true,
     subtitle2: {
       fontSize: '0.95rem',
     },

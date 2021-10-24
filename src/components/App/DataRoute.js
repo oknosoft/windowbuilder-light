@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Switch, Route} from 'react-router';
 
-import {withObj} from 'metadata-redux';
 import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "необходима авторизация"
 
 import NotFound from '../Markdown/NotFound';
@@ -93,7 +92,7 @@ DataRoute.propTypes = {
   user: PropTypes.object,
 };
 
-export default withObj(DataRoute);
+export default DataRoute;
 
 
 

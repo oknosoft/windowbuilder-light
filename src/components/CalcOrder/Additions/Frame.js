@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Dialog from 'metadata-react/App/Dialog';
 
-import connect from './connect';
+//import connect from './connect';
 
 class ParametricFrame extends React.Component {
 
@@ -92,4 +92,5 @@ ParametricFrame.propTypes = {
   Content: PropTypes.func,
 };
 
-export default connect(ParametricFrame);
+//export default connect(ParametricFrame);
+export default ParametricFrame;

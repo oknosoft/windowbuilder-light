@@ -4,7 +4,6 @@
 import common from './common';
 import editor from '../drawer/editor';
 
-
 // модификаторы справочников
 import catalogs from './catalogs';
 

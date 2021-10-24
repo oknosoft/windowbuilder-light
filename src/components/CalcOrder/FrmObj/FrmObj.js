@@ -4,7 +4,6 @@ import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 
-import {withIface} from 'metadata-redux';
 import DataField from 'metadata-react/DataField';
 import TabularSection from 'metadata-react/TabularSection';
 import DataObj from 'metadata-react/FrmObj/DataObj';
@@ -179,4 +178,4 @@ class CalcOrderObj extends DataObj {
 
 CalcOrderObj.rname = 'CalcOrderObj';
 
-export default withStyles600(withIface(CalcOrderObj));
+export default withStyles600(CalcOrderObj);

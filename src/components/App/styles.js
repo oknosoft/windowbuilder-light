@@ -46,4 +46,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles, {name: 'AppView'});
+export default withStyles(styles);

@@ -1,6 +1,8 @@
-import AppView from './AppView';
-import muiTheme from './muiTheme';
-import {item_props} from './menu_items';
+import Lazy from 'metadata-react/DumbLoader/Lazy';
 
-export default AppView;
-export { muiTheme, item_props };
+export default class AppView extends Lazy {
+  componentDidMount() {
+    import('./Frame')
+      .then((module) => this.setState({Component: module.default}));
+  }
+}

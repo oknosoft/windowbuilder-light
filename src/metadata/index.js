@@ -19,12 +19,6 @@ import modifiers from './modifiers';
 
 // конструкторы ui
 import {lazy} from '../components/App/lazy';
-import {user_log_in, user_log_out} from '../components/App/tune_menu';
-
-// генераторы действий и middleware для redux
-//import {combineReducers} from 'redux';
-import {addMiddleware} from 'redux-dynamic-middlewares';
-import {metaActions, metaMiddleware} from 'metadata-redux';
 
 // подключаем плагины к MetaEngine
 MetaEngine
@@ -48,42 +42,27 @@ meta_init($p);
 import('metadata-abstract-ui/rubles');
 
 // скрипт инициализации в привязке к store приложения
-export function init(store) {
+export function init(elm) {
 
   try{
-    const {dispatch} = store;
-
-    // подключаем metaMiddleware
-    addMiddleware(metaMiddleware($p));
 
     // сообщяем адаптерам пути, суффиксы и префиксы
-    const {wsql, job_prm, classes, adapters: {pouch}, md, ui} = $p;
+    const {wsql, job_prm, classes, adapters: {pouch}} = $p;
     if(wsql.get_user_param('couch_path') !== job_prm.couch_path && process.env.NODE_ENV !== 'development') {
       wsql.set_user_param('couch_path', job_prm.couch_path);
     }
+    if(!wsql.get_user_param('auth_provider')) {
+      wsql.set_user_param('auth_provider', 'couchdb');
+    }
+
     classes.PouchDB.plugin(proxy_login());
     pouch.init(wsql, job_prm);
 
-    pouch.remote.ram = new classes.PouchDB(pouch.dbpath('ram'), {skip_setup: true, owner: pouch, fetch: pouch.fetch});
-
     // выполняем модификаторы
-    modifiers($p, dispatch);
+    modifiers($p);
 
     // информируем хранилище о готовности MetaEngine
-    dispatch(metaActions.META_LOADED($p));
-
-    import('../redux')
-      .then(({handleIfaceState: {handleIfaceState}}) => ui.dialogs.init({handleIfaceState, lazy}));
-
-    pouch.on({
-      on_log_in() {
-        return load_ram($p)
-          .then(user_log_in);
-      },
-      user_log_out,
-    });
-    md.once('predefined_elmnts_inited', () => pouch.emit('pouch_complete_loaded'));
-
+    elm.setState({meta_loaded: true});
 
     // читаем общие данные в ОЗУ
     return load_common($p);

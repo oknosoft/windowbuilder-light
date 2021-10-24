@@ -37,10 +37,12 @@
     "metadata-core": "2.0.26-beta.3",
     "metadata-pouchdb": "2.0.26-beta.3",
     "metadata-react": "2.0.26-beta.3",
-    "metadata-redux": "2.0.26-beta.3",
     "metadata-superlogin": "2.0.26-beta.3",
+    "react-resize-layout": "^0.2.3",
+    "react-router-dom": "^5.2.0",
+    "react-treebeard": "^3.2.4",
     "react-highlight-words": "^0.17",
-    "wb-core": "file:../wb-core-skeleton",
+    "wb-core": "github:oknosoft/windowbuilder-core#f516ae24488519dca813a7e84e62b0adcbab66ae",
     "wb-forms": "github:oknosoft/windowbuilder-forms#32b577e51f105e2dac56bea9612ac74e51b5879d"
   },
   "devDependencies": {
@@ -109,7 +111,7 @@
     "webpack-dev-server": "3.11.1",
     "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "5.1.4",
-    "worker-plugin": "^3.2.0"
+    "worker-plugin": "^5.0"
   },
   "files": [
     "LICENSE",

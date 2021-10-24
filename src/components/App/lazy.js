@@ -5,6 +5,7 @@
  *
  * Created by Evgeniy Malyarov on 20.12.2019.
  */
+import withStyles from 'metadata-react/styles/paper600';
 
 const stub = () => null;
 
@@ -15,17 +16,17 @@ export const lazy = {
   FrmReport: stub,
 };
 
-import('metadata-react/DynList')
+import('metadata-react/DynList/DynList')
   .then(module => {
-    lazy.DataList = module.default;
+    lazy.DataList = module.DynList;
     return import('metadata-react/DataTree');
   })
   .then(module => {
     lazy.DataTree = module.default;
-    return import('metadata-react/FrmObj');
+    return import('metadata-react/FrmObj/DataObj');
   })
   .then(module => {
-    lazy.DataObj = module.default;
+    lazy.DataObj = withStyles(module.default);
     return import('metadata-react/FrmReport');
   })
   .then(module => {
