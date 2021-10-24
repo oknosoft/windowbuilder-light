@@ -5,11 +5,15 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 class Repl extends Progress {
 
+  componentDidUpdate() {
+    const {state: {completed}, props: {info}} = this;
+    const percent = !info.text && !info.index && info.docs_read * 100 /(info.docs_read + info.pending);
+    percent && completed !== percent && this.setState({completed: percent});
+  }
+
   render() {
     const {state: {completed, buffer}, props: {info}} = this;
     const percent = !info.text && !info.index && info.docs_read * 100 /(info.docs_read + info.pending);
-
-    percent && completed !== percent && this.setState({completed: percent});
 
     const syn = {
       templates: 'Шаблоны',
@@ -21,7 +25,7 @@ class Repl extends Progress {
       <div key="progress" style={{flexGrow: 1, marginTop: 8}}>
         <LinearProgress color="secondary" variant="buffer" value={completed} valueBuffer={buffer} />
       </div>,
-      !info.text && !info.index &&
+      info.docs_read && !info.text && !info.index &&
         <div key="text">{`${syn[info.db]}: прочитано ${info.docs_read} из ${info.docs_read + info.pending} (${percent.toFixed()}%)`}</div>,
       !info.text && info.index &&
         <div key="text">{`${syn[info.db]}: строим индекс ${info.index}`}</div>,

@@ -13,7 +13,7 @@ import Snack from 'metadata-react/App/Snack';       // сообщения в в�
 import Alert from 'metadata-react/App/Alert';       // диалог сообщения пользователю
 import Confirm from 'metadata-react/App/Confirm';   // диалог вопросов пользователю (да, нет)
 import WindowPortal from 'metadata-react/App/WindowPortal';   // контент в новом окне (например, для печати)
-import Loading from '../DumbScreen/Loading';
+import Loading from '../DumbScreen/DumbScreen';
 import {actions, init_state} from './actions';      // события метадаты
 import theme from './muiTheme';                     // тема material=ui
 import {lazy} from './lazy';                        // конструкторы для контекста
