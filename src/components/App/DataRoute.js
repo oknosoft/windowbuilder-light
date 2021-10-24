@@ -3,17 +3,18 @@ import PropTypes from 'prop-types';
 import {Switch, Route} from 'react-router';
 
 import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "необходима авторизация"
-
+import WindowSizer from 'metadata-react/WindowSize';// конструкторы для контекста
 import NotFound from '../Markdown/NotFound';
 
 /* eslint-disable-next-line */
 import {path, prm} from './menu_items';             // метод для вычисления base path
-import {lazy} from './lazy';                        // конструкторы для контекста
+import {lazy} from './lazy';
+
 
 class DataRoute extends React.Component {
 
   render() {
-    const {match, handlers, windowHeight, windowWidth, disablePermanent, couch_direct, offline, user} = this.props;
+    const {match, handlers, windowHeight, windowWidth, title, disablePermanent, couch_direct, offline, user} = this.props;
     const {area, name} = match.params;
     let _mgr = global.$p && $p[area][name];
 
@@ -63,7 +64,7 @@ class DataRoute extends React.Component {
       else if(type === 'list' && _mgr.FrmList) {
         Component = _mgr.FrmList;
       }
-      return <Component _mgr={_mgr} _acl={_acl} handlers={handlers} {...props} {...sizes} />;
+      return <Component _mgr={_mgr} _acl={_acl} handlers={handlers} title={title} {...props} {...handlers} {...sizes} />;
     };
 
     if(area === 'rep') {
@@ -92,7 +93,7 @@ DataRoute.propTypes = {
   user: PropTypes.object,
 };
 
-export default DataRoute;
+export default WindowSizer(DataRoute);
 
 
 

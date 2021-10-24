@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import {Router, Switch, Route, Redirect} from 'react-router-dom';
 
 import Header from 'metadata-react/Header/Header';  // навигация
-import WindowSizer from 'metadata-react/WindowSize';
 
 import Templates from 'wb-forms/dist/CalcOrder/Templates';  // stepper выбора шаблона изделия
 
 import DumbScreen from '../DumbScreen';             // заставка "загрузка занных"
-import Data from './DataRoute';                // вложенный маршрутизатор страниц с данными
+import DataRoute from './DataRoute';                // вложенный маршрутизатор страниц с данными
 import MarkdownRoute from '../Markdown';            // вложенный маршрутизатор страниц с Markdown, 404 живёт внутри Route
 import Settings from '../Settings';                 // страница настроек приложения
 import Builder from '../Builder';                   // графический редактор
@@ -16,10 +15,7 @@ import {lazy} from './lazy';                        // конструкторы 
 
 import withStyles from './styles';
 
-
 import items, {item_props, path} from './menu_items'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
-
-const DataRoute = WindowSizer(Data);
 
 // основной layout
 class Frame extends React.Component {
