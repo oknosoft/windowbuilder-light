@@ -309,14 +309,14 @@ export default class Mover {
 
   draw_move_ribs(vertexes) {
     this.hide_move_ribs();
-    const {Path} = this.editor;
+    const {Path, Group} = this.editor;
     const ppoints = new Map();
 
     for(const [vertex, v] of vertexes) {
       for(const {skeleton, profile, points, point} of v) {
         const {l_visualization} = skeleton.owner;
         if(!l_visualization._move_ribs) {
-          l_visualization._move_ribs = new paper.Group({parent: l_visualization});
+          l_visualization._move_ribs = new Group({parent: l_visualization});
         }
 
         if(!ppoints.has(profile)) {

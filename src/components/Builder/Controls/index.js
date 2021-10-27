@@ -1,3 +1,3 @@
-import Controls from './Controls';
+import ControlsFrame from './ControlsFrame';
 
-export default Controls;
+export default ControlsFrame;

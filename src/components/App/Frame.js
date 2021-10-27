@@ -2,16 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Router, Switch, Route, Redirect} from 'react-router-dom';
 
-import Header from 'metadata-react/Header/Header';  // навигация
+import Header from './Header';  // навигация
 
 import Templates from 'wb-forms/dist/CalcOrder/Templates';  // stepper выбора шаблона изделия
 
-import DumbScreen from '../DumbScreen';             // заставка "загрузка занных"
 import DataRoute from './DataRoute';                // вложенный маршрутизатор страниц с данными
 import MarkdownRoute from '../Markdown';            // вложенный маршрутизатор страниц с Markdown, 404 живёт внутри Route
 import Settings from '../Settings';                 // страница настроек приложения
 import Builder from '../Builder';                   // графический редактор
-import {lazy} from './lazy';                        // конструкторы для контекста
 
 import withStyles from './styles';
 
@@ -19,14 +17,6 @@ import items, {item_props, path} from './menu_items'; // массив элеме
 
 // основной layout
 class Frame extends React.Component {
-
-  constructor(props, context) {
-    super(props, context);
-    const iprops = item_props();
-    this.state = {
-      mobileOpen: false,
-    };
-  }
 
   handleDialogClose(name) {
     this.props.handleIfaceState({component: '', name, value: {open: false}});
@@ -37,42 +27,30 @@ class Frame extends React.Component {
     (first_run || reset) ? location.replace(path('')) : handleNavigate(path(''));
   }
 
-  handleDrawerToggle = () => {
-    const {state} = this;
-    this.setState({mobileOpen: !state.mobileOpen});
-  };
-
-  handleDrawerClose = () => {
-    this.setState({mobileOpen: false});
-  };
-
   render() {
     /* eslint-disable-next-line */
     const {classes, ...props} = this.props;
     const {history, user, couch_direct, offline, title, idle, handleIfaceState, handleNavigate} = props;
     const iprops = item_props();
 
-
-    const auth_props = {
-      key: 'auth',
-      handleNavigate,
-      handleIfaceState,
-      offline: couch_direct && offline,
-      user,
-      title,
-      idle,
-      disable: ['google'],
-      ret_url: path(''),
-    };
-
-    Object.assign(props, {handlers: {handleIfaceState, handleNavigate}});
+    // const auth_props = {
+    //   key: 'auth',
+    //   handleNavigate,
+    //   handleIfaceState,
+    //   offline: couch_direct && offline,
+    //   user,
+    //   title,
+    //   idle,
+    //   disable: ['google'],
+    //   ret_url: path(''),
+    // };
 
     const wraper = (Component, routeProps) => {
       return <Component {...props} {...routeProps}/>;
     };
 
     return <>
-      <Header key="header" items={items} {...props} open={this.state.mobileOpen} />
+      {iprops.header ? null : <Header items={items} {...props} />}
 
       <Router history={history}>
         <Switch key="switch">
@@ -97,6 +75,7 @@ Frame.propTypes = {
   handleNavigate: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
+  first_run: PropTypes.bool,
 };
 
 export default withStyles(Frame);

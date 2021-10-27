@@ -91,6 +91,7 @@ DataRoute.propTypes = {
   couch_direct: PropTypes.bool,
   offline: PropTypes.bool,
   user: PropTypes.object,
+  title: PropTypes.string,
 };
 
 export default WindowSizer(DataRoute);

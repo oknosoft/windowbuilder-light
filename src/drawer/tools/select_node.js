@@ -70,7 +70,7 @@ export default function select_node (Editor) {
 
     mousedown(event) {
 
-      const {project, _scope: {consts}, hitItem} = this;
+      const {project, _scope: {consts, eve}, hitItem} = this;
       const {shift, space, alt} = event.modifiers;
 
       this.mode = null;
@@ -82,8 +82,8 @@ export default function select_node (Editor) {
 
       if (hitItem && !alt) {
 
-        if(hitItem.item instanceof PointText) {
-          if(hitItem.item.parent instanceof DimensionLine) {
+        if (hitItem.item instanceof PointText) {
+          if (hitItem.item.parent instanceof DimensionLine) {
             this.sz_start(hitItem.item.parent);
           }
           return;

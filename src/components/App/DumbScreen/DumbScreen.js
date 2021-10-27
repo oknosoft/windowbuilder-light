@@ -49,6 +49,7 @@ class DumbScreen extends Component {
         need_auth = false;
       }
     }
+
     const over = page && page.limit * page.page > page.total_rows;
 
     let title;
@@ -66,7 +67,15 @@ class DumbScreen extends Component {
       : '';
 
     return need_auth ?
-      <Login {...this.props} handleLogin={handleLogin}/> :
+      <div style={{
+        position: 'absolute',
+        left: '48%',
+        marginLeft: -255,
+        marginTop: 140,
+      }}>
+        <Login {...this.props} handleLogin={handleLogin}/>
+      </div>
+      :
       <div className='splash' style={{marginTop: top}}>
         <div className="description">
           <h1 key="name" itemProp="name">Заказ дилера</h1>

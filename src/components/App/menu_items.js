@@ -117,6 +117,9 @@ export function item_props(path) {
   }
   if(!res && (path.match(/\/(doc|cat|ireg|cch|rep)\./) || path.match(/\/builder/) || path.match(/\/templates/))){
     res = {need_meta: true, need_user: true};
+    if(path.match(/\/builder/)) {
+      res.header = true;
+    }
   }
   return res || {};
 }

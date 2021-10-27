@@ -2,8 +2,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import Arrows from './Arrows';
 
 export default class Builder extends React.Component {
 
@@ -16,17 +14,48 @@ export default class Builder extends React.Component {
     }
   }
 
-  createEditor(el, width, height){
+  createEditor(el){
     if(el) {
       if(this.editor && this.editor._canvas === el) {
         const {project} = this.editor;
-        project.resize_canvas(width, height);
+        //project.resize_canvas(width, height);
       }
       else {
-        this.editor = new $p.Editor(el);
-        this.props.registerChild(this.editor);
-        window.paper = this.editor;
-        this.editor.create_tools();
+        const editor = this.editor = new $p.Editor(el);
+        window.paper = editor;
+        editor.create_tools();
+        const {project} = editor;
+
+        const {order, action} = $p.utils.prm();
+        project.load(this.props.match.params.ref)
+          .then(() => {
+            const {ox} = project;
+            if(ox.is_new() || (order && ox.calc_order != order)) {
+              ox.calc_order = order;
+            }
+            if(ox.calc_order.is_new()) {
+              return ox.calc_order.load();
+            }
+          })
+          .then(() => {
+            const {ox} = project;
+            if(!ox.calc_order.production.find(ox.ref, 'characteristic')) {
+              const row = ox.calc_order.production.add({characteristic: ox});
+              ox.product = row.row;
+            }
+            if(action === 'refill' || action === 'new') {
+              const {base_block} = $p.cat.templates._select_template;
+              if(ox.base_block != base_block && !base_block.empty()) {
+                return project.load_stamp(base_block);
+              }
+            }
+          })
+          // .then(() => props.handleIfaceState({
+          //   component: '',
+          //   name: 'title',
+          //   value: project.ox.prod_name(true),
+          // }))
+          .catch(console.log);
       }
     }
     this.editor && this.props.registerChild(this.editor);
@@ -42,30 +71,15 @@ export default class Builder extends React.Component {
   };
 
   render() {
-    const {height, classes} = this.props;
-    return <AutoSizer disableHeight>
-      {({width}) => {
-        if(width < 320) {
-          width = 320;
-        }
-        width -= 8;
-        return [
-          <canvas
-            key="canvas"
-            className={classes.canvas}
-            ref={(el) => this.createEditor(el, width, height)}
-            width={width}
-            height={height}
-          />,
-          <Arrows key="arrows" handleClick={this.arrowClick}/>,
-        ];
-      }}
-    </AutoSizer>;
+    const {classes} = this.props;
+    return <canvas
+      className={classes.canvas}
+      ref={(el) => this.createEditor(el)}
+    />;
   }
 }
 
 Builder.propTypes = {
   registerChild: PropTypes.func.isRequired,
-  height: PropTypes.number.isRequired,
   classes: PropTypes.object.isRequired,
 };

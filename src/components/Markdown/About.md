@@ -1,5 +1,5 @@
 # Окнософт: Заказ дилера
-Заказ дилера - это веб-приложение, разработанное компанией [Окнософт](http://www.oknosoft.ru/) на базе фреймворка [Metadata.js](https://github.com/oknosoft/metadata.js/tree/master/packages)  
+Заказ дилера - это веб-приложение, разработанное компанией [Окнософт](http://www.oknosoft.ru/) на базе фреймворка [Metadata.js](https://github.com/oknosoft/metadata.js/tree/master/packages)
 Исходный код и документация доступны в [GitHub <i class="fa fa-github-alt"></i>](https://github.com/oknosoft/windowbuilder)
 
 ### Назначение и возможности
@@ -22,7 +22,6 @@
 - [PouchDB](https://pouchdb.com/), клиентская NoSQL база данных с поддержкой автономной работы и репликации с CouchDB
 - [AlaSQL](https://github.com/agershun/alasql), SQL-интерфейс к массивам javascript в памяти браузера и Node.js
 - [Aes](http://www.movable-type.co.uk/scripts/aes.html), библиотека шифрования/дешифрования строк
-- [Redux](https://github.com/reactjs/redux), диспетчер состояния веб-приложения
 
 #### UI библиотеки и компоненты интерфейса
 - [Paper.js](http://paperjs.org), фреймворк векторной графики для HTML5 Canvas
@@ -39,7 +38,7 @@
 Коммерческая лицензия [Окнософт](https://github.com/oknosoft/windowbuilder/blob/master/LICENSE.ru.md)
 
 ### Благодарность
-Нашим спонсорам, ЗСК «Гласспром» [Экоокна](https://www.ecookna.ru/partnerstvo/stante-dilerom) и ООО «Доминанта» [ТМК](http://tmk-company.ru/contacts) 
+Нашим спонсорам, ЗСК «Гласспром» [Экоокна](https://www.ecookna.ru/partnerstvo/stante-dilerom) и ООО «Доминанта» [ТМК](http://tmk-company.ru/contacts)
 
 ### Вопросы
 Если обнаружили ошибку, пожалуйста, зарегистрируйте [вопрос в GitHub](https://github.com/oknosoft/windowbuilder/issues?utf8=%E2%9C%93&q=is%3Aissue) или <a href="mailto:info@oknosoft.ru?subject=windowbuilder">свяжитесь с разработчиком</a> напрямую

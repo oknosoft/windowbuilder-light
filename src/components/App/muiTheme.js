@@ -14,12 +14,6 @@ const theme = createTheme({
     }
   },
 
-  // custom: {
-  //   appbar: {
-  //     position: 'fixed',
-  //   }
-  // },
-
   typography: {
     subtitle2: {
       fontSize: '0.95rem',
@@ -27,18 +21,18 @@ const theme = createTheme({
   },
 
 
-  // overrides: {
-  //   MuiToolbar: {
-  //     root: {
-  //       minHeight: 48,
-  //     },
-  //   },
-  //   MuiAppBar: {
-  //     root: {
-  //       backgroundColor: colors.lightBlack,
-  //     }
-  //   },
-  // },
+  overrides: {
+    // MuiToolbar: {
+    //   root: {
+    //     minHeight: 48,
+    //   },
+    // },
+    MuiAppBar: {
+      root: {
+        boxShadow: 'none',
+      }
+    },
+  },
 
 });
 

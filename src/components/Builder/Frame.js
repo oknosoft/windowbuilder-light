@@ -1,6 +1,5 @@
 /**
  * Каркас графического редактора
- * builder/4b1af400-d12a-11e9-a38f-c343d95aab02
  *
  * @module Frame
  *
@@ -9,27 +8,27 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import {Prompt} from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
 import {withStyles} from '@material-ui/core/styles';
-import Builder from './Builder';
+import grey from '@material-ui/core/colors/grey';
+import {Prompt} from 'react-router-dom';
+import {Resize, ResizeHorizon} from 'metadata-react/Resize';
 import Toolbar from './Toolbar';
+import Builder from './Builder';
 import Controls from './Controls';
-import Characteristic from './Characteristic';
-import {path, prm} from '../App/menu_items';
+import ProductStructure from './ProductStructure';
 
 const styles = ({spacing}) => ({
-  content: {
-    padding: spacing(),
-  },
   canvas: {
-    marginLeft: spacing() / 2,
-    marginTop: spacing() / 2,
-    //backgroundColor: '#f9fbfa',
+    margin: 2,
+    width: '100%',
+    height: '100%',
+    backgroundColor: grey[50],
   },
   title: {
     flexGrow: 1,
+  },
+  toolbar: {
+    backgroundColor: grey[200],
   },
   padding: {
     paddingLeft: spacing(),
@@ -41,7 +40,17 @@ const ltitle = 'Редактор';
 
 class Frame extends React.Component {
 
-  state = {ox_opened: false};
+  constructor() {
+    super();
+    this.state = {
+      ox_opened: false,
+      editor: null,
+      elm: null,
+      layer: null,
+      tool: null,
+      type: 'root',
+    };
+  }
 
   componentDidMount() {
     const {props, editor} = this;
@@ -51,64 +60,53 @@ class Frame extends React.Component {
       name: 'title',
       value: ltitle,
     });
-    if(editor) {
-      const {project} = editor;
-      const {order, action} = prm();
-      project.load(props.match.params.ref)
-        .then(() => {
-          const {ox} = project;
-          if(ox.is_new() || (order && ox.calc_order != order)) {
-            ox.calc_order = order;
-          }
-          if(ox.calc_order.is_new()) {
-            return ox.calc_order.load();
-          }
-        })
-        .then(() => {
-          const {ox} = project;
-          if(!ox.calc_order.production.find(ox.ref, 'characteristic')) {
-            const row = ox.calc_order.production.add({characteristic: ox});
-            ox.product = row.row;
-          }
-          if(action === 'refill' || action === 'new') {
-            const {base_block} = $p.cat.templates._select_template;
-            if(ox.base_block != base_block && !base_block.empty()) {
-              return project.load_stamp(base_block);
-            }
-          }
-        })
-        .then(() => props.handleIfaceState({
-          component: '',
-          name: 'title',
-          value: project.ox.prod_name(true),
-        }))
-        .catch(console.log);
-    }
   }
 
+  componentWillUnmount() {
+    const {editor} = this.state;
+    editor && editor.eve.off({
+      elm_activated: this.elm_activated,
+    });
+  }
+
+  registerChild = (editor) => {
+    if(editor !== this.state.editor) {
+      editor && editor.eve.on({
+        elm_activated: this.elm_activated,
+      });
+      this.setState({editor});
+    }
+  };
+
   handleClose = () => {
-    const {editor, props} = this;
+    const {state: {editor}, props} = this;
     if(editor) {
       const {calc_order, ref} = editor.project.ox;
       const order = calc_order.empty() ? 'list' : `${calc_order.ref}?ref=${ref}`;
-      props.handleNavigate(path(`doc.calc_order/${order}`));
+      props.handleNavigate(`/doc.calc_order/${order}`);
     }
   };
 
   openTemplate = () => {
-    const {editor, props: {handleNavigate}} = this;
+    const {state: {editor}, props: {handleNavigate}} = this;
     if(editor) {
       const {ox} = editor.project;
       if(ox.empty() || ox.calc_order.empty()) {
         $p.ui.dialogs.alert({text: `Пустая ссылка изделия или заказа`, title: 'Ошибка данных'});
       }
       else {
-        handleNavigate(path(`templates/?order=${ox.calc_order.ref}&ref=${ox.ref}`));
+        handleNavigate(`/templates/?order=${ox.calc_order.ref}&ref=${ox.ref}`);
       }
     }
   };
 
-  registerChild = (el) => this.editor = el;
+  resizeStop = (inf) => {
+    const {editor} = this.state;
+    if(editor) {
+      const {offsetWidth, offsetHeight} = editor.view.element.parentNode;
+      editor.project.resize_canvas(offsetWidth, offsetHeight);
+    }
+  };
 
   open_ox = () => this.setState({ox_opened: true});
   close_ox = () => this.setState({ox_opened: false});
@@ -118,7 +116,7 @@ class Frame extends React.Component {
    * @return {String|Boolean}
    */
   prompt = (loc) => {
-    const {editor} = this;
+    const {editor} = this.state;
     if(!editor || !editor.project || loc.pathname.includes('templates')) {
       return true;
     }
@@ -126,13 +124,31 @@ class Frame extends React.Component {
     return ox && ox._modified ? `Изделие ${ox.prod_name(true)} изменено.\n\nЗакрыть без сохранения?` : true;
   };
 
-  render() {
-    const {editor, props: {classes, windowHeight, windowWidth}, state} = this;
-    let height = (windowWidth > 720 ? (windowHeight - 56) : windowWidth * 0.7) - 60;
-    if(height < 320) {
-      height = 320;
+  tree_select = ({type, elm, layer}) => {
+    this.setState({type, elm, layer});
+  };
+
+  elm_activated = (elm) => {
+    const {selected_elements} = elm.project;
+    if(selected_elements.length === 2) {
+      this.tree_select({type: 'pair', elm: selected_elements});
     }
-    return <div>
+    else if(selected_elements.length > 2) {
+      this.tree_select({type: 'grp', elm: selected_elements});
+    }
+    else {
+      this.tree_select({type: 'elm', elm});
+    }
+  };
+
+  render() {
+    const {
+      props: {classes, match},
+      state: {editor, elm, layer, tool, type},
+    } = this;
+    const width = innerWidth;
+
+    return <>
       <Prompt when message={this.prompt} />
       {editor && <Toolbar
         classes={classes}
@@ -141,22 +157,41 @@ class Frame extends React.Component {
         openTemplate={this.openTemplate}
         open_ox={this.open_ox}
       />}
-      <Grid container>
-        <Grid item xs={12} sm={12} lg={8}>
-          <Builder
-            height={height}
-            classes={classes}
-            registerChild={this.registerChild}
-          />
-        </Grid>
-        <Grid item xs={12} sm={12} lg={4}>
-          {editor && <Controls editor={editor}/>}
-        </Grid>
-      </Grid>
-      {editor && state.ox_opened && <Characteristic editor={editor} handleClose={this.close_ox} windowHeight={windowHeight} />}
-    </div>;
+      <div style={{position: 'relative', height: 'calc(100vh - 98px)'}}>
+        <Resize handleWidth="6px" handleColor={grey[200]} onResizeStop={this.resizeStop} onResizeWindow={this.resizeStop}>
+          <ResizeHorizon width={`${(width / 6).toFixed()}px`} minWidth="200px">
+            {editor ?
+              <ProductStructure
+                editor={editor}
+                type={type}
+                elm={elm}
+                layer={layer}
+                onSelect={this.tree_select}
+              /> :
+              'Загрузка...'
+            }
+          </ResizeHorizon>
+          <ResizeHorizon width={`${(width * 7 / 12).toFixed()}px`} minWidth="600px">
+            <Builder
+              classes={classes}
+              match={match}
+              registerChild={this.registerChild}
+            />
+          </ResizeHorizon>
+          <ResizeHorizon overflow="hidden auto" width={`${(width * 3 / 12).toFixed()}px`} minWidth="200px">
+            {editor ? <Controls
+              editor={editor}
+              type={type}
+              elm={elm}
+              layer={layer}
+            /> :
+              'Загрузка...'
+            }
+          </ResizeHorizon>
+        </Resize>
+      </div>
+    </>;
   }
-
 }
 
 Frame.propTypes = {
@@ -164,8 +199,6 @@ Frame.propTypes = {
   handleNavigate: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
-  windowHeight: PropTypes.number.isRequired,
-  windowWidth: PropTypes.number.isRequired,
   title: PropTypes.string,
 };
 

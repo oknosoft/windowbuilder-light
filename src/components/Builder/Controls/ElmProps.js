@@ -1,28 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
-import PropField from 'metadata-react/DataField/PropField';
-import ElmToolbar from './ElmToolbar';
+import ProfileProps from './ProfileProps';
+import GlassProps from './GlassProps';
+import SectionalProps from './SectionalProps';
 
-function ElmProps({elm1, elm2, editor}) {
-  const {fields} = elm1 ? elm1._metadata : {};
-  return <div>
-    <ElmToolbar editor={editor} elm={elm1} />
-    {
-      elm1 ? <div>
-          <PropField _obj={elm1} _fld="info" _meta={fields.info} read_only/>
-          <PropField _obj={elm1} _fld="inset" _meta={fields.inset} />
-          <PropField _obj={elm1} _fld="clr" _meta={fields.clr} />
-      </div>
-        : <Typography color="primary">Элемент не выбран</Typography>
-    }
-  </div>;
+export default function ElmProps({elm, ox}) {
+  const {fields} = elm.__metadata(false);
+  const {ProfileItem, Filling} = $p.EditorInvisible;
+  const CProps = elm instanceof ProfileItem ? ProfileProps : (elm instanceof Filling ? GlassProps : SectionalProps);
+
+  return <>
+    <CProps fields={fields} elm={elm} ox={ox}/>
+  </>;
 }
 
 ElmProps.propTypes = {
-  elm1: PropTypes.object,
-  elm2: PropTypes.object,
-  editor: PropTypes.object,
+  elm: PropTypes.object.isRequired,
+  ox: PropTypes.object.isRequired,
 };
-
-export default ElmProps;
