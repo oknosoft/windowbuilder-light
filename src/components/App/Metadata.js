@@ -82,7 +82,10 @@ class Metadata extends React.Component {
       {alert && alert.open && <Alert {...alert} handleOk={handleDialogClose.bind(this, 'alert')}/>}
       {confirm && confirm.open && <Confirm {...confirm}/>}
       {wnd_portal && wnd_portal.open && <WindowPortal {...wnd_portal}/>}
-      {show_dumb ? <Loading {...othes} /> : <App handleIfaceState={handleIfaceState} handleNavigate={handleNavigate} history={history} {...othes}/>
+      {show_dumb ?
+        <Loading handleIfaceState={handleIfaceState} handleNavigate={handleNavigate} {...othes} />
+        :
+        <App handleIfaceState={handleIfaceState} handleNavigate={handleNavigate} history={history} {...othes}/>
       }
     </ThemeProvider>;
   }

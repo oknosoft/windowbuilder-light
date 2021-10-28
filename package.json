@@ -25,23 +25,23 @@
     "url": "https://github.com/oknosoft/windowbuilder/issues"
   },
   "homepage": "https://light.oknosoft.ru/",
-  "proxy1": "https://develop.ecookna.ru/",
-  "proxy": "https://dvlp.ecookna.ru/",
+  "proxy": "https://develop.ecookna.ru/",
+  "proxy2": "https://dvlp.ecookna.ru/",
   "proxy3": "https://zakaz.kaleva.ru:2019/",
   "proxy4": "https://info.tmk-online.ru/",
   "proxy5": "http://localhost:3016/",
   "dependencies": {
     "@turf/points-within-polygon": "^6.5",
     "md5-file": "^5.0",
-    "metadata-abstract-ui": "2.0.26-beta.3",
-    "metadata-core": "2.0.26-beta.3",
-    "metadata-pouchdb": "2.0.26-beta.3",
-    "metadata-react": "2.0.26-beta.3",
-    "metadata-superlogin": "2.0.26-beta.3",
+    "metadata-abstract-ui": "2.0.26-beta.4",
+    "metadata-core": "2.0.26-beta.4",
+    "metadata-pouchdb": "2.0.26-beta.4",
+    "metadata-react": "2.0.26-beta.4",
+    "metadata-superlogin": "2.0.26-beta.4",
     "react-router-dom": "5.2.0",
     "react-treebeard": "^3.2.4",
-    "wb-core": "github:oknosoft/windowbuilder-core#f516ae24488519dca813a7e84e62b0adcbab66ae",
-    "wb-forms": "github:oknosoft/windowbuilder-forms#0905035c5dcfcdd33d175610a67a4465e7f7c191"
+    "wb-core": "github:oknosoft/windowbuilder-core#40056a2184fa590e265810245224786f47b6a3f8",
+    "wb-forms": "github:oknosoft/windowbuilder-forms#83c70d839787eaa4640f57bba0304a5b35ecb455"
   },
   "devDependencies": {
     "@babel/core": "7.12.3",

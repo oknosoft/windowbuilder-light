@@ -6,10 +6,9 @@ import loginStyles from 'metadata-react/FrmLogin/Proxy/styles';
 const Login = loginStyles(FrmLogin);
 
 import Repl from './Repl';
+import items from '../menu_items';
+import Header from '../Header';
 
-function handleLogin(login, password) {
-  return $p.adapters.pouch.log_in(login, password);
-}
 
 function text({meta_loaded, common_loaded, complete_loaded, user}) {
   let text;
@@ -39,6 +38,12 @@ class DumbScreen extends Component {
     return res;
   }
 
+  handleLogin = (login, password) => {
+    const {user, handleIfaceState} = this.props;
+    handleIfaceState({component: '', name: 'user', value: Object.assign({}, user, {try_log_in: true})});
+    return $p.adapters.pouch.log_in(login, password);
+  };
+
   render() {
 
     let {page, top, repl, meta_loaded, common_loaded, user, complete_loaded} = this.props;
@@ -67,14 +72,17 @@ class DumbScreen extends Component {
       : '';
 
     return need_auth ?
-      <div style={{
-        position: 'absolute',
-        left: '48%',
-        marginLeft: -255,
-        marginTop: 140,
-      }}>
-        <Login {...this.props} handleLogin={handleLogin}/>
-      </div>
+      <>
+        <Header items={items} {...this.props} />
+        <div style={{
+          position: 'absolute',
+          left: '48%',
+          marginLeft: -255,
+          marginTop: 92,
+        }}>
+          <Login {...this.props} handleLogin={this.handleLogin}/>
+        </div>
+      </>
       :
       <div className='splash' style={{marginTop: top}}>
         <div className="description">
@@ -106,16 +114,11 @@ class DumbScreen extends Component {
 }
 
 DumbScreen.propTypes = {
-  step: PropTypes.number,
-  step_size: PropTypes.number,
-  count_all: PropTypes.number,
   top: PropTypes.number,
   title: PropTypes.string,
-  processed: PropTypes.string,
-  current: PropTypes.string,
-  bottom: PropTypes.string,
   page: PropTypes.object,
   repl: PropTypes.object,
+  handleIfaceState: PropTypes.func,
 };
 
 export default DumbScreen;

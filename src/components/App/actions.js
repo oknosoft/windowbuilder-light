@@ -41,7 +41,6 @@ function log_in() {
       props._suffix = res.suffix || '';
       props._user = res.ref;
 
-
       remote.doc = new PouchDB(pouch.dbpath('doc'), {skip_setup: true, owner: pouch, fetch});
 
       return users.create(res, false, true);
@@ -62,10 +61,13 @@ export function actions(elm) {
         .then(() => import('../../styles/windowbuilder.css'))
     })
     .then(() => {
-      const {adapters: {pouch}, md, ui} = $p;
+      const {classes: {PouchDB}, adapters: {pouch}, md, ui} = $p;
       elm.setState({common_loaded: true});
       const {handleNavigate, handleIfaceState} = elm;
       ui.dialogs.init({handleIfaceState, handleNavigate, lazy});
+
+      const {remote, fetch} = pouch;
+      remote.ram = new PouchDB(pouch.dbpath('ram'), {skip_setup: true, owner: pouch, fetch});
 
       pouch.on({
         pouch_complete_loaded() {
@@ -75,8 +77,6 @@ export function actions(elm) {
           elm.setState({page});
         },
         on_log_in(username) {
-          const {remote, fetch} = pouch;
-          remote.ram = new PouchDB(pouch.dbpath('ram'), {skip_setup: true, owner: pouch, fetch});
           elm.setState({user: {
               name: username,
               logged_in: true,

@@ -1,11 +1,9 @@
 // общие модули
-
+import qs from 'qs';
 // строки интернационализации
 import i18ru from './i18n.ru';
 import wnd_oaddress from './wnd_oaddress';
-
 import {event_src} from 'metadata-superlogin/proxy/events';
-import qs from 'qs';
 
 import randomId from './ids';
 import scale_svg from './scale_svg';
