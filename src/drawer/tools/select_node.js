@@ -70,7 +70,7 @@ export default function select_node (Editor) {
 
     mousedown(event) {
 
-      const {project, _scope: {consts, eve}, hitItem} = this;
+      const {_scope: {consts}, hitItem} = this;
       const {shift, space, alt} = event.modifiers;
 
       this.mode = null;
@@ -270,7 +270,7 @@ export default function select_node (Editor) {
 
     mousedrag(event) {
 
-      const {_scope, project, mover} = this;
+      const {_scope, mover} = this;
       const {consts} = _scope;
 
       this.changed = true;

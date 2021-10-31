@@ -680,9 +680,6 @@ module.exports = function (webpackEnv) {
       isEnvProduction &&
         fs.existsSync(swSrc) &&
         new WorkboxWebpackPlugin.InjectManifest({
-          // clientsClaim: true,
-          // skipWaiting: true,
-          // cleanupOutdatedCaches: true,
           swSrc,
           dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
           exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/],

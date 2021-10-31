@@ -16,10 +16,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Confirm from 'metadata-react/App/Confirm';
 import withStyles from 'metadata-react/styles/paper600';
 
-import {withIface, withPrm} from 'metadata-redux';
-
-import {compose} from 'redux';
-
 class Settings extends React.Component {
 
   constructor(props) {
@@ -239,4 +235,4 @@ Settings.propTypes = {
   classes: PropTypes.object,
 };
 
-export default compose(withStyles, withIface, withPrm)(Settings);
+export default withStyles(Settings);

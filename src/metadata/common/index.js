@@ -19,5 +19,5 @@ export default function ($p) {
       return qs.parse(location.search.replace('?', ''));
     },
   });
-};
+}
 

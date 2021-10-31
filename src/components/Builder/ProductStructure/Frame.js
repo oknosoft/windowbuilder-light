@@ -63,7 +63,7 @@ export default class FrameTree extends React.Component {
     project._dp._manager.off('update', this.dp_listener);
   }
 
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
+  shouldComponentUpdate(nextProps, nextState) {
     const {elm, type, layer} = nextProps;
     const {current, struct} = nextState;
 
@@ -221,3 +221,7 @@ export default class FrameTree extends React.Component {
     );
   }
 }
+
+FrameTree.propTypes = {
+  editor: PropTypes.object.isRequired,
+};

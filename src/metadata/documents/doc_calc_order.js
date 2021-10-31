@@ -2,7 +2,6 @@
  * ### Модуль менеджера и документа Расчет
  */
 
-//import {handleIfaceState} from '../../redux';
 import FrmObj from '../../components/CalcOrder/FrmObj/FrmObj';
 import FrmList from 'wb-forms/dist/CalcOrder/FrmList/FrmList';
 import RepParams from 'wb-forms/dist/CalcOrder/FrmList/Params';

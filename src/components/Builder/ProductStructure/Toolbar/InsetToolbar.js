@@ -1,9 +1,7 @@
 
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Tip from 'wb-forms/dist/Common/Tip';
-import {useStyles} from '../../Toolbar'
+import {useStyles} from '../../Toolbar';
 
 function InsetToolbar({editor, current, classes}) {
   const {msg} = $p;

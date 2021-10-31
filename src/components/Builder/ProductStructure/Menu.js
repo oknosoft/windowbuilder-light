@@ -1,6 +1,7 @@
 import React from 'react';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import PropTypes from 'prop-types';
 
 export default function TreeMenu({item, anchorEl, handleClick, handleClose}) {
 
@@ -16,3 +17,10 @@ export default function TreeMenu({item, anchorEl, handleClick, handleClose}) {
     </Menu>
   );
 }
+
+TreeMenu.propTypes = {
+  item: PropTypes.object.isRequired,
+  anchorEl: PropTypes.object,
+  handleClick: PropTypes.func,
+  handleClose: PropTypes.func,
+};

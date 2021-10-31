@@ -14,7 +14,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TablePagination from '@material-ui/core/TablePagination';
-import Checkbox from '@material-ui/core/Checkbox';
 
 import withStyles from 'metadata-react/Diagrams/styles';
 import cn from 'classnames';
@@ -80,6 +79,7 @@ class NotiList extends Component {
 
 NotiList.propTypes = {
   rows: PropTypes.array.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(NotiList);

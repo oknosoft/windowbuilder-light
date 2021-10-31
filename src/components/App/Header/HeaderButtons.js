@@ -32,7 +32,7 @@ function HeaderButtons({
 
   return [
 
-    // показываем допкнопки, если задано в redux
+    // показываем допкнопки, если задано в props
     CustomBtn && <CustomBtn key="custom_btn" user={user}/>,
 
     // индикатор доступности облака показываем только на экране шире 'sm'
@@ -72,7 +72,7 @@ HeaderButtons.propTypes = {
   classes: PropTypes.object.isRequired,
   compact: PropTypes.bool,      // скрывает кнопки облака
   barColor: PropTypes.string,
-  custom_btn: PropTypes.object, // дополнительные кнопки, подключаемые через redux
+  custom_btn: PropTypes.object, // дополнительные кнопки, подключаемые через state
 };
 
 export default withStyles(withWidth()(HeaderButtons));

@@ -30,20 +30,8 @@ class Frame extends React.Component {
   render() {
     /* eslint-disable-next-line */
     const {classes, ...props} = this.props;
-    const {history, user, couch_direct, offline, title, idle, handleIfaceState, handleNavigate} = props;
+    const {history, handleIfaceState, handleNavigate} = props;
     const iprops = item_props();
-
-    // const auth_props = {
-    //   key: 'auth',
-    //   handleNavigate,
-    //   handleIfaceState,
-    //   offline: couch_direct && offline,
-    //   user,
-    //   title,
-    //   idle,
-    //   disable: ['google'],
-    //   ret_url: path(''),
-    // };
 
     const wraper = (Component, routeProps) => {
       return <Component {...props} {...routeProps}/>;

@@ -2,7 +2,8 @@ import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Tip from 'wb-forms/dist/Common/Tip';
-import {useStyles} from '../../Toolbar'
+import {useStyles} from '../../Toolbar';
+import PropTypes from 'prop-types';
 
 function addFlap(editor, furn) {
   const fillings = editor.project.getItems({class: $p.EditorInvisible.Filling, selected: true});
@@ -28,5 +29,11 @@ function GlassToolbar({editor, current, classes}) {
     </Tip>
   </Toolbar>;
 }
+
+GlassToolbar.propTypes = {
+  editor: PropTypes.object.isRequired,
+  current: PropTypes.object,
+  classes: PropTypes.object,
+};
 
 export default useStyles(GlassToolbar);

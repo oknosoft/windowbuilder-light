@@ -118,7 +118,11 @@ DumbScreen.propTypes = {
   title: PropTypes.string,
   page: PropTypes.object,
   repl: PropTypes.object,
+  user: PropTypes.object,
   handleIfaceState: PropTypes.func,
+  meta_loaded: PropTypes.bool,
+  common_loaded: PropTypes.bool,
+  complete_loaded: PropTypes.bool,
 };
 
 export default DumbScreen;
