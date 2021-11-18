@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import TabularSection from 'metadata-react/TabularSection';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
@@ -13,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import Bar from './Bar';
 import ElmInsetProps from './ElmInsetProps';
+import RegionEditor from './ElmInsetRegion';
 
 export default class ElmInsets extends React.Component {
 
@@ -62,7 +64,7 @@ export default class ElmInsets extends React.Component {
         if(this._grid) {
           this._grid.cache_actual = false;
         }
-        this.setState({row, inset: row.inset})
+        this.setState({row, inset: row.inset});
       });
   };
 
@@ -80,6 +82,14 @@ export default class ElmInsets extends React.Component {
       row = this._grid.rowGetter(sel.rowIdx);
     }
     this.setState({row, inset: (!row || row.inset.empty()) ? null : row.inset});
+  };
+
+  // установим для колонки "Ряд", индивидуальный элемент управления
+  handleColumnsChange = ({scheme, columns}) => { /* eslint-disable-line */
+    const region = columns.find(({key}) => key === 'region');
+    if(region) {
+      region.editor = RegionEditor;
+    }
   };
 
 
@@ -110,6 +120,7 @@ export default class ElmInsets extends React.Component {
               hideToolbar
               denyReorder
               onCellSelected={this.handleCellSelected}
+              columnsChange={this.handleColumnsChange}
               //onRowUpdated={this.defferedUpdate}
             />
           </div>
@@ -121,4 +132,8 @@ export default class ElmInsets extends React.Component {
         </Typography>}
     </>;
   }
+}
+
+ElmInsets.propTypes = {
+  elm: PropTypes.object.isRequired,
 };

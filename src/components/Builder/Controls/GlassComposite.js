@@ -1,5 +1,6 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Bar from './Bar';
 import TabularSection from 'metadata-react/TabularSection';
@@ -24,6 +25,21 @@ export default class GlassComposite extends React.Component {
     this.state = {row: null};
   }
 
+  componentDidMount() {
+    $p.cat.characteristics.on('update', this.value_change);
+  }
+
+  componentWillUnmount() {
+    $p.cat.characteristics.off('update', this.value_change);
+  }
+
+  value_change = (obj, flds) => {
+    if(obj instanceof $p.CatCharacteristicsGlass_specificationRow && 'inset' in flds) {
+      const {project} = this.props.elm;
+      project && project.register_change(true);
+    }
+  };
+
   filter = (collection) => {
     const {elm} = this.props.elm;
     const res = [];
@@ -33,26 +49,40 @@ export default class GlassComposite extends React.Component {
     return res;
   };
 
-  defferedUpdate = () => {
-    setTimeout(() => {
-      this.forceUpdate();
-    }, 100);
-  };
-
   handleAdd = () => {
-    const {ox, elm} = this.props.elm;
-    /* eslint-disable-next-line */
+    const {_grid, props} = this;
+    const {ox, elm} = props.elm;
+
     const row = ox.glass_specification.add({elm});
-    this.defferedUpdate();
+
+    //selectRow
+    if(_grid) {
+      _grid.handleFilterChange();
+      for (let i = 0; i < row.row; i++) {
+        if(_grid.rowGetter(i) === row) {
+          setTimeout(() => _grid._grid.selectCell({rowIdx: i, idx: 0}, true));
+          break;
+        }
+      }
+    }
   };
 
   handleRemove = () => {
-    this._grid.handleRemove();
-    this.defferedUpdate();
+    const {_grid, props} = this;
+    if(_grid) {
+      const {selected} = _grid.state;
+      if(selected && selected.hasOwnProperty('rowIdx')) {
+        _grid.handleRemove();
+        props.elm.project.register_change(true);
+        _grid.rowGetter(0) && setTimeout(() => {
+          _grid._grid.selectCell({rowIdx: 0, idx: 0}, false);
+        });
+      }
+    }
   };
 
   Toolbar = (props) => {
-    const {classes, width} = props;
+    const {width} = props;
     return <Toolbar disableGutters style={{width: width || '100%'}}>
       <IconButton key="btn_add" title="Добавить вставку" onClick={this.handleAdd}><AddIcon /></IconButton>
       <IconButton key="btn_del" title="Удалить строку" onClick={this.handleRemove}><RemoveIcon /></IconButton>
@@ -99,4 +129,8 @@ export default class GlassComposite extends React.Component {
         </Typography>}
     </>;
   }
+}
+
+GlassComposite.propTypes = {
+  elm: PropTypes.object, // элемент составного заполнения
 };
