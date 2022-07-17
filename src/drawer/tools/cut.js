@@ -5,6 +5,28 @@
  * @submodule tool_cut
  */
 
+import React from 'react';
+import IconButton from '../../components/Builder/Toolbar/IconButton';
+
+function CutMenu({buttons, onclick, ...other}) {
+
+  return buttons.map((btn) => {
+    const disabled = btn.css?.includes('disabled');
+    return <IconButton
+      key={btn.name}
+      title={btn.tooltip}
+      disabled={disabled}
+      onClick={(evt) => {
+        evt.preventDefault();
+        evt.stopPropagation();
+        onclick(btn.name);
+      }}
+    >
+      <i className={btn.css}/>
+    </IconButton>;
+  });
+}
+
 export default function arc (Editor) {
 
   const {ToolElement, ProfileItem, Profile} = Editor;
@@ -20,7 +42,7 @@ export default function arc (Editor) {
    * @tooltip Разрыв
    */
   Editor.ToolCut = class ToolCut extends ToolElement {
-    constructor() {
+    constructor(component) {
 
       super();
 
@@ -29,9 +51,9 @@ export default function arc (Editor) {
         mouseStartPos: new Point(),
         nodes: null,
         hitItem: null,
-        cont: null,
         square: null,
         profile: null,
+        component,
       });
 
       this.on({
@@ -52,19 +74,23 @@ export default function arc (Editor) {
 
     }
 
-    keydown(event) {
-      if (event.key == 'escape') {
+    keydown({event}) {
+      if(event.code === 'Escape') {
         this.remove_cont();
         this._scope.canvas_cursor('cursor-arrow-cut');
       }
     }
 
-    mouseup(event) {
+    /**
+     * по mouseup, выделяем/снимаем выделение профилей
+     * @param event
+     */
+    mouseup({point, modifiers}) {
 
-      const hitItem = this.project.hitTest(event.point, {fill: true, stroke: false, segments: false});
+      const hitItem = this.project.hitTest(point, {fill: true, stroke: false, segments: false});
       if(hitItem && hitItem.item.parent instanceof Profile) {
         let item = hitItem.item.parent;
-        if(event.modifiers.shift) {
+        if(modifiers.shift) {
           item.selected = !item.selected;
         }
         else {
@@ -83,11 +109,14 @@ export default function arc (Editor) {
 
     }
 
+    /**
+     * создаёт панель команд над узлом
+     */
     create_cont() {
       const {nodes} = this;
-      if(!this.cont && nodes.length) {
+      const {cnn_types} = $p.enm;
+      if(nodes.length) {
         const point = nodes[0].profile[nodes[0].point];
-        //const pt = this.project.view.projectToView(point);
 
         // определим, какие нужны кнопки
         const buttons = [];
@@ -107,44 +136,68 @@ export default function arc (Editor) {
         }
         // доступные соединения
         const types = new Set();
-        for(const {profile, point} of nodes) {
+        for (const {profile, point} of nodes) {
           if(point === 'b' || point === 'e') {
             const cnn = profile.rays[point];
             const cnns = $p.cat.cnns.nom_cnn(profile, cnn.profile, nodes.length > 2 ? undefined : cnn.cnn_types);
-            // if(profile !== cnn.profile) {
-            //   cnns.push.apply(cnns, $p.cat.cnns.nom_cnn(cnn.profile, profile, nodes.length > 2 ? undefined : cnn.cnn_types));
-            // }
-            for(const tcnn of cnns) {
+            for (const tcnn of cnns) {
               types.add(tcnn.cnn_type);
             }
           }
         }
-        for(const btn of buttons) {
+        for (const btn of buttons) {
           if(!btn.css.includes('disabled')) {
-            if(btn.name === 'uncut' && !types.has($p.enm.cnn_types.t) ||
-              btn.name === 'vh' && !types.has($p.enm.cnn_types.ah) ||
-              btn.name === 'hv' && !types.has($p.enm.cnn_types.av) ||
-              btn.name === 'diagonal' && !types.has($p.enm.cnn_types.ad)
-            ){
+            if(btn.name === 'uncut' && !types.has(cnn_types.t) ||
+              btn.name === 'vh' && !types.has(cnn_types.ah) && !types.has(cnn_types.short) ||
+              btn.name === 'hv' && !types.has(cnn_types.av) && !types.has(cnn_types.long) ||
+              btn.name === 'diagonal' && !types.has(cnn_types.ad)
+            ) {
               btn.css += ' gl disabled';
             }
             else if(['diagonal', 'vh', 'hv'].includes(btn.name) && nodes.every(({profile, point}) => {
               const {cnn} = profile.rays[point];
-              const type = btn.name === 'diagonal' ? $p.enm.cnn_types.ad : (btn.name === 'vh' ? $p.enm.cnn_types.ah : $p.enm.cnn_types.av);
-              return cnn && cnn.cnn_type === type;
-            })){
+              if(cnn) {
+                if(btn.name === 'diagonal') {
+                  return cnn.cnn_type === cnn_types.ad;
+                }
+                else if(btn.name === 'vh') {
+                  return cnn.cnn_type === cnn_types.ah || cnn.cnn_type === cnn_types.short;
+                }
+                else {
+                  return cnn.cnn_type === cnn_types.av || cnn.cnn_type === cnn_types.long;
+                }
+              }
+            })) {
               btn.css += ' gl disabled';
             }
           }
         }
 
+        const {view} = this.project;
+        const pt = view.projectToView(point);
+        let {offsetParent} = view._element.parentNode;
+        let {offsetLeft, offsetTop} = offsetParent;
+        while (offsetParent) {
+          offsetParent = offsetParent.offsetParent;
+          if(offsetParent) {
+            offsetLeft += offsetParent.offsetLeft;
+            offsetTop += offsetParent.offsetTop;
+          }
+        }
+        this.component.handleContextMenu({
+          mouseX: pt.x + offsetLeft - 16,
+          mouseY: pt.y + offsetTop - 16,
+          Component: CutMenu,
+          buttons,
+          onclick: this.tb_click.bind(this),
+        });
         // this.cont = new $p.iface.OTooolBar({
         //   wrapper: this._scope._wrapper,
         //   top: `${pt.y + 10}px`,
         //   left: `${pt.x - 20}px`,
         //   name: 'tb_cut',
         //   height: '28px',
-        //   width: `${29 * buttons.length + 1}px`,
+        //   width: `${32 * buttons.length + 1}px`,
         //   buttons,
         //   onclick: this.tb_click.bind(this),
         // });
@@ -160,30 +213,60 @@ export default function arc (Editor) {
       this._scope.canvas_cursor('cursor-arrow-white');
     }
 
+    /**
+     * удаляет панель команд над узлом
+     */
     remove_cont() {
-      this.cont && this.cont.unload();
-      this.square && this.square.remove();
+      this.component.handleCloseMenu();
+      this.square?.remove();
       this.nodes = null;
-      this.cont = null;
       this.square = null;
     }
 
+    /**
+     * switch команды
+     * @param name
+     */
     tb_click(name) {
-      const {nodes} = this;
+      const {nodes, project} = this;
       if(!nodes) {
         return;
       }
+      project.deselectAll();
+      const {cat, enm: {cnn_types, orientations}} = $p;
       if(['diagonal', 'vh', 'hv'].includes(name)) {
-        const type = name === 'diagonal' ? $p.enm.cnn_types.ad : (name === 'vh' ? $p.enm.cnn_types.ah : $p.enm.cnn_types.av);
-        for(const {profile, point} of nodes) {
+
+        const type = name === 'diagonal' ? cnn_types.ad : (name === 'vh' ? cnn_types.ah : cnn_types.av);
+
+        for (const {profile, point} of nodes) {
           if(point === 'b' || point === 'e') {
             const cnn = profile.rays[point];
-            if(cnn.cnn.cnn_type !== type) {
-              const cnns = $p.cat.cnns.nom_cnn(profile, cnn.profile, [type]);
-              if(cnns.length) {
-                cnn.cnn = cnns[0];
-                this.project.register_change();
+            const types = [];
+            if(name === 'diagonal') {
+              types.push(cnn_types.ad);
+            }
+            else if(name === 'vh') {
+              types.push(cnn_types.ah);
+              if(profile.orientation === orientations.vert) {
+                types.push(cnn_types.short);
               }
+              else {
+                types.push(cnn_types.long);
+              }
+            }
+            else {
+              types.push(cnn_types.av);
+              if(profile.orientation === orientations.hor) {
+                types.push(cnn_types.short);
+              }
+              else {
+                types.push(cnn_types.long);
+              }
+            }
+            const cnns = cat.cnns.nom_cnn(profile, cnn.profile, types);
+            if(cnns.length) {
+              cnn.cnn = cnns[0];
+              this.project.register_change();
             }
           }
         }
@@ -207,9 +290,9 @@ export default function arc (Editor) {
     }
 
     // делает разрыв и вставляет в него импост
-    do_cut(){
+    do_cut() {
       let impost, rack;
-      for(const node of this.nodes) {
+      for (const node of this.nodes) {
         if(node.point === 'b' || node.point === 'e') {
           impost = node;
         }
@@ -221,7 +304,7 @@ export default function arc (Editor) {
         return;
       }
 
-
+      const {enm: {cnn_types, orientations}, cat} = $p;
       let cnn = rack.profile.cnn_point('e');
       const base = cnn.cnn;
       cnn && cnn.profile && cnn.profile_point && cnn.profile.rays[cnn.profile_point].clear(true);
@@ -236,10 +319,11 @@ export default function arc (Editor) {
       const loc = generatrix.getNearestLocation(impost.profile[impost.point]);
       const rack2 = new Profile({generatrix: generatrix.splitAt(loc), proto: rack.profile});
 
+      // соединения конца нового профиля из разрыва
       cnn = rack2.cnn_point('e');
       if(base && cnn && cnn.profile) {
-        if(!cnn.cnn || cnn.cnn.cnn_type !== base.cnn_type){
-          const cnns = $p.cat.cnns.nom_cnn(rack2, cnn.profile, [base.cnn_type]);
+        if(!cnn.cnn || cnn.cnn.cnn_type !== base.cnn_type) {
+          const cnns = cat.cnns.nom_cnn(rack2, cnn.profile, [base.cnn_type]);
           if(cnns.includes(base)) {
             cnn.cnn = base;
           }
@@ -249,13 +333,46 @@ export default function arc (Editor) {
         }
         cnn = cnn.profile.cnn_point(cnn.profile_point);
         if(cnn.profile === rack2) {
-          const cnns = $p.cat.cnns.nom_cnn(cnn.parent, rack2, [base.cnn_type]);
-          if(cnns.includes(base)) {
-            cnn.cnn = base;
-          }
-          else if(cnns.length) {
-            cnn.cnn = cnns[0];
-          }
+          cnn.cnn = null;
+        }
+      }
+      const atypes = [cnn_types.short, cnn_types.t];
+      if(rack2.orientation === orientations.vert) {
+        atypes.push(cnn_types.ah);
+      }
+      else if(rack2.orientation === orientations.hor) {
+        atypes.push(cnn_types.av);
+      }
+
+      cnn = rack2.cnn_point('b');
+      if(cnn && cnn.profile === impost.profile) {
+        const cnns = cat.cnns.nom_cnn(rack2, cnn.profile, atypes);
+        if(cnns.length) {
+          cnn.cnn = cnns[0];
+        }
+      }
+      cnn = rack.profile.cnn_point('e');
+      if(cnn && cnn.profile === impost.profile) {
+        const cnns = cat.cnns.nom_cnn(rack.profile, cnn.profile, atypes);
+        if(cnns.length) {
+          cnn.cnn = cnns[0];
+        }
+      }
+      // соединения разрыва
+      atypes.length = 0;
+      atypes.push(cnn_types.long);
+      if(impost.profile.orientation === orientations.vert) {
+        atypes.push(cnn_types.av);
+      }
+      else if(impost.profile.orientation === orientations.hor) {
+        atypes.push(cnn_types.ah);
+      }
+      cnn = impost.profile.cnn_point(impost.point);
+      if(cnn) {
+        const cnns = cat.cnns.nom_cnn(impost.profile, rack.profile, atypes);
+        if(cnns.length) {
+          cnn.cnn = cnns[0];
+          cnn.set_cnno(cnns[0]);
         }
       }
 
@@ -295,8 +412,7 @@ export default function arc (Editor) {
       impost.profile.rays[impost.point].clear(true);
 
       // двигаем конец рамы
-      const p2 = rack2.profile[rack2.point === 'b' ? 'e' : 'b'];
-      rack1.profile[rack1.point] = p2;
+    rack1.profile[rack1.point] = rack2.profile[rack2.point === 'b' ? 'e' : 'b'];
 
       // удаляем rack2
       let base;
@@ -337,13 +453,7 @@ export default function arc (Editor) {
           }
           cnn = cnn.profile.cnn_point(cnn.profile_point);
           if(cnn.profile === rack1.profile) {
-            const cnns = $p.cat.cnns.nom_cnn(cnn.parent, rack1.profile, [base.cnn_type]);
-            if(cnns.includes(base)) {
-              cnn.cnn = base;
-            }
-            else if(cnns.length) {
-              cnn.cnn = cnns[0];
-            }
+          cnn.cnn = null;
           }
         }
       }
@@ -356,28 +466,27 @@ export default function arc (Editor) {
       if(!nodes || nn.length !== nodes.length) {
         return true;
       }
-      for(const n1 in nodes) {
+      for(const n1 of nodes) {
         let ok;
-        for(const n2 in nn) {
+        for(const n2 of nn) {
           if(n1.profile === n2.profile && n1.point === n2.point) {
             ok = true;
             break;
           }
         }
         if(!ok) {
-          return false;
+          return true;
         }
       }
-      return true;
     }
 
-    hitTest(event) {
+  hitTest({point}) {
 
       const hitSize = 30;
       this.hitItem = null;
 
-      if (event.point) {
-        this.hitItem = this.project.hitTest(event.point, { ends: true, tolerance: hitSize });
+    if (point) {
+      this.hitItem = this.project.hitTest(point, { ends: true, tolerance: hitSize });
       }
 
       if (this.hitItem && this.hitItem.item.parent instanceof ProfileItem) {
@@ -386,7 +495,7 @@ export default function arc (Editor) {
         if(profile.parent === activeLayer) {
           const {profiles} = activeLayer;
           const {b, e} = profile;
-          const selected = {profiles, profile, point: b.getDistance(event.point) < e.getDistance(event.point) ? 'b' : 'e'};
+        const selected = {profiles, profile, point: b.getDistance(point) < e.getDistance(point) ? 'b' : 'e'};
           const nodes = magnetism.filter(selected);
           if(this.nodes_different(nodes)) {
             this.remove_cont();

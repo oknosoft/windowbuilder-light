@@ -12,7 +12,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
-import Tip from 'wb-forms/dist/Common/Tip';
+import Tip from 'metadata-react/App/Tip';
 
 const title = 'Отмена редактирования';
 function revert({editor, closeMenu}) {

@@ -25,14 +25,14 @@ export default function ($p) {
     constructor(canvas) {
       super();
       this._canvas = canvas;
-      new EditorInvisible.Scheme(this._canvas, this, typeof window === 'undefined');
+      const scheme = new EditorInvisible.Scheme(this._canvas, this, typeof window === 'undefined');
 
       this._stable_zoom = new StableZoom(this);
       this._deformer = new Deformer(this);
       this._mover = new Mover(this);
 
-      this.project._use_skeleton = true;
-      this.project._dp.value_change = this.dp_value_change.bind(this);
+      scheme._use_skeleton = true;
+      scheme._dp.value_change = this.dp_value_change.bind(this);
       this._recalc_timer = 0;
 
       this.eve.on('coordinates_calculated', this.coordinates_calculated);
@@ -181,20 +181,53 @@ export default function ($p) {
       return rect;
     }
 
-    fragment_spec(elm, name) {
+    fragment_spec({elm, ox, name}) {
       const {ui: {dialogs}, cat: {characteristics}} = $p;
+      if(!ox) {
+        ox = this.project.ox;
+      }
       if(elm) {
         return dialogs.alert({
           timeout: 0,
           title: `Спецификация ${elm >= 0 ? 'элемента' : 'слоя'} №${Math.abs(elm)} (${name})`,
           Component: characteristics.SpecFragment,
-          props: {_obj: this.project.ox, elm},
+          props: {_obj: ox, elm},
           initFullScreen: true,
           hide_btn: true,
           noSpace: true,
         });
       }
-      dialogs.alert({text: 'Элемент не выбран', title: $p.msg.main_title});
+
+    }
+
+    elm_spec(elm) {
+      const {ui: {dialogs}, msg} = $p;
+      if(!elm) {
+        elm = this.project.selected_elm;
+      }
+      if(elm) {
+        return this.fragment_spec({
+          elm: elm.elm,
+          ox: elm.layer.prod_ox,
+          name: elm.inset.toString(),
+        });
+      }
+      dialogs.alert({text: 'Элемент не выбран', title: msg.main_title});
+    }
+
+    layer_spec(layer) {
+      const {ui: {dialogs}, msg} = $p;
+      if(!layer) {
+        layer = this.project.activeLayer;
+      }
+      if(layer) {
+        return this.fragment_spec({
+          elm: -layer.cnstr,
+          ox: layer.prod_ox,
+          name: layer.furn.toString(),
+        });
+      }
+      dialogs.alert({text: 'Слой не выбран', title: msg.main_title});
     }
 
     unload() {
@@ -206,10 +239,10 @@ export default function ($p) {
     }
 
   }
+
   $p.Editor = Editor;
 
-  if(typeof window !== 'undefined') {
-    tools(Editor, $p);
-    align(Editor, $p);
-  }
+  tools(Editor, $p);
+  align(Editor, $p);
+
 }

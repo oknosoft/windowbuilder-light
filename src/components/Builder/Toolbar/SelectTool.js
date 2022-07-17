@@ -15,7 +15,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
-import Tip from 'wb-forms/dist/Common/Tip';
+import Tip from 'metadata-react/App/Tip';
 
 const useIndicator = makeStyles(({palette}) => ({
   indicator: {
@@ -60,14 +60,11 @@ const actions = [
   //{css: 'tb_icon-arrow-white', name: 'Элемент и узел', id: 'select_node'},
   {css: 'tb_icon-hand', name: 'Панорама', id: 'pan'},
   {css: 'tb_cursor-pen-freehand', name: 'Добавить профиль', id: 'pen'},
-  {css: 'tb_stulp_flap', name: 'Добавить штульп-створки', id: 'stulp_flap'},
-  {css: 'tb_cursor-lay-impost', name: 'Раскладка, импосты', id: 'lay_impost'},
-  {css: 'tb_cursor-arc-r', name: 'Арка', id: 'arc'},
-  {children: <small><i className="fa fa-magnet"></i><sub>1</sub></small>, name: 'Импост по 0-штапику'},
-  {children: <small><i className="fa fa-magnet"></i><sub>2</sub></small>, name: 'T в угол'},
+  // {css: 'tb_cursor-lay-impost', name: 'Раскладка, импосты', id: 'lay_impost'},
+  // {css: 'tb_cursor-arc-r', name: 'Арка', id: 'arc'},
   {css: 'tb_cursor-cut', name: 'Тип соединения', id: 'cut'},
-  {css: 'tb_ruler_ui', name: 'Позиция и сдвиг'},
-  {css: 'tb_grid', name: 'Координаты'},
+  // {css: 'tb_ruler_ui', name: 'Позиция и сдвиг'},
+  // {css: 'tb_grid', name: 'Координаты'},
   {css: 'tb_text', name: 'Текст', id: 'text'},
 ];
 
@@ -76,7 +73,7 @@ export default function SelectTool({editor}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-  const cid = editor.tool && editor.tool.options.name;
+  const cid = editor.tool?.options?.name;
   const [is_select_node, set_select_node] = React.useState(cid === 'select_node');
 
   const handleClick = event => {

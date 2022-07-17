@@ -25,12 +25,12 @@ export default function tools (Editor, $p) {
   lay_impost(Editor);
   text(Editor);
 
-  Editor.prototype.create_tools = function create_tools() {
+  Editor.prototype.create_tools = function create_tools(component) {
     new Editor.ToolSelectNode();
     new Editor.ToolPan();
     new Editor.ToolPen();
     new Editor.ToolArc();
-    new Editor.ToolCut();
+    new Editor.ToolCut(component);
     new Editor.ToolStulpFlap();
     new Editor.ToolLayImpost();
     new Editor.ToolText();

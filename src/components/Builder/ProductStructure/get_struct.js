@@ -40,6 +40,13 @@ class BaseItem {
     this.toggled = true;
   }
 
+  collaps() {
+    this.toggled = false;
+    for(const chld of this.children) {
+      chld.collaps();
+    }
+  }
+
   deselect() {
     this.active = false;
     for(const chld of this.children) {
@@ -52,8 +59,16 @@ class Layer extends BaseItem {
   constructor(layer, parent) {
     const {contours, cnstr} = layer;
     super(layer.presentation(), `l-${cnstr}`, 'icon_layer', layer, parent);
-    if(contours.length) {
-      this.children.push(new Layers(layer, this));
+    Object.defineProperty(this, 'checked', {
+      get() {
+        return !layer.hidden;
+      },
+      set(v) {
+        layer.hidden = !v;
+      }
+    });
+    for(const layer of contours) {
+      this.children.push(new Layer(layer, this));
     }
     this.children.push(new Profiles(layer, this));
     if(layer.cnstr && layer.cnstr !== 1000000) {
@@ -65,8 +80,14 @@ class Layer extends BaseItem {
 
 class Profile extends BaseItem {
   constructor(profile, parent) {
-    const {info, elm} = profile;
+    const {info, elm, segms, addls} = profile;
     super(info, `pr-${elm}`, 'icon_profile', profile, parent);
+    for(const item of segms) {
+      this.children.push(new Profile(item, this));
+    }
+    for(const item of addls) {
+      this.children.push(new Profile(item, this));
+    }
   }
 }
 
@@ -77,17 +98,20 @@ class Glass extends BaseItem {
   }
 }
 
-class Layers extends BaseItem {
-  constructor(owner, parent) {
-    const {cnstr} = owner;
-    super('Слои', `lg-${cnstr || 0}`, 'icon_layers', owner, parent);
-    for(const layer of owner.contours) {
-      this.children.push(new Layer(layer, this));
+class SelectableGroup extends BaseItem {
+  select(event) {
+    const select = [];
+    event.type = 'elm';
+    const {children, _owner: {project}} = this;
+    for(const item of children) {
+      select.push({elm: item._owner.elm, node: null, shift: true});
+      event.elm = item._owner;
     }
+    project._scope.cmd('select', select);
   }
 }
 
-class Profiles extends BaseItem {
+class Profiles extends SelectableGroup {
   constructor(owner, parent) {
     const {cnstr} = owner;
     super('Профили', `pg-${cnstr || 0}`, 'icon_profile', owner, parent);
@@ -97,7 +121,7 @@ class Profiles extends BaseItem {
   }
 }
 
-class Glasses extends BaseItem {
+class Glasses extends SelectableGroup {
   constructor(owner, parent) {
     const {cnstr} = owner;
     super('Заполнения', `gg-${cnstr || 0}`, 'icon_glass', owner, parent);
@@ -120,9 +144,10 @@ class Insets extends BaseItem {
 class Struct extends BaseItem {
   constructor(project) {
     const {ox, contours, l_connective} = project;
-    super(ox.prod_name(true), 'root', 'icon_root', project);
+    const {calc_order} = ox;
 
-    //this.children.push(new Layers(project, this));
+    //name, key, icon, _owner, _parent
+    super(ox.prod_name(true), 'root', 'icon_root', project);
 
     for(const layer of contours) {
       this.children.push(new Layer(layer, this));
@@ -131,10 +156,25 @@ class Struct extends BaseItem {
 
     this.children.push(new Insets(project, this));
 
+    const order = new BaseItem(`Заказ ${calc_order.number_doc}`, 'order', 'icon_order', calc_order, this);
+    this.children.push(order);
+
+    const settings = new BaseItem(`Настройки`, 'settings', 'icon_gear', ox, this);
+    this.children.push(settings);
+
     this.toggled = true;
+
   }
 
-
+  collaps(l2) {
+    this.toggled = true;
+    for(const chld of this.children) {
+      chld.collaps();
+      if(l2) {
+        chld.expand();
+      }
+    }
+  }
 
 }
 

@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Dialog from 'metadata-react/App/Dialog';
+import withStyles from './styles';
 
 //import connect from './connect';
 
@@ -93,4 +94,4 @@ ParametricFrame.propTypes = {
 };
 
 //export default connect(ParametricFrame);
-export default ParametricFrame;
+export default withStyles(ParametricFrame);

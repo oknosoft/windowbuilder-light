@@ -39,22 +39,13 @@ class Metadata extends React.Component {
 
   handleIfaceState = ({component = '', name, value}) => {
     if(!component) {
-      if(value === 'invert') {
-        value = !this.state[name];
-      }
       this.setState({[name]: value});
     }
-    else {
-      const state = Object.assign({}, this.state[component]);
-      if(value === 'invert') {
-        state[name] = !state[name];
-      }
-      else {
-        state[name] = value;
-      }
-      this.setState({[component]: state});
-    }
   };
+
+  handleNavigate(url) {
+    handleNavigate(url);
+  }
 
   handleDialogClose = (name) => {
     this.handleIfaceState({name, value: {open: false}});
@@ -92,12 +83,13 @@ class Metadata extends React.Component {
 
   getChildContext() {
     const {handleIfaceState} = this;
-    return {components: lazy, handleNavigate, handleIfaceState};
+    return {components: lazy, history, handleIfaceState, handleNavigate};
   }
 }
 
 Metadata.childContextTypes = {
   components: PropTypes.object,
+  history: PropTypes.object,
   handleIfaceState: PropTypes.func,
   handleNavigate: PropTypes.func,
 };

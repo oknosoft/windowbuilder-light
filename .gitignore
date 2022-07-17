@@ -2,22 +2,34 @@
 # Editor files
 .idea
 .vscode
-
-# Exclude compiled files
-build/
-/.eslintcache
-/tmp
-coverage
-/scripts/stats.json
-
+.nyc_output
 
 # TODO
 .github
 
-# OS files
-.DS_STORE
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-# npm files
-node_modules
-*.lock
-*.log
+# testing
+/coverage
+
+# Exclude compiled files
+/build
+/scripts/stats.json
+/.eslintcache
+/src/public/data/
+/server/mdm/cache/
+!/server/mdm/cache/.gitkeep
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+*.log*
+yarn.lock
+

@@ -8,7 +8,8 @@
 }
 
 .dsn-search-box {
-  padding: 8px;
+  min-height: unset;
+  padding: 0 4px 4px 0;
 }
 
 .dsn-tree {
@@ -18,6 +19,7 @@
 
 .dsn-input {
   width: 100%;
+  margin-left: 4px;
 }
 
 .dsn-component {
@@ -63,6 +65,10 @@
   background-image: url(struct.png);
 }
 
+.icon_order {
+  background-image: url(briefcase.png);
+}
+
 .icon_layers {
   background-image: url(layers.png);
 }
@@ -85,6 +91,10 @@
 
 .icon_size {
   background-image: url(size.png);
+}
+
+.icon_gear {
+  background-image: url(gear.png);
 }
 
 .icon_1c_cat {

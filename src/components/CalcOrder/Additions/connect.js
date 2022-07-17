@@ -5,10 +5,6 @@
  * Created by Evgeniy Malyarov on 13.11.2017.
  */
 
-import {connect} from 'react-redux';
-import withStyles from './styles';
-import {compose} from 'redux';
-
 import AdditionsItem from './AdditionsItem';
 const {ItemData} = $p.cat.inserts;
 
@@ -162,8 +158,3 @@ function mapStateToProps(/*state, props*/) {
 // function mapDispatchToProps(dispatch) {
 //   return {};
 // }
-
-export default compose(
-  withStyles,
-  connect(mapStateToProps /*, mapDispatchToProps */),
-);

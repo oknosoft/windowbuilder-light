@@ -26,13 +26,19 @@ export default class Deformer {
    */
   select(items) {
     const {project, editor} = this;
+    const {Contour} = editor.constructor;
     let deselect;
     for(const {elm, node, shift} of items) {
-      const item = this.elm(elm);
+      const item = elm > 0 ? this.elm(elm) : project.getItem({class: Contour, cnstr: -elm});
       if(item) {
         if(node) {
           item.generatrix[node === 'b' ? 'firstSegment' : 'lastSegment'].selected = true;
           //item[node].selected = true;
+        }
+        else if(elm < 0) {
+          item.activate();
+          editor.eve.emit('elm_activated', item);
+          //editor.eve.emit_async('layer_activated', item);
         }
         else {
           deselect = true;

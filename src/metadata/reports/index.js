@@ -1,9 +1,8 @@
 // модификаторы отчетов
 
-// движение денег
-//import rep_cash_moving from "./rep_cash_moving";
+// анализ спецификации
+import materials_demand from "./materials_demand";
 
-/* eslint-disable-next-line */
 export default function ($p) {
-	//rep_cash_moving($p);
+  materials_demand($p);
 }

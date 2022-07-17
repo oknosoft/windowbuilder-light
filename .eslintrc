@@ -1,5 +1,4 @@
 {
-  "parser": "babel-eslint", // https://github.com/babel/babel-eslint,
   "parserOptions": {
     "ecmaVersion": 7,
     "ecmaFeatures": {
@@ -29,8 +28,6 @@
     "process": true,
     "paper": true,
     "expect": true,
-    "sinon": true,
-    "__DEV__": true
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "rules": {

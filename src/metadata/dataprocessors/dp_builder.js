@@ -8,7 +8,6 @@
  * @module dp_builder_pen
  */
 
-
 export default function ({dp, enm}) {
 
   dp.builder_pen.on({

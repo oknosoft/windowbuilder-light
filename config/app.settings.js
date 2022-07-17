@@ -10,9 +10,16 @@ const is_node = typeof process !== 'undefined' && process.versions && process.ve
 
 module.exports = function settings(prm = {}) {
 
-  Object.defineProperty(prm, 'use_google_geo', {
-    get() {
-      return this.keys.google;
+  Object.defineProperties(prm, {
+    use_google_geo: {
+      get() {
+        return '';
+      }
+    },
+    session_zone: {
+      get() {
+        return typeof sessionStorage === 'object' && sessionStorage.key('zone') ? sessionStorage.getItem('zone') : this.zone;
+      }
     }
   });
 
@@ -29,19 +36,20 @@ module.exports = function settings(prm = {}) {
     // гостевые пользователи для демо-режима
     guests: [],
 
-    // расположение couchdb для браузера
-    get couch_path() {
-      return is_node ? this.couch_local : '/couchdb/wb_';
-    },
+    // расположение couchdb для сайта
+    couch_path: process.env.COUCHPATH || "/couchdb/wb_",
 
     // расположение couchdb для nodejs
     couch_local: process.env.COUCHLOCAL || 'http://cou221:5984/wb_',
 
     // расположение адаптера postgres
-    pg_path: process.env.PGPATH || "/r/postgres/wb_",
+    pg_path: process.env.PGPATH || '/r/postgres/wb_',
 
-    // по умолчанию, обращаемся к зоне 1
-    zone: process.env.ZONE || 1,
+    // расположение файлов руководства пользователя
+    docs_root: 'https://raw.githubusercontent.com/oknosoft/windowbuilder/master/doc/',
+
+    // по умолчанию, обращаемся к зоне 10
+    zone: process.env.ZONE || 10,
 
     // объявляем номер демо-зоны
     zone_demo: 1,
@@ -49,8 +57,7 @@ module.exports = function settings(prm = {}) {
     // традиционный ram не используем - тянем в озу через сервисворкер
     use_ram: false,
 
-    // если use_meta === false, не используем базу meta в рантайме
-    // см.: https://github.com/oknosoft/metadata.js/issues/255
+    // если use_meta === false, не используем базу meta в рантайме - см.: https://github.com/oknosoft/metadata.js/issues/255
     use_meta: false,
 
     // размер вложений 2Mb
@@ -65,8 +72,11 @@ module.exports = function settings(prm = {}) {
     // разрешаем сохранение пароля
     enable_save_pwd: true,
 
-    // используем геокодер
-    use_ip_geo: true,
+    // геокодер не используем
+    use_ip_geo: false,
+
+    // здесь можно перечислить имена параметров для включения в корень job_prm c подтягиванием значений из local_storage
+    //additional_params: [],
 
     //
     keys: {

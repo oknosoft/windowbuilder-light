@@ -6,7 +6,7 @@ import plugin_ui from 'metadata-abstract-ui';
 import plugin_ui_tabulars from 'metadata-abstract-ui/tabulars';
 import plugin_mime from 'metadata-core/lib/mime.min';
 import plugin_react from 'metadata-react/plugin';
-import proxy_login, {load_ram, load_common} from 'metadata-superlogin/proxy';
+import proxy_login, {load_common} from 'metadata-superlogin/proxy';
 
 // функция установки параметров сеанса
 import settings from '../../config/app.settings';
@@ -17,8 +17,6 @@ import {patch_prm, patch_cnn} from '../../config/patch_cnn';
 import meta_init from 'wb-core/dist/init';
 import modifiers from './modifiers';
 
-// конструкторы ui
-import {lazy} from '../components/App/lazy';
 
 // подключаем плагины к MetaEngine
 MetaEngine

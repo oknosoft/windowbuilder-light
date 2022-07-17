@@ -9,7 +9,8 @@
  * @submodule tool_pen
  */
 
-import ToolWnd from '../../components/Builder/ToolWnds/PenWnd';
+import React from 'react';
+const ToolWnd = React.lazy(() => import('../../components/Builder/ToolWnds/PenWnd'));
 
 export default function pen (Editor, {enm, msg, dp, cat, utils}) {
 
@@ -209,10 +210,7 @@ export default function pen (Editor, {enm, msg, dp, cat, utils}) {
           options: {
             name: 'pen',
             wnd: {
-              caption: 'Новый сегмент профиля',
-              width: 320,
-              height: 320,
-              allow_close: true,
+              caption: 'Рисование профиля',
               bind_generatrix: true,
               bind_node: false,
               inset: '',
@@ -300,69 +298,6 @@ export default function pen (Editor, {enm, msg, dp, cat, utils}) {
         // дополняем свойства поля цвет отбором по служебным цветам
         cat.clrs.selection_exclude_service(profile._metadata('clr'), this);
 
-        // this.wnd = $p.iface.dat_blank(this._scope._dxw, this.options.wnd);
-        // this._grid = this.wnd.attachHeadFields({
-        //   obj: profile
-        // });
-        //
-        // // панелька с командой типовых форм
-        // this.wnd.tb_mode = new $p.iface.OTooolBar({
-        //   wrapper: this.wnd.cell,
-        //   width: '100%',
-        //   height: '28px',
-        //   class_name: '',
-        //   name: 'tb_mode',
-        //   buttons: [{
-        //     name: 'standard_form',
-        //     text: '<i class="fa fa-file-image-o fa-fw"></i>',
-        //     tooltip: 'Добавить типовую форму',
-        //     float: 'left',
-        //     sub: {
-        //       width: '90px',
-        //       height:'190px',
-        //       buttons: [
-        //         {name: 'square', img: 'square.png', float: 'left'},
-        //         {name: 'triangle1', img: 'triangle1.png', float: 'left'},
-        //         {name: 'triangle2', img: 'triangle2.png', float: 'right'},
-        //         {name: 'triangle3', img: 'triangle3.png', float: 'left'},
-        //         {name: 'semicircle1', img: 'semicircle1.png', float: 'left'},
-        //         {name: 'semicircle2', img: 'semicircle2.png', float: 'right'},
-        //         {name: 'circle',    img: 'circle.png', float: 'left'},
-        //         {name: 'arc1',      img: 'arc1.png', float: 'left'},
-        //         {name: 'trapeze1',  img: 'trapeze1.png', float: 'right'},
-        //         {name: 'trapeze2',  img: 'trapeze2.png', float: 'left'},
-        //         {name: 'trapeze3',  img: 'trapeze3.png', float: 'left'},
-        //         {name: 'trapeze4',  img: 'trapeze4.png', float: 'right'},
-        //         {name: 'trapeze5',  img: 'trapeze5.png', float: 'left'},
-        //         {name: 'trapeze6',  img: 'trapeze6.png', float: 'left'},
-        //         {name: 'trapeze7',  img: 'trapeze7.png', float: 'right'},
-        //         {name: 'trapeze8',  img: 'trapeze8.png', float: 'left'},
-        //         {name: 'trapeze9',  img: 'trapeze9.png', float: 'left'},
-        //         {name: 'trapeze10',  img: 'trapeze10.png', float: 'right'}]}
-        //   },
-        //   ],
-        //   image_path: '/imgs/',
-        //   onclick: (name) => this.standard_form(name)
-        // });
-        // this.wnd.tb_mode.cell.style.backgroundColor = '#f5f5f5';
-        // this.wnd.cell.firstChild.style.marginTop = '22px';
-        // const {standard_form} = this.wnd.tb_mode.buttons;
-        // const {onmouseover} = standard_form;
-        // const wnddiv = this.wnd.cell.parentElement;
-        // standard_form.onmouseover = function() {
-        //   if(wnddiv.style.transform) {
-        //     wnddiv.style.transform = '';
-        //   }
-        //   onmouseover.call(this);
-        // };
-        //
-        // // подмешиваем в метод wnd_options() установку доппараметров
-        // const wnd_options = this.wnd.wnd_options;
-        // this.wnd.wnd_options = (opt) => {
-        //   wnd_options.call(this.wnd, opt);
-        //   opt.bind_generatrix = profile.bind_generatrix;
-        //   opt.bind_node = profile.bind_node;
-        // }
       }
 
       on_activate() {
@@ -455,10 +390,10 @@ export default function pen (Editor, {enm, msg, dp, cat, utils}) {
         }
       }
 
-      mousedown(event) {
+      mousedown({event, modifiers}) {
         this.project.deselectAll();
 
-        if(event.event && event.event.which && event.event.which > 1){
+        if(event?.which > 1) {
           return this.on_keydown({key: 'escape'});
         }
 
@@ -482,17 +417,22 @@ export default function pen (Editor, {enm, msg, dp, cat, utils}) {
         }
       }
 
-      on_mouseup(event) {
+      on_mouseup({event, modifiers}) {
 
         this._scope.canvas_cursor('cursor-pen-freehand');
 
-        if(event.event && event.event.which && event.event.which > 1){
+        if(event?.which > 1){
           return this.on_keydown({key: 'escape'});
+        }
+        else if (this.hitItem?.item && modifiers.alt) {
+          this._scope.cmd('deselect', [{elm: null, shift: false}]);
+          this._scope.cmd('select', [{elm: -this.hitItem.item.layer.cnstr}]);
+          return;
         }
 
         let whas_select;
 
-        if(this.addl_hit){
+        if(this.addl_hit) {
 
           // рисуем доборный профиль
           if(this.addl_hit.glass && this.profile.elm_type == enm.elm_types.Добор && !this.profile.inset.empty()){
@@ -574,14 +514,14 @@ export default function pen (Editor, {enm, msg, dp, cat, utils}) {
             }, 50);
           }
         }
-        else if (this.hitItem && this.hitItem.item && (event.modifiers.shift || event.modifiers.control || event.modifiers.option)) {
+        else if (this.hitItem && this.hitItem.item && !modifiers.alt && (modifiers.shift || modifiers.control || modifiers.space)) {
 
           let item = this.hitItem.item.parent;
-          if(event.modifiers.space && item.nearest && item.nearest()) {
+          if(modifiers.space && item.nearest && item.nearest()) {
             item = item.nearest();
           }
 
-          if(event.modifiers.shift) {
+          if(modifiers.shift) {
             item.selected = !item.selected;
           }
           else {
@@ -1068,6 +1008,7 @@ export default function pen (Editor, {enm, msg, dp, cat, utils}) {
             }), proto: this.profile
           }));
         });
+        this.project.activeLayer.on_sys_changed(true);
         return profiles;
       }
 

@@ -19,7 +19,7 @@ export const lazy = {
 import('metadata-react/DynList/DynList')
   .then(module => {
     lazy.DataList = module.DynList;
-    return import('metadata-react/DataTree');
+    return import('metadata-react/DataTree/DataTree');
   })
   .then(module => {
     lazy.DataTree = module.default;

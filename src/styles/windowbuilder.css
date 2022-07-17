@@ -1,18 +1,4 @@
 
-.md_muted_color {
-	color: #636773;
-}
-
-.md-fa-lg {
-	font-size: 130%;
-	vertical-align: 25%;
-}
-
-.label_options{
-	padding-top: 12px !important;
-	/* border-bottom: 1px solid #ddd; */
-}
-
 .sz_input {
   position: absolute;
   background: white;
@@ -67,30 +53,4 @@
 	padding: 0;
 	border: none;
 	border-collapse: collapse;
-}
-
-[class*="tb_jalousie"] {
-  width: 28px;
-  height: 24px;
-  float: left;
-  background-position: 2px;
-  margin-right: 4px;
-}
-
-.rsvg_elm {
-  float: left;
-  height: 86px;
-  margin-left:  1px;
-  padding-left:  4px;
-  padding-right:  4px;
-  cursor: pointer;
-  user-select: none;
-}
-.rsvg_selected {
-  border: 1px silver solid;
-  height: 84px;
-  background-color: white;
-  -webkit-box-shadow: 3px 3px 12px 3px rgba(0,0,0,0.4);
-  -moz-box-shadow: 3px 3px 12px 3px rgba(0,0,0,0.4);
-  box-shadow: 3px 3px 12px 3px rgba(0,0,0,0.4);
 }

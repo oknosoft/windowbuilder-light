@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Switch, Route} from 'react-router';
 
-import NeedAuth from 'metadata-react/App/NeedAuth'; // страница "необходима авторизация"
+import NeedAuth from './NeedAuth'; // страница "необходима авторизация"
 import WindowSizer from 'metadata-react/WindowSize';// конструкторы для контекста
 import NotFound from '../Markdown/NotFound';
 

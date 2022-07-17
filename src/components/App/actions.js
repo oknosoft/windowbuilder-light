@@ -41,6 +41,7 @@ function log_in() {
       props._suffix = res.suffix || '';
       props._user = res.ref;
 
+      remote.ram = new PouchDB(pouch.dbpath('ram'), {skip_setup: true, owner: pouch, fetch});
       remote.doc = new PouchDB(pouch.dbpath('doc'), {skip_setup: true, owner: pouch, fetch});
 
       return users.create(res, false, true);
@@ -57,17 +58,16 @@ export function actions(elm) {
       // font-awesome, roboto и стили metadata подгрузим асинхронно
       import('metadata-react/styles/roboto/font.css');
       import('font-awesome/css/font-awesome.min.css')
-        .then(() => import('../../styles/global.css'))
-        .then(() => import('../../styles/windowbuilder.css'))
+        .then(() => {
+          import('../../styles/global.css');
+          import('../../styles/windowbuilder.css');
+        });
     })
     .then(() => {
-      const {classes: {PouchDB}, adapters: {pouch}, md, ui} = $p;
+      const {adapters: {pouch}, job_prm, md, ui} = $p;
       elm.setState({common_loaded: true});
       const {handleNavigate, handleIfaceState} = elm;
       ui.dialogs.init({handleIfaceState, handleNavigate, lazy});
-
-      const {remote, fetch} = pouch;
-      remote.ram = new PouchDB(pouch.dbpath('ram'), {skip_setup: true, owner: pouch, fetch});
 
       pouch.on({
         pouch_complete_loaded() {
@@ -75,19 +75,38 @@ export function actions(elm) {
         },
         pouch_data_page(page) {
           elm.setState({page});
-        },
-        on_log_in(username) {
+        }
+      });
+
+      md.once('predefined_elmnts_inited', () => {
+        // шаблоны грузим в озу сразу
+        const {templates_nested} = job_prm.builder;
+        let res = Promise.resolve();
+        if(templates_nested && templates_nested.length) {
+          for (const tmp of templates_nested) {
+            res = res.then(() => tmp.load_templates());
+          }
+        }
+        res.then(() => pouch.emit('pouch_complete_loaded'));
+      });
+
+      elm.setState({user: {
+          name: '',
+          logged_in: false,
+          try_log_in: true,
+          log_error: '',
+        }});
+
+      return log_in()
+        .then((user) => {
           elm.setState({user: {
-              name: username,
+              name: user.name || user.id,
               logged_in: true,
               try_log_in: false,
               log_error: '',
             }});
           return load_ram($p);
-        },
-      });
-
-      md.once('predefined_elmnts_inited', () => pouch.emit('pouch_complete_loaded'));
+        });
 
     });
 }
