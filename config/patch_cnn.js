@@ -16,7 +16,6 @@ export const predefined = {
   'brusnika.': {
     zone: 27,
     host: 'https://brusnika.oknosoft.ru/',
-    splash: {css: 'splash21', title: false},
   },
 }
 

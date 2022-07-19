@@ -25,11 +25,12 @@
     "url": "https://github.com/oknosoft/windowbuilder/issues"
   },
   "homepage": "https://light.oknosoft.ru/",
-  "proxy": "https://develop.ecookna.ru/",
+  "proxy1": "https://develop.ecookna.ru/",
   "proxy2": "https://dvlp.ecookna.ru/",
-  "proxy3": "https://zakaz.kaleva.ru:2019/",
+  "proxy3": "https://brusnika.oknosoft.ru/",
   "proxy4": "https://info.tmk-online.ru/",
   "proxy5": "http://localhost:3016/",
+  "proxy": "http://192.168.9.27:3016/",
   "dependencies": {
     "deep-diff": "^1.0.2",
     "history": "^4.10",
@@ -42,8 +43,8 @@
     "metadata-superlogin": "2.0.30-beta.5",
     "react-router-dom": "5.2.0",
     "react-treebeard": "^3.2.4",
-    "wb-core": "github:oknosoft/windowbuilder-core#964a5c2829e60b961a22d83bd3a2a4b90ff42a90",
-    "wb-forms": "github:oknosoft/windowbuilder-forms#a51a8daf8422280b23d464fe20dda33e550773f8"
+    "wb-core": "github:oknosoft/windowbuilder-core#b76507a0394a09a8ca39cfa6a7b983b59e3b714a",
+    "wb-forms": "github:oknosoft/windowbuilder-forms#930b0e80c40a2690b3243cb42461d5e5697d4a3d"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

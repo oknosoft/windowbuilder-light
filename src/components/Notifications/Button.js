@@ -30,9 +30,12 @@ export default class NotiButton extends React.Component {
 
 
   render() {
-    const {props: {handleToggle, filter, open, count}, state}  = this;
+    let {props: {handleToggle, filter, open, count}, state}  = this;
 
     const tip = `${count || '0'} непрочитанных сообщений`;
+    if(!filter){
+      filter = [];
+    }
     if(!filter.length || filter[0] === ''){
       filter[0] = 'any';
     }

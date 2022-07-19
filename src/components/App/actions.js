@@ -73,8 +73,39 @@ export function actions(elm) {
         pouch_complete_loaded() {
           elm.setState({complete_loaded: true});
         },
+
         pouch_data_page(page) {
           elm.setState({page});
+        },
+
+        on_log_in(name) {
+          elm.setState({user: {
+              name,
+              logged_in: true,
+              try_log_in: false,
+              log_error: '',
+            }});
+          return load_ram($p)
+            .then(() => {
+              const {roles} = $p.current_user || {};
+              if(roles && (roles.includes('ram_editor') || roles.includes('doc_full'))) {
+                pouch.local.sync.ram = pouch.remote.ram.changes({
+                  since: 'now',
+                  live: true,
+                  include_docs: true
+                })
+                  .on('change', (change) => {
+                    // информируем слушателей текущего сеанса об изменениях
+                    if(change.doc.obj_delivery_state !== 'Шаблон') {
+                      pouch.load_changes({docs: [change.doc]});
+                      pouch.emit('ram_change', change);
+                    }
+                  })
+                  .on('error', (err) => {
+                    $p.record_log(err);
+                  });
+              }
+            });
         }
       });
 
@@ -89,24 +120,6 @@ export function actions(elm) {
         }
         res.then(() => pouch.emit('pouch_complete_loaded'));
       });
-
-      elm.setState({user: {
-          name: '',
-          logged_in: false,
-          try_log_in: true,
-          log_error: '',
-        }});
-
-      return log_in()
-        .then((user) => {
-          elm.setState({user: {
-              name: user.name || user.id,
-              logged_in: true,
-              try_log_in: false,
-              log_error: '',
-            }});
-          return load_ram($p);
-        });
 
     });
 }
