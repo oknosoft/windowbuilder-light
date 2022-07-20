@@ -2,14 +2,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import Bar from './Bar';
 import TabularSection from 'metadata-react/TabularSection';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveIcon from '@material-ui/icons/DeleteOutline';
+import ArrowUpIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownIcon from '@material-ui/icons/ArrowDownward';
+import VerticalAlignBottomIcon from '@material-ui/icons/VerticalAlignBottom';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tip from 'metadata-react/App/Tip';
+import Bar from './Bar';
 import GlassLayerProps from './GlassLayerProps';
+import CompositeChains from './GlassCompositeChains';
 
+const reflect = ({project, reflect_grp}) => {
+  if(reflect_grp) {
+    reflect_grp();
+  }
+  else if(project){
+    project.register_change(true);
+  }
+};
 
 export default class GlassComposite extends React.Component {
 
@@ -22,7 +35,6 @@ export default class GlassComposite extends React.Component {
         this.scheme = scheme;
       }
     });
-    this.state = {row: null};
   }
 
   componentDidMount() {
@@ -33,10 +45,24 @@ export default class GlassComposite extends React.Component {
     $p.cat.characteristics.off('update', this.value_change);
   }
 
+  shouldComponentUpdate({elm, row}) {
+    const {props, _grid} = this;
+    if(_grid && (props.elm !== elm || row === null)) {
+      setTimeout(() => {
+        const row = _grid.rowGetter(0);
+        if(row) {
+          props.set_row(row);
+          _grid._grid.selectCell({rowIdx: 0, idx: 0}, false);
+        }
+      });
+    }
+    return props.elm !== elm || props.row !== row;
+  }
+
   value_change = (obj, flds) => {
-    if(obj instanceof $p.CatCharacteristicsGlass_specificationRow && 'inset' in flds) {
-      const {project} = this.props.elm;
-      project && project.register_change(true);
+    if(obj instanceof $p.CatCharacteristicsGlass_specificationRow && ('inset' in flds || 'dop' in flds)) {
+      reflect(this.props.elm);
+      this.forceUpdate();
     }
   };
 
@@ -68,24 +94,77 @@ export default class GlassComposite extends React.Component {
   };
 
   handleRemove = () => {
-    const {_grid, props} = this;
+    const {_grid, props: {elm, set_row}} = this;
     if(_grid) {
       const {selected} = _grid.state;
       if(selected && selected.hasOwnProperty('rowIdx')) {
         _grid.handleRemove();
-        props.elm.project.register_change(true);
-        _grid.rowGetter(0) && setTimeout(() => {
-          _grid._grid.selectCell({rowIdx: 0, idx: 0}, false);
-        });
+        reflect(elm);
+        if(_grid.rowGetter(0)) {
+          setTimeout(() => {
+            _grid._grid.selectCell({rowIdx: 0, idx: 0}, false);
+          });
+        }
+        else {
+          set_row(null);
+        }
       }
     }
   };
 
+  handleUp = () => {
+    const {_grid, props: {elm}} = this;
+    if(_grid) {
+      _grid.handleUp();
+      reflect(elm);
+    }
+  };
+
+  handleDown = () => {
+    const {_grid, props: {elm}} = this;
+    if(_grid) {
+      _grid.handleDown();
+      reflect(elm);
+    }
+  };
+
+  handleByInset = () => {
+    const {_grid, props: {elm, set_row}} = this;
+    elm.set_inset(elm.inset, false, true);
+    this.forceUpdate(() => {
+      if(_grid.rowGetter(0)) {
+        setTimeout(() => {
+          _grid._grid.selectCell({rowIdx: 0, idx: 0}, false);
+        });
+      }
+      else {
+        set_row(null);
+      }
+    });
+  };
+
   Toolbar = (props) => {
     const {width} = props;
+    const {_grid, props: {elm, set_row}} = this;
     return <Toolbar disableGutters style={{width: width || '100%'}}>
-      <IconButton key="btn_add" title="Добавить вставку" onClick={this.handleAdd}><AddIcon /></IconButton>
-      <IconButton key="btn_del" title="Удалить строку" onClick={this.handleRemove}><RemoveIcon /></IconButton>
+      <Tip title="Добавить вставку">
+        <IconButton onClick={this.handleAdd}><AddIcon /></IconButton>
+      </Tip>
+      <Tip title="Удалить строку">
+        <IconButton onClick={this.handleRemove}><RemoveIcon /></IconButton>
+      </Tip>
+      <IconButton disabled>|</IconButton>
+      <Tip title="Переместить вверх">
+        <IconButton onClick={this.handleUp}><ArrowUpIcon/></IconButton>
+      </Tip>
+      <Tip title="Переместить вниз">
+        <IconButton onClick={this.handleDown}><ArrowDownIcon/></IconButton>
+      </Tip>
+      <IconButton disabled>|</IconButton>
+      <Tip title="Заполнить по вставке">
+        <IconButton onClick={this.handleByInset}><VerticalAlignBottomIcon/></IconButton>
+      </Tip>
+      <CompositeChains _grid={_grid} elm={elm} set_row={set_row} />
     </Toolbar>;
   };
 
@@ -97,12 +176,12 @@ export default class GlassComposite extends React.Component {
     if(!row && sel && sel.hasOwnProperty('rowIdx')) {
       row = this._grid.rowGetter(sel.rowIdx);
     }
-    this.setState({row});
+    this.props.set_row(row);
   };
 
   render() {
 
-    const {props: {elm}, state: {row}}  = this;
+    const {elm, row}  = this.props;
 
     return <>
       <Bar>Составной пакет</Bar>
@@ -115,13 +194,13 @@ export default class GlassComposite extends React.Component {
             _tabular="glass_specification"
             scheme={this.scheme}
             filter={this.filter}
+            disable_cache
             denyAddDel
-            denyReorder
             Toolbar={this.Toolbar}
             onCellSelected={this.handleCellSelected}
           />
         </div>
-        <GlassLayerProps elm={elm} row={row}/>
+        <GlassLayerProps elm={elm} row={row} inset={row && row.inset}/>
       </>
       :
         <Typography color="error">
@@ -133,4 +212,6 @@ export default class GlassComposite extends React.Component {
 
 GlassComposite.propTypes = {
   elm: PropTypes.object, // элемент составного заполнения
+  row: PropTypes.object, // строка состава
+  set_row: PropTypes.func, // метод
 };

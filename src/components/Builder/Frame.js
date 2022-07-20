@@ -11,11 +11,14 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import {Prompt} from 'react-router-dom';
-import {Resize, ResizeHorizon} from 'metadata-react/Resize';
+import {Resize, ResizeHorizon, ResizeVertical} from 'metadata-react/Resize';
 import Toolbar from './Toolbar';
 import Builder from './Builder';
 import Controls from './Controls';
 import ProductStructure from './ProductStructure';
+import NotiContent from '../Notifications/Content';
+import noti_connect from '../Notifications/connect';
+const FrmCalcOrderObj = React.lazy(() => import('../CalcOrder/FrmObj'));
 
 const styles = ({spacing}) => ({
   canvas: {
@@ -23,6 +26,10 @@ const styles = ({spacing}) => ({
     width: '100%',
     height: '100%',
     backgroundColor: grey[50],
+  },
+  builder: {
+    cursor: 'context-menu',
+    height: '100%',
   },
   title: {
     flexGrow: 1,
@@ -40,15 +47,15 @@ const ltitle = 'Редактор';
 
 class Frame extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props, context) {
+    super(props, context);
     this.state = {
-      ox_opened: false,
       editor: null,
       elm: null,
       layer: null,
       tool: null,
       type: 'root',
+      order: ''
     };
   }
 
@@ -64,15 +71,19 @@ class Frame extends React.Component {
 
   componentWillUnmount() {
     const {editor} = this.state;
-    editor && editor.eve.off({
+    editor?.eve?.off({
       elm_activated: this.elm_activated,
+      coordinates_calculated: this.coordinates_calculated,
+      loaded: this.coordinates_calculated,
     });
   }
 
   registerChild = (editor) => {
-    if(editor !== this.state.editor) {
-      editor && editor.eve.on({
+    if (editor !== this.state.editor) {
+      editor?.eve?.on({
         elm_activated: this.elm_activated,
+        coordinates_calculated: this.coordinates_calculated,
+        loaded: this.coordinates_calculated,
       });
       this.setState({editor});
     }
@@ -108,9 +119,6 @@ class Frame extends React.Component {
     }
   };
 
-  open_ox = () => this.setState({ox_opened: true});
-  close_ox = () => this.setState({ox_opened: false});
-
   /**
    * проверка, можно ли покидать страницу
    * @return {String|Boolean}
@@ -129,35 +137,41 @@ class Frame extends React.Component {
   };
 
   elm_activated = (elm) => {
-    const {selected_elements} = elm.project;
-    if(selected_elements.length === 2) {
-      this.tree_select({type: 'pair', elm: selected_elements});
+    const {Contour} = this.state.editor.constructor;
+    if(!elm) {
+      this.tree_select({type: 'root', elm});
     }
-    else if(selected_elements.length > 2) {
-      this.tree_select({type: 'grp', elm: selected_elements});
+    else if(elm instanceof Contour) {
+      this.tree_select({type: 'layer', layer: elm, elm: null});
     }
     else {
-      this.tree_select({type: 'elm', elm});
+      const {selected_elements} = elm.project;
+      if(selected_elements.length === 2) {
+        this.tree_select({type: 'pair', elm: selected_elements});
+      }
+      else if(selected_elements.length > 2) {
+        this.tree_select({type: 'grp', elm: selected_elements});
+      }
+      else {
+        this.tree_select({type: 'elm', elm});
+      }
     }
   };
 
   render() {
-    const {
-      props: {classes, match},
-      state: {editor, elm, layer, tool, type},
-    } = this;
+    const {props: {classes, match}, state: {editor, noti, elm, layer, tool, type, order, sketchView}} = this;
     const width = innerWidth;
 
     return <>
-      <Prompt when message={this.prompt} />
+      <Prompt when message={this.prompt}/>
       {editor && <Toolbar
         classes={classes}
         editor={editor}
         handleClose={this.handleClose}
         openTemplate={this.openTemplate}
-        open_ox={this.open_ox}
+        noti={noti}
       />}
-      <div style={{position: 'relative', height: 'calc(100vh - 98px)'}}>
+      <div style={{position: 'relative', height: 'calc(100vh - 49px)'}}>
         <Resize handleWidth="6px" handleColor={grey[200]} onResizeStop={this.resizeStop} onResizeWindow={this.resizeStop}>
           <ResizeHorizon width={`${(width / 6).toFixed()}px`} minWidth="200px">
             {editor ?
@@ -197,9 +211,8 @@ class Frame extends React.Component {
 Frame.propTypes = {
   handleIfaceState: PropTypes.func.isRequired,
   handleNavigate: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   title: PropTypes.string,
 };
 
-export default withStyles(styles)(Frame);
+export default withStyles(styles)(noti_connect(Frame));

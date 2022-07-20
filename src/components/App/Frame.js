@@ -18,6 +18,16 @@ import items, {item_props, path} from './menu_items'; // массив элеме
 // основной layout
 class Frame extends React.Component {
 
+  // componentDidMount() {
+  //   this.props.history.listen(({ ...args }) => {
+  //     // this is called whenever new locations come in
+  //     // the action is POP, PUSH, or REPLACE
+  //     if(args === 'POP') {
+  //       this.forceUpdate();
+  //     }
+  //   });
+  // }
+
   handleDialogClose(name) {
     this.props.handleIfaceState({component: '', name, value: {open: false}});
   }
@@ -34,7 +44,7 @@ class Frame extends React.Component {
     const iprops = item_props();
 
     const wraper = (Component, routeProps) => {
-      return <Component {...props} {...routeProps}/>;
+      return <Component {...props} {...routeProps} iprops={iprops} />;
     };
 
     return <>
@@ -47,7 +57,7 @@ class Frame extends React.Component {
           <Route path={`${path('builder')}/:ref([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})`}
                  render={(props) => wraper(Builder, props)}/>
           <Route path={path('templates')} render={(props) => wraper(Templates, props)}/>
-          {/*<Route path={path('login')} render={(props) => <Login {...props} {...auth_props} />}/>*/}
+          <Route path={path('login')} render={(props) => wraper(DataRoute, props)}/>
           <Route path={path('settings')} render={(props) => wraper(Settings, props)}/>
           <Route path={`${path('')}:area(doc|cat|ireg|cch|rep).:name`} render={(props) => wraper(DataRoute, props)}/>
           <Route render={(props) => wraper(MarkdownRoute, props)}/>

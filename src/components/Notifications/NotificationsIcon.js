@@ -53,8 +53,8 @@ function Icon({title, onClick, count, open, classes}) {
 
 Icon.propTypes = {
   title: PropTypes.string,
-  count: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired,
+  count: PropTypes.number,
+  onClick: PropTypes.func,
 };
 
 export default withStyles(styles)(Icon);

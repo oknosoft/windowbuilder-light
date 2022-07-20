@@ -156,9 +156,6 @@ class Struct extends BaseItem {
 
     this.children.push(new Insets(project, this));
 
-    const order = new BaseItem(`Заказ ${calc_order.number_doc}`, 'order', 'icon_order', calc_order, this);
-    this.children.push(order);
-
     const settings = new BaseItem(`Настройки`, 'settings', 'icon_gear', ox, this);
     this.children.push(settings);
 

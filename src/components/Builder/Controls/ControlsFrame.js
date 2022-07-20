@@ -4,11 +4,23 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import {withStyles} from '@material-ui/core/styles';
+
 import ProductProps from './ProductProps';
 import LayerProps from './LayerProps';
 import ElmProps from './ElmProps';
+import ElmInsets from './ElmInsets';
 import GrpProps from './GrpProps';
 import PairProps from './PairProps';
+import GlassProps from './GlassProps';
+import OrderProps from './OrderProps';
+import BProps from './BProps';
+
+const styles = (theme) => ({
+  root: {
+    paddingLeft: theme.spacing() / 2,
+  },
+});
 
 class ControlsFrame extends React.Component {
 
@@ -23,7 +35,7 @@ class ControlsFrame extends React.Component {
       scheme_changed: this.scheme_changed,
       loaded: this.scheme_changed,
       set_inset: this.set_inset,
-      coordinates_calculated: this.coordinates_calculated,
+      //coordinates_calculated: this.coordinates_calculated,
     });
     project._dp._manager.on('update', this.dp_listener);
   }
@@ -39,7 +51,7 @@ class ControlsFrame extends React.Component {
       scheme_changed: this.scheme_changed,
       loaded: this.scheme_changed,
       set_inset: this.set_inset,
-      coordinates_calculated: this.coordinates_calculated,
+      //coordinates_calculated: this.coordinates_calculated,
     });
     project && project._dp._manager.off('update', this.dp_listener);
   }
@@ -51,7 +63,7 @@ class ControlsFrame extends React.Component {
 
   // при активации инструмента
   tool_activated = () => {
-
+    this.forceUpdate();
   };
 
   // при смене фурнитуры
@@ -89,29 +101,60 @@ class ControlsFrame extends React.Component {
   };
 
   render() {
-    const {editor: {project}, type, elm, layer} = this.props;
-    const {_dp, ox} = project || {};
-    switch (type) {
-    case 'elm':
-      return <ElmProps key={`e-${elm.elm}`} elm={elm} ox={ox}/>;
-    case 'pair':
-      return <PairProps key={`e-${elm.elm}`} elm={elm}/>;
-    case 'grp':
-      return <GrpProps key={`e-${elm.elm}`} elm={elm}/>;
-    case 'layer':
-      return <LayerProps key={`l-${layer.cnstr}`} ox={ox} layer={layer}/>;
-    default:
-      return <ProductProps _dp={_dp} ox={ox}/>;
+    const {type, classes, ...other} = this.props;
+    const {editor: {project, tool}, elm} = other;
+    const {ToolWnd} = tool;
+    let panel;
+    if(ToolWnd) {
+      panel = <ToolWnd {...other}/>;
     }
+    else {
+      other.ox = project ? project.ox : null;
+      const {Filling} = $p.EditorInvisible;
+
+      switch (type) {
+      case 'elm':
+        panel = elm !== null ? <ElmProps {...other}/> : ``;
+        break;
+      case 'pair':
+        panel = elm.every((elm) => elm instanceof Filling) ? <GlassProps {...other}/> : <PairProps {...other}/>;
+        break;
+      case 'grp':
+        panel = elm.every((elm) => elm instanceof Filling) ? <GlassProps {...other}/> : <GrpProps {...other}/>;
+        break;
+      case 'layer':
+        panel = <LayerProps {...other}/>;
+        break;
+      case 'order':
+        panel = <OrderProps {...other}/>;
+        break;
+      case 'settings':
+        panel = <BProps {...other}/>;
+        break;
+      case 'ins':
+        if(!other.elm) {
+          other.elm = new project.constructor.FakePrmElm(project);
+        }
+        panel = <ElmInsets {...other}/>;
+        break;
+      default:
+        panel = <ProductProps {...other}/>;
+      }
+    }
+
+    return <div className={classes.root}>
+        {panel}
+     </div>;
   }
 }
 
 ControlsFrame.propTypes = {
   editor: PropTypes.object.isRequired,
   type: PropTypes.string,
-  elm: PropTypes.object,
+  elm: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   layer: PropTypes.object,
+  classes: PropTypes.object,
 };
 
-export default ControlsFrame;
+export default withStyles(styles)(ControlsFrame);
 

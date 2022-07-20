@@ -4,7 +4,8 @@
  * предопределенные зоны
  */
 export const predefined = {
-  'localhost': {
+  'localhost:3027': {
+    zone: 27,
     log_level: 'warn',
     //keys: {google: ''},
   },

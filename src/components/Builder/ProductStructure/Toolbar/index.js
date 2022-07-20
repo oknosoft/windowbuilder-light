@@ -6,7 +6,6 @@ import LayerToolbar from './LayerToolbar';
 import PairToolbar from './PairToolbar';
 import ProfileToolbar from './ProfileToolbar';
 import RootToolbar from './RootToolbar';
-import OrderToolbar from './OrderToolbar';
 
 export default function Toolbar(props) {
   const {editor: {project}, type, elm, layer} = props;
@@ -21,8 +20,6 @@ export default function Toolbar(props) {
     return <PairToolbar {...props}/>;
   case 'layer':
     return <LayerToolbar {...props}/>;
-  case 'order':
-    return <OrderToolbar {...props}/>;
   default:
     return <RootToolbar {...props}/>;
   }
