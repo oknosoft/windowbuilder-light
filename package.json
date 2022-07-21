@@ -27,10 +27,10 @@
   "homepage": "https://light.oknosoft.ru/",
   "proxy1": "https://develop.ecookna.ru/",
   "proxy2": "https://dvlp.ecookna.ru/",
-  "proxy2": "https://brusnika.oknosoft.ru/",
+  "proxy": "https://brusnika.oknosoft.ru/",
   "proxy4": "https://info.tmk-online.ru/",
   "proxy5": "http://localhost:3016/",
-  "proxy": "http://192.168.9.27:3016/",
+  "proxy6": "http://192.168.9.27:3016/",
   "dependencies": {
     "deep-diff": "^1.0.2",
     "history": "^4.10",

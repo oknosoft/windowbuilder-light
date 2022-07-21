@@ -60,11 +60,11 @@ const actions = [
   //{css: 'tb_icon-arrow-white', name: 'Элемент и узел', id: 'select_node'},
   {css: 'tb_icon-hand', name: 'Панорама', id: 'pan'},
   {css: 'tb_cursor-pen-freehand', name: 'Добавить профиль', id: 'pen'},
-  // {css: 'tb_cursor-lay-impost', name: 'Раскладка, импосты', id: 'lay_impost'},
-  // {css: 'tb_cursor-arc-r', name: 'Арка', id: 'arc'},
+  {css: 'tb_cursor-lay-impost', name: 'Раскладка, импосты', id: 'lay_impost'},
+  {css: 'tb_cursor-arc-r', name: 'Арка', id: 'arc'},
   {css: 'tb_cursor-cut', name: 'Тип соединения', id: 'cut'},
-  // {css: 'tb_ruler_ui', name: 'Позиция и сдвиг'},
-  // {css: 'tb_grid', name: 'Координаты'},
+  {css: 'tb_ruler_ui', name: 'Позиция и сдвиг'},
+  {css: 'tb_grid', name: 'Координаты'},
   {css: 'tb_text', name: 'Текст', id: 'text'},
 ];
 

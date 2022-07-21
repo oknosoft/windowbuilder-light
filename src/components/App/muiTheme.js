@@ -22,16 +22,21 @@ const theme = createTheme({
 
 
   overrides: {
-    // MuiToolbar: {
-    //   root: {
-    //     minHeight: 48,
-    //   },
-    // },
+    MuiIconButton: {
+      root: {
+        padding: 11,
+      }
+    },
     MuiAppBar: {
       root: {
         boxShadow: 'none',
       }
     },
+    // MuiToolbar: {
+    //   root: {
+    //     minHeight: 48,
+    //   },
+    // },
   },
 
 });
