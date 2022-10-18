@@ -2,7 +2,7 @@
  * Индивидуальная форма отчета
  */
 
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -11,14 +11,7 @@ import FrmReport from 'metadata-react/FrmReport';
 
 const _mgr = $p.rep.materials_demand;
 
-class RepMaterialsDemand extends Component {
-
-  static propTypes = {
-    _obj: PropTypes.object,
-    location: PropTypes.object,
-    handleNavigate: PropTypes.func,
-
-  };
+class RepMaterialsDemand extends React.Component {
 
   constructor(props, context) {
     super(props, context);
@@ -58,7 +51,6 @@ class RepMaterialsDemand extends Component {
   }
 
   componentDidMount() {
-    const {location} = this.props;
     let {order: ref} = $p.utils.prm();
     if(!ref && location.pathname.startsWith('/builder')) {
       const ox = $p.cat.characteristics.get(location.pathname.substr(9));
@@ -97,26 +89,21 @@ class RepMaterialsDemand extends Component {
   }
 
   handleMenuOpen = (event) => {
-    //this.setState({menuOpen: true, anchorEl: event.currentTarget}, () => this._report && this._report.forceUpdate());
+    this.setState({menuOpen: true, anchorEl: event.currentTarget});
   };
 
   handleMenuClose = () => {
-    //this.setState({menuOpen: false}, () => this._report && this._report.forceUpdate());
+    this.setState({menuOpen: false}, () => this._report && this._report.forceUpdate());
   };
 
   handleList = () => {
-    // const {ref, state} = this.calcOrders(true);
-    // if(ref && state){
-    //   this.props.handleNavigate(`/?ref=${ref}&state_filter=${state}`);
-    // }
-    // else{
-    //   this.props.handleNavigate(`/`);
-    // }
+    const {ref} = this.calcOrders(true);
+    this.props.handleNavigate(`/doc.calc_order/list?ref=${ref || ''}`);
   };
 
   handleObj = () => {
-    // const {ref} = this.calcOrders(true);
-    // this.props.handleNavigate(`/doc.calc_order/${ref || 'list'}`);
+    const {ref} = this.calcOrders(true);
+    this.props.handleNavigate(`/doc.calc_order/${ref || 'list'}`);
   };
 
   ToolbarExt = () => {
@@ -151,6 +138,12 @@ class RepMaterialsDemand extends Component {
     />;
   }
 }
+
+RepMaterialsDemand.propTypes = {
+  _obj: PropTypes.object,
+  handleNavigate: PropTypes.func,
+};
+
 
 RepMaterialsDemand.rname = 'RepMaterialsDemand';
 

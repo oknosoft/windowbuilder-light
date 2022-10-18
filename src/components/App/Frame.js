@@ -13,7 +13,7 @@ import Builder from '../Builder';                   // графический р
 
 import withStyles from './styles';
 
-import items, {item_props, path} from './menu_items'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
+import items, {item_props, path} from './menu'; // массив элементов меню и метод для вычисления need_meta, need_user по location.pathname
 
 // основной layout
 class Frame extends React.Component {

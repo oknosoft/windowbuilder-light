@@ -48,7 +48,7 @@ class NotiList extends Component {
     </TableRow>;
   };
 
-  handleChangePage = (event, page) => {
+  handlePageChange = (event, page) => {
     this.setState({ page });
   };
 
@@ -71,8 +71,8 @@ class NotiList extends Component {
         count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
-        onChangePage={this.handleChangePage}
-        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+        onPageChange={this.handlePageChange}
+        onRowsPerPageChange={this.handleChangeRowsPerPage}
       />
     </div>;
   }

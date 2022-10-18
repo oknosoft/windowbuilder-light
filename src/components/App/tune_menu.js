@@ -6,7 +6,7 @@
  * Created by Evgeniy Malyarov on 27.05.2020.
  */
 
-import menu_items, {path} from './menu_items';
+import menu_items, {path} from './menu';
 
 const role_items = {
   ИзменениеТехнологическойНСИ: {

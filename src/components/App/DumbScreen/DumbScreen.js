@@ -6,7 +6,7 @@ import loginStyles from 'metadata-react/FrmLogin/Proxy/styles';
 const Login = loginStyles(FrmLogin);
 
 import Repl from './Repl';
-import items from '../menu_items';
+import items from '../menu';
 import Header from '../Header';
 
 

@@ -28,9 +28,6 @@ function Quantity({row, classes}) {
     row.quantity++;
   };
 
-  const prevent = event => {
-    event.preventDefault();
-  };
 
   return <TextField
     className={classes.root}
@@ -46,7 +43,7 @@ function Quantity({row, classes}) {
           <IconButton
             size="small"
             onClick={dec}
-            onMouseDown={prevent}
+            onMouseDown={$p.ui.prevent}
           >
             <RemoveIcon />
           </IconButton>
@@ -57,7 +54,7 @@ function Quantity({row, classes}) {
           <IconButton
             size="small"
             onClick={inc}
-            onMouseDown={prevent}
+            onMouseDown={$p.ui.prevent}
           >
             <AddIcon />
           </IconButton>

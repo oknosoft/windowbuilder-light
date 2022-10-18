@@ -15,7 +15,7 @@ import {Tabs, Tab} from 'metadata-react/App/AntTabs';
 import DataObjToolbar from './DataObjToolbar';
 import OrderRow from './OrderRow';
 import Parametric from './Parametric';
-import {prm} from '../../App/menu_items';
+import {prm} from '../../App/menu';
 
 class CalcOrderObj extends DataObj {
 

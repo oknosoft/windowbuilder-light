@@ -15,7 +15,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {prevent} from 'metadata-react/DataField/FieldInfinit/PaperComponent';
 
 import withStyles, {extClasses} from 'metadata-react/DataField/stylesPropertyGrid';
 
@@ -24,7 +23,7 @@ const _fld = 'inset';
 const onKeyDown = (evt) => {
   const {key} = evt;
   if(['ArrowUp', 'ArrowDown'].includes(key)) {
-    prevent(evt);
+    $p.ui.prevent(evt);
   }
 };
 

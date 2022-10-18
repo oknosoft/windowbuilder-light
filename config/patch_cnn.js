@@ -9,9 +9,14 @@ export const predefined = {
     log_level: 'warn',
     //keys: {google: ''},
   },
+  'localhost:3010': {
+    zone: 10,
+    log_level: 'warn',
+    //keys: {google: ''},
+  },
   'ecookna.': {
-    zone: 21,
-    host: 'https://zakaz.ecookna.ru/',
+    zone: 10,
+    host: 'https://develop.ecookna.ru/',
     splash: {css: 'splash21', title: false},
   },
   'brusnika.': {

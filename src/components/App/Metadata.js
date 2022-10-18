@@ -17,7 +17,7 @@ import Loading from './DumbScreen/DumbScreen';
 import {actions, init_state} from './actions';      // события метадаты
 import theme from './muiTheme';                     // тема material=ui
 import {lazy} from './lazy';
-import {item_props} from './menu_items';                        // конструкторы для контекста
+import {item_props} from './menu';                        // конструкторы для контекста
 
 const history = createBrowserHistory();
 

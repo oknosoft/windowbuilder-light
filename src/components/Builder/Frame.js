@@ -41,6 +41,13 @@ const styles = ({spacing}) => ({
     paddingLeft: spacing(),
     paddingRight: spacing(),
   },
+  sketch_view: {
+    position: 'absolute',
+    left: 8,
+    top: 8,
+    userSelect: 'none',
+    pointerEvents: 'none',
+  }
 });
 
 const ltitle = 'Редактор';
@@ -55,7 +62,8 @@ class Frame extends React.Component {
       layer: null,
       tool: null,
       type: 'root',
-      order: ''
+      order: '',
+      sketch_view: '',
     };
   }
 
@@ -75,6 +83,7 @@ class Frame extends React.Component {
       elm_activated: this.elm_activated,
       coordinates_calculated: this.coordinates_calculated,
       loaded: this.coordinates_calculated,
+      mirror_change: this.mirror_change,
     });
   }
 
@@ -84,6 +93,7 @@ class Frame extends React.Component {
         elm_activated: this.elm_activated,
         coordinates_calculated: this.coordinates_calculated,
         loaded: this.coordinates_calculated,
+        mirror_change: this.mirror_change,
       });
       this.setState({editor});
     }
@@ -100,9 +110,9 @@ class Frame extends React.Component {
 
   openTemplate = () => {
     const {state: {editor}, props: {handleNavigate}} = this;
-    if(editor) {
+    if (editor) {
       const {ox} = editor.project;
-      if(ox.empty() || ox.calc_order.empty()) {
+      if (ox.empty() || ox.calc_order.empty()) {
         $p.ui.dialogs.alert({text: `Пустая ссылка изделия или заказа`, title: 'Ошибка данных'});
       }
       else {
@@ -113,7 +123,7 @@ class Frame extends React.Component {
 
   resizeStop = (inf) => {
     const {editor} = this.state;
-    if(editor) {
+    if (editor) {
       const {offsetWidth, offsetHeight} = editor.view.element.parentNode;
       editor.project.resize_canvas(offsetWidth, offsetHeight);
     }
@@ -125,7 +135,7 @@ class Frame extends React.Component {
    */
   prompt = (loc) => {
     const {editor} = this.state;
-    if(!editor || !editor.project || loc.pathname.includes('templates')) {
+    if (!editor || !editor.project || loc.pathname.includes('templates')) {
       return true;
     }
     const {ox} = editor.project;
@@ -193,13 +203,15 @@ class Frame extends React.Component {
             />
           </ResizeHorizon>
           <ResizeHorizon overflow="hidden auto" width={`${(width * 3 / 12).toFixed()}px`} minWidth="200px">
-            {editor ? <Controls
-              editor={editor}
-              type={type}
-              elm={elm}
-              layer={layer}
-            /> :
-              'Загрузка...'
+            {noti.open ? <NotiContent {...noti}/> :
+              (editor ? <Controls
+                editor={editor}
+                type={type}
+                elm={elm}
+                layer={layer}
+                tree_select={this.tree_select}
+              /> :
+              'Загрузка...')
             }
           </ResizeHorizon>
         </Resize>

@@ -6,7 +6,7 @@ import {styles} from 'metadata-react/Markdown/MarkdownDocsLight';
 
 const useStyles = makeStyles(styles);
 
-import {path, prm} from '../App/menu_items'; // метод для вычисления base path
+import {path, prm} from '../App/menu'; // метод для вычисления base path
 
 // 404
 import NotFound from './NotFound';

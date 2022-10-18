@@ -64,7 +64,7 @@ export function actions(elm) {
         });
     })
     .then(() => {
-      const {adapters: {pouch}, job_prm, md, ui} = $p;
+      const {classes: {PouchDB}, adapters: {pouch}, job_prm, md, ui, cat: {users}} = $p;
       elm.setState({common_loaded: true});
       const {handleNavigate, handleIfaceState} = elm;
       ui.dialogs.init({handleIfaceState, handleNavigate, lazy});
@@ -85,6 +85,10 @@ export function actions(elm) {
               try_log_in: false,
               log_error: '',
             }});
+
+          const {remote, fetch} = pouch;
+          remote.ram = new PouchDB(pouch.dbpath('ram'), {skip_setup: true, owner: pouch, fetch});
+
           return load_ram($p)
             .then(() => {
               const {roles} = $p.current_user || {};

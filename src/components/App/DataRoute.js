@@ -8,7 +8,7 @@ import FrmLogin from 'metadata-react/FrmLogin/Proxy/FrmLogin';
 import NotFound from '../Markdown/NotFound';
 
 /* eslint-disable-next-line */
-import {path, prm} from './menu_items';             // метод для вычисления base path
+import {path, prm} from './menu';             // метод для вычисления base path
 import {lazy} from './lazy';
 
 
@@ -63,11 +63,10 @@ class DataRoute extends React.Component {
       );
     }
 
-    const dx = (windowWidth > 1280 && !disablePermanent) ? 280 : 0;
 
     const sizes = {
       height: windowHeight > 480 ? windowHeight - 52 : 428,
-      width: windowWidth > 800 ? windowWidth - (windowHeight < 480 ? 20 : dx) : 800,
+      width: windowWidth > 800 ? windowWidth : 800,
       windowHeight,
       windowWidth,
     };
@@ -99,7 +98,7 @@ class DataRoute extends React.Component {
 
     if(area === 'rep') {
       const Component = _mgr.FrmObj || lazy.FrmReport;
-      return <Component _mgr={_mgr} _acl={_acl} match={match} {...sizes} />;
+      return <Component _mgr={_mgr} _acl={_acl} match={match} title={title} {...handlers} {...sizes} />;
     }
 
     return <Switch>

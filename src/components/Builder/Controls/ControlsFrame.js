@@ -58,7 +58,7 @@ class ControlsFrame extends React.Component {
 
   // при активации слоя
   layer_activated = () => {
-
+    this.forceUpdate();
   };
 
   // при активации инструмента

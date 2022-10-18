@@ -61,7 +61,7 @@ export default function connect(Superclass) {
       const {BuilderElement} = project._scope.constructor;
       const rows = [];
       const set = new Set();
-      const {noti} = this.state;
+      const {noti, sketch_view} = this.state;
       project.ox.specification.forEach((row) => {
         const {nom} = row;
         if([ОшибкаКритическая, ОшибкаИнфо].includes(nom.elm_type)) {
@@ -74,8 +74,11 @@ export default function connect(Superclass) {
           set.add(nom);
         }
       });
-      if(noti.count !== set.size || rows.length || noti?.rows?.length) {
-        this.setState({noti: Object.assign({}, noti, {count: set.size, rows})});
+      if(noti.count !== set.size || rows.length || noti?.rows?.length || sketch_view !== project.sketch_view) {
+        this.setState({
+          noti: Object.assign({}, noti, {count: set.size, rows}),
+          sketch_view: project.sketch_view,
+        });
       }
     };
 
