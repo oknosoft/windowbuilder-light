@@ -65,9 +65,7 @@ export default function select_node(Editor) {
 
     deactivate() {
       this._scope.clear_selection_bounds();
-      if (this.profile) {
-        delete this.profile;
-      }
+      delete this.profile;
     }
 
     mousedown(event) {
@@ -82,7 +80,7 @@ export default function select_node(Editor) {
 
       this.sz_fin();
 
-      if(hitItem && !alt) {
+      if (hitItem && !alt) {
 
         if(hitItem.item instanceof PointText) {
           if(hitItem.item.parent instanceof DimensionLine) {
@@ -92,11 +90,11 @@ export default function select_node(Editor) {
         }
 
         let item = hitItem.item.parent;
-        if(space && item.nearest && item.nearest()) {
+        if (space && item.nearest && item.nearest()) {
           item = item.nearest();
         }
 
-        if(item && (hitItem.type == 'fill' || hitItem.type == 'stroke')) {
+        if (item && (hitItem.type == 'fill' || hitItem.type == 'stroke')) {
           if(shift) {
             if(item.selected) {
               deselect.push({elm: item.elm, node: null, shift});
@@ -109,15 +107,15 @@ export default function select_node(Editor) {
             deselect.push({elm: null, shift});
             select.push({elm: item.elm, node: null, shift});
           }
-          if(select.length) {
+          if (select.length) {
             this.mode = consts.move_shapes;
             this.mouseStartPos = event.point.clone();
           }
 
         }
-        else if(hitItem.type == 'segment') {
+        else if (hitItem.type == 'segment') {
           const node = item.generatrix.firstSegment.point.is_nearest(event.point, true) ? 'b' : 'e';
-          if(shift) {
+          if (shift) {
             if(hitItem.segment.selected) {
               deselect.push({elm: item.elm, node, shift});
             }
@@ -126,17 +124,17 @@ export default function select_node(Editor) {
             }
           }
           else {
-            if(!hitItem.segment.selected) {
+            if (!hitItem.segment.selected){
               deselect.push({elm: null, shift});
               select.push({elm: item.elm, node, shift});
             }
           }
-          if(select.length) {
+          if (select.length) {
             this.mode = consts.move_points;
             this.mouseStartPos = event.point.clone();
           }
         }
-        else if(hitItem.type == 'handle-in' || hitItem.type == 'handle-out') {
+        else if (hitItem.type == 'handle-in' || hitItem.type == 'handle-out') {
           this.mode = consts.move_handle;
           this.mouseStartPos = event.point.clone();
           this.originalHandleIn = hitItem.segment.handleIn.clone();
@@ -179,7 +177,7 @@ export default function select_node(Editor) {
 
       deselect.length && this._scope.cmd('deselect', deselect);
       select.length && this._scope.cmd('select', select);
-      this.originalContent = this._scope.capture_selection_state();
+      //this.originalContent = this._scope.capture_selection_state();
     }
 
     mouseup(event) {
@@ -191,43 +189,43 @@ export default function select_node(Editor) {
         activeElement.blur();
       }
 
-      if(this.mode == consts.move_shapes) {
-        if(this.changed) {
-          // const vertexes = mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+      if (this.mode == consts.move_shapes) {
+        if (this.changed) {
+          const vertexes = mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
           //_scope.restore_selection_state(this.originalContent);
-          // mover.move_shapes(vertexes);
+          mover.move_shapes(vertexes);
           project.redraw();
           _scope.clear_selection_bounds();
           //undo.snapshot("Move Shapes");
         }
       }
-      else if(this.mode == consts.move_points) {
-        if(this.changed) {
-          // const delta = mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+      else if (this.mode == consts.move_points) {
+        if (this.changed) {
+          const delta = mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
           //_scope.restore_selection_state(this.originalContent);
-          // project.move_points(delta);
+          project.move_points(delta);
           project.redraw();
           project.deselect_all_points();
           //_scope.purge_selection();
           //undo.snapshot("Move Points");
         }
       }
-      else if(this.mode == consts.move_handle) {
-        if(this.changed) {
+      else if (this.mode == consts.move_handle) {
+        if (this.changed) {
           _scope.clear_selection_bounds();
           //undo.snapshot("Move Handle");
         }
       }
-      else if(this.mode == 'box-select') {
+      else if (this.mode == 'box-select') {
 
         const box = new Rectangle(this.mouseStartPos, event.point);
 
-        if(!event.modifiers.shift) {
+        if (!event.modifiers.shift){
           project.deselectAll();
         }
 
         // при зажатом ctrl добавляем элемент иначе - узел
-        if(event.modifiers.control) {
+        if (event.modifiers.control) {
 
           const profiles = [];
           _scope.paths_intersecting_rect(box).forEach((path) => {
@@ -245,7 +243,7 @@ export default function select_node(Editor) {
         else {
 
           const selectedSegments = _scope.segments_in_rect(box);
-          if(selectedSegments.length > 0) {
+          if (selectedSegments.length > 0) {
             for (let i = 0; i < selectedSegments.length; i++) {
               selectedSegments[i].selected = !selectedSegments[i].selected;
             }
@@ -272,38 +270,30 @@ export default function select_node(Editor) {
       if (this.hitItem) {
         if (this.hitItem.item.selected || (this.hitItem.item.parent && this.hitItem.item.parent.selected)) {
           _scope.canvas_cursor('cursor-arrow-small');
-        } else {
+        }
+        else {
           _scope.canvas_cursor('cursor-arrow-white-shape');
         }
       }
     }
 
     mousedrag(event) {
-      const {project, consts} = this._scope;
+
+      const {_scope, project, mover} = this;
+      const {consts} = _scope;
 
       this.changed = true;
 
       if (this.mode == consts.move_shapes) {
-        this._scope.canvas_cursor('cursor-arrow-small');
-
-        let delta = event.point.subtract(this.mouseStartPos);
-        if (!event.modifiers.shift) {
-          delta = delta.snap_to_angle(Math.PI * 2 / 4);
-        }
-        this._scope.restore_selection_state(this.originalContent);
-        project.move_points(delta, true);
-        this._scope.clear_selection_bounds();
-      } else if (this.mode == consts.move_points) {
-        this._scope.canvas_cursor('cursor-arrow-small');
-
-        let delta = event.point.subtract(this.mouseStartPos);
-        if (!event.modifiers.shift) {
-          delta = delta.snap_to_angle(Math.PI * 2 / 4);
-        }
-        this._scope.restore_selection_state(this.originalContent);
-        project.move_points(delta);
-        this._scope.purge_selection();
-      } else if (this.mode == consts.move_handle) {
+        _scope.canvas_cursor('cursor-arrow-small');
+        mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+      }
+      else if (this.mode == consts.move_points) {
+        _scope.canvas_cursor('cursor-arrow-small');
+        //_scope.purge_selection();
+        mover.snap_to_edges({start: this.mouseStartPos, mode: this.mode, event});
+      }
+      else if (this.mode == consts.move_handle) {
 
         const delta = event.point.subtract(this.mouseStartPos);
         const noti = {
@@ -317,7 +307,8 @@ export default function select_node(Editor) {
 
           this.hitItem.segment.handleOut = handlePos;
           this.hitItem.segment.handleIn = handlePos.normalize(-this.originalHandleIn.length);
-        } else {
+        }
+        else {
           let handlePos = this.originalHandleIn.add(delta);
 
           this.hitItem.segment.handleIn = handlePos;
@@ -327,9 +318,10 @@ export default function select_node(Editor) {
         noti.profiles[0].rays.clear();
         noti.profiles[0].layer.notify(noti);
 
-        this._scope.purge_selection();
-      } else if (this.mode == 'box-select') {
-        this._scope.drag_rect(this.mouseStartPos, event.point);
+        _scope.purge_selection();
+      }
+      else if (this.mode == 'box-select') {
+        _scope.drag_rect(this.mouseStartPos, event.point);
       }
     }
 
@@ -583,7 +575,8 @@ export default function select_node(Editor) {
             if (hit.item.parent.generatrix === hit.item) {
               this.hitItem = hit;
             }
-          } else {
+          }
+          else {
             this.hitItem = hit;
           }
         }
@@ -608,7 +601,8 @@ export default function select_node(Editor) {
         else if (hitItem.type == 'segment' || hitItem.type == 'handle-in' || hitItem.type == 'handle-out') {
           if (hitItem.segment.selected) {
             canvas_cursor('cursor-arrow-small-point');
-          } else {
+          }
+          else {
             canvas_cursor('cursor-arrow-white-point');
           }
         }
@@ -660,6 +654,7 @@ export default function select_node(Editor) {
         };
         this.sz_fin();
         profile.sizes_wnd(attr);
+        // TODO:?
         const {elm1, elm2} = profile._attr;
         if(!elm1 && !elm2) {
           this._scope.deffered_recalc();
