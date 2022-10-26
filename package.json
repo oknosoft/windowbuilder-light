@@ -37,11 +37,11 @@
     "history": "^4.10",
     "@turf/points-within-polygon": "^6.5",
     "md5-file": "^5.0",
-    "metadata-react": "2.0.30-beta.11",
-    "metadata-superlogin": "2.0.30-beta.11",
+    "metadata-react": "2.0.30-beta.12",
+    "metadata-superlogin": "2.0.30-beta.12",
     "react-router-dom": "5.2.0",
     "react-treebeard": "^3.2.4",
-    "wb-core": "github:oknosoft/windowbuilder-core#7656ca87f22d42d0ad4c7d5915e8e75283b1a478",
+    "wb-core": "github:oknosoft/windowbuilder-core#90050eb062d314d6fe5703d4400ad91daab1f3a8",
     "wb-forms": "github:oknosoft/windowbuilder-forms#1e7330ec99adb5a754811ab8aedcf080dcbcd27f"
   },
   "devDependencies": {
