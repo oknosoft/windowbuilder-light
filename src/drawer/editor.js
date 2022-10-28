@@ -69,7 +69,7 @@ export default function ($p) {
     deffered_recalc() {
       const {project} = this;
       clearTimeout(this._recalc_timer);
-      project.register_change(true);
+      project.register_change();
       this._recalc_timer = setTimeout(() => {
         project.zoom_fit();
         project.save_coordinates({});

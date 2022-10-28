@@ -41,7 +41,7 @@
     "metadata-superlogin": "2.0.30-beta.12",
     "react-router-dom": "5.2.0",
     "react-treebeard": "^3.2.4",
-    "wb-core": "github:oknosoft/windowbuilder-core#08d489fb0e4a373c248cbc677f1ed8520e057309",
+    "wb-core": "github:oknosoft/windowbuilder-core#405f15f12e27037f33689a300b90c2d1b257835e",
     "wb-forms": "github:oknosoft/windowbuilder-forms#1e7330ec99adb5a754811ab8aedcf080dcbcd27f"
   },
   "devDependencies": {

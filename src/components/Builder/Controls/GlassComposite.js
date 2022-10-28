@@ -20,7 +20,7 @@ const reflect = ({project, reflect_grp}) => {
     reflect_grp();
   }
   else if(project){
-    project.register_change(true);
+    project.register_change();
   }
 };
 

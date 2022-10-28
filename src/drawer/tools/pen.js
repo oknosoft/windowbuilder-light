@@ -503,6 +503,7 @@ export default function pen (Editor, {enm, msg, dp, cat, utils}) {
           }
 
           this.path = null;
+          this.project.redraw();
 
           if(this.profile.elm_type == enm.elm_types.Рама){
             setTimeout(() => {
@@ -759,7 +760,7 @@ export default function pen (Editor, {enm, msg, dp, cat, utils}) {
           }
 
           if(event.className != "ToolEvent"){
-            project.register_update();
+            project.view.update();
           }
         }
       }

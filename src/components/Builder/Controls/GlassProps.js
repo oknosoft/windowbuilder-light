@@ -39,7 +39,7 @@ function glassGrp(grp) {
             }
           }
           _data._loading = false;
-          target.project.register_change(true);
+          target.project.register_change();
         };
       default:
         return target[prop];

@@ -144,7 +144,7 @@ export default function align(Editor, {enm, msg, ui}) {
         if(profiles.length > 1){
 
           if(changed){
-            this.project.register_change(true);
+            this.project.register_change();
             setTimeout(this.profile_group_align.bind(this, name, profiles), 100);
           }
           else{
@@ -152,7 +152,7 @@ export default function align(Editor, {enm, msg, ui}) {
           }
         }
         else if(changed){
-          this.project.register_change(true);
+          this.project.register_change();
         }
       }
     },

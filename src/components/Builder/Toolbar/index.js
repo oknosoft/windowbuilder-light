@@ -11,17 +11,17 @@ import NotiButton from '../../Notifications/Button';
 export default function BuilderToolbar({editor, handleClose, noti, openTemplate, classes}) {
 
   return <Toolbar disableGutters variant="dense" className={classes.toolbar}>
-    <Tip title="Сохранить изделие и заказ">
+    <Tip title="Сохранить и вернуться в форму заказа">
       <IconButton
         id="SaveRequestBtn"
-        onClick={() => editor.project && editor.project.save_coordinates({save: true, _from_service: true})
-          .then(() => null)
+        onClick={() => editor.project && editor.project.save_coordinates({save: true, close: true})
+          .then(() => handleClose())
         }
       ><i className="fa fa-floppy-o" /></IconButton>
     </Tip>
-    <Tip title="Рассчитать и записать изделие">
+    <Tip title="Рассчитать и записать изделие и заказ">
       <IconButton
-        onClick={() => editor.project && editor.project.save_coordinates({save: true, _from_service: true})}
+        onClick={() => editor.project && editor.project.save_coordinates({save: true})}
       ><i className="fa fa-calculator" /></IconButton>
     </Tip>
     <Tip title="Загрузить из типового блока">
