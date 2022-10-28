@@ -101,8 +101,8 @@ export default class Mover {
         if(edge.profile !== profile) {
           for(const candidate of candidates) {
             if(candidate.profile === edge.profile && !candidate.is_profile_outer(edge)) {
-              const path = edge.profile.generatrix
-                .get_subpath(edge.startVertex.point, candidate.endVertex.point)
+              const base = edge.profile.elm_type.is('Створка') ? edge.profile.rays.outer : edge.profile.generatrix;
+              const path = base.get_subpath(edge.startVertex.point, candidate.endVertex.point)
                 .elongation(-edge.profile.width);
               point = path.getNearestPoint(point);
               delta = point.subtract(start);
@@ -183,7 +183,7 @@ export default class Mover {
    * Возврвщает Map рёбер с координатами вершин
    * @param start
    * @param point
-   * @return {Point}
+   * @return {Map}
    */
   snap_shapes({start, point, delta}) {
     const {Path} = this.editor;
@@ -192,114 +192,181 @@ export default class Mover {
     // элементы двигаем перпендикулярно их образующим и следим за вершинами
     // добавляем delta к узлам, строим через них линию, находим точки на примыкающих - они и будут конечными
 
-    // собираем узлы
-    for(const profile of this.project.selected_profiles()) {
-      const {skeleton, b, e} = profile;
-      // исходные точки
-      const vb = skeleton.vertexByPoint(b);
-      const ve = skeleton.vertexByPoint(e);
-      if(!vertexes.has(vb)) {
-        vertexes.set(vb, []);
+    // группируем по слоям
+    const layers = new Map();
+    for (const profile of this.project.selected_profiles()) {
+      const {layer} = profile;
+      if (!layers.get(layer)) {
+        layers.set(layer, []);
       }
-      if(!vertexes.has(ve)) {
-        vertexes.set(ve, []);
-      }
-      // смещенные точки и линия через них
-      const db = b.add(delta);
-      const de = e.add(delta);
-      const line = new Path({insert: false, segments: [db, de]}).elongation(1000);
-      // map узлов грава и структуры точек
-      vertexes.get(vb).push({skeleton, profile, line, pt: db, ribs: new Map(), points: new Set()});
-      vertexes.get(ve).push({skeleton, profile, line, pt: de, ribs: new Map(), points: new Set()});
-      lines.set(line, {vb, ve, db, de});
+      layers.get(layer).push(profile);
     }
 
-    for(const [line, lv] of lines) {
-      const {vb, ve, db, de} = lv;
-      const {skeleton, profile, ribs, points} = vertexes.get(vb);
-    }
+    for(const [layer, profiles] of layers) {
+      // собираем узлы
+      for(const profile of profiles) {
+        const {skeleton, b, e, elm_type} = profile;
+        // исходные точки
+        const vb = skeleton.vertexByPoint(b);
+        const ve = skeleton.vertexByPoint(e);
+        if(!vertexes.has(vb)) {
+          vertexes.set(vb, []);
+        }
+        if(!vertexes.has(ve)) {
+          vertexes.set(ve, []);
+        }
+        // смещенные точки и линия через них
+        const db = b.add(delta);
+        const de = e.add(delta);
+        const line = new Path({insert: false, segments: [db, de]}).elongation(1000);
+        // map узлов графа и структуры точек
+        vertexes.get(vb).push({skeleton, profile, line, pt: db, ribs: new Map(), points: new Set()});
+        vertexes.get(ve).push({skeleton, profile, line, pt: de, ribs: new Map(), points: new Set()});
+        lines.set(line, {vb, ve, db, de});
+      }
+
+      // извлекаем разрешенные диапазоны из шаблона
+      const tdelta = delta.clone();
+      let li = 200;
+      let lmin = 200;
+      let lmax = 2000;
 
     // анализируем вариант T
-    for(const [vertex, av] of vertexes) {
-      if(!vertex) {
-        break;
-      }
-      // в ribs живут отрезки, а в points - концы подходящих для сдвига сегментов
-      for(const v of av) {
-        const {skeleton, profile, ribs, points, line, pt} = v;
-        const candidates = new Set();
-        let edges = vertex.getEdges();
-        for (const edge of edges) {
-          if(!edge.is_some_side(profile, vertex)) {
-            continue;
-          }
-
-          if(edge.profile.b.is_nearest(vertex.point, true)) {
-            ribs.set(edge.profile, 'b');
-          }
-          if(edge.profile.e.is_nearest(vertex.point, true)) {
-            ribs.set(edge.profile, 'e');
-          }
-
-          if(edge.profile !== profile) {
-            points.add(edge.endVertex.point);
-            candidates.add(edge);
-          }
+      for (const [vertex, av] of vertexes) {
+        if (!vertex) {
+          break;
         }
-        for (const edge of vertex.getEndEdges()) {
-          if(!edge.is_some_side(profile, vertex)) {
-            continue;
-          }
+        // в ribs живут отрезки, а в points - концы подходящих для сдвига сегментов
+        for (const v of av) {
+          const {skeleton, profile, ribs, points, line, pt} = v;
+          const candidates = new Set();
+          let edges = vertex.getEdges();
+          for (const edge of edges) {
+            if (!edge.is_some_side(profile, vertex)) {
+              continue;
+            }
 
-          if(edge.profile.b.is_nearest(vertex.point, true)) {
-            ribs.set(edge.profile, 'b');
-          }
-          if(edge.profile.e.is_nearest(vertex.point, true)) {
-            ribs.set(edge.profile, 'e');
-          }
+            if (edge.profile.b.is_nearest(vertex.point, true)) {
+              ribs.set(edge.profile, 'b');
+            }
+            if (edge.profile.e.is_nearest(vertex.point, true)) {
+              ribs.set(edge.profile, 'e');
+            }
 
-          if(edge.profile !== profile) {
-            points.add(edge.startVertex.point);
-            for (const candidate of candidates) {
-              if(candidate.profile === edge.profile && !candidate.is_profile_outer(edge)) {
-                const path = edge.profile.generatrix
-                  .get_subpath(edge.startVertex.point, candidate.endVertex.point)
-                  .elongation(-edge.profile.width);
-                const npoint = line.intersect_point(path, point);
-                if(npoint) {
-                  point = npoint;
+            if (edge.profile !== profile) {
+              points.add(edge.endVertex.point);
+              candidates.add(edge);
+            }
+          }
+          for (const edge of vertex.getEndEdges()) {
+            if (!edge.is_some_side(profile, vertex)) {
+              continue;
+            }
+
+            if (edge.profile.b.is_nearest(vertex.point, true)) {
+              ribs.set(edge.profile, 'b');
+            }
+            if (edge.profile.e.is_nearest(vertex.point, true)) {
+              ribs.set(edge.profile, 'e');
+            }
+
+            if (edge.profile !== profile) {
+              points.add(edge.startVertex.point);
+              for (const candidate of candidates) {
+                if (candidate.profile === edge.profile && !candidate.is_profile_outer(edge)) {
+                  const base = edge.profile.elm_type.is('Створка') ? edge.profile.rays.outer : edge.profile.generatrix;
+                  const path = base.get_subpath(edge.startVertex.point, candidate.endVertex.point)
+                    .elongation(-edge.profile.width);
+                  const npoint = line.intersect_point(path, point);
+                  if (npoint) {
+                    point = npoint;
+                  } else {
+                    point = path.getNearestPoint(pt);
+                  }
+                  const offset = path.getOffsetOf(point);
+                  if (offset < li) {
+                    point = path.getPointAt(li);
+                  } else if (offset > (path.length - li)) {
+                    point = path.getPointAt(path.length - li);
+                  }
+                  //delta = point.subtract(start);
+                  v.point = point;
+                  break;
                 }
-                else {
-                  point = path.getNearestPoint(pt);
-                }
-                //delta = point.subtract(start);
-                v.point = point;
-                break;
               }
             }
           }
         }
       }
 
+      // анализируем размеры в лоб
+      for(const [vertex, av] of vertexes) {
+        for(const {skeleton, point} of av) {
+          if(point) {
+            continue;
+          }
+          const lengths = skeleton.getLengths(vertex, delta);
+          lengths.forEach(([coordin, [lold, lnew]], index) => {
+            const min = index ? li : lmin;
+            if(lnew > lmax) {
+              if(lold > lmax) {
+                tdelta.length = 0;
+              }
+              else {
+                const tmp = lmax - lold;
+                if(tdelta.length > tmp) {
+                  tdelta.length = tmp;
+                }
+              }
+            }
+            else if(lnew < min) {
+              if(lold < min) {
+                tdelta.length = 0;
+              }
+              else {
+                const tmp = lold - min;
+                if(tdelta.length > tmp) {
+                  tdelta.length = tmp;
+                }
+              }
+            }
+          });
+        }
+      }
+
+      if (tdelta.length < delta.length) {
+        for (const [vertex, av] of vertexes) {
+          for (const v of av) {
+            let {point, pt} = v;
+            if (!point) {
+              v.point = pt.subtract(delta).add(tdelta);
+            }
+          }
+        }
+      }
     }
 
-    for(const [line, lv] of lines) {
-      const {vb, ve, db, de} = lv;
-      const {skeleton, profile, ribs, points} = vertexes.get(vb);
-
-    }
+    // for(const [line, lv] of lines) {
+    //   const {vb, ve, db, de} = lv;
+    //   const {skeleton, profile, ribs, points} = vertexes.get(vb);
+    // }
 
     this.draw_move_ribs(vertexes);
 
     return vertexes;
   }
 
+  /**
+   * Прячет визуализацию рёбер сдвига
+   * @param withOpacity {Boolean}
+   */
   hide_move_ribs(withOpacity) {
-    for(const contour of this.project.contours) {
+    const {project, editor} = this;
+    for (const contour of project.getItems({class: editor.constructor.Contour})) {
       const {l_visualization} = contour;
-      if(l_visualization._move_ribs) {
+      if (l_visualization._move_ribs) {
         l_visualization._move_ribs.removeChildren();
-        if(withOpacity) {
+        if (withOpacity) {
           contour.profiles.forEach((profile) => profile.opacity = 1);
           contour.glasses().forEach((glass) => glass.opacity = 1);
         }
@@ -307,6 +374,10 @@ export default class Mover {
     }
   }
 
+  /**
+   * Рисует рёбра сдвига
+   * @param vertexes {Map}
+   */
   draw_move_ribs(vertexes) {
     this.hide_move_ribs();
     const {Path, Group} = this.editor;
@@ -315,6 +386,9 @@ export default class Mover {
     for(const [vertex, v] of vertexes) {
       for(const {skeleton, profile, points, point} of v) {
         const {l_visualization} = skeleton.owner;
+        if(!l_visualization) {
+          continue;
+        }
         if(!l_visualization._move_ribs) {
           l_visualization._move_ribs = new Group({parent: l_visualization});
         }
@@ -341,7 +415,7 @@ export default class Mover {
           fillColor: 'blue',
           center: point,
           strokeScaling: false,
-          size: [80, 80],
+          size: [60, 60],
         });
 
         // прозрачность для деформируемых элементов
@@ -368,8 +442,14 @@ export default class Mover {
     }
   }
 
+  /**
+   * Двигает рёбра
+   * @param vertexes
+   */
   move_shapes(vertexes) {
     const {project} = this;
+    // сгруппируем в profiles сдвиги узлов
+    const profiles = new Map();
     for(const [vertex, av] of vertexes) {
       for (const v of av) {
         let {ribs, point, pt} = v;
@@ -377,8 +457,27 @@ export default class Mover {
           point = pt;
         }
         for(const [profile, node] of ribs) {
+          if(!profiles.has(profile)) {
+            profiles.set(profile, []);
+          }
           const node_point = profile[node];
-          if(!node_point.is_nearest(point, true)) {
+          if(!node_point.is_nearest(point, 1)) {
+            profiles.get(profile).push({node, point});
+          }
+        }
+      }
+    }
+    for(const [profile, move] of profiles) {
+      if(move.length) {
+        const {point, node} = move[0];
+        const node_point = profile[node];
+        if(move.length > 1) {
+          profile.move_gen(point.subtract(node_point));
+          profile._hatching && profile._hatching.removeChildren();
+        }
+        else {
+          const delta = point.subtract(node_point);
+          if(delta.length) {
             project.deselectAll();
             node_point.selected = true;
             profile.move_points(point.subtract(node_point));
