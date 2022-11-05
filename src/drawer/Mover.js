@@ -188,7 +188,6 @@ export default class Mover {
   snap_shapes({start, point, delta}) {
     const {Path} = this.editor;
     const vertexes = new Map();
-    const lines = new Map();
     // элементы двигаем перпендикулярно их образующим и следим за вершинами
     // добавляем delta к узлам, строим через них линию, находим точки на примыкающих - они и будут конечными
 
@@ -218,11 +217,9 @@ export default class Mover {
         // смещенные точки и линия через них
         const db = b.add(delta);
         const de = e.add(delta);
-        const line = new Path({insert: false, segments: [db, de]}).elongation(1000);
         // map узлов графа и структуры точек
-        vertexes.get(vb).push({skeleton, profile, line, pt: db, ribs: new Map(), points: new Set()});
-        vertexes.get(ve).push({skeleton, profile, line, pt: de, ribs: new Map(), points: new Set()});
-        lines.set(line, {vb, ve, db, de});
+        vertexes.get(vb).push({skeleton, profile, pt: db, db, de, ribs: new Map(), points: new Set()});
+        vertexes.get(ve).push({skeleton, profile, pt: de, db, de, ribs: new Map(), points: new Set()});
       }
 
       // извлекаем разрешенные диапазоны из шаблона
@@ -231,14 +228,14 @@ export default class Mover {
       let lmin = 200;
       let lmax = 2000;
 
-    // анализируем вариант T
+      // анализируем вариант T
       for (const [vertex, av] of vertexes) {
         if (!vertex) {
           break;
         }
         // в ribs живут отрезки, а в points - концы подходящих для сдвига сегментов
         for (const v of av) {
-          const {skeleton, profile, ribs, points, line, pt} = v;
+          const {skeleton, profile, ribs, points, pt, db, de} = v;
           const candidates = new Set();
           let edges = vertex.getEdges();
           for (const edge of edges) {
@@ -277,16 +274,19 @@ export default class Mover {
                   const base = edge.profile.elm_type.is('Створка') ? edge.profile.rays.outer : edge.profile.generatrix;
                   const path = base.get_subpath(edge.startVertex.point, candidate.endVertex.point)
                     .elongation(-edge.profile.width);
+                  const line = new Path({insert: false, segments: [db, de]}).elongation(2000);
                   const npoint = line.intersect_point(path, point);
                   if (npoint) {
                     point = npoint;
-                  } else {
+                  }
+                  else {
                     point = path.getNearestPoint(pt);
                   }
                   const offset = path.getOffsetOf(point);
                   if (offset < li) {
                     point = path.getPointAt(li);
-                  } else if (offset > (path.length - li)) {
+                  }
+                  else if (offset > (path.length - li)) {
                     point = path.getPointAt(path.length - li);
                   }
                   //delta = point.subtract(start);
@@ -301,10 +301,13 @@ export default class Mover {
 
       // анализируем размеры в лоб
       for(const [vertex, av] of vertexes) {
-        for(const {skeleton, point} of av) {
+        for(const v of av) {
+          const {skeleton, point, profile, ribs, pt, db, de} = v;
+          // если точка найдена в Т - движемся дальше
           if(point) {
             continue;
           }
+          // контроль новых размеров и расчёт tdelta
           const lengths = skeleton.getLengths(vertex, delta);
           lengths.forEach(([coordin, [lold, lnew]], index) => {
             const min = index ? li : lmin;
@@ -331,25 +334,27 @@ export default class Mover {
               }
             }
           });
-        }
-      }
 
-      if (tdelta.length < delta.length) {
-        for (const [vertex, av] of vertexes) {
-          for (const v of av) {
-            let {point, pt} = v;
-            if (!point) {
-              v.point = pt.subtract(delta).add(tdelta);
+          // вариант простых углов
+          if(ribs.size === 2) {
+            for(const [other, node] of ribs) {
+              if(other !== profile) {
+                const base = (other.elm_type.is('Створка') ? other.rays.outer : other.generatrix)
+                  .clone({insert: false})
+                  .elongation(3000);
+                const segments = tdelta.length < delta.length ? [profile.b.add(tdelta), profile.e.add(tdelta)] : [db, de];
+                const line = new Path({insert: false, segments}).elongation(2000);
+                v.point = line.intersect_point(base, pt);
+                break;
+              }
             }
+          }
+          else {
+            v.point = tdelta.length < delta.length ? pt.subtract(delta).add(tdelta) : pt;
           }
         }
       }
     }
-
-    // for(const [line, lv] of lines) {
-    //   const {vb, ve, db, de} = lv;
-    //   const {skeleton, profile, ribs, points} = vertexes.get(vb);
-    // }
 
     this.draw_move_ribs(vertexes);
 
