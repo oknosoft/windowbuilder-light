@@ -453,6 +453,12 @@ export default class Mover {
    */
   move_shapes(vertexes) {
     const {project} = this;
+    const move_point = (profile, node_point, d0) => {
+      project.deselectAll();
+      node_point.selected = true;
+      profile.move_points(d0);
+      node_point.selected = false;
+    };
     // сгруппируем в profiles сдвиги узлов
     const profiles = new Map();
     for(const [vertex, av] of vertexes) {
@@ -476,17 +482,21 @@ export default class Mover {
       if(move.length) {
         const {point, node} = move[0];
         const node_point = profile[node];
+        const d0 = point.subtract(node_point);
         if(move.length > 1) {
-          profile.move_gen(point.subtract(node_point));
+          const d1 = move[1].point.subtract(profile[move[1].node]);
+          if(Math.abs(d1.x - d0.x) < 0.5 && Math.abs(d1.y - d0.y) < 0.5) {
+            profile.move_gen(d0);
+          }
+          else {
+            move_point(profile, node_point, d0);
+            move_point(profile, profile[move[1].node], d1);
+          }
           profile._hatching && profile._hatching.removeChildren();
         }
         else {
-          const delta = point.subtract(node_point);
-          if(delta.length) {
-            project.deselectAll();
-            node_point.selected = true;
-            profile.move_points(point.subtract(node_point));
-            node_point.selected = false;
+          if(d0.length) {
+            move_point(profile, node_point, d0);
           }
         }
       }
