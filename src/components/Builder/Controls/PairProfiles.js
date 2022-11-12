@@ -42,6 +42,7 @@ export default function PairProps(props) {
     <PairToolbar {...props} />
     <PropField _obj={elm1} _fld="inset" _meta={_meta1} read_only={elm1_filling}/>
     <PropField _obj={elm2} _fld="inset" _meta={_meta2} read_only={elm2_filling}/>
+    <PropField _obj={elm1} _fld="clr" read_only/>
     {has_b1 ? <FieldEndConnection elm1={elm1} elm2={elm2} node="b" fields={fields} /> : null}
     {has_e1 ? <FieldEndConnection elm1={elm1} elm2={elm2} node="e" fields={fields} /> : null}
     {has_b2 ? <FieldEndConnection elm1={elm2} elm2={elm1} node="b" fields={fields} /> : null}

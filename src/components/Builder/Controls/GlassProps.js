@@ -104,9 +104,9 @@ export default class GlassProps extends React.Component {
   render() {
     const {state: {elm, row}, fields} = this;
 
-    const {info, inset, hide_coordinates} = elm;
+    const {info, inset, hide_coordinates, project} = elm;
     const props = elm.elm_props();
-    $p.cat.clrs.selection_exclude_service(fields.clr, inset);
+    $p.cat.clrs.selection_exclude_service(fields.clr, inset, project);
     fields.clr.hide_composite = true;
     const is_composite = inset.insert_type === inset.insert_type._manager.Стеклопакет;
 
@@ -116,8 +116,8 @@ export default class GlassProps extends React.Component {
       <PropField _obj={elm} _fld="inset" _meta={fields.inset} handleValueChange={() => this.set_row(null)}/>
       <PropField _obj={elm} _fld="clr" _meta={fields.clr}/>
       <PropField _obj={elm} _fld="note" _meta={fields.note} />
-      <PropField _obj={elm} _fld="first_cost" _meta={fields.first_cost}/>
-      <PropField  _obj={elm} _fld="price" _meta={fields.price}/>
+      {/*<PropField _obj={elm} _fld="first_cost" _meta={fields.first_cost}/>
+      <PropField  _obj={elm} _fld="price" _meta={fields.price}/>*/}
 
       {props.length ? <>
         <Bar>Свойства</Bar>

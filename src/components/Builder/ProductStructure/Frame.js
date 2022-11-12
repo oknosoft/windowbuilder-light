@@ -168,7 +168,7 @@ export default class FrameTree extends React.Component {
       struct.deselect();
     };
 
-    const {BuilderElement, Contour} = $p.Editor;
+    const {BuilderElement, Contour, ConnectiveLayer} = $p.Editor;
     const event = {node, layer: null, elm: null, inset: null};
     if(node.key === 'root') {
       event.type = node.key;
@@ -191,7 +191,12 @@ export default class FrameTree extends React.Component {
         deselect();
         editor.cmd('select', [{elm: node._owner.elm, node: null, shift: ctrlKeyDown}]);
       }
-
+    }
+    else if(node.key.startsWith('ins-')) {
+      event.type = 'ins';
+      event.layer = node._owner;
+      deselect();
+      node.active = true;
     }
     else if(node._owner instanceof Contour) {
       deselect();
@@ -205,6 +210,17 @@ export default class FrameTree extends React.Component {
         node.active = true;
       }
     }
+    else if(node._owner instanceof ConnectiveLayer) {
+      deselect();
+      if(node.select) {
+        node.select(event);
+      }
+      else {
+        event.type = 'l_connective';
+        event.layer = node._owner;
+        node.active = true;
+      }
+    }
     else if(node.key === 'order') {
       event.type = node.key;
       event.layer = node._owner;
@@ -213,12 +229,6 @@ export default class FrameTree extends React.Component {
     }
     else if(node.key === 'settings') {
       event.type = node.key;
-      event.layer = node._owner;
-      deselect();
-      node.active = true;
-    }
-    else if(node.key.startsWith('ins-')) {
-      event.type = 'ins';
       event.layer = node._owner;
       deselect();
       node.active = true;

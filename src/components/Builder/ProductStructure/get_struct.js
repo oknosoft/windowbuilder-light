@@ -135,9 +135,6 @@ class Insets extends BaseItem {
   constructor(owner, parent) {
     const {cnstr, elm} = owner;
     super('Вставки', `ins-${cnstr || 0}`, 'icon_1c_cat', owner, parent);
-    // for(const item of owner.glasses(false, true)) {
-    //   this.children.push(new Glass(item, this));
-    // }
   }
 }
 
@@ -149,17 +146,23 @@ class Struct extends BaseItem {
     //name, key, icon, _owner, _parent
     super(ox.prod_name(true), 'root', 'icon_root', project);
 
-    for(const layer of contours) {
-      this.children.push(new Layer(layer, this));
-    }
-    this.children.push(new Layer(l_connective, this));
-
-    this.children.push(new Insets(project, this));
-
     const settings = new BaseItem(`Настройки`, 'settings', 'icon_gear', ox, this);
     this.children.push(settings);
 
+    for(const layer of contours) {
+      this.children.push(new Layer(layer, this));
+    }
+
+    if(l_connective.profiles.length) {
+      product.children.push(new Layer(l_connective, product));
+    }
+
+    this.children.push(new Insets(project, this));
+
+
     this.toggled = true;
+
+    this.style = {subtree: {paddingLeft: 0}};
 
   }
 

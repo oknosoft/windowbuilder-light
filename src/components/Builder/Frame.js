@@ -202,16 +202,15 @@ class Frame extends React.Component {
               registerChild={this.registerChild}
             />
           </ResizeHorizon>
-          <ResizeHorizon overflow="hidden auto" width={`${(width * 3 / 12).toFixed()}px`} minWidth="200px">
+          <ResizeHorizon overflow="hidden auto" width={`${(width * 3 / 12).toFixed()}px`} minWidth="280px">
             {noti.open ? <NotiContent {...noti}/> :
-              (editor ? <Controls
+              <Controls
                 editor={editor}
                 type={type}
                 elm={elm}
                 layer={layer}
                 tree_select={this.tree_select}
-              /> :
-              'Загрузка...')
+              />
             }
           </ResizeHorizon>
         </Resize>

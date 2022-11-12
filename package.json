@@ -1,6 +1,6 @@
 {
   "name": "windowbuilder-light",
-  "version": "2.1.262",
+  "version": "2.1.263",
   "description": "Order dealer for windows and stained glass",
   "repository": {
     "type": "git",
@@ -41,8 +41,8 @@
     "metadata-superlogin": "2.0.30-beta.12",
     "react-router-dom": "5.2.0",
     "react-treebeard": "^3.2.4",
-    "wb-core": "github:oknosoft/windowbuilder-core#c5baa87f49184521989843bfcb798a810fb6f750",
-    "wb-forms": "github:oknosoft/windowbuilder-forms#1e7330ec99adb5a754811ab8aedcf080dcbcd27f"
+    "wb-core": "github:oknosoft/windowbuilder-core#27191738e9a4273fdb85b80dccbc61bd4b2ae412",
+    "wb-forms": "github:oknosoft/windowbuilder-forms#be88b738db081b5e0e8263e319faffd8258d033c"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -100,6 +100,7 @@
     "webpack-manifest-plugin": "^4.0.2",
     "workbox-webpack-plugin": "^6.4.1"
   },
+  "packageManager": "^yarn@1.22.19",
   "files": [
     "LICENSE",
     "LICENSE.ru.md"

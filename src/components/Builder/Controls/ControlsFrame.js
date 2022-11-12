@@ -13,7 +13,6 @@ import ElmInsets from './ElmInsets';
 import GrpProps from './GrpProps';
 import PairProps from './PairProps';
 import GlassProps from './GlassProps';
-import OrderProps from './OrderProps';
 import BProps from './BProps';
 
 const styles = (theme) => ({
@@ -110,6 +109,10 @@ class ControlsFrame extends React.Component {
     }
     else {
       other.ox = project ? project.ox : null;
+      if(!other.ox || other.ox.empty()) {
+        return 'Загрузка...';
+      }
+
       const {Filling} = $p.EditorInvisible;
 
       switch (type) {
@@ -126,16 +129,19 @@ class ControlsFrame extends React.Component {
         panel = <LayerProps {...other}/>;
         break;
       case 'order':
-        panel = <OrderProps {...other}/>;
+        panel = null;
         break;
       case 'settings':
         panel = <BProps {...other}/>;
         break;
       case 'ins':
         if(!other.elm) {
-          other.elm = new project.constructor.FakePrmElm(project);
+          other.elm = new project.constructor.FakePrmElm(other.layer);
         }
         panel = <ElmInsets {...other}/>;
+        break;
+      case 'l_connective':
+        panel = <div/>;
         break;
       default:
         panel = <ProductProps {...other}/>;

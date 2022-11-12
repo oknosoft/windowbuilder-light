@@ -79,6 +79,7 @@ export class NavDrawer extends Component {
     handleIfaceState: PropTypes.func.isRequired,
     handleNavigate: PropTypes.func.isRequired,
     items: PropTypes.array.isRequired,  // список элементов меню получеам от родительского компонента
+    NavList: PropTypes.object,
   };
 }
 

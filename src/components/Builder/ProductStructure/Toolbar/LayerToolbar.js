@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Tip from 'metadata-react/App/Tip';
-import {useStyles} from '../../Toolbar/styles'
+import {useStyles} from '../../Toolbar/styles';
 
 
 function dropLayer(layer) {
@@ -28,6 +29,9 @@ function LayerToolbar({layer, classes}) {
   </Toolbar>;
 }
 
-
+LayerToolbar.propTypes = {
+  layer: PropTypes.object,
+  classes: PropTypes.object,
+};
 
 export default useStyles(LayerToolbar);
