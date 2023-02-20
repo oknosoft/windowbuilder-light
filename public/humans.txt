@@ -1,0 +1,9 @@
+# Check it out: http://humanstxt.org/
+
+# TEAM
+
+    <Евгений Маляров> -- <https://github.com/unpete>
+
+# THANKS
+
+    <name>
