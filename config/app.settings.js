@@ -9,7 +9,7 @@
 const is_node = typeof process !== 'undefined' && process.versions && process.versions.node;
 const local_storage_prefix = 'wb_';
 
-module.exports = function settings(prm = {}) {
+function settings(prm = {}) {
 
   Object.defineProperties(prm, {
     use_google_geo: {
@@ -51,9 +51,6 @@ module.exports = function settings(prm = {}) {
     // размер вложений 5Mb
     attachment_max_size: 5000000,
 
-    // разрешаем сохранение пароля
-    enable_save_pwd: true,
-
     // геокодер может пригодиться
     use_ip_geo: true,
 
@@ -64,4 +61,43 @@ module.exports = function settings(prm = {}) {
 
   });
 
+}
+module.exports = settings;
+
+// корректирует параметры до инициализации
+settings.prm = (settings) =>{
+  const {predefined} = _dynamic_patch_;
+  return (prm) => {
+    settings(prm);
+    'zone,ram_indexer'.split(',').forEach((name) => {
+      if(predefined.hasOwnProperty(name)) {
+        prm[name] = predefined[name];
+      }
+    });
+    if(predefined.host && !location.host.match(predefined.host)) {
+      location.replace(predefined.host);
+    }
+    return prm;
+  };
+};
+
+// корректируем параметры после инициализации
+settings.cnn = ({job_prm, wsql}) => {
+  const {predefined} = _dynamic_patch_;
+  predefined.zone && wsql.get_user_param('zone') != predefined.zone && wsql.set_user_param('zone', predefined.zone);
+  'log_level,splash,keys'.split(',').forEach((name) => {
+    if(predefined.hasOwnProperty(name)) {
+      if(typeof job_prm[name] === 'object') {
+        Object.assign(job_prm[name], predefined[name]);
+      }
+      else {
+        job_prm[name] = predefined[name];
+      }
+    }
+  });
+
+  if(job_prm.use_ram) {
+    wsql.set_user_param('use_ram', false);
+    job_prm.use_ram = false;
+  }
 };

@@ -32,6 +32,7 @@
   "proxy5": "http://localhost:3016/",
   "proxy6": "http://192.168.9.27:3016/",
   "dependencies": {
+    "@aldabil/react-scheduler": "^2.6.13",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.6",
     "@fontsource/roboto": "^4.5.8",

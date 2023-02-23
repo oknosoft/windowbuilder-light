@@ -8,8 +8,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import IconHome from '@mui/icons-material/Home';
 
 import {drawerWidth, didablePermanent, DrawerHeader} from './styled';
@@ -43,11 +41,11 @@ const DrawerLeft = ({menu_open, sxColor, navigate, handleDrawerClose}) => (<Draw
   </DrawerHeader>
   <Divider />
   <List>
-    {menuItems.map(({text, icon, navigate, divider}, index) => {
+    {menuItems.map(({text, icon, path, divider}, index) => {
       return divider ?
         <Divider key={`divider-${index}`} /> :
         <ListItem key={`menu-${index}`} disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={() => navigate(path)}>
             <ListItemIcon>{icon}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItemButton>

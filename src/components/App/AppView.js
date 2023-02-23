@@ -2,6 +2,7 @@ import * as React from 'react';
 import {useTheme} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import {BrowserRouter, useNavigate} from 'react-router-dom';
+import {useLoadingContext} from '../Metadata';
 import Drawer from './Drawer';
 import Router from './Router';
 
@@ -16,22 +17,20 @@ const RootWithDrawer = ({menu_open, ...props}) => {
     boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%)',
   };
 
-  const {handleIfaceState} = props;
+  const {handleIfaceState} = useLoadingContext();
 
   const handleDrawerOpen = () => {
-    handleIfaceState({name: 'menu_open', value: true});
+    handleIfaceState({menu_open: true});
   };
 
   const handleDrawerClose = () => {
-    handleIfaceState({name: 'menu_open', value: false});
+    handleIfaceState({menu_open: false});
   };
 
   const navigate = useNavigate();
   const handleNavigate = (url) => {
     navigate(url);
   };
-
-  props.handlers.handleNavigate = handleNavigate;
 
   return <Root>
     <CssBaseline />

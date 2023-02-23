@@ -23,7 +23,8 @@ MetaEngine
 const $p = global.$p = new MetaEngine();
 
 // параметры сеанса инициализируем сразу
-$p.wsql.init(settings);
+$p.wsql.init(settings.prm(settings));
+settings.cnn($p);
 
 // со скрипом инициализации метаданных, так же - не затягиваем
 init_meta($p);
@@ -31,7 +32,7 @@ init_sql($p);
 init_classes($p);
 
 // скрипт инициализации в привязке к store приложения
-export function init(elm) {
+export function init(handleIfaceState) {
 
   try{
 
@@ -51,7 +52,7 @@ export function init(elm) {
     //modifiers($p);
 
     // информируем хранилище о готовности MetaEngine
-    elm.setState({meta_loaded: true});
+    handleIfaceState({meta_loaded: true});
 
     // читаем общие данные в ОЗУ
     return load_common($p);

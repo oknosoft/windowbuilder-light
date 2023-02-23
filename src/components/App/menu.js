@@ -1,14 +1,17 @@
 import React from 'react';
-import IconChart from '@mui/icons-material/InsertChart';
-import IconDoc from '@mui/icons-material/EventNote';
 import IconInfo from '@mui/icons-material/Info';
 import IconPerson from '@mui/icons-material/Person';
 import IconSettings from '@mui/icons-material/Settings';
-import LibraryBooks from '@mui/icons-material/LibraryBooks';
-import FiberNew from '@mui/icons-material/FiberNew';
+import SafetyDividerIcon from '@mui/icons-material/SafetyDivider';
+import StoreIcon from '@mui/icons-material/Store';
 import IconDownload from '@mui/icons-material/CloudDownload';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import IconHelp from '@mui/icons-material/Help';
+import FactoryIcon from '@mui/icons-material/Factory';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import IconAccessibility from '@mui/icons-material/AccessibilityNew';
+// import IconChart from '@mui/icons-material/InsertChart';
+// import IconDoc from '@mui/icons-material/EventNote';
 // import Flask from '../../styles/icons/Flask';
 // import IconDrafts from '@mui/icons-material/Drafts';
 // import IconList from '@mui/icons-material/List';
@@ -18,52 +21,54 @@ export const description = 'Заказ дилера';
 const items = [
   {
     text: 'Проекты и лиды',
-    icon: <FiberNew/>,
-    navigate: '/cat.leads/list',
+    icon: <SafetyDividerIcon/>,
+    path: '/partners',
+    aliases: ['/project', '/projects', '/lead', '/leads'],
   },
   {
     text: 'Расчёты-заказы',
-    icon: <FiberNew/>,
-    navigate: '/doc.calc_order/list',
+    icon: <BusinessCenterIcon/>,
+    path: '/doc.calc_order/list',
   },
   {
     text: 'Производство',
-    icon: <LibraryBooks/>,
-    navigate: '/doc.work_centers_task/list',
+    icon: <FactoryIcon/>,
+    path: '/production',
+    aliases: ['/manufacture', '/manufacturing'],
   },
   {
     text: 'Снабжение и склад',
-    icon: <IconDownload/>,
+    icon: <StoreIcon/>,
     id: 'files',
-    navigate: '/files/',
+    path: '/store',
   },
   {
-    text: 'Оплаты',
-    icon: <IconDownload/>,
+    text: 'Оплаты и отгрузки',
+    icon: <PointOfSaleIcon/>,
     id: 'files',
-    navigate: '/files/',
+    path: '/sales',
   },
   {
     divider: true,
   },
   {
     text: 'Профиль',
-    navigate: '/login',
+    path: '/login',
     icon: <IconPerson/>
   },
   {
     text: 'Настройки',
-    navigate: '/settings',
+    path: '/settings',
     icon: <IconSettings/>,
   },
   {
     text: 'Справка',
-    navigate: '/help',
-    icon: <IconInfo/>
+    path: '/help',
+    icon: <IconHelp/>
   },
   {
     text: 'О программе',
-    navigate: '/about',
+    path: '/about',
     icon: <IconInfo/>
   }
 ];

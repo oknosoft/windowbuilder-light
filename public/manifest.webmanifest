@@ -1,21 +1,10 @@
 {
   "lang": "ru",
-  "name": "Окнософт",
-  "short_name": "Окнософт",
-  "icons": [
-    {
-      "src": "imgs/flask_32.png",
-      "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "imgs/flask_144.png",
+  "name": "Окнософт:Заказ дилера",
+  "short_name": "Заказ дилера",
+  "icons": [{
+      "src": "imgs/fav-okn144.png",
       "sizes": "144x144",
-      "type": "image/png"
-    },
-    {
-      "src": "imgs/flask_192.png",
-      "sizes": "220x220",
       "type": "image/png"
     }],
   "background_color": "#ffffff",

@@ -47,12 +47,12 @@ function log_in() {
     });
 }
 
-export function actions(elm) {
+export function actions(handleIfaceState) {
 
   // скрипт инициализации структуры метаданных и модификаторы
   return Promise.resolve()
     .then(() => import('../../metadata'))
-    .then((module) => module.init(elm))
+    .then((module) => module.init(handleIfaceState))
     .then(() => {
       // font-awesome, roboto и стили metadata подгрузим асинхронно
       import('@fontsource/roboto/300.css');
@@ -63,21 +63,19 @@ export function actions(elm) {
     })
     .then(() => {
       const {classes: {PouchDB}, adapters: {pouch}, job_prm, md, ui, cat: {users}} = $p;
-      elm.setState({common_loaded: true});
-      const {handleNavigate, handleIfaceState} = elm;
-      //ui.dialogs.init({handleIfaceState, handleNavigate, {}});
+      handleIfaceState({common_loaded: true});
 
       pouch.on({
         pouch_complete_loaded() {
-          elm.setState({complete_loaded: true});
+          handleIfaceState({complete_loaded: true});
         },
 
         pouch_data_page(page) {
-          elm.setState({page});
+          handleIfaceState({page});
         },
 
         on_log_in(name) {
-          elm.setState({user: {
+          handleIfaceState({user: {
               name,
               logged_in: true,
               try_log_in: false,

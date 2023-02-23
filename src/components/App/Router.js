@@ -10,11 +10,11 @@ import PropTypes from 'prop-types';
 import {Route, Routes} from 'react-router-dom';
 
 import Home from '../Home';
+import FrmLogin from '../FrmLogin';
 
 const DataRoute = (props) => {
   return 'DataRoute';
 };
-const FrmLogin = () => 'FrmLogin';
 
 function AppRouter(props) {
   // const {match, handlers, offline, user} = this.props;
@@ -31,10 +31,6 @@ function AppRouter(props) {
     <Route path="password-reset" element={loginRoute}/>
   </Routes>;
 }
-
-AppRouter.propTypes = {
-  handlers: PropTypes.object.isRequired,
-};
 
 export default AppRouter;
 
