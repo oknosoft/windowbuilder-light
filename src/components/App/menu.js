@@ -4,17 +4,17 @@ import IconPerson from '@mui/icons-material/Person';
 import IconSettings from '@mui/icons-material/Settings';
 import SafetyDividerIcon from '@mui/icons-material/SafetyDivider';
 import StoreIcon from '@mui/icons-material/Store';
-import IconDownload from '@mui/icons-material/CloudDownload';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import IconHelp from '@mui/icons-material/Help';
 import FactoryIcon from '@mui/icons-material/Factory';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
-import IconAccessibility from '@mui/icons-material/AccessibilityNew';
-// import IconChart from '@mui/icons-material/InsertChart';
-// import IconDoc from '@mui/icons-material/EventNote';
-// import Flask from '../../styles/icons/Flask';
-// import IconDrafts from '@mui/icons-material/Drafts';
-// import IconList from '@mui/icons-material/List';
+//import IconDownload from '@mui/icons-material/CloudDownload';
+//import IconAccessibility from '@mui/icons-material/AccessibilityNew';
+//import IconChart from '@mui/icons-material/InsertChart';
+//import IconDoc from '@mui/icons-material/EventNote';
+//import Flask from '../../styles/icons/Flask';
+//import IconDrafts from '@mui/icons-material/Drafts';
+//import IconList from '@mui/icons-material/List';
 
 export const description = 'Заказ дилера';
 

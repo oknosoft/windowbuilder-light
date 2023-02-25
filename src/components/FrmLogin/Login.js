@@ -23,8 +23,9 @@ export default function Login({pfilter}) {
   const providerChange = (event, value) => {
     setProvider(([old, options]) => [value.value, options]);
   };
+
   const handleLogin = () => {
-    console.log([login, password]);
+    return $p.adapters.pouch.log_in(login, password);
   };
 
   return <LoginRoot>

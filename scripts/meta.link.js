@@ -5,11 +5,42 @@
 const path = require('path');
 const fs = require('fs');
 const md5File = require('md5-file');
+const {appWebpackCache} = require('../config/paths');
+
 const localNodeModules = path.resolve(__dirname, '../node_modules');
-const remoteNodeModules = '..\\metadata\\packages';
 const {dependencies} = require(path.resolve(__dirname, '../package.json'));
-const libs = Object.keys(dependencies).filter(v => /^metadata-/.test(v));
-//libs.push('docdash');
+
+// накапливаем пути
+const repos = [
+  {
+    local: 'wb-core',
+    remote: '..\\wb-core\\dist',
+    dir: '',
+  },
+  {
+    local: 'metadata-core',
+    remote: '..\\metadata\\packages\\metadata-core',
+    dir: '',
+  },
+  {
+    local: 'metadata-pouchdb',
+    remote: '..\\metadata\\packages\\metadata-pouchdb',
+    dir: '',
+  },
+  {
+    local: 'metadata-ui',
+    remote: '..\\metadata-ui\\dist',
+    dir: '',
+  },
+];
+
+// for(const local of Object.keys(dependencies).filter(v => /^metadata-/.test(v))) {
+//   repos.push({
+//     local,
+//     remote: `..\\metadata\\packages\\${local}`,
+//     dir: '',
+//   });
+// }
 
 function fromDir(startPath, filter, callback) {
 
@@ -35,12 +66,13 @@ function fromDir(startPath, filter, callback) {
   };
 };
 
+// исполняем
 let copied;
-for (const lib of libs) {
-  const lpath = path.resolve(localNodeModules, lib);
-  const rpath = lib === 'docdash' ?  path.resolve('../', lib) : path.resolve(remoteNodeModules, lib);
+for(const {local, remote, dir} of repos) {
+  const lpath = path.resolve(localNodeModules, local, dir);
+  const rpath = path.resolve(remote, dir);
   let i = 0;
-  fromDir(rpath, /\.(css|js|mjs|md|map|tmpl)$/, (rname, isDir) => {
+  fromDir(rpath, /\.(css|js|mjs|md|map|gif|png|ts)$/, (rname, isDir) => {
     const name = rname.replace(rpath, '');
     const lame = path.join(lpath, name);
     if(isDir) {
@@ -58,6 +90,12 @@ for (const lib of libs) {
     console.log(`from ${rpath} written ${i} files`);
   }
 }
-if(!copied){
+
+
+if(copied){
+  // чистим cache webpack
+  fs.rm(appWebpackCache, {recursive: true, force: true}, () => null);
+}
+else {
   console.log(`all files match`);
 }

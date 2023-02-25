@@ -54,3 +54,4 @@ export function abonentDeps({setBranch, setYear, yearState, abonent}) {
   setBranch([branches.get(), branches.find_rows({owner: abonent})]);
   setYear(yearByAbonent(abonent, yearState));
 }
+

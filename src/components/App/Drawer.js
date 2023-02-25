@@ -9,49 +9,55 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconHome from '@mui/icons-material/Home';
+import {useNavigate} from 'react-router-dom';
 
 import {drawerWidth, didablePermanent, DrawerHeader} from './styled';
 import menuItems from '../App/menu';
 
-const DrawerLeft = ({menu_open, sxColor, navigate, handleDrawerClose}) => (<Drawer
-  sx={{
-    width: drawerWidth,
-    flexShrink: 0,
-    '& .MuiDrawer-paper': {
+const DrawerLeft = ({menu_open, sxColor, handleDrawerClose}) => {
+
+  const navigate = useNavigate();
+
+  return <Drawer
+    sx={{
       width: drawerWidth,
-      boxSizing: 'border-box',
-    },
-  }}
-  variant={didablePermanent ? 'temporary' : 'persistent'}
-  anchor="left"
-  open={menu_open}
->
-  <DrawerHeader sx={{...sxColor, boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 7%)'}}>
-    <ListItem sx={{flex: 1}} disablePadding onClick={() => navigate('/')}>
-      <ListItemButton>
-        <ListItemIcon>
-          <IconHome />
-        </ListItemIcon>
-        <ListItemText primary="Главная" />
-      </ListItemButton>
-    </ListItem>
-    <IconButton onClick={handleDrawerClose}>
-      <ChevronLeftIcon />
-    </IconButton>
-  </DrawerHeader>
-  <Divider />
-  <List>
-    {menuItems.map(({text, icon, path, divider}, index) => {
-      return divider ?
-        <Divider key={`divider-${index}`} /> :
-        <ListItem key={`menu-${index}`} disablePadding>
-          <ListItemButton onClick={() => navigate(path)}>
-            <ListItemIcon>{icon}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItemButton>
-        </ListItem>;
-    })}
-  </List>
-</Drawer>);
+      flexShrink: 0,
+      '& .MuiDrawer-paper': {
+        width: drawerWidth,
+        boxSizing: 'border-box',
+      },
+    }}
+    variant={didablePermanent ? 'temporary' : 'persistent'}
+    anchor="left"
+    open={menu_open}
+  >
+    <DrawerHeader sx={{...sxColor, boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 7%)'}}>
+      <ListItem sx={{flex: 1}} disablePadding onClick={() => navigate('/')}>
+        <ListItemButton>
+          <ListItemIcon>
+            <IconHome />
+          </ListItemIcon>
+          <ListItemText primary="Главная" />
+        </ListItemButton>
+      </ListItem>
+      <IconButton onClick={handleDrawerClose}>
+        <ChevronLeftIcon />
+      </IconButton>
+    </DrawerHeader>
+    <Divider />
+    <List>
+      {menuItems.map(({text, icon, path, divider}, index) => {
+        return divider ?
+          <Divider key={`divider-${index}`} /> :
+          <ListItem key={`menu-${index}`} disablePadding>
+            <ListItemButton onClick={() => navigate(path)}>
+              <ListItemIcon>{icon}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>;
+      })}
+    </List>
+  </Drawer>;
+};
 
 export default DrawerLeft;

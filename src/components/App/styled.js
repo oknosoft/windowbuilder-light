@@ -3,12 +3,11 @@ import { styled, useTheme } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
+import {useTitleContext} from './titleContext';
 
 export const drawerWidth = 220;
 export const didablePermanent = window.innerWidth < 640;
-
 
 export const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })
 (({ theme, open }) => ({
@@ -46,22 +45,23 @@ const StyledAppBar = styled(MuiAppBar, {
   }),
 }));
 
-export const AppBar = ({menu_open, handleDrawerOpen, sxColor}) => (<StyledAppBar position="fixed" open={menu_open} sx={sxColor}>
-  <Toolbar>
-    <IconButton
-      color="inherit"
-      aria-label="open drawer"
-      onClick={handleDrawerOpen}
-      edge="start"
-      sx={{mr: 2, ...(menu_open && {display: 'none'})}}
-    >
-      <MenuIcon/>
-    </IconButton>
-    <Typography variant="h6" noWrap component="div">
-      Persistent drawer
-    </Typography>
-  </Toolbar>
-</StyledAppBar>);
+export const AppBar = ({menu_open, handleDrawerOpen, sxColor}) => {
+  const {appTitle} = useTitleContext();
+  return <StyledAppBar position="fixed" open={menu_open} sx={sxColor}>
+    <Toolbar>
+      <IconButton
+        color="inherit"
+        aria-label="open drawer"
+        onClick={handleDrawerOpen}
+        edge="start"
+        sx={{mr: 2, ...(menu_open && {display: 'none'})}}
+      >
+        <MenuIcon/>
+      </IconButton>
+      {appTitle}
+    </Toolbar>
+  </StyledAppBar>;
+};
 
 export const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
