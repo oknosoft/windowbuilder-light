@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {RouterProvider} from 'react-router-dom';
+import Helmet from 'react-helmet';
 import {router} from './Router';
 import Loading from './Loading';
 
@@ -12,6 +13,7 @@ export default function AppView(props) {
   }, []);
 
   return <TitleContext.Provider value={{ description, title, appTitle, setTitle }}>
+    <Helmet title={title}/>
     <RouterProvider router={router} fallbackElement={<Loading />} />
   </TitleContext.Provider>;
 }

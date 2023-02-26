@@ -5,7 +5,9 @@ import Provider from './Provider';
 import Creditales from './Creditales';
 import {LoginRoot} from './Root';
 import {abonentInit, abonentDeps} from './initLogin';
+import {useTitleContext} from '../App';
 
+const title = {title: 'Авторизация', appTitle: <Typography variant="h6" noWrap>Авторизация</Typography>};
 export default function Login({pfilter}) {
   const [[abonent, abonentOptions], setAbonent] = React.useState([null, []]);
   const [[branch, branchesOptions], setBranch] = React.useState([null, []]);
@@ -13,8 +15,12 @@ export default function Login({pfilter}) {
   const [yearState, setYear] = React.useState([new Date().getFullYear(), [new Date().getFullYear()]]);
   const [year, years] = yearState;
   const [[login, password], loginChange] = React.useState(['', '']);
+  const {setTitle} = useTitleContext();
 
-  React.useEffect(() => abonentInit({setAbonent, setProvider, pfilter}), []);
+  React.useEffect(() => {
+    abonentInit({setAbonent, setProvider, pfilter});
+    setTitle(title);
+  }, []);
   React.useEffect(() => abonentDeps({setBranch, setYear, yearState, abonent}), [abonent]);
 
   const abonentChange = (event, value) => setAbonent(([old, options]) => [value, options]);

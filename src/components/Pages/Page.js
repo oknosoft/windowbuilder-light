@@ -14,7 +14,7 @@ export default function Page(props) {
     import(`.${pathname}.md`)
       .then((module) => {
         setMarkdown(module.default);
-      })
+      });
   }, [pathname]);
 
   return <MarkdownDocs

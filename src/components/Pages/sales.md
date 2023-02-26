@@ -1,0 +1,12 @@
+---
+title: Объекты подсистем 'Продажи' и 'Оплаты'
+---
+- [Реализация товаров и услуг](/cat/project_categories/list)
+- [Возврат товаров от покупателя](/cat/project_categories/list)
+- [Поступление в кассу](/cat/projects/list)
+- [Расход из кассы](/cat/lead_src/list)
+- [Поступление на счёт](/cat/projects/list)
+- [Расход со счёта](/cat/lead_src/list)
+- [Оплата платёжной картой](/cat/leads/list)
+- [Возврат ДС на карту](/cat/leads/list)
+- [Корректировка долга](/cat/leads/list)

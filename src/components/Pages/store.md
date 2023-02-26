@@ -1,0 +1,12 @@
+---
+title: Объекты подсистем 'Снабжение' и 'Склад'
+---
+- [Склады](/cat/organizations/list)
+- [Поступление товаров и услуг](/cat/partners/list)
+- [Перемещение товаров](/cat/projects/list)
+- [Потребность в материалах](/cat/lead_src/list)
+- [Заказы поставщикам](/cat/leads/list)
+- [Комплектация](/cat/leads/list)
+- [Инвентаризация](/cat/leads/list)
+- [Оприходование товаров](/cat/leads/list)
+- [Списание товаров](/cat/leads/list)
