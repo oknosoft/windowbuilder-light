@@ -54,11 +54,11 @@ const items = [
     path: '/login',
     icon: <IconPerson/>
   },
-  {
-    text: 'Настройки',
-    path: '/settings',
-    icon: <IconSettings/>,
-  },
+  // {
+  //   text: 'Настройки',
+  //   path: '/settings',
+  //   icon: <IconSettings/>,
+  // },
   {
     text: 'Справка',
     path: '/help',

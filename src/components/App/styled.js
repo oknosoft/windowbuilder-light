@@ -1,10 +1,11 @@
 import React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useTitleContext} from './titleContext';
+import {toolbarHeight} from '../../styles/muiTheme';
 
 export const drawerWidth = 220;
 export const didablePermanent = window.innerWidth < 640;
@@ -12,7 +13,7 @@ export const didablePermanent = window.innerWidth < 640;
 export const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })
 (({ theme, open }) => ({
   flexGrow: 1,
-  padding: theme.spacing(didablePermanent ? 1 : 2),
+  //padding: theme.spacing(didablePermanent ? 1 : 2),
   transition: theme.transitions.create('margin', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -78,3 +79,13 @@ export const Space = styled('div')(({ theme }) => ({
 }));
 
 export const Root = styled('div')(() => ({display: 'flex'}));
+
+export const Content = styled('div')(({ theme }) => ({
+  height: `calc(100vh - ${toolbarHeight + 1}px)`,
+  width: 'calc(100% - 1px)',
+  overflow: 'hidden',
+  //--blockSize: '100%',
+  //boxSizing: 'content-box',
+  display: 'flex',
+  flexDirection: 'column',
+}));

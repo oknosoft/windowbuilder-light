@@ -59,7 +59,7 @@ export function actions(handleIfaceState) {
       import('@fontsource/roboto/400.css');
       import('@fontsource/roboto/500.css');
       import('@fontsource/roboto/700.css');
-
+      import('react-data-grid/lib/styles.css');
     })
     .then(() => {
       const {classes: {PouchDB}, adapters: {pouch}, job_prm, md, ui, cat: {users}} = $p;

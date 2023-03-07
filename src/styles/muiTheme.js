@@ -1,6 +1,8 @@
 import {createTheme} from '@mui/material';
 import primary from '@mui/material/colors/blueGrey';
 
+export const toolbarHeight = 50;
+
 const theme = createTheme({
 
   // Purple and green play nicely together.
@@ -10,7 +12,7 @@ const theme = createTheme({
 
   mixins: {
     toolbar: {
-      minHeight: 50,
+      minHeight: toolbarHeight,
     }
   },
 
@@ -31,6 +33,15 @@ const theme = createTheme({
         // The props to apply
         disableRipple: true, // No more ripple, on the whole application
       },
+    },
+
+    MuiToolbar: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          paddingLeft: theme.spacing(),
+          paddingRight: theme.spacing(),
+        }),
+      }
     },
 
     MuiFormControl: {
