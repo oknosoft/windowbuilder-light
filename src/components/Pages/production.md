@@ -1,11 +1,11 @@
 ---
 title: Объекты подсистем 'Планирование' и 'Подготовка производства'
 ---
-- [Подразделения](/cat/organizations/list)
-- [Виды рабочих центров](/cat/partners/list)
-- [Рабочие центры](/cat/project_categories/list)
-- [Мощности рабочих центров](/cat/projects/list)
+- [Подразделения](/cat/organizations)
+- [Виды рабочих центров](/cat/partners)
+- [Рабочие центры](/cat/project_categories)
+- [Мощности рабочих центров](/cat/projects)
 - [Календарь](/scheduler)
-- [Планирование](/cat/leads/list)
-- [Задания на производство](/cat/leads/list)
-- [Выпуск продукции](/cat/leads/list)
+- [Планирование](/cat/leads)
+- [Задания на производство](/cat/leads)
+- [Выпуск продукции](/cat/leads)

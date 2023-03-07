@@ -1,11 +1,15 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import Autocomplete from '../DataField/Autocomplete';
 import Provider from './Provider';
 import Creditales from './Creditales';
+import Progress from './Progress';
 import {LoginRoot} from './Root';
 import {abonentInit, abonentDeps} from './initLogin';
 import {useTitleContext} from '../App';
+import {useLoadingContext} from '../Metadata';
 
 const title = {title: 'Авторизация', appTitle: <Typography variant="h6" noWrap>Авторизация</Typography>};
 export default function Login({pfilter}) {
@@ -16,6 +20,7 @@ export default function Login({pfilter}) {
   const [year, years] = yearState;
   const [[login, password], loginChange] = React.useState(['', '']);
   const {setTitle} = useTitleContext();
+  const {ifaceState: {user, page}} = useLoadingContext();
 
   React.useEffect(() => {
     abonentInit({setAbonent, setProvider, pfilter});
@@ -31,7 +36,9 @@ export default function Login({pfilter}) {
   };
 
   const handleLogin = () => {
-    return $p.adapters.pouch.log_in(login, password);
+    if(!user.logged_in && !user.try_log_in) {
+      return $p.adapters.pouch.log_in(login, password);
+    }
   };
 
   return <LoginRoot>
@@ -49,5 +56,9 @@ export default function Login({pfilter}) {
     />
     <Provider options={providers} value={provider} providerChange={providerChange}/>
     <Creditales provider={provider} login={login} password={password} loginChange={loginChange} handleLogin={handleLogin}/>
+    <Stack direction="row" justifyContent="flex-end" spacing={1} mt={2} mb={1}>
+      <Button disabled={user.try_log_in || user.logged_in} onClick={handleLogin}>Войти</Button>
+    </Stack>
+    <Progress user={user} page={page}/>
   </LoginRoot>;
 }

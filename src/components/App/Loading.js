@@ -2,9 +2,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 
-export default function LinearBuffer({html}) {
-  const [progress, setProgress] = React.useState(0);
+export default function LinearBuffer({html, children, progress}) {
+  const [autoProgress, setProgress] = React.useState(0);
   const [buffer, setBuffer] = React.useState(12);
+  if(!progress) {
+    progress = autoProgress;
+  }
 
   const progressRef = React.useRef(() => {});
   React.useEffect(() => {
@@ -35,6 +38,7 @@ export default function LinearBuffer({html}) {
     <Box sx={{ width: '100%' }}>
       <LinearProgress variant="buffer" value={progress} valueBuffer={buffer} />
       {html && <div dangerouslySetInnerHTML={{__html: html}} />}
+      {children}
     </Box>
   );
 }

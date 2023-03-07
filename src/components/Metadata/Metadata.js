@@ -23,7 +23,7 @@ function Metadata({App, initialText}) {
 
   // инициализируем MetaEngine
   React.useEffect(() => {
-    import('./actions')
+    import('../../metadata/actions')
       .then(({actions, init_state}) => {
         if(first) {
           setIfaceState(init_state);

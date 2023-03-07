@@ -4,7 +4,7 @@
  * Created by Evgeniy Malyarov on 14.02.2021.
  */
 
-import {load_ram} from '../../packages/superlogin-proxy';
+import {load_ram} from '../packages/superlogin-proxy';
 
 export const init_state = {
   meta_loaded: false,
@@ -51,7 +51,7 @@ export function actions(handleIfaceState) {
 
   // скрипт инициализации структуры метаданных и модификаторы
   return Promise.resolve()
-    .then(() => import('../../metadata'))
+    .then(() => import('./index'))
     .then((module) => module.init(handleIfaceState))
     .then(() => {
       // font-awesome, roboto и стили metadata подгрузим асинхронно
@@ -71,7 +71,7 @@ export function actions(handleIfaceState) {
         },
 
         pouch_data_page(page) {
-          handleIfaceState({page});
+          handleIfaceState({page: {...page}});
         },
 
         on_log_in(name) {

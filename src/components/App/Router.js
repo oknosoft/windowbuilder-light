@@ -15,6 +15,7 @@ const Home = React.lazy(() => import('../Home'));
 const FrmLogin = React.lazy(() => import('../FrmLogin'));
 const Page = React.lazy(() => import('../Pages/Page'));
 const Scheduler = React.lazy(() => import('../Scheduler/Stub'));
+const DataRoute = React.lazy(() => import('../../metadata/Router'));
 
 const Wraper = (Component) => {
   return <React.Suspense fallback={<Loading/>}>
@@ -40,6 +41,7 @@ export const router = createBrowserRouter([
       {path: "login", element: loginRoute},
       {path: "profile", element: loginRoute},
       {path: "password-reset", element: loginRoute},
+      {path: "*", element: Wraper(DataRoute)},
     ],
   },
 ]);

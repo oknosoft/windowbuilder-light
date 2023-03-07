@@ -3,6 +3,7 @@
 import MetaEngine from 'metadata-core';
 import plugin_pouchdb from 'metadata-pouchdb';
 import plugin_mime from 'metadata-core/lib/mime.min';
+import plugin_scheme_settings from './cat/scheme_settings/plugin';
 import proxy_login, {load_common} from '../packages/superlogin-proxy';
 
 // функция установки параметров сеанса
@@ -16,8 +17,9 @@ import init_classes from 'wb-core/init';
 
 // подключаем плагины к MetaEngine
 MetaEngine
-  .plugin(plugin_pouchdb)     // подключаем pouchdb-адаптер к прототипу metadata.js
-  .plugin(plugin_mime);        // подключаем mime-types
+  .plugin(plugin_pouchdb)           // подключаем pouchdb-адаптер к прототипу metadata.js
+  .plugin(plugin_mime)              // подключаем mime-types
+  .plugin(plugin_scheme_settings);
 
 // создаём экземпляр MetaEngine и экспортируем его глобально
 const $p = global.$p = new MetaEngine();
