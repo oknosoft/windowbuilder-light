@@ -1,0 +1,16 @@
+.rdg.fill-grid {
+  block-size: 100%;
+  overflow-y: scroll;
+}
+.rdg.small-grid {
+  block-size: 300px;
+}
+.rdg.big-grid {
+  block-size: 600px;
+}
+
+@layer rdg.HeaderRow {
+  .h197vzie7-0-0-beta-26 {
+    font-weight: 400
+  }
+}

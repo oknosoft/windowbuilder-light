@@ -13,17 +13,6 @@ html, body, input, textarea, select, button {
   text-rendering: optimizeLegibility;
 }
 
-.rdg.fill-grid {
-  block-size: 100%;
-  overflow-y: scroll;
-}
-.rdg.small-grid {
-  block-size: 300px;
-}
-.rdg.big-grid {
-  block-size: 600px;
-}
-
 .splash {
   width: 512px;
   height: 132px;

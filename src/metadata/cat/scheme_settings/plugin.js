@@ -6,34 +6,9 @@
  * Created 19.12.2016
  */
 
-const DataFrame = require('dataframe');
-
-class GridColumn {
-  constructor(props) {
-    for(const prop in props) {
-      if(prop === 'width') {
-        if(props.width !== '*') {
-          this.width = parseInt(props.width, 10) || 140;
-        }
-      }
-      else if(prop === 'sortable') {
-        if(props[prop]) {
-          this[prop] = true;
-          if(props[prop].direction == 'desc') {
-            this.sortDescendingFirst = true;
-          }
-        }
-      }
-      else {
-        this[prop] = props[prop];
-      }
-    }
-  }
-
-  get _width() {
-    return this.width || 200;
-  }
-}
+import DataFrame from 'dataframe';
+import proto_columns from './rx_columns';
+import GridColumn from './GridColumn';
 
 
 /**
@@ -257,18 +232,16 @@ export default {
         this._search = '';
 
         // если указан стандартный период - заполняем
-        !this.is_new() && this.set_standard_period();
+        (!this.is_new() || loading) && this.set_standard_period(true);
 
       }
 
       load() {
         return super.load()
           .then(() => {
-            if(!this.is_new()) {
-              this.set_standard_period();
-            }
+            this.set_standard_period(true);
             return this;
-          })
+          });
       }
 
       save(post, operational, attachments, attr = {}) {
@@ -1301,6 +1274,7 @@ export default {
         return mode;
       }
     }
+    Object.defineProperty(CatScheme_settings.prototype, 'rx_columns', {value: proto_columns(this)});
 
     this.CatScheme_settings = CatScheme_settings;
 

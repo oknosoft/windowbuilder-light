@@ -8,7 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {createBrowserRouter} from 'react-router-dom';
-import Loading from '../App/Loading';
+import {Wraper} from './Wraper';
 import RootWithDrawer from './RootWithDrawer';
 
 const Home = React.lazy(() => import('../Home'));
@@ -16,12 +16,6 @@ const FrmLogin = React.lazy(() => import('../FrmLogin'));
 const Page = React.lazy(() => import('../Pages/Page'));
 const Scheduler = React.lazy(() => import('../Scheduler/Stub'));
 const DataRoute = React.lazy(() => import('../../metadata/Router'));
-
-const Wraper = (Component) => {
-  return <React.Suspense fallback={<Loading/>}>
-    <Component/>
-  </React.Suspense>;
-};
 
 const loginRoute = Wraper(FrmLogin);
 const pageRoute = Wraper(Page);
