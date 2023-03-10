@@ -5,7 +5,10 @@ export default function proto_columns({utils: {moment}, enm, md}) {
 
   const typed_formatters = {};
 
-  const indicator_formatter = (is_doc, is_date) => function IndicatorFormatter({value, row, raw}) {
+  const indicator_formatter = (is_doc, is_date) => function IndicatorFormatter({column, row, value, isCellSelected, onRowChange, raw}) {
+    if(value === undefined) {
+      value = row[column.key];
+    }
     if(value && value.toString) {
       value = value.toString();
     }
@@ -36,7 +39,8 @@ export default function proto_columns({utils: {moment}, enm, md}) {
 
   const date_formatter = (format, indicator, is_doc) => {
     const formatter = indicator && indicator_formatter(is_doc, true);
-    return function DateFormatter({value, row, raw}) {
+    return function DateFormatter({column, row, isCellSelected, onRowChange, raw}) {
+      let value = row[column.key];
       if(!value || value.length < 5) {
         value = String(value || '');
       }
@@ -47,7 +51,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
         return value;
       }
       if(formatter) {
-        return formatter({value, row});
+        return formatter({column, row, value, isCellSelected, onRowChange, raw});
       }
       const values = value.split(' ');
       if(values.length === 2) {
@@ -57,7 +61,10 @@ export default function proto_columns({utils: {moment}, enm, md}) {
     };
   };
 
-  function PresentationFormatter ({value, raw}) {
+  function PresentationFormatter ({column, row, value, isCellSelected, onRowChange, raw}) {
+    if(!value) {
+      value = row[column.key];
+    }
     let text = typeof value === 'string' ? value : (value && value.presentation) || '';
     if(text === '_') {
       text = '';
@@ -72,9 +79,10 @@ export default function proto_columns({utils: {moment}, enm, md}) {
     const _mgr = md.mgr_by_class_name(type);
     if(_mgr) {
       typed_formatters[type] = (row) => {
+        const value = row.value || row.row[row.column.key];
         return PresentationFormatter({
-          value: _mgr.get(row.value, true) || stub,
-          raw: row.raw,
+          ...row,
+          value: _mgr.get(value, true) || stub,
         });
       };
       return typed_formatters[type];
@@ -82,7 +90,10 @@ export default function proto_columns({utils: {moment}, enm, md}) {
   };
 
   const number_formatter = (fraction = 0) => {
-    return function NumberFormatter ({value, raw}) {
+    return function NumberFormatter ({column, row, value, isCellSelected, onRowChange, raw}) {
+      if(value === undefined) {
+        value = row[column.key];
+      }
       if(!value && value !== 0) value = 0;
       const tmp = typeof value === 'number' ? value : parseFloat(value);
       const text = isNaN(tmp) ? value.toString() : tmp.toFixed(fraction);
@@ -90,12 +101,18 @@ export default function proto_columns({utils: {moment}, enm, md}) {
     };
   };
 
-  function BoolFormatter ({value, raw}) {
+  function BoolFormatter ({column, row, value, isCellSelected, onRowChange, raw}) {
+    if(value === undefined) {
+      value = row[column.key];
+    }
     const v = value ? 'Да' : 'Нет';
     return raw ? v : <div>{v}</div>;
   }
 
-  function PropsFormatter ({value, raw}) {
+  function PropsFormatter ({column, row, value, isCellSelected, onRowChange, raw}) {
+    if(value === undefined) {
+      value = row[column.key];
+    }
     return raw ? value.presentation : <div title={value.toString()}>{value.presentation}</div>;
   }
 

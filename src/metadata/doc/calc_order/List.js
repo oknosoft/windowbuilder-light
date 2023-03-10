@@ -1,5 +1,6 @@
 import React from 'react';
 import DataGrid from 'react-data-grid';
+import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
 import ListToolbar from './ListToolbar';
 
@@ -45,10 +46,19 @@ export default function CalcOrderList() {
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     loadMoreRows(50, 0, setRows, setError);
   }, []);
+
+  const onCellClick = (...attr) => {
+    console.log(...attr);
+  };
+
+  const onCellDoubleClick = ({column, row, selectCell}, evt) => {
+    navigate(`/doc/calc_order/${row.ref}`);
+  };
 
   return <Content>
     <ListToolbar/>
@@ -56,6 +66,9 @@ export default function CalcOrderList() {
       columns={columns}
       rows={rows}
       rowKeyGetter={rowKeyGetter}
+      onRowsChange={setRows}
+      onCellClick={onCellClick}
+      onCellDoubleClick={onCellDoubleClick}
       className="fill-grid"
       rowHeight={33}
     />
