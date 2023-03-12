@@ -32,7 +32,12 @@ const DrawerLeft = ({menu_open, sxColor, handleDrawerClose}) => {
     open={menu_open}
   >
     <DrawerHeader sx={{...sxColor, boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 7%)'}}>
-      <ListItem sx={{flex: 1}} disablePadding onClick={() => navigate('/')}>
+      <ListItem sx={{flex: 1}} disablePadding onClick={() => {
+        navigate('/');
+        if (didablePermanent) {
+          handleDrawerClose();
+        }
+      }}>
         <ListItemButton>
           <ListItemIcon>
             <IconHome />
@@ -50,7 +55,12 @@ const DrawerLeft = ({menu_open, sxColor, handleDrawerClose}) => {
         return divider ?
           <Divider key={`divider-${index}`} /> :
           <ListItem key={`menu-${index}`} disablePadding>
-            <ListItemButton onClick={() => navigate(path)}>
+            <ListItemButton onClick={() => {
+              navigate(path);
+              if (didablePermanent) {
+                handleDrawerClose();
+              }
+            }}>
               <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>

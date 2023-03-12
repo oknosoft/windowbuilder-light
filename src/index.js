@@ -17,7 +17,7 @@ root.render(<Metadata App={App} initialText={initialText} />);
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
 
-swRegistration.register({
+swRegistration.unregister({
   // onUpdate() {
   //   alert('Код программы обновлён, необходимо перезагрузить страницу');
   //   location.reload();

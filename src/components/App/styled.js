@@ -5,10 +5,9 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useTitleContext} from './titleContext';
-import {toolbarHeight} from '../../styles/muiTheme';
+import {toolbarHeight, didablePermanent, drawerWidth} from '../../styles/muiTheme';
 
-export const drawerWidth = 220;
-export const didablePermanent = window.innerWidth < 640;
+export {didablePermanent, drawerWidth};
 
 export const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })
 (({ theme, open }) => ({

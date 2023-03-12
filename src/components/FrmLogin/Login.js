@@ -42,7 +42,7 @@ export default function Login({pfilter}) {
   };
 
   return <LoginRoot>
-    <Typography variant="h6" sx={{paddingBottom: 1}}>Для доступа к данному разделу, необходима авторизация</Typography>
+    <Typography variant="h6" sx={{paddingBottom: 1}}>Для доступа к разделу, необходима авторизация</Typography>
     <Autocomplete options={abonentOptions} value={abonent} onChange={abonentChange} label="Абонент" fullWidth/>
     <Autocomplete options={years} value={year} onChange={yearChange} label="Год" title="База архива" fullWidth/>
     <Autocomplete
