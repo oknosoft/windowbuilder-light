@@ -8,6 +8,7 @@ import ObjToolbar from './ObjToolbar';
 import ObjHead from './ObjHead';
 import ObjTabs from './ObjTabs';
 import ObjProduction from './ObjProduction';
+import ObjGlasses from './ObjGlasses';
 
 export default function CalcOrderObj() {
 
@@ -50,5 +51,6 @@ export default function CalcOrderObj() {
     <ObjHead obj={obj}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab}/>
     {tab === 0 && <ObjProduction tabRef={tabRef} obj={obj}/>}
+    {tab === 2 && <ObjGlasses tabRef={tabRef} obj={obj}/>}
   </Root>;
 }

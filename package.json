@@ -38,6 +38,7 @@
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.12",
+    "@mui/styles": "^5.11.12",
     "@mui/x-date-pickers": "^5.0",
     "dataframe": "2.0",
     "date-fns": "^2.29",

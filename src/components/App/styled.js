@@ -5,19 +5,19 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useTitleContext} from './titleContext';
-import {toolbarHeight, didablePermanent, drawerWidth} from '../../styles/muiTheme';
+import {toolbarHeight, disablePermanent, drawerWidth} from '../../styles/muiTheme';
 
-export {didablePermanent, drawerWidth};
+export {disablePermanent, drawerWidth};
 
 export const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })
 (({ theme, open }) => ({
   flexGrow: 1,
-  //padding: theme.spacing(didablePermanent ? 1 : 2),
+  //padding: theme.spacing(disablePermanent ? 1 : 2),
   transition: theme.transitions.create('margin', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  marginLeft: didablePermanent ? 0 : `-${drawerWidth}px`,
+  marginLeft: disablePermanent ? 0 : `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
@@ -25,7 +25,7 @@ export const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open
     }),
     marginLeft: 0,
   }),
-  ...(didablePermanent && {width: '100%'}),
+  ...(disablePermanent && {width: '100%'}),
 }));
 
 const StyledAppBar = styled(MuiAppBar, {

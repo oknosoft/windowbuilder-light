@@ -16,3 +16,8 @@ export const Root = styled('div')(({ theme }) => ({
   height: 'calc(100vh - 51px)',
   overflow: 'auto',
 }));
+
+export const GlassesDetail = styled('div')(({ theme }) => ({
+  paddingTop: theme.spacing(),
+  lineHeight: 'initial',
+}));
