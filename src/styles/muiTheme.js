@@ -2,7 +2,7 @@ import {createTheme} from '@mui/material';
 import primary from '@mui/material/colors/blueGrey';
 
 export const toolbarHeight = 50;
-export const didablePermanent = window.innerWidth < 640;
+export const disablePermanent = window.innerWidth < 640;
 export const drawerWidth = 220;
 
 const theme = createTheme({

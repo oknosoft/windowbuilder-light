@@ -11,7 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 import IconHome from '@mui/icons-material/Home';
 import {useNavigate} from 'react-router-dom';
 
-import {drawerWidth, didablePermanent, DrawerHeader} from './styled';
+import {drawerWidth, disablePermanent, DrawerHeader} from './styled';
 import menuItems from '../App/menu';
 
 const DrawerLeft = ({menu_open, sxColor, handleDrawerClose}) => {
@@ -27,14 +27,14 @@ const DrawerLeft = ({menu_open, sxColor, handleDrawerClose}) => {
         boxSizing: 'border-box',
       },
     }}
-    variant={didablePermanent ? 'temporary' : 'persistent'}
+    variant={disablePermanent ? 'temporary' : 'persistent'}
     anchor="left"
     open={menu_open}
   >
     <DrawerHeader sx={{...sxColor, boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 7%)'}}>
       <ListItem sx={{flex: 1}} disablePadding onClick={() => {
         navigate('/');
-        if (didablePermanent) {
+        if (disablePermanent) {
           handleDrawerClose();
         }
       }}>
@@ -57,7 +57,7 @@ const DrawerLeft = ({menu_open, sxColor, handleDrawerClose}) => {
           <ListItem key={`menu-${index}`} disablePadding>
             <ListItemButton onClick={() => {
               navigate(path);
-              if (didablePermanent) {
+              if (disablePermanent) {
                 handleDrawerClose();
               }
             }}>
