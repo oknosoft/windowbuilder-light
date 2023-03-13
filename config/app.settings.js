@@ -51,6 +51,9 @@ function settings(prm = {}) {
     // размер вложений 5Mb
     attachment_max_size: 5000000,
 
+    // расположение файлов руководства пользователя
+    docs_root: 'https://raw.githubusercontent.com/oknosoft/windowbuilder/develop/doc/',
+
     // геокодер может пригодиться
     use_ip_geo: true,
 
