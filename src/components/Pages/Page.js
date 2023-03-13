@@ -23,6 +23,5 @@ export default function Page(props) {
     //subtitle="Окнософт"
     //descr={description}
     setTitle={setTitle}
-    canonical="/about"
   />;
 }
