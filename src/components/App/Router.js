@@ -14,6 +14,7 @@ import RootWithDrawer from './RootWithDrawer';
 const Home = React.lazy(() => import('../Home'));
 const FrmLogin = React.lazy(() => import('../FrmLogin'));
 const Page = React.lazy(() => import('../Pages/Page'));
+const Help = React.lazy(() => import('../Pages/Help'));
 const Scheduler = React.lazy(() => import('../Scheduler/Stub'));
 const DataRoute = React.lazy(() => import('../../metadata/Router'));
 
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
       {path: "store", element: pageRoute},
       {path: "sales", element: pageRoute},
       {path: "about", element: pageRoute},
+      {path: "help*", element: Wraper(Help)},
       {path: "login", element: loginRoute},
       {path: "profile", element: loginRoute},
       {path: "password-reset", element: loginRoute},
