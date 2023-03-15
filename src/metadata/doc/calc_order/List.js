@@ -47,11 +47,16 @@ function rowKeyGetter(row) {
   return row.ref;
 }
 
+function preventDefault(event) {
+  event.preventGridDefault();
+  event.preventDefault();
+}
+
 export default function CalcOrderList() {
   const [rows, setRows] = React.useState([]);
+  const [selectedRows, setSelectedRows] = React.useState(new Set());
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
-  const [current, setCurrent] = React.useState(null);
   const navigate = useNavigate();
   const {setTitle} = useTitleContext();
 
@@ -61,27 +66,62 @@ export default function CalcOrderList() {
   }, []);
 
   const onCellClick = ({row, column, selectCell}) => {
-    current !== row && setCurrent(row);
-  };
-
-  const onCellKeyDown = ({mode, row, column, rowIdx, selectCell}, evt) => {
-    current !== row && setCurrent(row);
-    if(evt.key === 'Enter') {
-      onCellDoubleClick({row, column, selectCell});
+    if(!selectedRows.size || Array.from(selectedRows)[0] !== row.ref) {
+      setSelectedRows(new Set([row.ref]));
     }
   };
+
+  function onCellKeyDown({ mode, row, column, rowIdx, selectCell }, event) {
+    if (mode === 'EDIT' || !rows.length) return;
+    const { idx } = column;
+    const { key, shiftKey } = event;
+
+    if(key === 'Enter') {
+      onCellDoubleClick({row, column, selectCell});
+    }
+    else if (key === 'ArrowDown') {
+      if (rowIdx < rows.length - 1) {
+        selectCell({rowIdx: rowIdx + 1, idx});
+        setSelectedRows(new Set([rows[rowIdx + 1].ref]));
+      }
+      preventDefault(event);
+    }
+    else if ((key === 'ArrowRight' || (key === 'Tab' && !shiftKey)) && idx === columns.length - 1) {
+      if (rowIdx < rows.length - 1) {
+        selectCell({rowIdx: rowIdx + 1, idx: 0});
+        setSelectedRows(new Set([rows[rowIdx + 1].ref]));
+      }
+      preventDefault(event);
+    }
+    else if (key === 'ArrowUp') {
+      if(rowIdx > 0) {
+        selectCell({rowIdx: rowIdx - 1, idx});
+        setSelectedRows(new Set([rows[rowIdx - 1].ref]));
+      }
+      preventDefault(event);
+    }
+    else if ((key === 'ArrowLeft' || (key === 'Tab' && shiftKey)) && idx === 0) {
+      if(rowIdx > 0) {
+        selectCell({ rowIdx: rowIdx - 1, idx: columns.length - 1 });
+        setSelectedRows(new Set([rows[rowIdx - 1].ref]));
+      }
+      preventDefault(event);
+    }
+  }
 
   const onCellDoubleClick = ({column, row, selectCell}, evt) => {
     navigate(`${row.ref}`);
   };
 
   return <Content>
-    <ListToolbar current={current}/>
+    <ListToolbar selectedRows={selectedRows}/>
     <DataGrid
       columns={columns}
       rows={rows}
       rowKeyGetter={rowKeyGetter}
       onRowsChange={setRows}
+      selectedRows={selectedRows}
+      onSelectedRowsChange={setSelectedRows}
       onCellClick={onCellClick}
       onCellDoubleClick={onCellDoubleClick}
       onCellKeyDown={onCellKeyDown}

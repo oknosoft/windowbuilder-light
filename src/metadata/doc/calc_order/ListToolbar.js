@@ -5,13 +5,13 @@ import CopyIcon from '@mui/icons-material/PostAdd';
 import EditIcon from '@mui/icons-material/Edit';
 import {useNavigate} from 'react-router-dom';
 import {Toolbar} from './styled';
-export default function ListToolbar({current}) {
+export default function ListToolbar({selectedRows}) {
   const navigate = useNavigate();
   return <Toolbar disableGutters>
     <IconButton><AddIcon/></IconButton>
     <IconButton><CopyIcon/></IconButton>
     <IconButton onClick={() => {
-      current && navigate(`${current.ref}`);
+      selectedRows.size && navigate(Array.from(selectedRows)[0]);
     }}><EditIcon/></IconButton>
   </Toolbar>;
 }
