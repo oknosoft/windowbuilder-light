@@ -5,6 +5,7 @@ import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
 import {useTitleContext} from '../../../components/App';
 import ListToolbar from './ListToolbar';
+import {rowKeyGetter, preventDefault} from '../../dataGrid';
 
 
 const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}} = $p;
@@ -43,14 +44,7 @@ function loadMoreRows(newRowsCount, skip, setRows, setError) {
     .catch(setError);
 }
 
-function rowKeyGetter(row) {
-  return row.ref;
-}
 
-function preventDefault(event) {
-  event.preventGridDefault();
-  event.preventDefault();
-}
 
 export default function CalcOrderList() {
   const [rows, setRows] = React.useState([]);

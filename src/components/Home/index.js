@@ -1,14 +1,31 @@
 import React from 'react';
-import Autocomplete from '../DataField/Autocomplete';
+import Typography from '@mui/material/Typography';
+import {useNavigate} from 'react-router-dom';
+import {useLoadingContext} from '../Metadata';
+import {useTitleContext} from '../App';
+import {Wraper} from '../App/Wraper';
+import {Padding, Content} from '../App/styled';
+const Report = React.lazy(() => import('./Report'));
 
-// Диаграммы заказов за неделю-месяц в сравнении с прошлыми периодами
-
-const options = [{name: 'The Godfather', ref: 0}, {name: 'Pulp Fiction', ref: 1}];
-export default function HomeView() {
-
-  const [value, setValue] = React.useState(options[0]);
-  const onChange = (event, value, reason, details) => {
-    setValue(value);
+const title = {title: 'Заказ дилера', appTitle: <Typography variant="h6" noWrap>Заказ дилера</Typography>};
+export default function Login({pfilter}) {
+  const {setTitle} = useTitleContext();
+  const {ifaceState: {complete_loaded}} = useLoadingContext();
+  const navigate = useNavigate();
+  const auth = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate('/login?return=/');
   };
-  return <Autocomplete options={options} value={value} onChange={onChange} label="Заголовок"/>;
+
+  React.useEffect(() => setTitle(title), []);
+
+
+  return <Content>
+    <Padding><Typography variant="h6">Статистика сводно</Typography></Padding>
+    {complete_loaded ? Wraper(Report) : <Padding>
+      <Typography component="span">Для просмотра отчёта, </Typography>
+      <Typography component="a" href="/login?return=/" onClick={auth}>авторизуйтесь</Typography>
+    </Padding>}
+  </Content>;
 }

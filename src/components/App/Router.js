@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
       {path: "store", element: pageRoute},
       {path: "sales", element: pageRoute},
       {path: "about", element: pageRoute},
-      {path: "help*", element: Wraper(Help)},
+      {path: "help/*", element: Wraper(Help)},
       {path: "login", element: loginRoute},
       {path: "profile", element: loginRoute},
       {path: "password-reset", element: loginRoute},
