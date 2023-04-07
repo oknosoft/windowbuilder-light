@@ -5,7 +5,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CloseIcon from '@mui/icons-material/Close';
 import {useNavigate} from 'react-router-dom';
-import {Toolbar, ListSubheader} from './styled';
+import {ListSubheader} from './styled';
+import {Toolbar} from '../../../components/App/styled';
 
 export default function ListToolbar({obj}) {
   const navigate = useNavigate();

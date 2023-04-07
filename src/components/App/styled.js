@@ -1,7 +1,8 @@
 import React from 'react';
 import {styled} from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
+import MuiToolbar from '@mui/material/Toolbar';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useTitleContext} from './titleContext';
@@ -48,7 +49,7 @@ const StyledAppBar = styled(MuiAppBar, {
 export const AppBar = ({menu_open, handleDrawerOpen, sxColor}) => {
   const {appTitle} = useTitleContext();
   return <StyledAppBar position="fixed" open={menu_open} sx={sxColor}>
-    <Toolbar>
+    <MuiToolbar>
       <IconButton
         color="inherit"
         aria-label="open drawer"
@@ -59,7 +60,7 @@ export const AppBar = ({menu_open, handleDrawerOpen, sxColor}) => {
         <MenuIcon/>
       </IconButton>
       {appTitle}
-    </Toolbar>
+    </MuiToolbar>
   </StyledAppBar>;
 };
 
@@ -79,6 +80,12 @@ export const Space = styled('div')(({ theme }) => ({
 
 export const Root = styled('div')(() => ({display: 'flex'}));
 
+export const Relative = styled('div')(() => ({
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+}));
+
 export const Padding = styled('div')(({ theme }) => ({padding: theme.spacing()}));
 
 export const Content = styled('div')(({ theme }) => ({
@@ -89,4 +96,20 @@ export const Content = styled('div')(({ theme }) => ({
   //boxSizing: 'content-box',
   display: 'flex',
   flexDirection: 'column',
+}));
+
+export const Toolbar = styled(MuiToolbar)(({ theme }) => ({
+  backgroundColor: theme.palette.grey["50"],
+}));
+
+export const HtmlTooltip = styled(({ className, children, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} ><span>{children}</span></Tooltip>
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 240,
+    fontSize: theme.typography.pxToRem(14),
+    border: '1px solid #dadde9',
+  },
 }));

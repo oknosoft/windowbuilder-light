@@ -8,10 +8,6 @@ export const ListSubheader = styled(MuiListSubheader)(({ theme }) => ({
   paddingRight: 0,
 }));
 
-export const Toolbar = styled(MuiToolbar)(({ theme }) => ({
-  backgroundColor: theme.palette.grey["50"],
-}));
-
 export const Root = styled('div')(({ theme }) => ({
   height: 'calc(100vh - 51px)',
   overflow: 'auto',
