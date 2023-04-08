@@ -13,7 +13,7 @@ import settings from '../../config/app.settings';
 import init_meta from 'wb-core/init_meta';
 import init_sql from 'wb-core/init_sql';
 import init_classes from 'wb-core/init';
-//import modifiers from './modifiers';
+import modifiers from './modifiers';
 
 // подключаем плагины к MetaEngine
 MetaEngine
@@ -51,7 +51,7 @@ export function init(handleIfaceState) {
     pouch.init(wsql, job_prm);
 
     // выполняем модификаторы
-    //modifiers($p);
+    modifiers($p);
 
     // информируем хранилище о готовности MetaEngine
     handleIfaceState({meta_loaded: true});

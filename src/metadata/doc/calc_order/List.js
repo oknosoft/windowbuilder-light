@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
 import {useTitleContext} from '../../../components/App';
 import ListToolbar from './ListToolbar';
-import {rowKeyGetter, preventDefault} from '../../dataGrid';
+import {rowKeyGetter, preventDefault, cellClick, cellKeyDown} from '../../dataGrid';
 
 
 const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}} = $p;
@@ -59,53 +59,13 @@ export default function CalcOrderList() {
     setTitle(title);
   }, []);
 
-  const onCellClick = ({row, column, selectCell}) => {
-    if(!selectedRows.size || Array.from(selectedRows)[0] !== row.ref) {
-      setSelectedRows(new Set([row.ref]));
-    }
-  };
-
-  function onCellKeyDown({ mode, row, column, rowIdx, selectCell }, event) {
-    if (mode === 'EDIT' || !rows.length) return;
-    const { idx } = column;
-    const { key, shiftKey } = event;
-
-    if(key === 'Enter') {
-      onCellDoubleClick({row, column, selectCell});
-    }
-    else if (key === 'ArrowDown') {
-      if (rowIdx < rows.length - 1) {
-        selectCell({rowIdx: rowIdx + 1, idx});
-        setSelectedRows(new Set([rows[rowIdx + 1].ref]));
-      }
-      preventDefault(event);
-    }
-    else if ((key === 'ArrowRight' || (key === 'Tab' && !shiftKey)) && idx === columns.length - 1) {
-      if (rowIdx < rows.length - 1) {
-        selectCell({rowIdx: rowIdx + 1, idx: 0});
-        setSelectedRows(new Set([rows[rowIdx + 1].ref]));
-      }
-      preventDefault(event);
-    }
-    else if (key === 'ArrowUp') {
-      if(rowIdx > 0) {
-        selectCell({rowIdx: rowIdx - 1, idx});
-        setSelectedRows(new Set([rows[rowIdx - 1].ref]));
-      }
-      preventDefault(event);
-    }
-    else if ((key === 'ArrowLeft' || (key === 'Tab' && shiftKey)) && idx === 0) {
-      if(rowIdx > 0) {
-        selectCell({ rowIdx: rowIdx - 1, idx: columns.length - 1 });
-        setSelectedRows(new Set([rows[rowIdx - 1].ref]));
-      }
-      preventDefault(event);
-    }
-  }
-
   const onCellDoubleClick = ({column, row, selectCell}, evt) => {
     navigate(`${row.ref}`);
   };
+
+  const onCellClick = cellClick({selectedRows, setSelectedRows});
+
+  const onCellKeyDown = cellKeyDown({rows, columns, onDoubleClick: onCellDoubleClick, setSelectedRows});
 
   return <Content>
     <ListToolbar selectedRows={selectedRows}/>

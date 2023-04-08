@@ -1,36 +1,80 @@
 import React from 'react';
 import {useTheme} from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import {Resize, ResizeHorizon} from 'metadata-ui/Resize';
 import {Content, Relative} from '../../../components/App/styled';
-import {useTitleContext} from '../../../components/App';
+import Tree, {buildTree} from './Tree';
+import List from './List';
 import Toolbar from './Toolbar';
 
+import 'metadata-ui/styles/indicator/index.css';
 
 export default function TreeList(props) {
+
+  let {mgr, meta, owner} = props;
 
   // const width = frameRect?.width || window.innerWidth * .5;
   // const height = frameRect?.height || window.innerHeight * .6;
   const width = 900;
   const theme = useTheme();
 
-  const {setTitle} = useTitleContext();
+  const [parent, setParent] = React.useState(null);
+  const [current, setCurrent] = React.useState(null);
+  const {tree, scheme, columns} = React.useMemo(() => {
+    const scheme = $p.cat.scheme_settings.get_scheme(mgr.class_name, true);
+    const columns = scheme.rx_columns({mode: 'ts', fields: meta.fields, _mgr: mgr});
+    const tree = buildTree({
+      mgr,
+      owner,
+      meta,
+      selected: parent,
+    });
+    return {tree, scheme, columns};
+  }, [mgr]);
 
-  React.useEffect(() => {
-    const listName = 'Справочник (список)';
-    const title =  {title: listName, appTitle: <Typography variant="h6" noWrap>{listName}</Typography>};
-    setTitle(title);
-  }, []);
+
+  const handleSelect = () => {
+    if(current?.is_folder) {
+      return this.listDoubleClick();
+    }
+    current && props?.handleSelect?.(current);
+  };
+
+  const listDoubleClick = () => {
+    if(current?.is_folder) {
+      const {tree} = this;
+      tree.deselect();
+      const node = tree.findNode(current);
+      if(node) {
+        node.expand();
+        node.active = true;
+      }
+      setParent(current);
+    }
+    else if(current) {
+      handleSelect();
+    }
+  };
+
+  const listSetCurrent = (elm) => {
+    setCurrent(elm);
+  };
+
+  const rows = (tree.findNode(parent) || tree).list;
 
   return <Content>
-    <Toolbar />
+    <Toolbar mgr={mgr} meta={meta} selectionMode={owner}/>
     <Relative>
       <Resize handleWidth="6px" handleColor={theme.palette.grey[200]}>
         <ResizeHorizon width={`${(width /3).toFixed()}px`} minWidth="200px">
-          Tree
+          <Tree tree={tree} setParent={setParent} />
         </ResizeHorizon>
         <ResizeHorizon width={`${(width * 2/3).toFixed()}px`} minWidth="400px">
-          List
+          <List
+            rows={rows}
+            columns={columns}
+            onDoubleClick={listDoubleClick}
+            setCurrent={listSetCurrent}
+          />
         </ResizeHorizon>
       </Resize>
     </Relative>

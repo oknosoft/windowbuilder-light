@@ -12,8 +12,9 @@ import ControlPointDuplicateOutlinedIcon from '@mui/icons-material/ControlPointD
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 
 export default function (props) {
+  const {selectionMode, meta} = props;
   return <Toolbar disableGutters>
-    {props.selectionMode && <>
+    {selectionMode && <>
       <Button startIcon={<PlaylistAddCheckIcon/>} onClick={null}>Выбрать</Button>
       <Divider orientation="vertical" flexItem />
     </>}

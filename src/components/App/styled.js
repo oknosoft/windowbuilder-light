@@ -103,10 +103,11 @@ export const Toolbar = styled(MuiToolbar)(({ theme }) => ({
 }));
 
 export const HtmlTooltip = styled(({ className, children, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} ><span>{children}</span></Tooltip>
+  <Tooltip followCursor {...props} classes={{ popper: className }} ><span>{children}</span></Tooltip>
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: '#f5f5f9',
+    opacity: 0.9,
     color: 'rgba(0, 0, 0, 0.87)',
     maxWidth: 240,
     fontSize: theme.typography.pxToRem(14),

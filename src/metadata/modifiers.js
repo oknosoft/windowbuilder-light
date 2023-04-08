@@ -1,16 +1,16 @@
 // модификаторы объектов и менеджеров данных
 
 // общие модули
-import common from './common';
+//import common from './common';
 
 // модификаторы перечислений
-import enums from "./enums";
+//import enums from "./enums";
 
 // модификаторы справочников
-import catalogs from "./catalogs";
+//import catalogs from "./catalogs";
 
 // модификаторы документов
-import documents from "./documents";
+//import documents from "./documents";
 
 // модификаторы планов видов характеристик
 //import chartscharacteristics from "./chartscharacteristics";
@@ -18,12 +18,9 @@ import documents from "./documents";
 // модификаторы отчетов
 //import reports from "./reports";
 
+import ui from '../packages/ui'
+
 
 export default function ($p) {
-  common($p);
-  enums($p);
-  catalogs($p);
-  //chartscharacteristics($p);
-  documents($p);
-  //reports($p);
+  ui($p);
 }
