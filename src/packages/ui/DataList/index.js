@@ -17,7 +17,7 @@ export default function DataList() {
     const mgr = $p[parts[1]]?.[parts[2]];
     if(mgr) {
       const meta = mgr.metadata();
-      const listName = `${meta.list_presentation || meta.name} (список)`;
+      const listName = `${meta.list_presentation || meta.synonym} (список)`;
       const title =  {title: listName, appTitle: <Typography variant="h6" noWrap>{listName}</Typography>};
       setTitle(title);
       setMgr(mgr);

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {decorators, Treebeard} from 'metadata-ui/Treebeard';
 import './styles/dsn.css';
-import './styles/folder.css';
 
 function useForceUpdate(){
   const [value, setValue] = React.useState(0); // integer state

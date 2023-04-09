@@ -18,7 +18,7 @@ export default function TreeList(props) {
   const theme = useTheme();
 
   const [parent, setParent] = React.useState(null);
-  const [current, setCurrent] = React.useState(null);
+  const [selectedRows, setSelectedRows] = React.useState(new Set());
   const {tree, scheme, columns} = React.useMemo(() => {
     const scheme = $p.cat.scheme_settings.get_scheme(mgr.class_name, true);
     const columns = scheme.rx_columns({mode: 'ts', fields: meta.fields, _mgr: mgr});
@@ -31,8 +31,12 @@ export default function TreeList(props) {
     return {tree, scheme, columns};
   }, [mgr]);
 
+  const rows = (tree.findNode(parent) || tree).list;
+
+  const getCurrent = () => selectedRows.size ? mgr.get(Array.from(selectedRows)[0]) : null;
 
   const handleSelect = () => {
+    const current = getCurrent();
     if(current?.is_folder) {
       return this.listDoubleClick();
     }
@@ -40,8 +44,8 @@ export default function TreeList(props) {
   };
 
   const listDoubleClick = () => {
+    const current = getCurrent();
     if(current?.is_folder) {
-      const {tree} = this;
       tree.deselect();
       const node = tree.findNode(current);
       if(node) {
@@ -55,11 +59,6 @@ export default function TreeList(props) {
     }
   };
 
-  const listSetCurrent = (elm) => {
-    setCurrent(elm);
-  };
-
-  const rows = (tree.findNode(parent) || tree).list;
 
   return <Content>
     <Toolbar mgr={mgr} meta={meta} selectionMode={owner}/>
@@ -73,7 +72,8 @@ export default function TreeList(props) {
             rows={rows}
             columns={columns}
             onDoubleClick={listDoubleClick}
-            setCurrent={listSetCurrent}
+            selectedRows={selectedRows}
+            setSelectedRows={setSelectedRows}
           />
         </ResizeHorizon>
       </Resize>

@@ -15,5 +15,6 @@ export default function DataRoute() {
   return complete_loaded ? <Routes>
     <Route path="doc/*" element={docRoute}/>
     <Route path="cat/*" element={catRoute} />
+    <Route path="cch/*" element={catRoute} />
   </Routes> : loginRoute;
 }
