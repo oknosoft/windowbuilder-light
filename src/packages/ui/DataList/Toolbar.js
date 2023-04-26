@@ -5,11 +5,11 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddIcon from '@mui/icons-material/AddBoxOutlined';
+import CopyIcon from '@mui/icons-material/PostAdd';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
-import ControlPointDuplicateOutlinedIcon from '@mui/icons-material/ControlPointDuplicateOutlined';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import EditIcon from '@mui/icons-material/DriveFileRenameOutline';
 
 export default function (props) {
   const {selectionMode, meta} = props;
@@ -25,13 +25,13 @@ export default function (props) {
       <IconButton disabled onClick={null}><DriveFileMoveOutlinedIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Создать элемент">
-      <IconButton disabled onClick={null}><AddCircleOutlineIcon/></IconButton>
+      <IconButton disabled onClick={null}><AddIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Создать элемент копированием текущего">
-      <IconButton disabled onClick={null}><ControlPointDuplicateOutlinedIcon/></IconButton>
+      <IconButton disabled onClick={null}><CopyIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Изменить элемент">
-      <IconButton onClick={null}><DriveFileRenameOutlineIcon/></IconButton>
+      <IconButton onClick={null}><EditIcon/></IconButton>
     </HtmlTooltip>
   </Toolbar>;
 }
