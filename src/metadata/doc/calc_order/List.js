@@ -8,7 +8,7 @@ import ListToolbar from './ListToolbar';
 import {rowKeyGetter, preventDefault, cellClick, cellKeyDown} from '../../dataGrid';
 
 
-const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}} = $p;
+const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}, utils} = $p;
 const scheme = scheme_settings
   .find_schemas('doc.calc_order', true)
   .find(({name}) => name.endsWith('.main'));
@@ -22,14 +22,18 @@ function isAtBottom({ currentTarget }) {
   return currentTarget.scrollTop + 10 >= currentTarget.scrollHeight - currentTarget.clientHeight;
 }
 
-function loadMoreRows(newRowsCount, skip, setRows, setError) {
+function loadMoreRows(newRowsCount, skip, ref) {
   const sprm = {
     columns,
     skip,
     limit: newRowsCount,
     _owner: null,
   };
+
   const selector = calc_order.mango_selector ? calc_order.mango_selector(scheme, sprm) : scheme.mango_selector(sprm);
+  if(ref) {
+    selector.ref = ref;
+  }
   const opts = {
     method: 'post',
     headers: new Headers({suffix: pouch.props._suffix || '0'}),
@@ -37,14 +41,8 @@ function loadMoreRows(newRowsCount, skip, setRows, setError) {
   };
 
   return pouch.fetch('/r/_find', opts)
-    .then((res) => res.json())
-    .then((data) => {
-      setRows((rows) => [...rows, ...data.docs]);
-    })
-    .catch(setError);
+    .then((res) => res.json());
 }
-
-
 
 export default function CalcOrderList() {
   const [rows, setRows] = React.useState([]);
@@ -55,8 +53,21 @@ export default function CalcOrderList() {
   const {setTitle} = useTitleContext();
 
   React.useEffect(() => {
-    loadMoreRows(50, 0, setRows, setError);
     setTitle(title);
+    const {ref} = utils.prm();
+    loadMoreRows(50, 0, ref)
+      .then((data) => {
+        setRows((rows) => {
+          const nrows = [...rows, ...data.docs];
+          if(ref) {
+            if(nrows.find((raw) => raw.ref === ref)) {
+              setTimeout(() => setSelectedRows(new Set([ref])));
+            }
+          }
+          return nrows;
+        });
+      })
+      .catch(setError);
   }, []);
 
   const onCellDoubleClick = ({column, row, selectCell}, evt) => {

@@ -29,7 +29,7 @@
   "proxy1": "https://develop.ecookna.ru/",
   "proxy2": "https://dvlp.ecookna.ru/",
   "proxy3": "https://brusnika.oknosoft.ru/",
-  "proxy5": "http://localhost:3016/",
+  "proxy4": "http://localhost:3016/",
   "proxy6": "http://192.168.9.27:3016/",
   "proxy": "https://steklotorg.oknosoft.ru:2310/",
   "dependencies": {

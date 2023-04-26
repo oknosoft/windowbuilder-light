@@ -746,11 +746,11 @@ export default {
           res.sort = [{class_name: direction}, {date: direction}];
         });
 
-        if(skip) {
+        if(typeof skip === 'number') {
           res.skip = skip;
         }
 
-        if(limit) {
+        if(typeof limit === 'number') {
           res.limit = limit;
         }
 

@@ -18,9 +18,13 @@
 // модификаторы отчетов
 //import reports from "./reports";
 
-import ui from '../packages/ui'
+import qs from 'qs';
+import ui from '../packages/ui';
 
 
 export default function ($p) {
   ui($p);
+  $p.utils.prm = function prm() {
+    return qs.parse(location.search.replace('?',''));
+  };
 }
