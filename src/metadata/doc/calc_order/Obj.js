@@ -8,7 +8,8 @@ import ObjToolbar from './ObjToolbar';
 import ObjHead from './ObjHead';
 import ObjTabs from './ObjTabs';
 import ObjProduction from './ObjProduction';
-import ObjGlasses from './ObjGlasses';
+import ObjGlasses from './glasses/ObjGlasses';
+import {ObjSetting, key, setting as initSetting} from './ObjSetting';
 
 export default function CalcOrderObj() {
 
@@ -17,10 +18,15 @@ export default function CalcOrderObj() {
   const [tab, setTab] = React.useState(0);
   const tabRef = React.useRef(null);
 
+  const [settingOpen, setSettingOpen] = React.useState(false);
+  const [setting, setSetting] = React.useState(initSetting);
+  const saveSetting = (setting) => {
+    $p.wsql.set_user_param(key, setting);
+    setSetting(setting);
+  };
+
   const params = useParams();
   const {setTitle} = useTitleContext();
-
-
 
   React.useEffect(() => {
     const {ref} = params;
@@ -46,11 +52,14 @@ export default function CalcOrderObj() {
     </Loading>;
   }
 
+  const curr = setting.tabs.filter(({visible}) => visible)[tab];
+
   return <Root>
-    <ObjToolbar obj={obj} />
-    <ObjHead obj={obj}/>
-    <ObjTabs ref={tabRef} tab={tab} setTab={setTab}/>
-    {tab === 0 && <ObjProduction tabRef={tabRef} obj={obj}/>}
-    {tab === 2 && <ObjGlasses tabRef={tabRef} obj={obj}/>}
+    <ObjToolbar obj={obj} setSettingOpen={setSettingOpen} />
+    <ObjHead obj={obj} setting={setting}/>
+    <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
+    {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj}/>}
+    {curr.name === 'glass' && <ObjGlasses tabRef={tabRef} obj={obj}/>}
+    {settingOpen && <ObjSetting setSettingOpen={setSettingOpen} />}
   </Root>;
 }

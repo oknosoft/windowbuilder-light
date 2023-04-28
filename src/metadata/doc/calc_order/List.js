@@ -79,7 +79,7 @@ export default function CalcOrderList() {
   const onCellKeyDown = cellKeyDown({rows, columns, onDoubleClick: onCellDoubleClick, setSelectedRows});
 
   return <Content>
-    <ListToolbar selectedRows={selectedRows}/>
+    <ListToolbar selectedRows={selectedRows} mgr={calc_order}/>
     <DataGrid
       columns={columns}
       rows={rows}
