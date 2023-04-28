@@ -8,7 +8,13 @@ import WindowIcon from '@mui/icons-material/Window';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import {disablePermanent} from '../../../styles/muiTheme';
 
-export default React.forwardRef(({obj, tab, setTab}, ref) => {
+const iconMap = {
+  all: <FunctionsIcon />,
+  builder: <FormatShapesIcon />,
+  glass: <WindowIcon />,
+  parametric: <CalculateIcon />,
+};
+export default React.forwardRef(({obj, tab, setTab, setting}, ref) => {
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
@@ -20,10 +26,14 @@ export default React.forwardRef(({obj, tab, setTab}, ref) => {
         value={tab}
         onChange={handleChange}
       >
-        <Tab icon={<FunctionsIcon />} iconPosition="start" label={disablePermanent ? undefined : 'Все строки'} />
-        <Tab icon={<FormatShapesIcon />} iconPosition="start" label={disablePermanent ? undefined : 'Построитель'} />
-        <Tab icon={<WindowIcon />} iconPosition="start" label={disablePermanent ? undefined : 'Заполнения'} />
-        <Tab icon={<CalculateIcon />} iconPosition="start" label={disablePermanent ? undefined : 'Параметрик'} />
+        {setting.tabs
+          .filter(({visible}) => visible)
+          .map(({name, text}, index) => <Tab
+            key={`tab-${index}`}
+            icon={iconMap[name]}
+            iconPosition="start"
+            label={disablePermanent ? undefined : text}
+          />)}
       </Tabs>
     </Box>
   </Box>;
