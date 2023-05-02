@@ -71,7 +71,7 @@ export default function CalcOrderList() {
   }, []);
 
   const onCellDoubleClick = ({column, row, selectCell}, evt) => {
-    navigate(`${row.ref}`);
+    navigate(`${row.ref}`, {relative: 'path'});
   };
 
   const onCellClick = cellClick({selectedRows, setSelectedRows});

@@ -3,6 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
 import CopyIcon from '@mui/icons-material/PostAdd';
 import EditIcon from '@mui/icons-material/DriveFileRenameOutline';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useNavigate} from 'react-router-dom';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 
@@ -25,7 +26,7 @@ export default function ListToolbar({selectedRows, mgr}) {
   };
   const open = () => {
     if(selectedRows.size) {
-      navigate(Array.from(selectedRows)[0]);
+      navigate(Array.from(selectedRows)[0], {relative: 'path'});
     }
     else {
       //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});

@@ -4,7 +4,7 @@ import {useLoadingContext} from '../../../../components/Metadata';
 import {disablePermanent, drawerWidth} from '../../../../styles/muiTheme';
 import ObjProductionToolbar from '../ObjProductionToolbar';
 
-import {useStyles, createGlasses, rowKeyGetter} from './data';
+import {useStyles, createGlasses, rowKeyGetter, handleAdd} from './data';
 
 
 export default function ObjGlasses({tabRef, obj}) {
@@ -17,7 +17,7 @@ export default function ObjGlasses({tabRef, obj}) {
 
   const classes = useStyles();
 
-  const [columns, glasses] = React.useMemo(
+  const [columns, glasses, dp] = React.useMemo(
     () => createGlasses({obj, classes}), []);
   const [rows, setRows] = React.useState(glasses);
   function onRowsChange(rows, { indexes }) {
@@ -38,7 +38,7 @@ export default function ObjGlasses({tabRef, obj}) {
   }
 
   return <div style={style}>
-    <ObjProductionToolbar obj={obj}/>
+    <ObjProductionToolbar obj={obj} dp={dp} handleAdd={handleAdd} setRows={setRows}/>
     <DataGrid
       rowKeyGetter={rowKeyGetter}
       columns={columns}

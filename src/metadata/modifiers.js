@@ -20,6 +20,7 @@
 
 import qs from 'qs';
 import ui from '../packages/ui';
+import drawer from '../drawer/editor';
 
 
 export default function ($p) {
@@ -27,4 +28,5 @@ export default function ($p) {
   $p.utils.prm = function prm() {
     return qs.parse(location.search.replace('?',''));
   };
+  drawer($p);
 }
