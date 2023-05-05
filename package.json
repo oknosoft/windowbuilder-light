@@ -40,7 +40,7 @@
     "@mui/icons-material": "^5.11",
     "@mui/material": "^5.12",
     "@mui/styles": "^5.12",
-    "@mui/x-date-pickers": "^6.0",
+    "@mui/x-date-pickers": "^6.3",
     "dataframe": "2.0",
     "date-fns": "^2.30",
     "hammerjs": "^2.0.8",
@@ -50,7 +50,7 @@
     "metadata-pouchdb": "2.0.33-beta.2",
     "metadata-ui": "file:../metadata-ui/dist",
     "paper-jsdom-canvas": "0.12.17",
-    "react-data-grid": "7.0.0-beta.28",
+    "react-data-grid": "7.0.0-beta.29",
     "react-draggable": "^4.4.5",
     "react-helmet": "^6.1",
     "react-highlight-words": "^0.20",
@@ -65,7 +65,7 @@
     "wb-core": "file:../wb-core/dist"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.0",
+    "@babel/core": "^7.21",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/jest-dom": "^5.16.5",

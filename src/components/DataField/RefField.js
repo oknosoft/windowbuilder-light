@@ -1,0 +1,37 @@
+import React from 'react';
+import Autocomplete from './Autocomplete';
+
+export default function RefField({obj, fld, meta, label, value, onChange, fullWidth=true, ...other}) {
+  if(!value && obj && fld) {
+    value = obj[fld];
+  }
+  if(!meta && obj && fld) {
+    meta = obj._metadata(fld);
+  }
+  if(!label && meta) {
+    label = meta.synonym;
+  }
+  const options = React.useMemo(() => {
+    const mgr = obj._manager.value_mgr(obj, fld, meta.type);
+    const res = [];
+    const elmOnly = meta.choice_groups_elm === 'elm';
+    for(const o of mgr) {
+      if(elmOnly && o.is_folder) {
+        continue;
+      }
+      res.push(o);
+    }
+    return res;
+  }, [obj]);
+  return <Autocomplete
+    options={options}
+    onChange={(v) => {
+      obj[fld] = v;
+      onChange?.(v);
+    }}
+    value={value}
+    label={label}
+    fullWidth={fullWidth}
+    {...other}
+  />;
+}

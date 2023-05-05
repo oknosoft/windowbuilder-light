@@ -9,8 +9,14 @@
   block-size: 600px;
 }
 
+@layer rdg.TextEditor {
+  .tlmcuo07-0-0-beta-29 {
+    appearance: auto;
+  }
+}
+
 @layer rdg.HeaderRow {
-  .h197vzie7-0-0-beta-28 {
+  .h197vzie7-0-0-beta-29 {
     font-weight: 400
   }
 }

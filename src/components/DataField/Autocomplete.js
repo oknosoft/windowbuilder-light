@@ -3,6 +3,8 @@ import MuiAutocomplete from '@mui/material/Autocomplete';
 import Typography from '@mui/material/Typography';
 import StyledInput from './StyledInput';
 
+const getOptionLabel = (v) => v?.name || v?.toString() || '';
+
 /**
  * @summary Висящее в воздухе поле ввода
  * @desc Это не совсем DataField.
@@ -17,7 +19,7 @@ export default function Autocomplete({label, fullWidth, disableClearable, ...oth
   return <MuiAutocomplete
     disableListWrap
     disableClearable={disableClearable}
-    getOptionLabel={(v) => v?.name || v?.toString() || ''}
+    getOptionLabel={getOptionLabel}
     renderInput={(params) => <StyledInput {...params} fullWidth={fullWidth} label={label}/>}
     //renderOption={(props, option, state) => <Typography key={option.ref} noWrap>{option.name}</Typography>}
     {...other}

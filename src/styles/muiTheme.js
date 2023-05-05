@@ -37,6 +37,15 @@ const theme = createTheme({
       },
     },
 
+    MuiTab: {
+      styleOverrides: {
+        // Name of the slot
+        root: ({ ownerState, theme }) => ({
+          minHeight: 52,
+        }),
+      }
+    },
+
     MuiToolbar: {
       styleOverrides: {
         root: ({ ownerState, theme }) => ({

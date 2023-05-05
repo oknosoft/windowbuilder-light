@@ -9,7 +9,7 @@ import {useStyles, createGlasses, rowKeyGetter, handleAdd} from './data';
 
 export default function ObjGlasses({tabRef, obj}) {
   const {ifaceState: {menu_open}} = useLoadingContext();
-  const style = {minHeight: 420, width: window.offsetWidth - (!disablePermanent && menu_open ? drawerWidth : 0) - 2};
+  const style = {minHeight: 420, width: window.innerWidth - (!disablePermanent && menu_open ? drawerWidth : 0) - 2};
   if(tabRef?.current && !disablePermanent) {
     const top = tabRef.current.offsetTop + tabRef.current.offsetHeight + 51;
     style.height = `calc(100vh - ${top}px)`;
