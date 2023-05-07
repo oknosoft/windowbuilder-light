@@ -1,6 +1,5 @@
 import React from 'react';
 import MuiAutocomplete from '@mui/material/Autocomplete';
-import Typography from '@mui/material/Typography';
 import StyledInput from './StyledInput';
 
 const getOptionLabel = (v) => v?.name || v?.toString() || '';

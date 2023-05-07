@@ -2,6 +2,8 @@ import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import ObjGlassesDetail from './ObjGlassesDetail';
 
+import {NumberCell, NumberFormatter} from '../../../../packages/ui/DataField/Number';
+
 const {cat: {inserts}, enm: {inserts_types}, dp: {buyers_order}, utils: {blank}}  = $p;
 const {ItemData} = inserts;
 const ioptions = [];
@@ -94,7 +96,8 @@ export function createGlasses({obj, classes}){
       formatter({row}) {
         return row.row.inset.name;
       },
-      editor({row, onRowChange}) {
+      editor(props) {
+        const {row, onRowChange} = props;
         return <select
           autoFocus
           className="rdg-text-editor tlmcuo07-0-0-beta-29"
@@ -110,8 +113,8 @@ export function createGlasses({obj, classes}){
         </select>;
       }
     },
-    {key: 'len', name: 'Ширина', width: 88},
-    {key: 'height', name: 'Высота', width: 88},
+    {key: 'len', name: 'Ширина', width: 88, editor: NumberCell, formatter: NumberFormatter},
+    {key: 'height', name: 'Высота', width: 88, editor: NumberCell, formatter: NumberFormatter},
   ],
     glasses, dp,
   ];

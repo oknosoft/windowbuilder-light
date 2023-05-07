@@ -1,7 +1,8 @@
 import React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import TextField from '../../../components/DataField/Text';
-import RefField from '../../../components/DataField/RefField';
+import TextField from '../../../packages/ui/DataField/Text';
+import RefField from '../../../packages/ui/DataField/RefField';
+import {NumberField} from '../../../packages/ui/DataField/Number';
 
 export default function ObjHead({obj}) {
   return <Grid container spacing={2} ml={0} mr={0}>
@@ -18,7 +19,7 @@ export default function ObjHead({obj}) {
     <Grid xs={12} lg={4}>
       <RefField obj={obj} fld="manager"/>
       <TextField label="Комментарий" value={obj.note}/>
-      <TextField label="Сумма документа" value={obj.doc_amount}/>
+      <NumberField obj={obj} fld="doc_amount" readOnly/>
     </Grid>
   </Grid>;
 }

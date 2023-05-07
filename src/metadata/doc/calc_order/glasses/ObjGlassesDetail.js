@@ -1,6 +1,6 @@
 import React from 'react';
 import CellExpanderFormatter from './CellExpanderFormatter';
-import Autocomplete from '../../../../components/DataField/Autocomplete';
+import Autocomplete from '../../../../packages/ui/DataField/Autocomplete';
 import {GlassesDetail} from '../styled';
 export default function ObjGlassesDetail({ row, isCellSelected, onRowChange }) {
   if (row.type === 'DETAIL') {
