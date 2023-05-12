@@ -139,6 +139,6 @@ export default function index (withMeta) {
     logOut: logOut,
     getBasicAuthHeaders,
   };
-}
+};
 
 export {load_common, load_ram, event_src};

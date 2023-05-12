@@ -142,18 +142,10 @@ export function NumberCell({row, column, onRowChange, onClose}) {
     return {TextEditor, ...toAttr(obj._metadata(fld))};
   }, [obj, fld]);
 
-  // if(!onChange) {
-  //   onChange = (v) => {
-  //     row.row[fld] = v;
-  //     onRowChange({ ...row}, true);
-  //   };
-  // }
-  // const {onKeyDown, onBlur, onFocus, handleChange} = actions({obj, fld, onChange, value, setValue});
-
   return <NumberFormatCustom
     value={value}
     onChange={({target}) => {
-      //setValue(target.value);
+      console.log(target.value);
     }}
     customInput={TextEditor}
     {...other}

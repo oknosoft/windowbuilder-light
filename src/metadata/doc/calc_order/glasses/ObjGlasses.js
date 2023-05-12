@@ -17,9 +17,10 @@ export default function ObjGlasses({tabRef, obj}) {
 
   const classes = useStyles();
 
-  const [columns, glasses, dp] = React.useMemo(
+  const [columns, glasses] = React.useMemo(
     () => createGlasses({obj, classes}), []);
   const [rows, setRows] = React.useState(glasses);
+
   function onRowsChange(rows, { indexes }) {
     const row = rows[indexes[0]];
     if (row.type === 'MASTER') {
@@ -32,13 +33,26 @@ export default function ObjGlasses({tabRef, obj}) {
           key: row.key + 1000,
           parentId: row.key
         });
+        // сворачиваем другие открытые
+        const rm = [];
+        for(const tmp of rows) {
+          if(tmp.expanded && tmp !== row) {
+            tmp.expanded = false;
+          }
+          else if(tmp.type === 'DETAIL' && tmp.parentId !== row.key) {
+            rm.push(tmp);
+          }
+        }
+        for(const tmp of rm) {
+          rows.splice(rows.indexOf(tmp), 1);
+        }
       }
       setRows(rows);
     }
   }
 
   return <div style={style}>
-    <ObjProductionToolbar obj={obj} dp={dp} handleAdd={handleAdd} setRows={setRows}/>
+    <ObjProductionToolbar obj={obj} handleAdd={handleAdd} setRows={setRows}/>
     <DataGrid
       rowKeyGetter={rowKeyGetter}
       columns={columns}
