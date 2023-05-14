@@ -22,32 +22,36 @@ export class RowProxy {
     return this.#row.row;
   }
 
+  get characteristic() {
+    return this.#row.characteristic;
+  }
+
   get inset() {
-    return this.glassRow().inset;
+    return this.glassRow.inset;
   }
   set inset(v) {
-    this.glassRow().inset = v;
+    this.glassRow.inset = v;
   }
 
   get len() {
-    const {x1, x2} = this.glassRow();
+    const {x1, x2} = this.glassRow;
     return Math.abs(x2 - x1);
   }
   set len(v) {
-    const grow = this.glassRow();
+    const grow = this.glassRow;
     grow.x2 = parseFloat(v) + grow.x1;
   }
 
   get height() {
-    const {y1, y2} = this.glassRow();
+    const {y1, y2} = this.glassRow;
     return Math.abs(y2 - y1);
   }
   set height(v) {
-    const grow = this.glassRow();
+    const grow = this.glassRow;
     grow.y2 = parseFloat(v) + grow.y1;
   }
 
-  glassRow() {
+  get glassRow() {
     const {coordinates} = this.#row.characteristic;
     for(const grow of coordinates) {
       if(itypes.includes(grow.inset.insert_type)) {

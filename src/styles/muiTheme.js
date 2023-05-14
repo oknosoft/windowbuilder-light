@@ -55,6 +55,14 @@ const theme = createTheme({
       }
     },
 
+    MuiCheckbox: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          padding: 6,
+        }),
+      }
+    },
+
     MuiFormControl: {
       styleOverrides: {
         // Name of the slot

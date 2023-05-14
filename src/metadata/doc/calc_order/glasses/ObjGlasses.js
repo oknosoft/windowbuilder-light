@@ -2,10 +2,16 @@ import React from 'react';
 import DataGrid from 'react-data-grid';
 import {useLoadingContext} from '../../../../components/Metadata';
 import {disablePermanent, drawerWidth} from '../../../../styles/muiTheme';
-import ObjProductionToolbar from '../ObjProductionToolbar';
+import Toolbar from '../ObjProductionToolbar';
 
 import {useStyles, createGlasses, rowKeyGetter, handleAdd} from './data';
 
+const onCellKeyDown = (_, event) => {
+  if (event.isDefaultPrevented()) {
+    // skip parent grid keyboard navigation if nested grid handled it
+    event.preventGridDefault();
+  }
+};
 
 export default function ObjGlasses({tabRef, obj}) {
   const {ifaceState: {menu_open}} = useLoadingContext();
@@ -20,6 +26,7 @@ export default function ObjGlasses({tabRef, obj}) {
   const [columns, glasses] = React.useMemo(
     () => createGlasses({obj, classes}), []);
   const [rows, setRows] = React.useState(glasses);
+  //const [cx, setCx] = React.useState(null);
 
   function onRowsChange(rows, { indexes }) {
     const row = rows[indexes[0]];
@@ -31,7 +38,7 @@ export default function ObjGlasses({tabRef, obj}) {
         rows.splice(indexes[0] + 1, 0, {
           type: 'DETAIL',
           key: row.key + 1000,
-          parentId: row.key
+          row: row.row,
         });
         // сворачиваем другие открытые
         const rm = [];
@@ -39,7 +46,7 @@ export default function ObjGlasses({tabRef, obj}) {
           if(tmp.expanded && tmp !== row) {
             tmp.expanded = false;
           }
-          else if(tmp.type === 'DETAIL' && tmp.parentId !== row.key) {
+          else if(tmp.type === 'DETAIL' && tmp.row !== row.row) {
             rm.push(tmp);
           }
         }
@@ -51,23 +58,31 @@ export default function ObjGlasses({tabRef, obj}) {
     }
   }
 
+  function onSelectedRowsChange(selectedRows) {
+
+  }
+
   return <div style={style}>
-    <ObjProductionToolbar obj={obj} handleAdd={handleAdd} setRows={setRows}/>
+    <Toolbar obj={obj} handleAdd={handleAdd} setRows={setRows}/>
     <DataGrid
       rowKeyGetter={rowKeyGetter}
       columns={columns}
       rows={rows}
       onRowsChange={onRowsChange}
       headerRowHeight={33}
-      rowHeight={(args) => (args.type === 'ROW' && args.row.type === 'DETAIL' ? 200 : 33)}
+      rowHeight={({row, type}) => {
+        if(type === 'ROW' && row.type === 'DETAIL') {
+          let {length} = row.row.inset.used_params();
+          if(length < 4) {
+            length = 4;
+          }
+          return length * 33 + 16;
+        }
+        return 33;
+      }}
       className="fill-grid"
       enableVirtualization={false}
-      onCellKeyDown={(_, event) => {
-        if (event.isDefaultPrevented()) {
-          // skip parent grid keyboard navigation if nested grid handled it
-          event.preventGridDefault();
-        }
-      }}
+      onCellKeyDown={onCellKeyDown}
     />
   </div>;
 }

@@ -43,7 +43,7 @@ export function createGlasses({obj, classes}){
       },
       formatter: ObjGlassesDetail,
     },
-    {key: 'key', name: '№', width: 31,},
+    {key: 'key', name: '№', width: 30,},
     {
       key: 'inset',
       name: 'Продукт',
@@ -91,34 +91,6 @@ function defaultValue(inset, param) {
 
 export async function handleAdd({obj, setRows}) {
   const row = new RowProxy(await obj.create_product_row({create: true}));
-
-  // const params = inset.used_params();
-  let rib;
-  // for(const rrow of inset.inserts) {
-  //   if(rrow.by_default && rrow.inset.insert_glass_type.is('Ребро')) {
-  //     rib = rrow.inset;
-  //     break;
-  //   }
-  // }
-  // параметры вставки
-  // for(const param of params) {
-  //   if(param.is_calculated) {
-  //     continue;
-  //   }
-  //   xparams.add({elm: row.row, inset, param, value: defaultValue(inset, param)});
-  // }
-  // параметры рёбер
-  // if(rib) {
-  //   const params = rib.used_params();
-  //   for(let i=1; i<5; i++) {
-  //     for(const param of params) {
-  //       if(param.is_calculated) {
-  //         continue;
-  //       }
-  //       xparams.add({elm: row.row, region: 10 + i, inset: rib, param, value: defaultValue(rib, param)});
-  //     }
-  //   }
-  // }
   setRows((rows) => [...rows, {
     type: 'MASTER',
     expanded: false,

@@ -11,8 +11,12 @@ export default function RefField({obj, fld, meta, label, value, onChange, fullWi
   if(!label && meta) {
     label = meta.synonym;
   }
+
   const options = React.useMemo(() => {
     const mgr = obj._manager.value_mgr(obj, fld, meta.type);
+    if(Array.isArray(meta.list)) {
+      return meta.list.map((v) => mgr.get(v));
+    }
     const res = [];
     const elmOnly = meta.choice_groups_elm === 'elm';
     for(const o of mgr) {
@@ -23,11 +27,12 @@ export default function RefField({obj, fld, meta, label, value, onChange, fullWi
     }
     return res;
   }, [obj]);
+
   return <Autocomplete
     options={options}
-    onChange={(v) => {
-      obj[fld] = v;
-      onChange?.(v);
+    onChange={(event, newValue, reason, details) => {
+      obj[fld] = newValue;
+      onChange?.(newValue);
     }}
     value={value}
     label={label}
