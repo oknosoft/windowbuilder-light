@@ -1,6 +1,7 @@
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import ObjGlassesDetail from './ObjGlassesDetail';
+import ProductFormatter from './ProductFormatter';
 
 import {NumberCell, NumberFormatter} from '../../../../packages/ui/DataField/Number';
 // доступные типы вставок
@@ -47,9 +48,7 @@ export function createGlasses({obj, classes}){
     {
       key: 'inset',
       name: 'Продукт',
-      formatter({row}) {
-        return row.row.inset?.name;
-      },
+      formatter: ProductFormatter,
       editor(props) {
         const {row, onRowChange} = props;
         return <select
