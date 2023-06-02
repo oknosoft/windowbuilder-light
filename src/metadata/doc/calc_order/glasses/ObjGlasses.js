@@ -3,15 +3,10 @@ import DataGrid from 'react-data-grid';
 import {useLoadingContext} from '../../../../components/Metadata';
 import {disablePermanent, drawerWidth} from '../../../../styles/muiTheme';
 import Toolbar from '../ObjProductionToolbar';
+import {preventDefault} from '../../../dataGrid';
 
-import {useStyles, createGlasses, rowKeyGetter, handleAdd} from './data';
+import {useStyles, rowHeight, createGlasses, rowKeyGetter, handleAdd} from './data';
 
-const onCellKeyDown = (_, event) => {
-  if (event.isDefaultPrevented()) {
-    // skip parent grid keyboard navigation if nested grid handled it
-    event.preventGridDefault();
-  }
-};
 
 export default function ObjGlasses({tabRef, obj}) {
   const {ifaceState: {menu_open}} = useLoadingContext();
@@ -26,7 +21,7 @@ export default function ObjGlasses({tabRef, obj}) {
   const [columns, glasses] = React.useMemo(
     () => createGlasses({obj, classes}), []);
   const [rows, setRows] = React.useState(glasses);
-  //const [cx, setCx] = React.useState(null);
+  const [selectedRows, setSelectedRows] = React.useState(new Set());
 
   function onRowsChange(rows, { indexes }) {
     const row = rows[indexes[0]];
@@ -58,9 +53,83 @@ export default function ObjGlasses({tabRef, obj}) {
     }
   }
 
-  function onSelectedRowsChange(selectedRows) {
+  async function selectedRowsChange(newRows) {
+    let oldKey = selectedRows.size && Array.from(selectedRows)[0];
+    if(oldKey > 1000) {
+      oldKey -= 1000;
+    }
+    let newKey = Array.from(newRows)[0];
+    if(newKey > 1000) {
+      newKey -= 1000;
+    }
+    if(oldKey && oldKey !== newKey) {
+      // ищем старую строку и пересчитываем изделие
+      const row = rows.find(({key}) => key === oldKey);
+      const {_editor: editor} = row;
+      const {project} = editor;
+      editor.unload();
+      delete row._editor;
+    }
+    // создаём редактор для новой строки
+    const row = rows.find(({key}) => key === newKey);
+    const {characteristic} = row.row;
+    const editor = new $p.EditorInvisible();
+    const project = editor.create_scheme();
+    await project.load(characteristic, true, characteristic.calc_order);
+    row._editor = editor;
 
+    setSelectedRows(newRows);
   }
+
+  const onCellClick = ({row, column, selectCell}) => {
+    if(!selectedRows.size || Array.from(selectedRows)[0] !== row.key) {
+      selectedRowsChange(new Set([row.key]));
+    }
+  };
+
+  const onCellKeyDown = ({ mode, row, column, rowIdx, selectCell }, event) => {
+
+    if (event.isDefaultPrevented() || row?.type === "DETAIL") {
+      // skip parent grid keyboard navigation if nested grid handled it
+      event.preventGridDefault();
+    }
+
+    if (mode === 'EDIT' || !rows.length || row?.type === "DETAIL"){
+      return;
+    }
+
+    const { idx } = column;
+    const { key, shiftKey } = event;
+    if (key === 'ArrowDown') {
+      if (rowIdx < rows.length - 1) {
+        selectCell({rowIdx: rowIdx + 1, idx});
+        selectedRowsChange(new Set([rows[rowIdx + 1].key]));
+      }
+      preventDefault(event);
+    }
+    else if ((key === 'ArrowRight' || (key === 'Tab' && !shiftKey)) && idx === columns.length - 1) {
+      if (rowIdx < rows.length - 1) {
+        selectCell({rowIdx: rowIdx + 1, idx: 0});
+        selectedRowsChange(new Set([rows[rowIdx + 1].key]));
+      }
+      preventDefault(event);
+    }
+    else if (key === 'ArrowUp') {
+      if(rowIdx > 0) {
+        selectCell({rowIdx: rowIdx - 1, idx});
+        selectedRowsChange(new Set([rows[rowIdx - 1].key]));
+      }
+      preventDefault(event);
+    }
+    else if ((key === 'ArrowLeft' || (key === 'Tab' && shiftKey)) && idx === 0) {
+      if(rowIdx > 0) {
+        selectCell({ rowIdx: rowIdx - 1, idx: columns.length - 1 });
+        selectedRowsChange(new Set([rows[rowIdx - 1].key]));
+      }
+      preventDefault(event);
+    }
+
+  };
 
   return <div style={style}>
     <Toolbar obj={obj} handleAdd={handleAdd} setRows={setRows}/>
@@ -70,19 +139,13 @@ export default function ObjGlasses({tabRef, obj}) {
       rows={rows}
       onRowsChange={onRowsChange}
       headerRowHeight={33}
-      rowHeight={({row, type}) => {
-        if(type === 'ROW' && row.type === 'DETAIL') {
-          let {length} = row.row.inset.used_params();
-          if(length < 4) {
-            length = 4;
-          }
-          return length * 33 + 16;
-        }
-        return 33;
-      }}
+      rowHeight={rowHeight}
       className="fill-grid"
       enableVirtualization={false}
       onCellKeyDown={onCellKeyDown}
+      onCellClick={onCellClick}
+      selectedRows={selectedRows}
+      onSelectedRowsChange={selectedRowsChange}
     />
   </div>;
 }

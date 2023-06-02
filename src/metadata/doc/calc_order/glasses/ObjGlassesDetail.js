@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import CellExpanderFormatter from './CellExpanderFormatter';
 import PropField from '../../../../packages/ui/DataField/PropField';
 import {GlassesDetail} from '../styled';
-export default function ObjGlassesDetail({ row, isCellSelected, onRowChange }) {
+export default function ObjGlassesDetail({ row, tabIndex, onRowChange }) {
   if (row.type === 'DETAIL') {
     return Details(row);
   }
@@ -12,10 +12,8 @@ export default function ObjGlassesDetail({ row, isCellSelected, onRowChange }) {
   return (
     <CellExpanderFormatter
       expanded={row.expanded}
-      isCellSelected={isCellSelected}
-      onCellExpand={() => {
-        onRowChange({ ...row, expanded: !row.expanded });
-      }}
+      tabIndex={tabIndex}
+      onCellExpand={() => onRowChange({ ...row, expanded: !row.expanded })}
     />
   );
 }

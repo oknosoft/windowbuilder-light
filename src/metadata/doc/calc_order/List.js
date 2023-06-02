@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
 import {useTitleContext} from '../../../components/App';
 import ListToolbar from './ListToolbar';
-import {rowKeyGetter, preventDefault, cellClick, cellKeyDown} from '../../dataGrid';
+import {rowKeyGetter, cellClick, cellKeyDown} from '../../dataGrid';
 
 
 const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}, utils} = $p;

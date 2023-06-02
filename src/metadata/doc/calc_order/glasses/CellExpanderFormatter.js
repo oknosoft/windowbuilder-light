@@ -1,6 +1,5 @@
 import React from 'react';
 import {styled} from '@mui/material/styles';
-import { useFocusRef } from 'react-data-grid';
 
 export const CellExpand = styled('div')(() => ({
   float: 'right',
@@ -13,8 +12,7 @@ export const CellExpand = styled('div')(() => ({
   }
 }));
 
-export default function CellExpanderFormatter({isCellSelected, expanded, onCellExpand}) {
-  const { ref, tabIndex } = useFocusRef(isCellSelected);
+export default function CellExpanderFormatter({tabIndex, expanded, onCellExpand}) {
 
   function handleKeyDown(e) {
     if (e.key === ' ' || e.key === 'Enter') {
@@ -26,9 +24,7 @@ export default function CellExpanderFormatter({isCellSelected, expanded, onCellE
   return (
     <CellExpand>
       <span onClick={onCellExpand} onKeyDown={handleKeyDown}>
-        <span ref={ref} tabIndex={tabIndex}>
-          {expanded ? '\u25BC' : '\u25B6'}
-        </span>
+        <span tabIndex={tabIndex}>{expanded ? '\u25BC' : '\u25B6'}</span>
       </span>
     </CellExpand>
   );

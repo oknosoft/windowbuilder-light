@@ -15,6 +15,17 @@ export const useStyles = makeStyles(({spacing}) => ({
   },
 }));
 
+export const rowHeight = ({row, type}) => {
+  if(type === 'ROW' && row.type === 'DETAIL') {
+    let {length} = row.row.inset.used_params();
+    if(length < 4) {
+      length = 4;
+    }
+    return length * 33 + 16;
+  }
+  return 33;
+};
+
 export function rowKeyGetter(row) {
   return row.key;
 }
@@ -53,7 +64,7 @@ export function createGlasses({obj, classes}){
         const {row, onRowChange} = props;
         return <select
           autoFocus
-          className="rdg-text-editor tlmcuo07-0-0-beta-29"
+          className="rdg-text-editor tlmcuo07-0-0-beta-31"
           value={row.row.inset}
           onChange={({target}) => {
             row.row.inset = target.value;
