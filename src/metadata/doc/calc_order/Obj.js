@@ -33,8 +33,8 @@ export default function CalcOrderObj() {
     const {ref} = params;
     $p.doc.calc_order.get(ref, 'promise')
       .then((doc) => doc.load_linked_refs())
-      .then((doc) => setObj(doc))
-      .catch((err) => setError(err))
+      .then(setObj)
+      .catch(setError)
       .then(() => backdrop.setOpen(false));
   }, []);
   React.useEffect(() => {

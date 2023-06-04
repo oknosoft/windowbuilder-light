@@ -84,21 +84,6 @@ export function createGlasses({obj, classes}){
   ];
 }
 
-function defaultValue(inset, param) {
-  const drow = inset.product_params.find({param});
-  let value;
-  if(drow) {
-    value = drow.value;
-    if((value?.empty?.() || !value?.empty) && drow.list.length) {
-      try{
-        value = JSON.parse(drow.list)[0];
-      }
-      catch (e) {}
-    }
-  }
-  return param.fetch_type(value);
-}
-
 export async function handleAdd({obj, proto, setRows}) {
   const {job_prm, utils} = $p;
   const row = new RowProxy(await obj.create_product_row({create: true}));

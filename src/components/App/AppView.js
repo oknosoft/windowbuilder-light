@@ -13,9 +13,11 @@ const bsx = { color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 };
 export default function AppView(props) {
   const [{description, title, appTitle}, setTitleState] = React.useState(initialTitle);
   const [backdropOpen, setBackdropState] = React.useState(false);
+
   const setTitle = React.useMemo(() => (newState) => {
     setTitleState(prevState => ({...prevState, ...newState}));
   }, []);
+
   const setBackdrop = React.useMemo(() => (newOpen) => {
     setBackdropState(newOpen);
     return Promise.resolve();

@@ -1,6 +1,7 @@
 import React from 'react';
 import DataGrid from 'react-data-grid';
 import {useLoadingContext} from '../../../../components/Metadata';
+import {useBackdropContext} from '../../../../components/App';
 import {disablePermanent, drawerWidth} from '../../../../styles/muiTheme';
 import Toolbar from '../ObjProductionToolbar';
 import {preventDefault} from '../../../dataGrid';
@@ -15,6 +16,7 @@ export default function ObjGlasses({tabRef, obj}) {
     const top = tabRef.current.offsetTop + tabRef.current.offsetHeight + 51;
     style.height = `calc(100vh - ${top}px)`;
   }
+  const backdrop = useBackdropContext();
 
   const classes = useStyles();
 
@@ -70,6 +72,7 @@ export default function ObjGlasses({tabRef, obj}) {
       // пересчитываем изделие
       const {characteristic} = row.row;
       if(characteristic._modified) {
+        backdrop.setOpen(true);
         const {project} = row.row.editor;
         project.redraw();
         await project.save_coordinates({save: true});
@@ -83,6 +86,7 @@ export default function ObjGlasses({tabRef, obj}) {
     await row.row.createEditor();
 
     setSelectedRows(newRows);
+    backdrop.setOpen(false);
   }
 
   const onCellClick = ({row, column, selectCell}) => {
@@ -170,7 +174,7 @@ export default function ObjGlasses({tabRef, obj}) {
   };
 
   return <div style={style}>
-    <Toolbar obj={obj} handleAdd={handleAdd} handleDel={handleDel} getRow={getRow} setRows={setRows}/>
+    <Toolbar obj={obj} handleAdd={handleAdd} handleDel={handleDel} getRow={getRow} setRows={setRows} />
     <DataGrid
       rowKeyGetter={rowKeyGetter}
       columns={columns}
