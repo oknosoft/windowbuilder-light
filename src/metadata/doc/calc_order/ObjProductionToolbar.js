@@ -7,21 +7,24 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {ListSubheader} from './styled';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 
-export default function ObjProductionToolbar({obj, handleAdd, handleEdit, dp, setRows}) {
+export default function ObjProductionToolbar({obj, handleAdd, handleDel, handleEdit, getRow, dp, setRows}) {
 
   return <ListSubheader>
     <Toolbar disableGutters>
-      <HtmlTooltip title="Добавить строку">
+      <HtmlTooltip title="Добавить строку {Insert}">
         <IconButton onClick={() => handleAdd({obj, dp, setRows})}><AddIcon/></IconButton>
       </HtmlTooltip>
-      <HtmlTooltip title="Добавить строку копированием текущей">
-        <IconButton><CopyIcon/></IconButton>
+      <HtmlTooltip title="Добавить строку копированием текущей {F9}">
+        <IconButton onClick={() => {
+          const row = getRow();
+          handleAdd({obj, proto: row?.row?.characteristic, setRows});
+        }}><CopyIcon/></IconButton>
       </HtmlTooltip>
       {handleEdit && <HtmlTooltip title="Изменить продукцию">
         <IconButton><EditIcon/></IconButton>
       </HtmlTooltip>}
-      <HtmlTooltip title="Удалить строку">
-        <IconButton><DeleteForeverIcon/></IconButton>
+      <HtmlTooltip title="Удалить строку {Delete}">
+        <IconButton onClick={handleDel}><DeleteForeverIcon/></IconButton>
       </HtmlTooltip>
     </Toolbar>
   </ListSubheader>;

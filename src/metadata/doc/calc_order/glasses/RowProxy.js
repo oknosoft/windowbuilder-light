@@ -13,6 +13,7 @@ export {ioptions};
 
 export class RowProxy {
   #row;
+  #editor = null;
 
   constructor(row) {
     this.#row = row;
@@ -26,29 +27,90 @@ export class RowProxy {
     return this.#row.characteristic;
   }
 
+  get editor() {
+    return this.#editor;
+  }
+
+  async createEditor() {
+    const {characteristic} = this;
+    this.#editor = new $p.EditorInvisible();
+    const project = this.#editor.create_scheme();
+    await project.load(characteristic, true, characteristic.calc_order);
+    project.redraw();
+  }
+
+  unloadEditor() {
+    if(this.#editor) {
+      this.#editor.unload();
+      this.#editor = null;
+    }
+  }
+
   get inset() {
     return this.glassRow.inset;
   }
   set inset(v) {
-    this.glassRow.inset = v;
+    const {glassRow, editor} = this;
+    if(editor) {
+      const glass = editor.elm(glassRow.elm);
+      glass.set_inset(v, false, true);
+    }
+  }
+
+  recalcFin() {
+    const {project, eve} = this.editor;
+    return $p.utils.sleep(20)
+      .then(() => {
+        if(eve?._async?.move_points?.timer) {
+          return this.recalcFin();
+        }
+        project.redraw();
+        return project.save_coordinates({});
+      });
   }
 
   get len() {
+    const {editor} = this;
+    if(editor) {
+      return editor.project.bounds.width.round();
+    }
     const {x1, x2} = this.glassRow;
     return Math.abs(x2 - x1);
   }
   set len(v) {
-    const grow = this.glassRow;
-    grow.x2 = parseFloat(v) + grow.x1;
+    const {editor} = this;
+    if(editor) {
+      const {project, eve} = editor;
+      const szLine = project?.l_dimensions?.bottom;
+      szLine.sizes_wnd({
+        wnd: szLine,
+        size: parseFloat(v),
+        name: 'auto',
+      });
+      this.recalcFin();
+    }
   }
 
   get height() {
+    const {editor} = this;
+    if(editor) {
+      return editor.project.bounds.height.round();
+    }
     const {y1, y2} = this.glassRow;
     return Math.abs(y2 - y1);
   }
   set height(v) {
-    const grow = this.glassRow;
-    grow.y2 = parseFloat(v) + grow.y1;
+    const {editor} = this;
+    if(editor) {
+      const {project, eve} = editor;
+      const szLine = project?.l_dimensions?.right;
+      szLine.sizes_wnd({
+        wnd: szLine,
+        size: parseFloat(v),
+        name: 'auto',
+      });
+      this.recalcFin();
+    }
   }
 
   get glassRow() {
@@ -66,5 +128,9 @@ export class RowProxy {
 
   _metadata(fld) {
     return buyers_order.metadata(fld);
+  }
+
+  get calc_order_row() {
+    return this.#row;
   }
 }

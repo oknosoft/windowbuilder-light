@@ -23,33 +23,35 @@ export default function ObjGlasses({tabRef, obj}) {
   const [rows, setRows] = React.useState(glasses);
   const [selectedRows, setSelectedRows] = React.useState(new Set());
 
-  function onRowsChange(rows, { indexes }) {
-    const row = rows[indexes[0]];
-    if (row.type === 'MASTER') {
-      if (!row.expanded) {
-        rows.splice(indexes[0] + 1, 1);
-      }
-      else {
-        rows.splice(indexes[0] + 1, 0, {
-          type: 'DETAIL',
-          key: row.key + 1000,
-          row: row.row,
-        });
-        // сворачиваем другие открытые
-        const rm = [];
-        for(const tmp of rows) {
-          if(tmp.expanded && tmp !== row) {
-            tmp.expanded = false;
+  function onRowsChange(rows, {column, indexes }) {
+    if(column.key === 'expanded') {
+      const row = rows[indexes[0]];
+      if (row.type === 'MASTER') {
+        if (!row.expanded) {
+          rows.splice(indexes[0] + 1, 1);
+        }
+        else {
+          rows.splice(indexes[0] + 1, 0, {
+            type: 'DETAIL',
+            key: row.key + 1000,
+            row: row.row,
+          });
+          // сворачиваем другие открытые
+          const rm = [];
+          for(const tmp of rows) {
+            if(tmp.expanded && tmp !== row) {
+              tmp.expanded = false;
+            }
+            else if(tmp.type === 'DETAIL' && tmp.row !== row.row) {
+              rm.push(tmp);
+            }
           }
-          else if(tmp.type === 'DETAIL' && tmp.row !== row.row) {
-            rm.push(tmp);
+          for(const tmp of rm) {
+            rows.splice(rows.indexOf(tmp), 1);
           }
         }
-        for(const tmp of rm) {
-          rows.splice(rows.indexOf(tmp), 1);
-        }
+        setRows(rows);
       }
-      setRows(rows);
     }
   }
 
@@ -63,20 +65,22 @@ export default function ObjGlasses({tabRef, obj}) {
       newKey -= 1000;
     }
     if(oldKey && oldKey !== newKey) {
-      // ищем старую строку и пересчитываем изделие
+      // ищем старую строку
       const row = rows.find(({key}) => key === oldKey);
-      const {_editor: editor} = row;
-      const {project} = editor;
-      editor.unload();
-      delete row._editor;
+      // пересчитываем изделие
+      const {characteristic} = row.row;
+      if(characteristic._modified) {
+        const {project} = row.row.editor;
+        project.redraw();
+        await project.save_coordinates({save: true});
+      }
+      // TODO
+      // выгружаем редактор
+      row.row.unloadEditor();
     }
     // создаём редактор для новой строки
     const row = rows.find(({key}) => key === newKey);
-    const {characteristic} = row.row;
-    const editor = new $p.EditorInvisible();
-    const project = editor.create_scheme();
-    await project.load(characteristic, true, characteristic.calc_order);
-    row._editor = editor;
+    await row.row.createEditor();
 
     setSelectedRows(newRows);
   }
@@ -94,12 +98,18 @@ export default function ObjGlasses({tabRef, obj}) {
       event.preventGridDefault();
     }
 
+    const { key, shiftKey } = event;
+    if (key === 'Insert' || key === 'F9') {
+      const row = key === 'F9' && getRow();
+      handleAdd({obj, proto: row?.row?.characteristic, setRows});
+      return preventDefault(event);
+    }
+
     if (mode === 'EDIT' || !rows.length || row?.type === "DETAIL"){
       return;
     }
 
     const { idx } = column;
-    const { key, shiftKey } = event;
     if (key === 'ArrowDown') {
       if (rowIdx < rows.length - 1) {
         selectCell({rowIdx: rowIdx + 1, idx});
@@ -128,11 +138,39 @@ export default function ObjGlasses({tabRef, obj}) {
       }
       preventDefault(event);
     }
+    else if (key === 'Delete') {
+      preventDefault(event);
+      return handleDel();
+    }
 
   };
 
+  const getRow = () => {
+    const selectedKey = selectedRows.size && Array.from(selectedRows)[0];
+    if(selectedKey) {
+      return rows.find(({key}) => key === selectedKey);
+    }
+  };
+
+  const handleDel = () => {
+    const row = getRow();
+    if(row) {
+      setSelectedRows(new Set());
+      row.row.unloadEditor();
+      obj.production.del(row.row.calc_order_row);
+      rows.splice(rows.indexOf(row), 1);
+      rows.some((srow, index) => {
+        if(srow.row === row.row) {
+          rows.splice(index, 1);
+          return true;
+        }
+      });
+      setRows([...rows]);
+    }
+  };
+
   return <div style={style}>
-    <Toolbar obj={obj} handleAdd={handleAdd} setRows={setRows}/>
+    <Toolbar obj={obj} handleAdd={handleAdd} handleDel={handleDel} getRow={getRow} setRows={setRows}/>
     <DataGrid
       rowKeyGetter={rowKeyGetter}
       columns={columns}

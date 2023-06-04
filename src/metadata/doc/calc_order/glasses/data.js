@@ -18,8 +18,8 @@ export const useStyles = makeStyles(({spacing}) => ({
 export const rowHeight = ({row, type}) => {
   if(type === 'ROW' && row.type === 'DETAIL') {
     let {length} = row.row.inset.used_params();
-    if(length < 4) {
-      length = 4;
+    if(length < 6) {
+      length = 6;
     }
     return length * 33 + 16;
   }
@@ -99,8 +99,14 @@ function defaultValue(inset, param) {
   return param.fetch_type(value);
 }
 
-export async function handleAdd({obj, setRows}) {
+export async function handleAdd({obj, proto, setRows}) {
+  const {job_prm, utils} = $p;
   const row = new RowProxy(await obj.create_product_row({create: true}));
+  if(!proto) {
+    proto = job_prm.builder.glasses_template;
+  }
+  const tmp = utils._clone(proto.toJSON());
+  utils._mixin(row.characteristic, tmp, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name'.split(','), true);
   setRows((rows) => [...rows, {
     type: 'MASTER',
     expanded: false,
