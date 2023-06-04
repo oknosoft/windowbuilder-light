@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import {useParams} from 'react-router-dom';
-import {useTitleContext} from '../../../components/App';
+import {useTitleContext, useBackdropContext} from '../../../components/App';
 import Loading from '../../../components/App/Loading';
 import {Root} from './styled';
 import ObjToolbar from './ObjToolbar';
@@ -27,15 +27,15 @@ export default function CalcOrderObj() {
 
   const params = useParams();
   const {setTitle} = useTitleContext();
+  const backdrop = useBackdropContext();
 
   React.useEffect(() => {
     const {ref} = params;
     $p.doc.calc_order.get(ref, 'promise')
       .then((doc) => doc.load_linked_refs())
-      .then((doc) => {
-        setObj(doc);
-      })
-      .catch((err) => setError(err));
+      .then((doc) => setObj(doc))
+      .catch((err) => setError(err))
+      .then(() => backdrop.setOpen(false));
   }, []);
   React.useEffect(() => {
     const title = obj ? obj.presentation : 'Расчёт-заказ';

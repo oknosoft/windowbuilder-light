@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import DataGrid from 'react-data-grid';
 import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
-import {useTitleContext} from '../../../components/App';
+import {useTitleContext, useBackdropContext} from '../../../components/App';
 import ListToolbar from './ListToolbar';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate} from '../../dataGrid';
 
@@ -50,6 +50,7 @@ export default function CalcOrderList() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
   const navigate = useNavigate();
+  const backdrop = useBackdropContext();
   const {setTitle} = useTitleContext();
 
   React.useEffect(() => {
@@ -70,7 +71,7 @@ export default function CalcOrderList() {
       .catch(setError);
   }, []);
 
-  const [create, clone, open] = mgrCreate({mgr: calc_order, navigate, selectedRows});
+  const [create, clone, open] = mgrCreate({mgr: calc_order, navigate, selectedRows, backdrop});
 
   const onCellDoubleClick = ({column, row, selectCell}, evt) => {
     navigate(`${row.ref}`, {relative: 'path'});

@@ -16,19 +16,28 @@ export function cellClick({selectedRows, setSelectedRows}) {
   };
 }
 
-export function mgrCreate({mgr, navigate, selectedRows}) {
+export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
 
   const create = () => {
-    mgr.create().then(({ref}) => navigate(ref));
+    backdrop
+      .setOpen(true)
+      .then(() => mgr.create())
+      .then(({ref}) => navigate(ref));
   };
 
-  const clone = async () => {
+  const clone = () => {
     if(selectedRows.size) {
-      const proto = mgr.get(Array.from(selectedRows)[0]);
-      if(proto.is_new()) {
-        await proto.load();
-      }
-      mgr.clone(proto.toJSON()).then(({ref}) => navigate(ref));
+      backdrop
+        .setOpen(true)
+        .then(async () => {
+          const proto = mgr.get(Array.from(selectedRows)[0]);
+          if(proto.is_new()) {
+            await proto.load();
+          }
+          return proto;
+        })
+        .then((proto) => mgr.clone(proto.toJSON()))
+        .then(({ref}) => navigate(ref));
     }
     else {
       //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
@@ -37,7 +46,9 @@ export function mgrCreate({mgr, navigate, selectedRows}) {
 
   const open = () => {
     if(selectedRows.size) {
-      navigate(Array.from(selectedRows)[0], {relative: 'path'});
+      backdrop
+        .setOpen(true)
+        .then(() => navigate(Array.from(selectedRows)[0], {relative: 'path'}));
     }
     else {
       //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
