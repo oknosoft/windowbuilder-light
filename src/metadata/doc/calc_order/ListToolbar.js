@@ -7,36 +7,13 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useNavigate} from 'react-router-dom';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 
-export default function ListToolbar({selectedRows, mgr}) {
-  const navigate = useNavigate();
-  const create = () => {
-    mgr.create().then(({ref}) => navigate(ref));
-  };
-  const clone = async () => {
-    if(selectedRows.size) {
-      const proto = mgr.get(Array.from(selectedRows)[0]);
-      if(proto.is_new()) {
-        await proto.load();
-      }
-      mgr.clone(proto.toJSON()).then(({ref}) => navigate(ref));
-    }
-    else {
-      //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
-    }
-  };
-  const open = () => {
-    if(selectedRows.size) {
-      navigate(Array.from(selectedRows)[0], {relative: 'path'});
-    }
-    else {
-      //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
-    }
-  };
+export default function ListToolbar({create, clone, open}) {
+
   return <Toolbar disableGutters>
-    <HtmlTooltip title="Создать документ">
+    <HtmlTooltip title="Создать документ {Insert}">
       <IconButton onClick={create}><AddIcon/></IconButton>
     </HtmlTooltip>
-    <HtmlTooltip title="Создать документ копированием текущего">
+    <HtmlTooltip title="Создать документ копированием текущего {F9}">
       <IconButton onClick={clone}><CopyIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Изменить документ">

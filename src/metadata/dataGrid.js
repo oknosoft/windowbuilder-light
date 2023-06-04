@@ -16,7 +16,38 @@ export function cellClick({selectedRows, setSelectedRows}) {
   };
 }
 
-export function cellKeyDown({rows, columns, onDoubleClick, setSelectedRows}) {
+export function mgrCreate({mgr, navigate, selectedRows}) {
+
+  const create = () => {
+    mgr.create().then(({ref}) => navigate(ref));
+  };
+
+  const clone = async () => {
+    if(selectedRows.size) {
+      const proto = mgr.get(Array.from(selectedRows)[0]);
+      if(proto.is_new()) {
+        await proto.load();
+      }
+      mgr.clone(proto.toJSON()).then(({ref}) => navigate(ref));
+    }
+    else {
+      //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
+    }
+  };
+
+  const open = () => {
+    if(selectedRows.size) {
+      navigate(Array.from(selectedRows)[0], {relative: 'path'});
+    }
+    else {
+      //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
+    }
+  };
+
+  return [create, clone, open];
+}
+
+export function cellKeyDown({rows, columns, create, clone, onDoubleClick, setSelectedRows}) {
   return ({ mode, row, column, rowIdx, selectCell }, event) => {
     if (mode === 'EDIT' || !rows.length) return;
     const { idx } = column;
@@ -24,6 +55,12 @@ export function cellKeyDown({rows, columns, onDoubleClick, setSelectedRows}) {
 
     if(key === 'Enter') {
       onDoubleClick({row, column, selectCell});
+    }
+    else if(key === 'Insert') {
+      create();
+    }
+    else if(key === 'F9') {
+      clone();
     }
     else if (key === 'ArrowDown') {
       if (rowIdx < rows.length - 1) {

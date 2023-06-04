@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
 import {useTitleContext} from '../../../components/App';
 import ListToolbar from './ListToolbar';
-import {rowKeyGetter, cellClick, cellKeyDown} from '../../dataGrid';
+import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate} from '../../dataGrid';
 
 
 const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}, utils} = $p;
@@ -70,16 +70,25 @@ export default function CalcOrderList() {
       .catch(setError);
   }, []);
 
+  const [create, clone, open] = mgrCreate({mgr: calc_order, navigate, selectedRows});
+
   const onCellDoubleClick = ({column, row, selectCell}, evt) => {
     navigate(`${row.ref}`, {relative: 'path'});
   };
 
   const onCellClick = cellClick({selectedRows, setSelectedRows});
 
-  const onCellKeyDown = cellKeyDown({rows, columns, onDoubleClick: onCellDoubleClick, setSelectedRows});
+  const onCellKeyDown = cellKeyDown({
+    rows,
+    columns,
+    create,
+    clone,
+    onDoubleClick: onCellDoubleClick,
+    setSelectedRows
+  });
 
   return <Content>
-    <ListToolbar selectedRows={selectedRows} mgr={calc_order}/>
+    <ListToolbar create={create} clone={clone} open={open}/>
     <DataGrid
       columns={columns}
       rows={rows}
