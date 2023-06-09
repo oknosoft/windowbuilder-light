@@ -119,7 +119,7 @@ export function NumberCell({row, column, onRowChange, onClose}) {
     function TextEditor(porps) {
       return <input
         ref={autoFocusAndSelect}
-        className="rdg-text-editor tlmcuo07-0-0-beta-31"
+        className="rdg-text-editor tlmcuo07-0-0-beta-33"
         value={porps.value}
         onChange={({target}) => {
           setValue(target.value);

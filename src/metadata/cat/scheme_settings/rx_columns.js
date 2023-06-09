@@ -5,7 +5,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
 
   const typed_formatters = {};
 
-  const indicator_formatter = (is_doc, is_date) => function IndicatorFormatter({column, row, value, isCellSelected, onRowChange, raw}) {
+  const indicator_formatter = (is_doc, is_date) => function IndicatorFormatter({column, row, value, isCellEditable, tabIndex, onRowChange, raw}) {
     if(value === undefined) {
       value = row[column.key];
     }
@@ -39,7 +39,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
 
   const date_formatter = (format, indicator, is_doc) => {
     const formatter = indicator && indicator_formatter(is_doc, true);
-    return function DateFormatter({column, row, isCellSelected, onRowChange, raw}) {
+    return function DateFormatter({column, row, isCellEditable, tabIndex, onRowChange, raw}) {
       let value = row[column.key];
       if(!value || value.length < 5) {
         value = String(value || '');
@@ -51,7 +51,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
         return value;
       }
       if(formatter) {
-        return formatter({column, row, value, isCellSelected, onRowChange, raw});
+        return formatter({column, row, value, isCellEditable, tabIndex, onRowChange, raw});
       }
       const values = value.split(' ');
       if(values.length === 2) {
@@ -61,7 +61,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
     };
   };
 
-  function PresentationFormatter ({column, row, value, isCellSelected, onRowChange, raw}) {
+  function PresentationFormatter ({column, row, value, isCellEditable, tabIndex, onRowChange, raw}) {
     if(!value) {
       value = row[column.key];
     }
@@ -90,7 +90,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
   };
 
   const number_formatter = (fraction = 0) => {
-    return function NumberFormatter ({column, row, value, isCellSelected, onRowChange, raw}) {
+    return function NumberFormatter ({column, row, value, isCellEditable, tabIndex, onRowChange, raw}) {
       if(value === undefined) {
         value = row[column.key];
       }
@@ -101,7 +101,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
     };
   };
 
-  function BoolFormatter ({column, row, value, isCellSelected, onRowChange, raw}) {
+  function BoolFormatter ({column, row, value, isCellEditable, tabIndex, onRowChange, raw}) {
     if(value === undefined) {
       value = row[column.key];
     }
@@ -109,7 +109,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
     return raw ? v : <div>{v}</div>;
   }
 
-  function PropsFormatter ({column, row, value, isCellSelected, onRowChange, raw}) {
+  function PropsFormatter ({column, row, value, isCellEditable, tabIndex, onRowChange, raw}) {
     if(value === undefined) {
       value = row[column.key];
     }
@@ -183,19 +183,19 @@ export default function proto_columns({utils: {moment}, enm, md}) {
         }
 
 
-        if(!column.formatter && _fld && _fld.type) {
+        if(!column.renderCell && _fld && _fld.type) {
 
           if(column.key === 'ref' || _fld.type.is_ref) {
-            column.formatter = !_obj && _fld.type.types[0].includes('.') ? typed_formatter(_fld.type.types[0]) : PresentationFormatter;
+            column.renderCell = !_obj && _fld.type.types[0].includes('.') ? typed_formatter(_fld.type.types[0]) : PresentationFormatter;
           }
           else if(_fld.type.date_part) {
-            column.formatter = date_formatter(_fld.type.date_part, !index && !editable, is_doc);
+            column.renderCell = date_formatter(_fld.type.date_part, !index && !editable, is_doc);
           }
           else if(_fld.type.digits && _fld.type.types.length === 1){
-            column.formatter = number_formatter(_fld.type.fraction);
+            column.renderCell = number_formatter(_fld.type.fraction);
           }
           else if(_fld.type.types.includes('boolean')) {
-            column.formatter = BoolFormatter;
+            column.renderCell = BoolFormatter;
           }
         }
 
@@ -227,48 +227,48 @@ export default function proto_columns({utils: {moment}, enm, md}) {
               }
             ];
             if(editable){
-              //column.editor = <DropDownEditor options={toggle_options}/>;
+              //column.renderEditCell = <DropDownEditor options={toggle_options}/>;
             }
             //column.formatter = <DropDownFormatter options={toggle_options} value={''}/>;
             break;
 
           case path:
             if(editable){
-              //column.editor = PathFieldCell;
+              //column.renderEditCell = PathFieldCell;
             }
             break;
 
           case type:
             if(editable){
-              //column.editor = TypeFieldCell;
+              //column.renderEditCell = TypeFieldCell;
             }
             break;
 
           case props:
             if(editable){
-              //column.editor = PropsFieldCell;
+              //column.renderEditCell = PropsFieldCell;
             }
-            column.formatter = PropsFormatter;
+            column.renderCell = PropsFormatter;
             break;
 
           case typed_field:
             if(editable){
-              //column.editor = DataCellTyped;
+              //column.renderEditCell = DataCellTyped;
             }
-            column.formatter = PresentationFormatter;
+            column.renderCell = PresentationFormatter;
             break;
 
           default:
-            if(!column.editor && editable){
-              //column.editor = DataCell;
+            if(!column.renderEditCell && editable){
+              //column.renderEditCell = DataCell;
             }
-            else if(!column.formatter && !index && !is_rep) {
-              column.formatter = indicator_formatter(is_doc);
+            else if(!column.renderCell && !index && !is_rep) {
+              column.renderCell = indicator_formatter(is_doc);
             }
         }
 
-        if(appearance[column.key] && column.formatter) {
-          column.formatter = appearance_formatter(appearance[column.key], column.formatter);
+        if(appearance[column.key] && column.renderCell) {
+          column.renderCell = appearance_formatter(appearance[column.key], column.renderCell);
         }
 
       });

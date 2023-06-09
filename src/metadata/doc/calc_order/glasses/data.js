@@ -53,18 +53,18 @@ export function createGlasses({obj, classes}){
       cellClass(row) {
         return row.type === 'DETAIL' ? classes.padding : undefined;
       },
-      formatter: ObjGlassesDetail,
+      renderCell: ObjGlassesDetail,
     },
     {key: 'key', name: '№', width: 30,},
     {
       key: 'inset',
       name: 'Продукт',
-      formatter: ProductFormatter,
-      editor(props) {
+      renderCell: ProductFormatter,
+      renderEditCell(props) {
         const {row, onRowChange} = props;
         return <select
           autoFocus
-          className="rdg-text-editor tlmcuo07-0-0-beta-31"
+          className="rdg-text-editor tlmcuo07-0-0-beta-33"
           value={row.row.inset}
           onChange={({target}) => {
             row.row.inset = target.value;
@@ -77,8 +77,8 @@ export function createGlasses({obj, classes}){
         </select>;
       }
     },
-    {key: 'len', name: 'Ширина', width: 88, editor: NumberCell, formatter: NumberFormatter},
-    {key: 'height', name: 'Высота', width: 88, editor: NumberCell, formatter: NumberFormatter},
+    {key: 'len', name: 'Ширина', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
+    {key: 'height', name: 'Высота', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
   ],
     glasses,
   ];
