@@ -1,8 +1,10 @@
 import React from 'react';
 import Autocomplete from './Autocomplete';
 
-export default function RefField({obj, fld, meta, label, value, onChange, fullWidth=true, ...other}) {
-  if(!value && obj && fld) {
+export default function RefField({obj, fld, meta, label, onChange, fullWidth=true, ...other}) {
+
+  let [value, setValue] = React.useState();
+  if(value === undefined && obj && fld) {
     value = obj[fld];
   }
   if(!meta && obj && fld) {
@@ -33,6 +35,7 @@ export default function RefField({obj, fld, meta, label, value, onChange, fullWi
     onChange={(event, newValue, reason, details) => {
       obj[fld] = newValue;
       onChange?.(newValue);
+      setValue(obj[fld]);
     }}
     value={value}
     label={label}

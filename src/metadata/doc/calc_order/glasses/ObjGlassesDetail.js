@@ -3,8 +3,10 @@ import FormGroup from '@mui/material/FormGroup';
 import Grid from '@mui/material/Unstable_Grid2';
 import CellExpanderFormatter from './CellExpanderFormatter';
 import PropField from '../../../../packages/ui/DataField/PropField';
+import {useSelectedContext} from './selectedContext';
 import {GlassesDetail} from '../styled';
-export default function ObjGlassesDetail({ row, tabIndex, onRowChange }) {
+
+export default function ObjGlassesDetail({ row, tabIndex, isCellEditable, onRowChange }) {
   if (row.type === 'DETAIL') {
     return Details(row);
   }
@@ -45,13 +47,14 @@ function Details(row) {
     />);
   });
 
+  const selected = useSelectedContext() === row.key;
 
-  return <Grid container spacing={2}>
+  return <GlassesDetail container spacing={2} selected={selected}>
     <Grid sm={12} md={5}>
       <FormGroup>{gprops}</FormGroup>
     </Grid>
     <Grid sm={12} md={5}>
       <FormGroup>{rprops}</FormGroup>
     </Grid>
-  </Grid>;
+  </GlassesDetail>;
 }

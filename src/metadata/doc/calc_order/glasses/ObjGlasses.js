@@ -4,6 +4,7 @@ import {useLoadingContext} from '../../../../components/Metadata';
 import {useBackdropContext} from '../../../../components/App';
 import {disablePermanent, drawerWidth} from '../../../../styles/muiTheme';
 import Toolbar from '../ObjProductionToolbar';
+import {SelectedContext} from './selectedContext';
 import {preventDefault} from '../../../dataGrid';
 
 import {useStyles, rowHeight, createGlasses, rowKeyGetter, handleAdd} from './data';
@@ -175,19 +176,21 @@ export default function ObjGlasses({tabRef, obj}) {
 
   return <div style={style}>
     <Toolbar obj={obj} handleAdd={handleAdd} handleDel={handleDel} getRow={getRow} setRows={setRows} />
-    <DataGrid
-      rowKeyGetter={rowKeyGetter}
-      columns={columns}
-      rows={rows}
-      onRowsChange={onRowsChange}
-      headerRowHeight={33}
-      rowHeight={rowHeight}
-      className="fill-grid"
-      enableVirtualization={false}
-      onCellKeyDown={onCellKeyDown}
-      onCellClick={onCellClick}
-      selectedRows={selectedRows}
-      onSelectedRowsChange={selectedRowsChange}
-    />
+    <SelectedContext.Provider value={selectedRows.size ? Array.from(selectedRows)[0] : 0}>
+      <DataGrid
+        rowKeyGetter={rowKeyGetter}
+        columns={columns}
+        rows={rows}
+        onRowsChange={onRowsChange}
+        headerRowHeight={33}
+        rowHeight={rowHeight}
+        className="fill-grid"
+        enableVirtualization={false}
+        onCellKeyDown={onCellKeyDown}
+        onCellClick={onCellClick}
+        selectedRows={selectedRows}
+        onSelectedRowsChange={selectedRowsChange}
+      />
+    </SelectedContext.Provider>
   </div>;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import MuiListSubheader from '@mui/material/ListSubheader';
-import MuiToolbar from '@mui/material/Toolbar';
+import Grid from '@mui/material/Unstable_Grid2';
 import {styled} from '@mui/material/styles';
 
 export const ListSubheader = styled(MuiListSubheader)(({ theme }) => ({
@@ -13,7 +13,9 @@ export const Root = styled('div')(({ theme }) => ({
   overflow: 'auto',
 }));
 
-export const GlassesDetail = styled('div')(({ theme }) => ({
+export const GlassesDetail = styled(Grid, {
+  shouldForwardProp: (prop) => prop !== 'selected',
+})(({ theme, selected }) => ({
   paddingTop: theme.spacing(),
-  lineHeight: 'initial',
+  ...(!selected && {pointerEvents: `none`}),
 }));
