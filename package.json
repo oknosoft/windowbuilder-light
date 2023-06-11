@@ -56,7 +56,7 @@
     "react-helmet": "^6.1",
     "react-highlight-words": "^0.20",
     "react-number-format": "^5.2",
-    "react-router-dom": "^6.12",
+    "react-router-dom": "6.11",
     "react-treebeard": "^3.2.4",
     "react-virtualized-auto-sizer": "^1.0.20",
     "react-window": "^1.8.9",

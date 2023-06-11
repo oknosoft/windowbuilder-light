@@ -13,7 +13,7 @@
   );
 
   const host = zone === 29 ? 'steklotorg.oknosoft.ru' : (
-    zone === 22 ? 'localhost:2222' : 'steklotorg.oknosoft.ru:2310'
+    zone === 22 ? 'localhost:2222' : 'steklotorg.oknosoft.ru:2210'
   );
 
   window._dynamic_patch_ = {

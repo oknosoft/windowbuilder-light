@@ -48,7 +48,7 @@ export function createGlasses({obj, classes}){
       minWidth: 28,
       width: 28,
       colSpan(args) {
-        return args.type === 'ROW' && args.row.type === 'DETAIL' ? 5 : undefined;
+        return args.type === 'ROW' && args.row.type === 'DETAIL' ? 9 : undefined;
       },
       cellClass(row) {
         return row.type === 'DETAIL' ? classes.padding : undefined;
