@@ -133,4 +133,32 @@ export class RowProxy {
   get calc_order_row() {
     return this.#row;
   }
+
+  get quantity() {
+    return this.#row.quantity;
+  }
+  set quantity(v) {
+    this.#row.quantity = v;
+  }
+
+  get discount_percent_internal() {
+    return this.#row.discount_percent_internal;
+  }
+  set discount_percent_internal(v) {
+    this.#row.discount_percent_internal = v;
+  }
+
+  get price_internal() {
+    return this.#row.price_internal;
+  }
+  set price_internal(v) {
+    this.#row.price_internal = v;
+  }
+
+  get amount_internal() {
+    return this.#row.amount_internal;
+  }
+  set amount_internal(v) {
+    this.#row.amount_internal = v;
+  }
 }
