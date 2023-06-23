@@ -15,12 +15,14 @@ export default function AppView(props) {
   const [{description, title, appTitle}, setTitleState] = React.useState(initialTitle);
   const [backdropOpen, setBackdropState] = React.useState(false);
   const [snack, setSnackState] = React.useState('');
+  const [confirm, setConfirmState] = React.useState(null);
+
 
   const setTitle = React.useMemo(() => (newState) => {
     setTitleState(prevState => ({...prevState, ...newState}));
   }, []);
 
-  const [setBackdrop, setSnack, snackClose] = React.useMemo(() => [
+  const [setBackdrop, setSnack, snackClose, setConfirm, setConfirmClose] = React.useMemo(() => [
     (newOpen) => {
       setBackdropState(newOpen);
       return Promise.resolve();
@@ -30,6 +32,15 @@ export default function AppView(props) {
       return Promise.resolve();
     },
     () => setSnackState(''),
+
+    ({text, title = 'Внимание', actions = []}) => {
+      if (confirm) {
+        return Promise.reject(new Error('Уже открыт системный диалог'));
+      }
+      return new Promise(({resolve, reject}) => {
+        setConfirmState({text, title, actions});
+      });
+    },
   ]);
 
   return <TitleContext.Provider value={{ description, title, appTitle, setTitle }}>

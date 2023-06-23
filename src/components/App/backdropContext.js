@@ -1,15 +1,23 @@
 import {createContext, useContext} from 'react';
 
+const stub = () => Promise.resolve();
+
 export const initialBackdrop = {
   backdropOpen: false,
-  setBackdrop() {
-    return Promise.resolve();
-  },
+  setBackdrop: stub,
 
   snack: '',
-  setSnack() {
-    return Promise.resolve();
-  },
+  setSnack: stub,
+
+  alert: null,
+  setAlert: stub,
+
+  confirm: null,
+  setConfirm: stub,
+
+  inputValue: null,
+  setInputValue: stub,
+
 };
 
 export const initialSnack = {
