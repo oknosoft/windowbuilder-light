@@ -27,7 +27,7 @@ export default function CalcOrderObj() {
 
   const params = useParams();
   const {setTitle} = useTitleContext();
-  const backdrop = useBackdropContext();
+  const {setBackdrop} = useBackdropContext();
 
   React.useEffect(() => {
     const {ref} = params;
@@ -35,7 +35,7 @@ export default function CalcOrderObj() {
       .then((doc) => doc.load_linked_refs())
       .then(setObj)
       .catch(setError)
-      .then(() => backdrop.setOpen(false));
+      .then(() => setBackdrop(false));
   }, []);
   React.useEffect(() => {
     const title = obj ? obj.presentation : 'Расчёт-заказ';

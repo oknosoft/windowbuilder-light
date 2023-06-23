@@ -36,7 +36,7 @@ export default {
         const path = this._owner.formulas.predefined('components');
         if(path && !path.empty()) {
           const {fields} = this.metadata('fields');
-          const choice = {name: 'parent', path}
+          const choice = {name: 'parent', path};
           fields.formatter.choice_params = [choice];
           fields.editor.choice_params = [choice];
         }
@@ -276,7 +276,7 @@ export default {
             this.date_from = from.subtract(7, 'days').startOf('day').toDate();
             this.date_till = till.endOf('day').toDate();
             break;
-          case period.lastTendays:
+          case period.lastTendays: {
             const nf = from.clone();
             (nf.date() > 10) ? nf.subtract(10, 'days') : nf.subtract(1, 'month').endOf('month');
             const days_of_ten = 10 * Math.floor(nf.date() / 10);
@@ -285,6 +285,7 @@ export default {
             ed.add(9, 'days');
             this.date_till = (ed.month() > nf.month()) ? nf.endOf('month').toDate() : ed.endOf('day').toDate();
             break;
+          }
           case period.last30days:
             this.date_from = from.subtract(30, 'days').startOf('day').toDate();
             this.date_till = till.endOf('day').toDate();
@@ -322,7 +323,7 @@ export default {
             this.date_from = from.add(1, 'days').startOf('day').toDate();
             this.date_till = till.add(7, 'days').endOf('day').toDate();
             break;
-          case period.nextTendays:
+          case period.nextTendays: {
             const dot = 10 * Math.floor(from.date() / 10) + 10;
             const nf2 = from.clone().startOf('month').add(dot, 'days');
             this.date_from = (nf2.month() > from.month()) ? nf2.startOf('month').toDate() : nf2.startOf('day').toDate();
@@ -330,6 +331,7 @@ export default {
             ed2.add(9, 'days');
             this.date_till = (ed2.month() > nf2.month()) ? nf2.endOf('month').toDate() : ed2.endOf('day').toDate();
             break;
+          }
           case period.nextWeek:
             this.date_from = from.add(1, 'weeks').startOf('week').toDate();
             this.date_till = till.add(1, 'weeks').endOf('week').toDate();
@@ -368,12 +370,13 @@ export default {
             this.date_from = from.startOf('day').toDate();
             this.date_till = (from.quarter() <= 2) ? from.startOf('year').add(5, 'month').endOf('quarter').toDate() : from.endOf('year').toDate();
             break;
-          case period.tillEndOfThistendays:
+          case period.tillEndOfThistendays: {
             this.date_from = from.startOf('day').toDate();
             const dot2 = 10 * Math.floor(from.date() / 10) + 9;
             const this_end_days = from.clone().startOf('month').add(dot2, 'days');
             this.date_till = (this_end_days.month() > from.date()) ? from.endOf('month').toDate() : this_end_days.endOf('day').toDate();
             break;
+          }
           case period.tillEndOfThisweek:
             this.date_from = from.startOf('day').toDate();
             this.date_till = till.endOf('week').toDate();
@@ -394,22 +397,24 @@ export default {
             this.date_from = (from.quarter() <= 2) ? from.startOf('year').toDate : from.startOf('year').add(7, 'month').startOf('quarter').toDate();
             this.date_till = till.endOf('day').toDate();
             break;
-          case period.fromBeginningOfThisTendays:
+          case period.fromBeginningOfThisTendays: {
             const dot4 = 10 * Math.floor(from.date() / 10);
             this.date_from = from.startOf('month').add(dot4, 'days').toDate();
             this.date_till = till.endOf('day').toDate();
             break;
+          }
           case period.fromBeginningOfThisWeek:
             this.date_from = from.startOf('week').toDate();
             this.date_till = till.endOf('day').toDate();
             break;
-          case period.thisTenDays:
+          case period.thisTenDays: {
             const dot5 = 10 * Math.floor(from.date() / 10);
             this.date_from = from.startOf('month').add(dot5, 'days').toDate();
             const dot6 = 10 * Math.floor(from.date() / 10) + 9;
             const this_end_days2 = from.clone().startOf('month').add(dot6, 'days');
             this.date_till = (this_end_days2.month() > from.date()) ? from.endOf('month').toDate() : this_end_days2.endOf('day').toDate();
             break;
+          }
           case period.thisWeek:
             this.date_from = from.startOf('week').toDate();
             this.date_till = till.endOf('week').toDate();

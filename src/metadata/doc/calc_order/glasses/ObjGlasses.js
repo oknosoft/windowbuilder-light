@@ -17,7 +17,7 @@ export default function ObjGlasses({tabRef, obj}) {
     const top = tabRef.current.offsetTop + tabRef.current.offsetHeight + 51;
     style.height = `calc(100vh - ${top}px)`;
   }
-  const backdrop = useBackdropContext();
+  const {setBackdrop, setSnack} = useBackdropContext();
 
   const classes = useStyles();
 
@@ -73,7 +73,7 @@ export default function ObjGlasses({tabRef, obj}) {
       // пересчитываем изделие
       const {characteristic} = row.row;
       if(characteristic._modified) {
-        backdrop.setOpen(true);
+        setBackdrop(true);
         const {project} = row.row.editor;
         project.redraw();
         await project.save_coordinates({save: true});
@@ -87,7 +87,7 @@ export default function ObjGlasses({tabRef, obj}) {
     await row.row.createEditor();
 
     setSelectedRows(newRows);
-    backdrop.setOpen(false);
+    setBackdrop(false);
   }
 
   const onCellClick = ({row, column, selectCell}) => {
@@ -171,6 +171,9 @@ export default function ObjGlasses({tabRef, obj}) {
         }
       });
       setRows([...rows]);
+    }
+    else {
+      setSnack('Укажите строку табчасти для удаления');
     }
   };
 

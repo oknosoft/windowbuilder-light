@@ -11,7 +11,9 @@ import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 
 export default function ObjToolbar({obj, setSettingOpen}) {
   const navigate = useNavigate();
-  const close = () => navigate(`/doc/calc_order${obj?.ref ? `?ref=${obj?.ref}` : ''}`);
+  const close = () => {
+    navigate(`/doc/calc_order${obj?.ref ? `?ref=${obj?.ref}` : ''}`);
+  };
   const save = () => obj.save();
   const saveClose = () => obj.save().then(close);
 

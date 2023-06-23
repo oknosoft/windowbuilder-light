@@ -7,9 +7,9 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useNavigate} from 'react-router-dom';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 
-export default function ListToolbar({create, clone, open}) {
+export default function ListToolbar({create, clone, open, disabled}) {
 
-  return <Toolbar disableGutters>
+  return <Toolbar disableGutters disabled={disabled}>
     <HtmlTooltip title="Создать документ {Insert}">
       <IconButton onClick={create}><AddIcon/></IconButton>
     </HtmlTooltip>

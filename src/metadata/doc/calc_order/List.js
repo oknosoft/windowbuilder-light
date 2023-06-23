@@ -48,7 +48,7 @@ export default function CalcOrderList() {
   const [rows, setRows] = React.useState([]);
   const [selectedRows, setSelectedRows] = React.useState(new Set());
   const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState(false);
+  const [error, setError] = React.useState(null);
   const navigate = useNavigate();
   const backdrop = useBackdropContext();
   const {setTitle} = useTitleContext();
@@ -58,6 +58,13 @@ export default function CalcOrderList() {
     const {ref} = utils.prm();
     loadMoreRows(50, 0, ref)
       .then((data) => {
+        if(data.error) {
+          const err = new Error(data.message);
+          if(data.status) {
+            err.status = data.status;
+          }
+          throw err;
+        }
         setRows((rows) => {
           const nrows = [...rows, ...data.docs];
           if(ref) {
@@ -89,8 +96,8 @@ export default function CalcOrderList() {
   });
 
   return <Content>
-    <ListToolbar create={create} clone={clone} open={open}/>
-    <DataGrid
+    <ListToolbar create={create} clone={clone} open={open} disabled={Boolean(error)}/>
+    {error ? error.message : <DataGrid
       columns={columns}
       rows={rows}
       rowKeyGetter={rowKeyGetter}
@@ -102,6 +109,6 @@ export default function CalcOrderList() {
       onCellKeyDown={onCellKeyDown}
       className="fill-grid"
       rowHeight={33}
-    />
+    />}
   </Content>;
 }
