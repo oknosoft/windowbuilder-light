@@ -8,7 +8,7 @@ import {router} from './Router';
 import Loading from './Loading';
 
 import {initialTitle, TitleContext} from './titleContext';
-import {BackdropContext, SnackContext} from './backdropContext';
+import {BackdropContext} from './backdropContext';
 const bsx = { color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 };
 
 export default function AppView(props) {
@@ -27,28 +27,25 @@ export default function AppView(props) {
       setBackdropState(newOpen);
       return Promise.resolve();
     },
+
     (newSnack) => {
       setSnackState(newSnack);
       return Promise.resolve();
     },
+
     () => setSnackState(''),
 
     ({text, title = 'Внимание', actions = []}) => {
-      if (confirm) {
-        return Promise.reject(new Error('Уже открыт системный диалог'));
-      }
       return new Promise(({resolve, reject}) => {
+        if (confirm) {
+          return reject(new Error('Уже открыт системный диалог'));
+        }
         setConfirmState({text, title, actions});
       });
     },
-  ]);
 
-  React.useEffect(() => {
-    console.log(router, router);
-    return router.subscribe((...attr) => {
-      console.log(attr);
-    });
-  }, []);
+    () => setConfirmState(null),
+  ]);
 
   return <TitleContext.Provider value={{ description, title, appTitle, setTitle }}>
     <Helmet title={title}/>
@@ -63,7 +60,7 @@ export default function AppView(props) {
       message={snack}
       //action={action}
     />
-    <BackdropContext.Provider value={{backdropOpen, setBackdrop, snack, setSnack}}>
+    <BackdropContext.Provider value={{backdropOpen, setBackdrop, snack, setSnack, setConfirm, setConfirmClose}}>
       <RouterProvider router={router} fallbackElement={<Loading/>}/>
     </BackdropContext.Provider>
   </TitleContext.Provider>;
