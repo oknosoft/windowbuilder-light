@@ -43,6 +43,13 @@ export default function AppView(props) {
     },
   ]);
 
+  React.useEffect(() => {
+    console.log(router, router);
+    return router.subscribe((...attr) => {
+      console.log(attr);
+    });
+  }, []);
+
   return <TitleContext.Provider value={{ description, title, appTitle, setTitle }}>
     <Helmet title={title}/>
     <Backdrop sx={bsx} open={backdropOpen}>

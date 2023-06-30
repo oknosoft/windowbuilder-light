@@ -1,6 +1,7 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import {useParams} from 'react-router-dom';
+// https://www.npmjs.com/package/react-router-prompt
+import {useParams, useBeforeUnload, unstable_usePrompt as usePrompt} from 'react-router-dom';
 import {useTitleContext, useBackdropContext} from '../../../components/App';
 import Loading from '../../../components/App/Loading';
 import {Root} from './styled';
@@ -17,6 +18,8 @@ export default function CalcOrderObj() {
   const [error, setError] = React.useState(null);
   const [tab, setTab] = React.useState(0);
   const tabRef = React.useRef(null);
+
+  const [modified, setModified] = React.useState(false);
 
   const [settingOpen, setSettingOpen] = React.useState(false);
   const [setting, setSetting] = React.useState(initSetting);
@@ -40,7 +43,34 @@ export default function CalcOrderObj() {
   React.useEffect(() => {
     const title = obj ? obj.presentation : 'Расчёт-заказ';
     setTitle({title, appTitle: <Typography variant="h6" noWrap>{title}</Typography>});
-  }, [obj?._modified]);
+  }, [obj, modified]);
+
+  usePrompt({
+    when: modified,
+    message: "Hello from usePrompt -- Are you sure you want to leave?"
+  });
+
+  //useBeforeUnload(update);
+  //
+  React.useEffect(() => {
+    function update (curr, flds){
+      if(!modified && curr === obj) {
+        setModified(obj._modified);
+      }
+    };
+    function beforeUnload (e) {
+      if(modified || obj._modified) {
+        e.preventDefault();
+        return (e.returnValue = "");
+      }
+    };
+    $p.doc.calc_order.on({update});
+    addEventListener("beforeunload", beforeUnload);
+    return () => {
+      $p.doc.calc_order.off({update});
+      removeEventListener("beforeunload", beforeUnload);
+    };
+  }, [obj]);
 
   if(error) {
     return error.message;
