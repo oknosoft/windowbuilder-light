@@ -22,7 +22,10 @@ function isAtBottom({ currentTarget }) {
   return currentTarget.scrollTop + 10 >= currentTarget.scrollHeight - currentTarget.clientHeight;
 }
 
-function loadMoreRows(newRowsCount, skip, ref) {
+function loadMoreRows(newRowsCount, skip, ref, backdrop) {
+
+  backdrop.setBackdrop(true);
+
   const sprm = {
     columns,
     skip,
@@ -41,7 +44,14 @@ function loadMoreRows(newRowsCount, skip, ref) {
   };
 
   return pouch.fetch('/r/_find', opts)
-    .then((res) => res.json());
+    .then((res) => {
+      backdrop.setBackdrop(false);
+      return res.json();
+    })
+    .catch((err) => {
+      backdrop.setBackdrop(false);
+      throw err;
+    });
 }
 
 export default function CalcOrderList() {
@@ -56,7 +66,7 @@ export default function CalcOrderList() {
   React.useEffect(() => {
     setTitle(title);
     const {ref} = utils.prm();
-    loadMoreRows(50, 0, ref)
+    loadMoreRows(50, 0, ref, backdrop)
       .then((data) => {
         if(data.error) {
           const err = new Error(data.message);
@@ -80,10 +90,6 @@ export default function CalcOrderList() {
 
   const [create, clone, open] = mgrCreate({mgr: calc_order, navigate, selectedRows, backdrop});
 
-  const onCellDoubleClick = ({column, row, selectCell}, evt) => {
-    navigate(`${row.ref}`, {relative: 'path'});
-  };
-
   const onCellClick = cellClick({selectedRows, setSelectedRows});
 
   const onCellKeyDown = cellKeyDown({
@@ -91,7 +97,7 @@ export default function CalcOrderList() {
     columns,
     create,
     clone,
-    onDoubleClick: onCellDoubleClick,
+    open,
     setSelectedRows
   });
 
@@ -105,7 +111,7 @@ export default function CalcOrderList() {
       selectedRows={selectedRows}
       onSelectedRowsChange={setSelectedRows}
       onCellClick={onCellClick}
-      onCellDoubleClick={onCellDoubleClick}
+      onCellDoubleClick={open}
       onCellKeyDown={onCellKeyDown}
       className="fill-grid"
       rowHeight={33}

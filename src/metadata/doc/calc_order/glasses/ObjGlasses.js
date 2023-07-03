@@ -9,8 +9,9 @@ import {preventDefault} from '../../../dataGrid';
 
 import {useStyles, rowHeight, createGlasses, rowKeyGetter, handleAdd} from './data';
 
+let skey;
 
-export default function ObjGlasses({tabRef, obj}) {
+export default function ObjGlasses({tabRef, obj, setModified}) {
   const {ifaceState: {menu_open}} = useLoadingContext();
   const style = {minHeight: 420, width: window.innerWidth - (!disablePermanent && menu_open ? drawerWidth : 0) - 2};
   if(tabRef?.current && !disablePermanent) {
@@ -24,7 +25,36 @@ export default function ObjGlasses({tabRef, obj}) {
   const [columns, glasses] = React.useMemo(
     () => createGlasses({obj, classes}), []);
   const [rows, setRows] = React.useState(glasses);
-  const [selectedRows, setSelectedRows] = React.useState(new Set());
+  const [selectedRows, rawSetSelectedRows] = React.useState(new Set());
+
+  const setSelectedRows = (rows) => {
+    skey = rows.size && Array.from(rows)[0];
+    if(skey > 1000) {
+      skey -= 1000;
+    }
+    rawSetSelectedRows(rows);
+  };
+
+  React.useEffect(function recalc() {
+
+    async function before_save (curr){
+      if(curr === obj) {
+        if(skey) {
+          const row = rows.find(({key}) => key === skey);
+          const {characteristic} = row.row;
+          if(characteristic._modified) {
+            const {project} = row.row.editor;
+            project.redraw();
+            await project.save_coordinates();
+          }
+        }
+      }
+      return curr;
+    }
+
+    $p.doc.calc_order.on({before_save});
+    return () => $p.doc.calc_order.off({before_save});
+  }, [obj]);
 
   function onRowsChange(rows, {column, indexes }) {
     if(column.key === 'expanded') {
@@ -77,6 +107,7 @@ export default function ObjGlasses({tabRef, obj}) {
         const {project} = row.row.editor;
         project.redraw();
         await project.save_coordinates({save: true});
+        setModified(false);
       }
       // TODO
       // выгружаем редактор

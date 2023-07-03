@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 // https://www.npmjs.com/package/react-router-prompt
-import {useParams, useBeforeUnload, unstable_usePrompt as usePrompt} from 'react-router-dom';
+import {useParams, unstable_usePrompt as usePrompt} from 'react-router-dom';
 import {useTitleContext, useBackdropContext} from '../../../components/App';
 import Loading from '../../../components/App/Loading';
 import {Root} from './styled';
@@ -52,23 +52,23 @@ export default function CalcOrderObj() {
 
   //useBeforeUnload(update);
   //
-  React.useEffect(() => {
+  React.useEffect(function prompt() {
     function update (curr, flds){
       if(!modified && curr === obj) {
         setModified(obj._modified);
       }
-    };
+    }
     function beforeUnload (e) {
       if(modified || obj._modified) {
         e.preventDefault();
         return (e.returnValue = "");
       }
-    };
+    }
     $p.doc.calc_order.on({update});
-    addEventListener("beforeunload", beforeUnload);
+    addEventListener('beforeunload', beforeUnload);
     return () => {
       $p.doc.calc_order.off({update});
-      removeEventListener("beforeunload", beforeUnload);
+      removeEventListener('beforeunload', beforeUnload);
     };
   }, [obj]);
 
@@ -89,7 +89,7 @@ export default function CalcOrderObj() {
     <ObjHead obj={obj} setting={setting}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
     {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj}/>}
-    {curr.name === 'glass' && <ObjGlasses tabRef={tabRef} obj={obj}/>}
+    {curr.name === 'glass' && <ObjGlasses tabRef={tabRef} obj={obj} setModified={setModified}/>}
     {settingOpen && <ObjSetting setSettingOpen={setSettingOpen} />}
   </Root>;
 }

@@ -20,7 +20,7 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
 
   const create = () => {
     backdrop
-      .setOpen(true)
+      .setBackdrop(true)
       .then(() => mgr.create())
       .then(({ref}) => navigate(ref));
   };
@@ -28,7 +28,7 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
   const clone = () => {
     if(selectedRows.size) {
       backdrop
-        .setOpen(true)
+        .setBackdrop(true)
         .then(async () => {
           const proto = mgr.get(Array.from(selectedRows)[0]);
           if(proto.is_new()) {
@@ -47,7 +47,7 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
   const open = () => {
     if(selectedRows.size) {
       backdrop
-        .setOpen(true)
+        .setBackdrop(true)
         .then(() => navigate(Array.from(selectedRows)[0], {relative: 'path'}));
     }
     else {
@@ -58,14 +58,14 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
   return [create, clone, open];
 }
 
-export function cellKeyDown({rows, columns, create, clone, onDoubleClick, setSelectedRows}) {
+export function cellKeyDown({rows, columns, create, clone, open, setSelectedRows}) {
   return ({ mode, row, column, rowIdx, selectCell }, event) => {
     if (mode === 'EDIT' || !rows.length) return;
     const { idx } = column;
     const { key, shiftKey } = event;
 
     if(key === 'Enter') {
-      onDoubleClick({row, column, selectCell});
+      open();
     }
     else if(key === 'Insert') {
       create();
