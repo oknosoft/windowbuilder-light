@@ -9,6 +9,7 @@ export default function GlassDetails({row, selected}) {
   const {characteristic, inset, glassRow} = row.row;
   const gprops = [];
   const rprops = [];
+  
   // параметры изделия
   characteristic.params.find_rows({cnstr: 0, region: 0}, (prow) => {
     gprops.push(<PropField key={`pr-${prow.row}`} obj={prow} inset={inset} />);

@@ -7,7 +7,7 @@
 //import enums from "./enums";
 
 // модификаторы справочников
-//import catalogs from "./catalogs";
+import catalogs from "./cat";
 
 // модификаторы документов
 //import documents from "./documents";
@@ -29,4 +29,5 @@ export default function ($p) {
     return qs.parse(location.search.replace('?',''));
   };
   drawer($p);
+  catalogs($p);
 }
