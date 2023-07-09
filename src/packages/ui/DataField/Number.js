@@ -53,6 +53,7 @@ function actions({obj, fld, onChange, value, setValue}) {
 
   return {onKeyDown, onBlur, onFocus, handleChange};
 }
+
 export function NumberFormatCustom(props) {
   const { onChange, min, max, ...other } = props;
 
@@ -82,8 +83,6 @@ function autoFocusAndSelect(input) {
   input?.select();
 }
 
-
-
 export function NumberField({obj, fld, meta, label, readOnly,  fullWidth=true, onChange, ...other}) {
   if(!meta) {
     meta = obj._metadata(fld);
@@ -94,6 +93,19 @@ export function NumberField({obj, fld, meta, label, readOnly,  fullWidth=true, o
   const {attr} = toAttr(meta, other, readOnly);
   const [value, setValue] = React.useState(obj[fld]);
   const {onKeyDown, onBlur, onFocus, handleChange} = actions({obj, fld, onChange, value, setValue});
+
+  React.useEffect(function listen() {
+    function update (curr, flds){
+      if(curr === obj && fld in flds) {
+        setValue(obj[fld]);
+      }
+    }
+    const {_manager} = obj;
+    if(_manager) {
+      _manager.on({update});
+      return () => _manager.off({update});
+    }
+  }, [obj, fld]);
 
   return <FormControl fullWidth={fullWidth} {...attr}>
     <InputLabel>{label}</InputLabel>
@@ -145,7 +157,7 @@ export function NumberCell({row, column, onRowChange, onClose}) {
   return <NumberFormatCustom
     value={value}
     onChange={({target}) => {
-      console.log(target.value);
+      //console.log(target.value);
     }}
     customInput={TextEditor}
     {...other}
@@ -153,5 +165,20 @@ export function NumberCell({row, column, onRowChange, onClose}) {
 }
 
 export function NumberFormatter({row, column}) {
-  return row.row[column.key];
+
+  const [value, setValue] = React.useState(row.row[column.key]);
+
+  React.useEffect(() => {
+    function update (curr, flds){
+      if(row.row.equals(curr)) {
+        setValue(row.row[column.key]);
+      }
+    }
+    row.row._manager.on({update});
+    return () => {
+      row.row._manager.off({update});
+    };
+  }, [row.row, column.key]);
+
+  return value;
 }

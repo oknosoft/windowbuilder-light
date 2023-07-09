@@ -47,14 +47,14 @@ export default function CalcOrderObj() {
 
   usePrompt({
     when: modified,
-    message: "Hello from usePrompt -- Are you sure you want to leave?"
+    message: 'Документ изменён -- закрыть без сохранения?'
   });
 
   //useBeforeUnload(update);
   //
   React.useEffect(function prompt() {
     function update (curr, flds){
-      if(!modified && curr === obj) {
+      if(!modified && (curr === obj || curr._owner._owner === obj)) {
         setModified(obj._modified);
       }
     }
@@ -64,10 +64,10 @@ export default function CalcOrderObj() {
         return (e.returnValue = "");
       }
     }
-    $p.doc.calc_order.on({update});
+    $p.doc.calc_order.on({update, after_save: update});
     addEventListener('beforeunload', beforeUnload);
     return () => {
-      $p.doc.calc_order.off({update});
+      $p.doc.calc_order.off({update, after_save: update});
       removeEventListener('beforeunload', beforeUnload);
     };
   }, [obj]);

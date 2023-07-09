@@ -1,5 +1,5 @@
 
-const {cat: {inserts}, enm: {inserts_types}, dp: {buyers_order}}  = $p;
+const {cat: {inserts}, enm: {inserts_types}, doc: {calc_order}, dp: {buyers_order}}  = $p;
 
 // доступные типы вставок
 export const itypes = [inserts_types.glass, inserts_types.composite];
@@ -44,6 +44,10 @@ export class RowProxy {
       this.#editor.unload();
       this.#editor = null;
     }
+  }
+
+  equals(row) {
+    return this.#row === row;
   }
 
   get inset() {
@@ -128,6 +132,10 @@ export class RowProxy {
 
   _metadata(fld) {
     return buyers_order.metadata(fld);
+  }
+
+  get _manager() {
+    return calc_order;
   }
 
   get calc_order_row() {
