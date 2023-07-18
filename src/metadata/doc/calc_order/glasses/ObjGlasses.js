@@ -9,7 +9,7 @@ import {preventDefault} from '../../../dataGrid';
 
 import {useStyles, rowHeight, createGlasses, rowKeyGetter, handleAdd} from './data';
 
-let skey;
+let skey, rows;
 
 export default function ObjGlasses({tabRef, obj, setModified}) {
   const {ifaceState: {menu_open}} = useLoadingContext();
@@ -24,7 +24,12 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
 
   const [columns, glasses] = React.useMemo(
     () => createGlasses({obj, classes}), []);
-  const [rows, setRows] = React.useState(glasses);
+  const [srows, setSRows] = React.useState(glasses);
+  rows = srows;
+  const setRows = (v) => {
+    rows = v;
+    setSRows(v);
+  };
   const [selectedRows, rawSetSelectedRows] = React.useState(new Set());
 
   const setSelectedRows = (rows) => {
@@ -35,9 +40,9 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     rawSetSelectedRows(rows);
   };
 
-  React.useEffect(function recalc() {
+  React.useEffect(() => {
 
-    async function before_save (curr){
+    async function before_save(curr) {
       if(curr === obj) {
         if(skey) {
           const row = rows.find(({key}) => key === skey);
@@ -206,6 +211,10 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     else {
       setSnack('Укажите строку табчасти для удаления');
     }
+  };
+
+  const handleOpen = () => {
+
   };
 
   return <div style={style}>

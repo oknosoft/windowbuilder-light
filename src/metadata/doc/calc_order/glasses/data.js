@@ -102,4 +102,5 @@ export async function handleAdd({obj, proto, setRows}) {
     row: row,
     key: row.row,
   }]);
+  await obj.save();
 }

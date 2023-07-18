@@ -1,13 +1,20 @@
 import React from 'react';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
 import CopyIcon from '@mui/icons-material/PostAdd';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import GridOnIcon from '@mui/icons-material/GridOn';
+import {useNavigate} from 'react-router-dom';
+import {useBackdropContext} from '../../../components/App';
 import {ListSubheader} from './styled';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 
 export default function ObjProductionToolbar({obj, handleAdd, handleDel, handleEdit, getRow, setRows}) {
+
+  const navigate = useNavigate();
+  const {setSnack} = useBackdropContext();
 
   return <ListSubheader>
     <Toolbar disableGutters>
@@ -15,7 +22,7 @@ export default function ObjProductionToolbar({obj, handleAdd, handleDel, handleE
         <IconButton onClick={() => handleAdd({obj, setRows})}><AddIcon/></IconButton>
       </HtmlTooltip>
       <HtmlTooltip title="Добавить строку копированием текущей {F9}">
-        <IconButton onClick={() => {
+        <IconButton disabled={!getRow} onClick={() => {
           const row = getRow();
           handleAdd({obj, proto: row?.row?.characteristic, setRows});
         }}><CopyIcon/></IconButton>
@@ -25,6 +32,18 @@ export default function ObjProductionToolbar({obj, handleAdd, handleDel, handleE
       </HtmlTooltip>}
       <HtmlTooltip title="Удалить строку {Delete}">
         <IconButton onClick={handleDel}><DeleteForeverIcon/></IconButton>
+      </HtmlTooltip>
+      <Typography sx={{flex: 1}}></Typography>
+      <HtmlTooltip title="Детали продукции">
+        <IconButton disabled={!getRow} onClick={() => {
+          const row = getRow();
+          if(row) {
+            navigate(`/cat/characteristics/${row.row.characteristic.ref}`);
+          }
+          else {
+            setSnack('Укажите строку табчасти для открытия деталей продукции');
+          }
+        }}><GridOnIcon/></IconButton>
       </HtmlTooltip>
     </Toolbar>
   </ListSubheader>;
