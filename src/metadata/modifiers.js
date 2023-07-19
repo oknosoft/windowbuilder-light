@@ -10,7 +10,7 @@
 import catalogs from "./cat";
 
 // модификаторы документов
-//import documents from "./documents";
+import documents from "./doc";
 
 // модификаторы планов видов характеристик
 //import chartscharacteristics from "./chartscharacteristics";
@@ -28,6 +28,7 @@ export default function ($p) {
   $p.utils.prm = function prm() {
     return qs.parse(location.search.replace('?',''));
   };
-  drawer($p);
   catalogs($p);
+  documents($p);
+  drawer($p);
 }

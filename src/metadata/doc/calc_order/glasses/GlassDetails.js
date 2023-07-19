@@ -5,11 +5,27 @@ import PropField from '../../../../packages/ui/DataField/PropField';
 import {GlassesDetail} from '../styled';
 
 
-export default function GlassDetails({row, selected}) {
+export default function GlassDetails({row, selected, glob}) {
   const {characteristic, inset, glassRow} = row.row;
   const gprops = [];
   const rprops = [];
-  
+
+  React.useEffect(() => {
+    function update (curr, flds){
+      if(curr._owner?._owner === characteristic) {
+        const {project} = row.row.editor;
+        project.redraw();
+        project.save_coordinates({})
+          .then(() => {
+            const pkey = row.key - 1000;
+            const parent = glob.rows.find(({key}) => key === pkey);
+          });
+      }
+    }
+    characteristic._manager.on({update});
+    return () => characteristic._manager.off({update});
+  }, [characteristic]);
+
   // параметры изделия
   characteristic.params.find_rows({cnstr: 0, region: 0}, (prow) => {
     gprops.push(<PropField key={`pr-${prow.row}`} obj={prow} inset={inset} />);

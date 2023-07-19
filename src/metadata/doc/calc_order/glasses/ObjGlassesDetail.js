@@ -7,11 +7,12 @@ import {useSelectedContext} from './selectedContext';
 
 export default function ObjGlassesDetail({ row, tabIndex, isCellEditable, onRowChange }) {
 
-  const selected = useSelectedContext() === row.key;
+  const glob = useSelectedContext();
 
   if (row.type === 'DETAIL') {
+    const selected = row.key === glob.skey;
     const Component = row.row.inset.insert_type.is('glass') ? GlassDetails : CompositeDetails;
-    return Component({row, selected});
+    return Component({row, selected, glob});
   }
 
   return (

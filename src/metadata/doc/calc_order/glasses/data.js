@@ -85,6 +85,7 @@ export function createGlasses({obj, classes}){
     {key: 'amount_internal', name: 'Сумма', width: 99, renderCell: NumberFormatter},
   ],
     glasses,
+    {skey: 0, rows: []}
   ];
 }
 

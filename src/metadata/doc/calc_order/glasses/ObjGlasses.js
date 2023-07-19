@@ -8,8 +8,7 @@ import {SelectedContext} from './selectedContext';
 import {preventDefault} from '../../../dataGrid';
 
 import {useStyles, rowHeight, createGlasses, rowKeyGetter, handleAdd} from './data';
-
-let skey, rows;
+let selectedContext = {};
 
 export default function ObjGlasses({tabRef, obj, setModified}) {
   const {ifaceState: {menu_open}} = useLoadingContext();
@@ -22,30 +21,34 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
 
   const classes = useStyles();
 
-  const [columns, glasses] = React.useMemo(
-    () => createGlasses({obj, classes}), []);
-  const [srows, setSRows] = React.useState(glasses);
-  rows = srows;
-  const setRows = (v) => {
-    rows = v;
-    setSRows(v);
-  };
+  const [columns, glasses, glob] = React.useMemo(() => createGlasses({obj, classes}), [obj]);
+  const [rows, rawSetRows] = React.useState(glasses);
   const [selectedRows, rawSetSelectedRows] = React.useState(new Set());
 
-  const setSelectedRows = (rows) => {
-    skey = rows.size && Array.from(rows)[0];
-    if(skey > 1000) {
-      skey -= 1000;
+  glob.rows = rows;
+  const setRows = (rows) => {
+    if(glob.rows !== rows) {
+      glob.rows = rows;
+      selectedContext = {...glob};
+      rawSetRows(rows);
     }
-    rawSetSelectedRows(rows);
+  };
+
+  const setSelectedRows = (rows) => {
+    const skey = rows.size && Array.from(rows)[0];
+    if(glob.skey !== skey) {
+      glob.skey = skey;
+      selectedContext = {...glob};
+      rawSetSelectedRows(rows);
+    }
   };
 
   React.useEffect(() => {
 
     async function before_save(curr) {
       if(curr === obj) {
-        if(skey) {
-          const row = rows.find(({key}) => key === skey);
+        if(glob.skey) {
+          const row = glob.rows.find(({key}) => key === glob.skey);
           const {characteristic} = row.row;
           if(characteristic._modified) {
             const {project} = row.row.editor;
@@ -104,7 +107,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
     if(oldKey && oldKey !== newKey) {
       // ищем старую строку
-      const row = rows.find(({key}) => key === oldKey);
+      const row = glob.rows.find(({key}) => key === oldKey);
       // пересчитываем изделие
       const {characteristic} = row.row;
       if(characteristic._modified) {
@@ -119,8 +122,10 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       row.row.unloadEditor();
     }
     // создаём редактор для новой строки
-    const row = rows.find(({key}) => key === newKey);
-    await row.row.createEditor();
+    const row = glob.rows.find(({key}) => key === newKey);
+    if(!row.row.editor) {
+      await row.row.createEditor();
+    }
 
     setSelectedRows(newRows);
     setBackdrop(false);
@@ -219,7 +224,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
 
   return <div style={style}>
     <Toolbar obj={obj} handleAdd={handleAdd} handleDel={handleDel} getRow={getRow} setRows={setRows} />
-    <SelectedContext.Provider value={selectedRows.size ? Array.from(selectedRows)[0] : 0}>
+    <SelectedContext.Provider value={selectedContext}>
       <DataGrid
         rowKeyGetter={rowKeyGetter}
         columns={columns}
