@@ -7,7 +7,7 @@ import Toolbar from '../ObjProductionToolbar';
 import {SelectedContext} from './selectedContext';
 import {preventDefault} from '../../../dataGrid';
 
-import {useStyles, rowHeight, createGlasses, rowKeyGetter, handleAdd} from './data';
+import {useStyles, rowHeight, createGlasses, rowKeyGetter, handleAdd, recalcRow} from './data';
 let selectedContext = {};
 
 export default function ObjGlasses({tabRef, obj, setModified}) {
@@ -96,7 +96,9 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
   }
 
-  async function selectedRowsChange(newRows) {
+
+
+  async function selectedRowsChange(newRows, noSave) {
     let oldKey = selectedRows.size && Array.from(selectedRows)[0];
     if(oldKey > 1000) {
       oldKey -= 1000;
@@ -109,14 +111,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       // ищем старую строку
       const row = glob.rows.find(({key}) => key === oldKey);
       // пересчитываем изделие
-      const {characteristic} = row.row;
-      if(characteristic._modified) {
-        setBackdrop(true);
-        const {project} = row.row.editor;
-        project.redraw();
-        await project.save_coordinates({save: true});
-        setModified(false);
-      }
+      await recalcRow({row, setBackdrop, setModified, noSave});
       // TODO
       // выгружаем редактор
       row.row.unloadEditor();
@@ -128,7 +123,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
 
     setSelectedRows(newRows);
-    setBackdrop(false);
+    !noSave && setBackdrop(false);
   }
 
   const onCellClick = ({row, column, selectCell}) => {
@@ -147,7 +142,14 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     const { key, shiftKey } = event;
     if (key === 'Insert' || key === 'F9') {
       const row = key === 'F9' && getRow();
-      handleAdd({obj, proto: row?.row?.characteristic, setRows});
+      handleAdd({
+        obj,
+        proto: row?.row?.characteristic,
+        rows,
+        setRows,
+        setBackdrop,
+        setModified,
+        selectedRowsChange});
       return preventDefault(event);
     }
 
@@ -211,6 +213,9 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
           return true;
         }
       });
+      for(const tmp of rows) {
+        tmp.key = tmp.row.row;
+      }
       setRows([...rows]);
     }
     else {
@@ -223,7 +228,17 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
   };
 
   return <div style={style}>
-    <Toolbar obj={obj} handleAdd={handleAdd} handleDel={handleDel} getRow={getRow} setRows={setRows} />
+    <Toolbar
+      obj={obj}
+      rows={rows}
+      handleAdd={handleAdd}
+      handleDel={handleDel}
+      getRow={getRow}
+      setRows={setRows}
+      setBackdrop={setBackdrop}
+      setModified={setModified}
+      selectedRowsChange={selectedRowsChange}
+    />
     <SelectedContext.Provider value={selectedContext}>
       <DataGrid
         rowKeyGetter={rowKeyGetter}

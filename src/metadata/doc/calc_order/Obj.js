@@ -12,6 +12,21 @@ import ObjProduction from './ObjProduction';
 import ObjGlasses from './glasses/ObjGlasses';
 import {ObjSetting, key, setting as initSetting} from './ObjSetting';
 
+const stubDb = {
+  allDocs() {
+    return Promise.resolve({rows: []});
+  },
+  get() {
+    return Promise.resolve({});
+  },
+  bulkDocs() {
+    return Promise.resolve([]);
+  },
+  query() {
+    return Promise.resolve({rows: []});
+  }
+};
+
 export default function CalcOrderObj() {
 
   const [obj, setObj] = React.useState(null);
@@ -55,6 +70,9 @@ export default function CalcOrderObj() {
   React.useEffect(function prompt() {
     function update (curr, flds){
       if(!modified && (curr === obj || curr._owner._owner === obj)) {
+        if(flds.production) {
+          obj.before_save({db: stubDb});
+        }
         setModified(obj._modified);
       }
     }
@@ -64,10 +82,10 @@ export default function CalcOrderObj() {
         return (e.returnValue = "");
       }
     }
-    $p.doc.calc_order.on({update, after_save: update});
+    $p.doc.calc_order.on({update, after_save: update, rows: update});
     addEventListener('beforeunload', beforeUnload);
     return () => {
-      $p.doc.calc_order.off({update, after_save: update});
+      $p.doc.calc_order.off({update, after_save: update, rows: update});
       removeEventListener('beforeunload', beforeUnload);
     };
   }, [obj]);

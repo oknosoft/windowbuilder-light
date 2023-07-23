@@ -89,19 +89,35 @@ export function createGlasses({obj, classes}){
   ];
 }
 
-export async function handleAdd({obj, proto, setRows}) {
+export async function recalcRow({row, setBackdrop, setModified, noSave}) {
+  const {characteristic} = row.row;
+  if(characteristic._modified) {
+    setBackdrop(true);
+    const {project} = row.row.editor;
+    project.redraw();
+    await project.save_coordinates({save: !noSave});
+    !noSave && setModified(false);
+  }
+}
+
+export async function handleAdd({obj, proto, rows, setRows, setBackdrop, setModified, selectedRowsChange}) {
   const {job_prm, utils} = $p;
+  setBackdrop(true);
   const row = new RowProxy(await obj.create_product_row({create: true}));
   if(!proto) {
     proto = job_prm.builder.glasses_template;
   }
   const tmp = utils._clone(proto.toJSON());
   utils._mixin(row.characteristic, tmp, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name'.split(','), true);
-  setRows((rows) => [...rows, {
+  const newRow = {
     type: 'MASTER',
     expanded: false,
     row: row,
     key: row.row,
-  }]);
-  await obj.save();
+  };
+  setRows([...rows, newRow]);
+
+  await selectedRowsChange(new Set([newRow.key]), true);
+  await recalcRow({row: newRow, setBackdrop, setModified});
+  setBackdrop(false);
 }

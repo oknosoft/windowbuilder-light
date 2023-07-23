@@ -11,7 +11,8 @@ import {useBackdropContext} from '../../../components/App';
 import {ListSubheader} from './styled';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 
-export default function ObjProductionToolbar({obj, handleAdd, handleDel, handleEdit, getRow, setRows}) {
+export default function ObjProductionToolbar({
+  obj, rows, handleAdd, handleDel, handleEdit, getRow, setRows, setBackdrop, setModified, selectedRowsChange}) {
 
   const navigate = useNavigate();
   const {setSnack} = useBackdropContext();
@@ -19,12 +20,13 @@ export default function ObjProductionToolbar({obj, handleAdd, handleDel, handleE
   return <ListSubheader>
     <Toolbar disableGutters>
       <HtmlTooltip title="Добавить строку {Insert}">
-        <IconButton onClick={() => handleAdd({obj, setRows})}><AddIcon/></IconButton>
+        <IconButton onClick={() => handleAdd({obj, rows, setRows, setBackdrop, setModified, selectedRowsChange})}>
+          <AddIcon/></IconButton>
       </HtmlTooltip>
       <HtmlTooltip title="Добавить строку копированием текущей {F9}">
         <IconButton disabled={!getRow} onClick={() => {
           const row = getRow();
-          handleAdd({obj, proto: row?.row?.characteristic, setRows});
+          handleAdd({obj, proto: row?.row?.characteristic, rows, setRows, setBackdrop, setModified, selectedRowsChange});
         }}><CopyIcon/></IconButton>
       </HtmlTooltip>
       {handleEdit && <HtmlTooltip title="Изменить продукцию">
