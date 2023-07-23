@@ -19,7 +19,7 @@ export default function ObjHead({obj}) {
     <Grid xs={12} lg={4}>
       <RefField obj={obj} fld="manager"/>
       <TextField label="Комментарий" value={obj.note}/>
-      <NumberField obj={obj} fld="doc_amount" readOnly/>
+      <NumberField obj={obj} fld="amount_internal" readOnly/>
     </Grid>
   </Grid>;
 }
