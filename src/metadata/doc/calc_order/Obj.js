@@ -69,8 +69,8 @@ export default function CalcOrderObj() {
   //
   React.useEffect(function prompt() {
     function update (curr, flds){
-      if(!modified && (curr === obj || curr._owner._owner === obj)) {
-        if(flds.production) {
+      if(!modified && (curr === obj || curr?._owner?._owner === obj)) {
+        if(flds?.production) {
           obj.before_save({db: stubDb});
         }
         setModified(obj._modified);
