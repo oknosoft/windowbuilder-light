@@ -13,12 +13,12 @@ export default function ObjHead({obj}) {
     </Grid>
     <Grid xs={12} lg={4}>
       <RefField obj={obj} fld="partner"/>
-      <TextField label="Клиент дилера" value={obj.client_of_dealer}/>
+      <TextField obj={obj} fld="client_of_dealer"/>
       <TextField label="Адрес доставки" value={obj.shipping_address}/>
     </Grid>
     <Grid xs={12} lg={4}>
       <RefField obj={obj} fld="manager"/>
-      <TextField label="Комментарий" value={obj.note}/>
+      <TextField obj={obj} fld="note"/>
       <NumberField obj={obj} fld="amount_internal" readOnly/>
     </Grid>
   </Grid>;
