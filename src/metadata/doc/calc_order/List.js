@@ -66,7 +66,7 @@ export default function CalcOrderList() {
   React.useEffect(() => {
     setTitle(title);
     const {ref} = utils.prm();
-    loadMoreRows(50, 0, ref, backdrop)
+    loadMoreRows(80, 0, ref, backdrop)
       .then((data) => {
         if(data.error) {
           const err = new Error(data.message);
@@ -74,6 +74,15 @@ export default function CalcOrderList() {
             err.status = data.status;
           }
           throw err;
+        }
+        const {by_ref} = calc_order;
+        for(const row of data.docs) {
+          const tmp = by_ref[row.ref];
+          if(tmp && !tmp.is_new()) {
+            for(const fld in row) {
+              row[fld] = tmp[fld];
+            }
+          }
         }
         setRows((rows) => {
           const nrows = [...rows, ...data.docs];
