@@ -11,8 +11,9 @@ export default function GlassDetails({row, selected, glob}) {
   const rprops = [];
 
   React.useEffect(() => {
-    function update (curr, flds){
-      if(curr._owner?._owner === characteristic) {
+    const {utils, CatCharacteristicsParamsRow} = $p;
+    const update = utils.debounce(function update (curr, flds){
+      if(curr instanceof CatCharacteristicsParamsRow && curr._owner._owner === characteristic) {
         const {project} = row.row.editor;
         project.redraw();
         project.save_coordinates({})
@@ -21,7 +22,7 @@ export default function GlassDetails({row, selected, glob}) {
             const parent = glob.rows.find(({key}) => key === pkey);
           });
       }
-    }
+    });
     characteristic._manager.on({update});
     return () => characteristic._manager.off({update});
   }, [characteristic]);

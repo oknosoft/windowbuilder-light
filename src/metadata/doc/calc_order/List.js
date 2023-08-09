@@ -66,7 +66,7 @@ export default function CalcOrderList() {
   React.useEffect(() => {
     setTitle(title);
     const {ref} = utils.prm();
-    loadMoreRows(80, 0, ref, backdrop)
+    loadMoreRows(300, 0, ref, backdrop)
       .then((data) => {
         if(data.error) {
           const err = new Error(data.message);

@@ -131,12 +131,14 @@ export function NumberCell({row, column, onRowChange, onClose}) {
     function TextEditor(porps) {
       return <input
         ref={autoFocusAndSelect}
-        className="rdg-text-editor tlmcuo07-0-0-beta-34"
+        className="rdg-text-editor tlmcuo07-0-0-beta-36"
         value={porps.value}
         onChange={({target}) => {
           setValue(target.value);
         }}
-        onBlur={() => onClose(true)}
+        // onBlur={() => {
+        //   onClose(true);
+        // }}
         onKeyDown={(ev) => {
           const {key} = ev;
           if(key === 'Enter' || key === 'Tab') {
