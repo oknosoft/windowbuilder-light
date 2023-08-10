@@ -8,11 +8,12 @@ export default function ProductFormatter({row}) {
   const [index, setIndex] = React.useState(0);
 
   React.useEffect(() => {
-    function update (curr, flds){
-      if(curr._owner?._owner === characteristic) {
+    const {utils, CatCharacteristicsParamsRow} = $p;
+    const update = utils.debounce(function update (curr, flds){
+      if(curr instanceof CatCharacteristicsParamsRow && curr._owner?._owner === characteristic) {
         setIndex((i) => i + 1);
       }
-    }
+    });
     characteristic._manager.on({update});
     return () => characteristic._manager.off({update});
   }, [characteristic]);

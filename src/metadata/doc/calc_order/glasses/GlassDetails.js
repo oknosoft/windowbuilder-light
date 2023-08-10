@@ -10,6 +10,7 @@ export default function GlassDetails({row, selected, glob}) {
   const gprops = [];
   const rprops = [];
 
+  const [index, setIndex] = React.useState(0);
   React.useEffect(() => {
     const {utils, CatCharacteristicsParamsRow} = $p;
     const update = utils.debounce(function update (curr, flds){
@@ -18,8 +19,9 @@ export default function GlassDetails({row, selected, glob}) {
         project.redraw();
         project.save_coordinates({})
           .then(() => {
-            const pkey = row.key - 1000;
-            const parent = glob.rows.find(({key}) => key === pkey);
+            // const pkey = row.key - 1000;
+            // const parent = glob.rows.find(({key}) => key === pkey);
+            setIndex((i) => i + 1);
           });
       }
     });
@@ -29,11 +31,11 @@ export default function GlassDetails({row, selected, glob}) {
 
   // параметры изделия
   characteristic.params.find_rows({cnstr: 0, region: 0}, (prow) => {
-    gprops.push(<PropField key={`pr-${prow.row}`} obj={prow} inset={inset} />);
+    gprops.push(<PropField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} />);
   });
   // параметры вставки
   characteristic.params.find_rows({cnstr: -glassRow.elm, region: 0}, (prow) => {
-    gprops.push(<PropField key={`pr-${prow.row}`} obj={prow} inset={inset} />);
+    gprops.push(<PropField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} />);
   });
   // параметры рёбер
   const rrows = [];

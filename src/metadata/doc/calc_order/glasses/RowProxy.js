@@ -54,10 +54,42 @@ export class RowProxy {
     return this.glassRow.inset;
   }
   set inset(v) {
-    const {glassRow, editor} = this;
+    const {glassRow, editor, characteristic} = this;
     if(editor) {
       const glass = editor.elm(glassRow.elm);
+      //characteristic.params.clear();
       glass.set_inset(v, false, true);
+      const params = glass.inset.used_params();
+      const {product_params} = editor.project.ox.sys;
+      // удаляем лишнее
+      const rm = [];
+      const cnstrs = [0, -glassRow.elm];
+      for(const prow of characteristic.params) {
+        if(cnstrs.includes(prow.cnstr) && !params.includes(prow.param) && !product_params.find({param: prow.param})) {
+          rm.push(prow);
+        }
+      }
+      for(const prow of rm) {
+        characteristic.params.del(prow);
+      }
+      // добавляем и или уточняем значения
+      for(const pprow of product_params) {
+        const prow = characteristic.params.find({param: pprow.param}) || characteristic.params.add({param: pprow.param});
+        const drow = glassRow.inset.product_params.find({param: prow.param});
+        if(drow?.list) {
+          try {
+            const list = JSON.parse(drow.list).map((v) => drow.param.fetch_type(v));
+            if(!list.includes(prow.value)) {
+              prow.value = drow.value.empty() ? list[0] : drow.value;
+            }
+          }
+          catch (e) {}
+        }
+      }
+
+      for(const param of params) {
+        const prow = characteristic.params.find({param}) || characteristic.params.add({param, cnstr: -glassRow.elm, region: 0 });
+      }
     }
   }
 

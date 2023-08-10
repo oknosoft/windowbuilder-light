@@ -96,8 +96,6 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
   }
 
-
-
   async function selectedRowsChange(newRows, noSave) {
     let oldKey = selectedRows.size && Array.from(selectedRows)[0];
     if(oldKey > 1000) {
