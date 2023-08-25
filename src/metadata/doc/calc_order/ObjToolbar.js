@@ -1,21 +1,27 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import SaveIcon from '@mui/icons-material/Save';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import SettingsIcon from '@mui/icons-material/DisplaySettings';
 import CloseIcon from '@mui/icons-material/Close';
+import CalculateIcon from '@mui/icons-material/Calculate';
 import {useNavigate} from 'react-router-dom';
 import {ListSubheader} from './styled';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 
 export default function ObjToolbar({obj, setSettingOpen}) {
   const navigate = useNavigate();
-  const close = () => {
-    navigate(`/doc/calc_order${obj?.ref ? `?ref=${obj?.ref}` : ''}`);
-  };
-  const save = () => obj.save();
-  const saveClose = () => obj.save().then(close);
+  const {close, recalc, save, saveClose} = React.useMemo(() => {
+    const close = () => {
+      navigate(`/doc/calc_order${obj?.ref ? `?ref=${obj.ref}` : ''}`);
+    };
+    const recalc = () => obj.recalc();
+    const save = () => obj.save();
+    const saveClose = () => obj.save().then(close);
+    return {close, recalc, save, saveClose};
+  }, [obj]);
 
   return <ListSubheader>
     <Toolbar disableGutters>
@@ -24,6 +30,10 @@ export default function ObjToolbar({obj, setSettingOpen}) {
       </HtmlTooltip>
       <HtmlTooltip title="Записать">
         <IconButton onClick={save}><SaveAsIcon/></IconButton>
+      </HtmlTooltip>
+      <Divider orientation="vertical" flexItem />
+      <HtmlTooltip title="Пересчитать">
+        <IconButton onClick={recalc}><CalculateIcon/></IconButton>
       </HtmlTooltip>
       <Typography sx={{flex: 1}}></Typography>
       <HtmlTooltip title="Настроить форму">
