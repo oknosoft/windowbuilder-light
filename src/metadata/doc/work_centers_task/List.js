@@ -4,7 +4,7 @@ import DataGrid from 'react-data-grid';
 import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
 import {useTitleContext, useBackdropContext} from '../../../components/App';
-import ListToolbar from '../calc_order/ListToolbar';
+import ListToolbar from '../../_common/ListToolbar';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../dataGrid';
 
 
@@ -43,7 +43,7 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
     });
 }
 
-export default function CalcOrderList() {
+export default function WorkCentersTaskList() {
   const [rows, setRows] = React.useState([]);
   const [selectedRows, setSelectedRows] = React.useState(new Set());
   const [loading, setLoading] = React.useState(true);

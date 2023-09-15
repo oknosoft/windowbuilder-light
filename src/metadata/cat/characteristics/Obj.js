@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import {Root} from '../../doc/calc_order/styled';
+import {Root} from '../../_common/styled';
 
 export default function CharacteristicObj(props) {
   return <Root>

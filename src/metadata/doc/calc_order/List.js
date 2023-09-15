@@ -4,7 +4,7 @@ import DataGrid from 'react-data-grid';
 import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
 import {useTitleContext, useBackdropContext} from '../../../components/App';
-import ListToolbar from './ListToolbar';
+import ListToolbar from '../../_common/ListToolbar';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../dataGrid';
 
 

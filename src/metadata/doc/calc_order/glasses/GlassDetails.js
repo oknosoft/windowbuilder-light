@@ -2,7 +2,7 @@ import React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import Grid from '@mui/material/Unstable_Grid2';
 import PropField from '../../../../packages/ui/DataField/PropField';
-import {GlassesDetail} from '../styled';
+import {GlassesDetail} from '../../../_common/styled';
 
 
 export default function GlassDetails({row, selected, glob}) {

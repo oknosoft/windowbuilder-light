@@ -9,13 +9,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import {useNavigate} from 'react-router-dom';
 import {ListSubheader} from './styled';
-import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
+import {Toolbar, HtmlTooltip} from '../../components/App/styled';
 
-export default function ObjToolbar({obj, setSettingOpen}) {
+export default function ObjToolbar({obj, mgr, setSettingOpen}) {
   const navigate = useNavigate();
   const {close, recalc, save, saveClose} = React.useMemo(() => {
     const close = () => {
-      navigate(`/doc/calc_order${obj?.ref ? `?ref=${obj.ref}` : ''}`);
+      navigate(`/${mgr.class_name.replace('.', '/')}${obj?.ref ? `?ref=${obj.ref}` : ''}`);
     };
     const recalc = () => obj.recalc();
     const save = () => obj.save();

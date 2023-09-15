@@ -1,13 +1,12 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-// https://www.npmjs.com/package/react-router-prompt
-import {useParams, unstable_usePrompt as usePrompt} from 'react-router-dom';
+import {useParams, unstable_usePrompt as usePrompt} from 'react-router-dom'; // https://www.npmjs.com/package/react-router-prompt
 import {useTitleContext, useBackdropContext} from '../../../components/App';
 import Loading from '../../../components/App/Loading';
-import {Root} from './styled';
-import ObjToolbar from './ObjToolbar';
+import {Root} from '../../_common/styled';
+import ObjToolbar from '../../_common/ObjToolbar';
 import ObjHead from './ObjHead';
-import ObjTabs from './ObjTabs';
+import ObjTabs from '../../_common/ObjTabs';
 import ObjProduction from './ObjProduction';
 import ObjGlasses from './glasses/ObjGlasses';
 import {ObjSetting, key, setting as initSetting} from './ObjSetting';
@@ -27,19 +26,19 @@ const stubDb = {
   }
 };
 
+const {doc: {calc_order: mgr}, wsql} = $p;
+
 export default function CalcOrderObj() {
 
   const [obj, setObj] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [tab, setTab] = React.useState(0);
   const tabRef = React.useRef(null);
-
   const [modified, setModified] = React.useState(false);
-
   const [settingOpen, setSettingOpen] = React.useState(false);
   const [setting, setSetting] = React.useState(initSetting);
   const saveSetting = (setting) => {
-    $p.wsql.set_user_param(key, setting);
+    wsql.set_user_param(key, setting);
     setSetting(setting);
   };
 
@@ -49,7 +48,7 @@ export default function CalcOrderObj() {
 
   React.useEffect(() => {
     const {ref} = params;
-    $p.doc.calc_order.get(ref, 'promise')
+    mgr.get(ref, 'promise')
       .then((doc) => doc.load_linked_refs())
       .then(setObj)
       .catch(setError)
@@ -82,10 +81,10 @@ export default function CalcOrderObj() {
         return (e.returnValue = "");
       }
     }
-    $p.doc.calc_order.on({update, after_save: update, rows: update});
+    mgr.on({update, after_save: update, rows: update});
     addEventListener('beforeunload', beforeUnload);
     return () => {
-      $p.doc.calc_order.off({update, after_save: update, rows: update});
+      mgr.off({update, after_save: update, rows: update});
       removeEventListener('beforeunload', beforeUnload);
     };
   }, [obj]);
@@ -103,7 +102,7 @@ export default function CalcOrderObj() {
   const curr = setting.tabs.filter(({visible}) => visible)[tab];
 
   return <Root>
-    <ObjToolbar obj={obj} setSettingOpen={setSettingOpen} />
+    <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} />
     <ObjHead obj={obj} setting={setting}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
     {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj}/>}

@@ -2,7 +2,7 @@ import React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import Grid from '@mui/material/Unstable_Grid2';
 import PropField from '../../../../packages/ui/DataField/PropField';
-import {GlassesDetail} from '../styled';
+import {GlassesDetail} from '../../../_common/styled';
 
 const {blank} = $p.utils;
 // http://localhost:2222/doc/calc_order/82f1a0b0-fac8-11ed-bbc3-e1c5499d8d7a
