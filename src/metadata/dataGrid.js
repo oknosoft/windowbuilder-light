@@ -103,3 +103,7 @@ export function cellKeyDown({rows, columns, create, clone, open, setSelectedRows
     }
   };
 }
+
+export function isAtBottom({ currentTarget }) {
+  return currentTarget.scrollTop + 10 >= currentTarget.scrollHeight - currentTarget.clientHeight;
+}

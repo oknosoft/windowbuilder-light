@@ -7,7 +7,7 @@ import Toolbar from '../ObjProductionToolbar';
 import {SelectedContext} from './selectedContext';
 import {preventDefault} from '../../../dataGrid';
 
-import {useStyles, rowHeight, createGlasses, rowKeyGetter, handleAdd, recalcRow} from './data';
+import {rowHeight, createGlasses, rowKeyGetter, handleAdd, recalcRow} from './data';
 let selectedContext = {};
 
 export default function ObjGlasses({tabRef, obj, setModified}) {
@@ -19,9 +19,8 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
   }
   const {setBackdrop, setSnack} = useBackdropContext();
 
-  const classes = useStyles();
 
-  const [columns, glasses, glob] = React.useMemo(() => createGlasses({obj, classes}), [obj]);
+  const [columns, glasses, glob] = React.useMemo(() => createGlasses({obj}), [obj]);
   const [rows, rawSetRows] = React.useState(glasses);
   const [selectedRows, rawSetSelectedRows] = React.useState(new Set());
 

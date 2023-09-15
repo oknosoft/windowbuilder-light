@@ -4,18 +4,18 @@ import DataGrid from 'react-data-grid';
 import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
 import {useTitleContext, useBackdropContext} from '../../../components/App';
-import ListToolbar from './ListToolbar';
+import ListToolbar from '../calc_order/ListToolbar';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../dataGrid';
 
 
-const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}, utils} = $p;
+const {adapters: {pouch}, cat: {scheme_settings}, doc: {work_centers_task}, utils} = $p;
 const scheme = scheme_settings
-  .find_schemas('doc.calc_order', true)
+  .find_schemas('doc.work_centers_task', true)
   .find(({name}) => name.endsWith('.main'));
-const {fields} = calc_order.metadata();
-const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: calc_order});
+const {fields} = work_centers_task.metadata();
+const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: work_centers_task});
 
-const listName = 'Расчёты-заказы (список)';
+const listName = 'Задания на производство (список)';
 const title =  {title: listName, appTitle: <Typography variant="h6" noWrap>{listName}</Typography>};
 
 function loadMoreRows(newRowsCount, skip, ref, backdrop) {
@@ -30,19 +30,12 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
   };
 
   const selector = scheme.mango_selector(sprm);
-  if(ref) {
-    selector.ref = ref;
-  }
-  const opts = {
-    method: 'post',
-    headers: new Headers({suffix: pouch.props._suffix || '0'}),
-    body: JSON.stringify(selector)
-  };
+  selector._raw = true;
 
-  return pouch.fetch('/r/_find', opts)
+  return work_centers_task.find_rows_remote(selector)
     .then((res) => {
       backdrop.setBackdrop(false);
-      return res.json();
+      return res;
     })
     .catch((err) => {
       backdrop.setBackdrop(false);
@@ -64,24 +57,8 @@ export default function CalcOrderList() {
     const {ref} = utils.prm();
     loadMoreRows(300, 0, ref, backdrop)
       .then((data) => {
-        if(data.error) {
-          const err = new Error(data.message);
-          if(data.status) {
-            err.status = data.status;
-          }
-          throw err;
-        }
-        const {by_ref} = calc_order;
-        for(const row of data.docs) {
-          const tmp = by_ref[row.ref];
-          if(tmp && !tmp.is_new()) {
-            for(const fld in row) {
-              row[fld] = tmp[fld];
-            }
-          }
-        }
         setRows((rows) => {
-          const nrows = [...rows, ...data.docs];
+          const nrows = [...rows, ...data];
           if(ref) {
             if(nrows.find((raw) => raw.ref === ref)) {
               setTimeout(() => setSelectedRows(new Set([ref])));
@@ -93,7 +70,7 @@ export default function CalcOrderList() {
       .catch(setError);
   }, []);
 
-  const [create, clone, open] = mgrCreate({mgr: calc_order, navigate, selectedRows, backdrop});
+  const [create, clone, open] = mgrCreate({mgr: work_centers_task, navigate, selectedRows, backdrop});
 
   const onCellClick = cellClick({selectedRows, setSelectedRows});
 

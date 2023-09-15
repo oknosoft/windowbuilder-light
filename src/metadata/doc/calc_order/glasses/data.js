@@ -1,19 +1,10 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import ObjGlassesDetail from './ObjGlassesDetail';
 import ProductFormatter from './ProductFormatter';
 
 import {NumberCell, NumberFormatter} from '../../../../packages/ui/DataField/Number';
 // доступные типы вставок
 import {itypes, ioptions, RowProxy} from './RowProxy';
-
-export const useStyles = makeStyles(({spacing}) => ({
-  padding: {
-    padding: spacing(),
-    lineHeight: 'initial',
-    outline: 'none',
-  },
-}));
 
 export const rowHeight = ({row, type}) => {
   if(type === 'DETAIL') {
@@ -30,7 +21,7 @@ export function rowKeyGetter(row) {
   return row.key;
 }
 
-export function createGlasses({obj, classes}){
+export function createGlasses({obj}){
   const glasses = [];
   for(const prow of obj.production) {
     const row = new RowProxy(prow);
@@ -51,7 +42,7 @@ export function createGlasses({obj, classes}){
         return args.type === 'ROW' && args.row.type === 'DETAIL' ? 9 : undefined;
       },
       cellClass(row) {
-        return row.type === 'DETAIL' ? classes.padding : undefined;
+        return row.type === 'DETAIL' ? 'glass-padding' : undefined;
       },
       renderCell: ObjGlassesDetail,
     },
@@ -64,7 +55,7 @@ export function createGlasses({obj, classes}){
         const {row, onRowChange} = props;
         return <select
           autoFocus
-          className="rdg-text-editor tlmcuo07-0-0-beta-37"
+          className="rdg-text-editor tlmcuo07-0-0-beta-39"
           value={row.row.inset}
           onChange={({target}) => {
             row.row.inset = target.value;
