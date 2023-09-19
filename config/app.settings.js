@@ -77,9 +77,6 @@ settings.prm = (settings) =>{
         prm[name] = predefined[name];
       }
     });
-    if(predefined.host && !location.host.match(predefined.host)) {
-      location.replace(predefined.host);
-    }
     return prm;
   };
 };
