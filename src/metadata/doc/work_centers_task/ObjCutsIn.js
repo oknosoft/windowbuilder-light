@@ -8,6 +8,6 @@ const columns = [
   {key: "power", name: "Мощность", width: 120, renderEditCell: NumberCell, renderCell: NumberFormatter}
 ];
 
-export default function ObjPlan({tabRef, obj}) {
+export default function ObjCutsIn({tabRef, obj}) {
   return <ObjTabular tabRef={tabRef} tabular={obj.planning} columns={columns}/>;
 }

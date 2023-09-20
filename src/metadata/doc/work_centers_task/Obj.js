@@ -9,6 +9,7 @@ import ObjToolbar from '../../_common/ObjToolbar';
 import ObjTabs from '../../_common/ObjTabs';
 import ObjHead from './ObjHead';
 import ObjPlan from './ObjPlan';
+import ObjCutsIn from './ObjCutsIn';
 import {ObjSetting, key, setting as initSetting} from './ObjSetting';
 
 const {doc: {work_centers_task: mgr}, wsql} = $p;
@@ -85,7 +86,8 @@ export default function WorkCentersTaskObj() {
     <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} />
     <ObjHead obj={obj} setting={setting}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
-    {curr.name === 'planning' && <ObjPlan tabRef={tabRef} tabular={obj.planning}/>}
+    {curr.name === 'planning' && <ObjPlan obj={obj} tabRef={tabRef} />}
+    {curr.name === 'cuts_in' && <ObjCutsIn obj={obj} tabRef={tabRef} />}
     {settingOpen && <ObjSetting setSettingOpen={setSettingOpen} />}
   </Root>;
 }
