@@ -85,7 +85,7 @@ export default function WorkCentersTaskObj() {
     <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} />
     <ObjHead obj={obj} setting={setting}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
-    {curr.name === 'planning' && <ObjPlan tabRef={tabRef} obj={obj}/>}
+    {curr.name === 'planning' && <ObjPlan tabRef={tabRef} tabular={obj.planning}/>}
     {settingOpen && <ObjSetting setSettingOpen={setSettingOpen} />}
   </Root>;
 }

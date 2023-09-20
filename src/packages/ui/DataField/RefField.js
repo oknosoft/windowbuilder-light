@@ -43,3 +43,14 @@ export default function RefField({obj, fld, meta, label, onChange, fullWidth=tru
     {...other}
   />;
 }
+
+export function PresentationFormatter ({column, row, value, isCellEditable, tabIndex, onRowChange, raw}) {
+  if(!value) {
+    value = row[column.key];
+  }
+  let text = typeof value === 'string' ? value : (value && value.presentation) || '';
+  if(text === '_') {
+    text = '';
+  }
+  return raw ? text : <div title={text}>{text}</div>;
+}
