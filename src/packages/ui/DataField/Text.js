@@ -37,3 +37,24 @@ export default function Text({obj, fld, meta, label, value, onChange, inputProps
     />
   </FormControl>;
 }
+
+export function TextFormatter({row, column}) {
+
+  const obj = row instanceof $p.classes.TabularSectionRow ? row : row.row;
+
+  const [value, setValue] = React.useState(obj[column.key]);
+
+  React.useEffect(() => {
+    function update (curr, flds){
+      if(obj.equals?.(curr) || curr === obj || curr === obj?._owner?._owner) {
+        setValue(obj[column.key]);
+      }
+    }
+    obj._manager.on({update, rows: update});
+    return () => {
+      obj._manager.off({update, rows: update});
+    };
+  }, [obj, column.key]);
+
+  return value;
+}

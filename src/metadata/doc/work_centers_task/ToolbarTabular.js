@@ -7,7 +7,7 @@ import {ListSubheader} from '../../_common/styled';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 
 
-export default function ToolbarTabular({create, clone, remove}) {
+export default function ToolbarTabular({create, clone, remove, buttons=null}) {
 
   return <ListSubheader>
     <Toolbar disableGutters>
@@ -21,6 +21,7 @@ export default function ToolbarTabular({create, clone, remove}) {
       <HtmlTooltip title="Удалить строку {Delete}">
         <IconButton onClick={remove}><DeleteForeverIcon/></IconButton>
       </HtmlTooltip>
+      {buttons}
     </Toolbar>
   </ListSubheader>;
 }

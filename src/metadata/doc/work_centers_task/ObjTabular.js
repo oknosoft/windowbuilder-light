@@ -4,7 +4,7 @@ import {useLoadingContext} from '../../../components/Metadata';
 import ToolbarTabular from './ToolbarTabular';
 import {cellKeyDown, tabularCreate, tabularStyle} from '../../dataGrid';
 
-export default function ObjPlan({tabRef, tabular, columns}) {
+export default function ObjPlan({tabRef, tabular, columns, buttons}) {
 
   const style = tabularStyle(tabRef, useLoadingContext());
 
@@ -22,7 +22,7 @@ export default function ObjPlan({tabRef, tabular, columns}) {
   const onCellKeyDown = cellKeyDown({rows, columns, create, clone, remove, setSelectedRows, keyField: 'row'});
 
   return <div style={style}>
-    <ToolbarTabular create={create} clone={clone} remove={remove}/>
+    <ToolbarTabular create={create} clone={clone} remove={remove} buttons={buttons}/>
     <DataGrid
       rowKeyGetter={(row) => row.row}
       columns={columns}
