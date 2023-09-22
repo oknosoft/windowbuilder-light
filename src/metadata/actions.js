@@ -89,7 +89,7 @@ export function actions(handleIfaceState) {
           return load_ram($p)
             .then(() => {
               const {roles} = $p.current_user || {};
-              if(roles && (roles.includes('ram_editor') || roles.includes('doc_full'))) {
+              if(!roles && (roles.includes('ram_editor') || roles.includes('doc_full'))) {
                 pouch.local.sync.ram = pouch.remote.ram.changes({
                   since: 'now',
                   live: true,
