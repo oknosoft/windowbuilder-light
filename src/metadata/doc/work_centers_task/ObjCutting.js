@@ -21,13 +21,44 @@ export const columns = [
   {key: "cell", width: 100, name: "Ячейка", tooltip: "№ ячейки (откуда брать заготовку или куда помещать)", renderCell: TextFormatter}
 ];
 
+const load = (obj) => {
+  return function load(text) {
+    for(const row of text.split('\n')) {
+      const values = row.split('\t');
+      let strings = 0;
+      let numbers = 0;
+      let newRow;
+      for(const v of values) {
+        if(v) {
+          const n = parseFloat(v);
+          if(!isNaN(n)) {
+            if(!newRow) {
+              newRow = obj.cutting.add();
+            }
+            if(numbers) {
+              newRow.width = n;
+            }
+            else {
+              newRow.len = n;
+            }
+            numbers++;
+          }
+        }
+      }
+    }
+  };
+};
+
 export default function ObjCutting({tabRef, obj, setBackdrop}) {
+
+  const execute = React.useMemo(() => load(obj), [obj]);
+
   return <ObjTabular
     tabRef={tabRef}
     tabular={obj.cutting}
     columns={columns}
     buttons={<>
-      <ClipBoard obj={obj}/>
+      <ClipBoard execute={execute}/>
       <Optimize2D obj={obj} setBackdrop={setBackdrop}/>
     </>}
   />;

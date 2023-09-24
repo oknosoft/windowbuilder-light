@@ -4,14 +4,29 @@ import {useLoadingContext} from '../../../components/Metadata';
 import ToolbarTabular from './ToolbarTabular';
 import {cellKeyDown, tabularCreate, tabularStyle} from '../../dataGrid';
 
-export default function ObjPlan({tabRef, tabular, columns, buttons}) {
+export default function ObjTabular({tabRef, tabular, columns, buttons, rootStyle, selectedRowsChange}) {
 
-  const style = tabularStyle(tabRef, useLoadingContext());
+  if(!rootStyle) {
+    rootStyle = tabularStyle(tabRef, useLoadingContext());
+  }
 
   const [rows, setRows] = React.useState(Array.from(tabular));
-  const [selectedRows, setSelectedRows] = React.useState(new Set());
+  const [selectedRows, rawSetSelectedRows] = React.useState(new Set());
+  const setSelectedRows = (selectedRows) => {
+    rawSetSelectedRows(selectedRows);
+    selectedRowsChange?.(selectedRows);
+  };
 
-  const {getRow, create, clone, remove} = tabularCreate({tabular, setRows, selectedRows, setSelectedRows});
+  React.useEffect(() => {
+    const update = () => {
+      setRows(Array.from(tabular));
+      setSelectedRows(new Set());
+    };
+    tabular._owner._manager.on('rows', update);
+    return () => tabular._owner._manager.off('rows', update);
+  }, [tabular]);
+
+  const {getRow, create, clone, remove, clear} = tabularCreate({tabular, setRows, selectedRows, setSelectedRows});
 
   const onCellClick = ({row, column, selectCell}) => {
     if(!selectedRows.size || Array.from(selectedRows)[0] !== row.row) {
@@ -21,8 +36,8 @@ export default function ObjPlan({tabRef, tabular, columns, buttons}) {
 
   const onCellKeyDown = cellKeyDown({rows, columns, create, clone, remove, setSelectedRows, keyField: 'row'});
 
-  return <div style={style}>
-    <ToolbarTabular create={create} clone={clone} remove={remove} buttons={buttons}/>
+  return <div style={rootStyle}>
+    <ToolbarTabular clear={clear} create={create} clone={clone} remove={remove} buttons={buttons}/>
     <DataGrid
       rowKeyGetter={(row) => row.row}
       columns={columns}

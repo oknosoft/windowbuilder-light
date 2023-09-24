@@ -18,7 +18,7 @@ function PaperComponent(props) {
   );
 }
 
-export default function DraggableDialog({open, onClose, title, children, actions}) {
+export default function DraggableDialog({open, onClose, onOk, title, children, actions}) {
 
   return <Dialog
     open={open}
@@ -35,7 +35,7 @@ export default function DraggableDialog({open, onClose, title, children, actions
         <Button autoFocus onClick={onClose}>
           Отмена
         </Button>
-        <Button onClick={onClose}>Ок</Button>
+        <Button onClick={onOk || onClose}>Ок</Button>
       </>}
     </DialogActions>
   </Dialog>;

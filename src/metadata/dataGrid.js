@@ -82,6 +82,12 @@ export function tabularCreate({tabular, setRows, selectedRows, setSelectedRows})
 
   const clone = () => add(getRow?.());
 
+  const clear = () => {
+    tabular.clear();
+    setSelectedRows(new Set());
+    setRows(Array.from(tabular));
+  };
+
   const remove = () => {
     const row = getRow();
     if(row) {
@@ -91,7 +97,7 @@ export function tabularCreate({tabular, setRows, selectedRows, setSelectedRows})
     }
   };
 
-  return {getRow, create, clone, remove};
+  return {getRow, create, clone, remove, clear};
 }
 
 export function cellKeyDown({rows, columns, create, clone, open, remove, keyField = 'ref', setSelectedRows}) {
@@ -151,7 +157,11 @@ export function tabularStyle(tabRef, {ifaceState: {menu_open}}) {
   const style = {minHeight: 420, width: window.innerWidth - (!disablePermanent && menu_open ? drawerWidth : 0) - 2};
   if(tabRef?.current && !disablePermanent) {
     const top = tabRef.current.offsetTop + tabRef.current.offsetHeight + 51;
-    style.height = `calc(100vh - ${top}px)`;
+    style.height = window.innerHeight - top;
+    if(style.height < style.minHeight) {
+      style.minHeight = style.height;
+    }
+    //style.height = `calc(100vh - ${top}px)`;
   }
   return style;
 }
