@@ -15,7 +15,6 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {directLogins} from './providers';
-import Text from '../../packages/ui/DataField/Text';
 
 const prevent = (e) => {
   e.preventDefault();
@@ -30,13 +29,16 @@ export default function Creditales({provider, login, password, loginChange, hand
   }
 
   return <>
-    <Text
-      fullWidth
-      meta={{synonym: 'Логин', placeholder: 'login'}}
-      value={login}
-      onChange={(value) => loginChange([value, password])}
-      inputProps={{id: 'username', name: 'username'}}
-    />
+    <FormControl fullWidth>
+      <InputLabel>Логин</InputLabel>
+      <Input
+        inputProps={{placeholder: 'login', id: 'username', name: 'username'}}
+        value={login}
+        onChange={({target}) => {
+          loginChange([target.value, password]);
+        }}
+      />
+    </FormControl>
     <FormControl fullWidth>
       <InputLabel>Пароль</InputLabel>
       <Input

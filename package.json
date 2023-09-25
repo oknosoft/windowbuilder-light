@@ -30,9 +30,9 @@
   "proxy2": "https://dvlp.ecookna.ru/",
   "proxy3": "https://brusnika.oknosoft.ru/",
   "proxy4": "https://phototech.oknosoft.ru/",
-  "proxy": "http://localhost:3016/",
+  "proxy5": "http://localhost:3016/",
   "proxy6": "http://192.168.9.27:3016/",
-  "proxy7": "https://steklotorg.oknosoft.ru:2310/",
+  "proxy": "https://steklotorg.oknosoft.ru:2310/",
   "dependencies": {
     "@aldabil/react-scheduler": "^2.7",
     "@emotion/react": "^11.11",
