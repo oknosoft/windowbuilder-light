@@ -3,11 +3,11 @@ import DataGrid from 'react-data-grid';
 import {useLoadingContext} from '../../../../components/Metadata';
 import {useBackdropContext} from '../../../../components/App';
 import {disablePermanent, drawerWidth} from '../../../../styles/muiTheme';
+import {preventDefault} from '../../../dataGrid';
 import Toolbar from '../ObjProductionToolbar';
 import {SelectedContext} from './selectedContext';
-import {preventDefault} from '../../../dataGrid';
 
-import {rowHeight, createGlasses, rowKeyGetter, handleAdd, recalcRow} from './data';
+import {rowHeight, createGlasses, rowKeyGetter, handlers, recalcRow} from './data';
 let selectedContext = {};
 
 export default function ObjGlasses({tabRef, obj, setModified}) {
@@ -114,9 +114,11 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       row.row.unloadEditor();
     }
     // создаём редактор для новой строки
-    const row = glob.rows.find(({key}) => key === newKey);
-    if(!row.row.editor) {
-      await row.row.createEditor();
+    if(newRows.size) {
+      const row = glob.rows.find(({key}) => key === newKey);
+      if(!row.row.editor) {
+        await row.row.createEditor();
+      }
     }
 
     setSelectedRows(newRows);
@@ -139,15 +141,16 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     const { key, shiftKey } = event;
     if (key === 'Insert' || key === 'F9') {
       const row = key === 'F9' && getRow();
-      handleAdd({
+      const {add} = handlers({
         obj,
-        proto: row?.row?.characteristic,
         rows,
         setRows,
+        getRow,
         setBackdrop,
         setModified,
         selectedRowsChange});
-      return preventDefault(event);
+      preventDefault(event);
+      return add(row?.row?.characteristic);
     }
 
     if (mode === 'EDIT' || !rows.length || row?.type === "DETAIL"){
@@ -185,7 +188,15 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
     else if (key === 'Delete') {
       preventDefault(event);
-      return handleDel();
+      const {del} = handlers({
+        obj,
+        rows,
+        setRows,
+        getRow,
+        setBackdrop,
+        setModified,
+        selectedRowsChange});
+      return del();
     }
 
   };
@@ -197,39 +208,10 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
   };
 
-  const handleDel = () => {
-    const row = getRow();
-    if(row) {
-      setSelectedRows(new Set());
-      row.row.unloadEditor();
-      obj.production.del(row.row.calc_order_row);
-      rows.splice(rows.indexOf(row), 1);
-      rows.some((srow, index) => {
-        if(srow.row === row.row) {
-          rows.splice(index, 1);
-          return true;
-        }
-      });
-      for(const tmp of rows) {
-        tmp.key = tmp.row.row;
-      }
-      setRows([...rows]);
-    }
-    else {
-      setSnack('Укажите строку табчасти для удаления');
-    }
-  };
-
-  const handleOpen = () => {
-
-  };
-
   return <div style={style}>
     <Toolbar
       obj={obj}
       rows={rows}
-      handleAdd={handleAdd}
-      handleDel={handleDel}
       getRow={getRow}
       setRows={setRows}
       setBackdrop={setBackdrop}
