@@ -14,8 +14,11 @@ function params(obj) {
     if(row.record_kind.empty()) {
       row.record_kind = 'debit';
     }
+    if(!row.stick) {
+      row.stick = obj.cuts.aggregate([], ['stick'], 'max') + 1;
+    }
     if(row.record_kind.is('debit') && row.width && row.len && row.quantity) {
-      res.scraps.push({stick: row.row, length: row.len, height: row.width, quantity: row.quantity});
+      res.scraps.push({stick: row.stick, length: row.len, height: row.width, quantity: row.quantity});
     }
   }
   for(const row of obj.cutting) {
@@ -27,6 +30,9 @@ function params(obj) {
 }
 
 function setSticks(obj, data) {
+  if(data.error) {
+    throw data;
+  }
   const sticks = new Set();
   for(const row of data.scrapsIn) {
     let docRow = obj.cuts.find({stick: row.stick});
@@ -76,7 +82,10 @@ export default function Optimize2D({setBackdrop, obj}) {
     .then((res) => res.json())
     .then((data) => setSticks(obj, data))
     .then(() => setBackdrop(false))
-    .catch(() => setBackdrop(false));
+    .catch((err) => {
+      setBackdrop(false);
+      alert(err?.message || err);
+    });
 
   return <>
     <HtmlTooltip title="Оптимизировать раскрой 2D">
