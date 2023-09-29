@@ -16,6 +16,7 @@
 # Exclude compiled files
 /build
 /scripts/stats.json
+/src/_common/styles/steklotorg.png
 *.map
 
 # misc
