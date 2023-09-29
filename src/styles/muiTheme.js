@@ -4,6 +4,7 @@ import primary from '@mui/material/colors/blueGrey';
 export const toolbarHeight = 50;
 export const disablePermanent = window.innerWidth < 640;
 export const drawerWidth = 220;
+export const contentWidth = (menu_open) => window.innerWidth - (!disablePermanent && menu_open ? drawerWidth : 0) - 2;
 
 const theme = createTheme({
 
