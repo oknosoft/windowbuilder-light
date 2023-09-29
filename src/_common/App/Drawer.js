@@ -29,6 +29,7 @@ const DrawerLeft = ({drawerOpen, sxColor, handleDrawerClose}) => {
     }}
     variant={disablePermanent ? 'temporary' : 'persistent'}
     anchor="left"
+    transitionDuration={100}
     open={drawerOpen}
   >
     <DrawerHeader sx={{...sxColor, boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 7%)'}}>

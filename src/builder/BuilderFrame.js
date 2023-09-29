@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import {Resize, ResizeHorizon} from '@oknosoft/ui/dist/Resize';
 import {useTitleContext} from '../_common/App';
 import {useLoadingContext} from '../_common/Metadata';
+import {contentWidth} from '../_common/styles/muiTheme';
 import MainToolbar from './Toolbar/Main';
 import ProductStructure from './Structure';
 import Controls from './Controls';
@@ -13,6 +14,14 @@ export default function BuilderFrame({useBuilderContext}) {
   const context = useBuilderContext();
   const {handleIfaceState, ifaceState: {drawerOpen}} = useLoadingContext();
   const theme = useTheme();
+  const width = contentWidth(drawerOpen);
+  const resizeStop = (inf) => {
+    const {editor} = context;
+    if (editor) {
+      const {offsetWidth, offsetHeight} = editor.view.element.parentNode;
+      editor.project.resizeCanvas(offsetWidth, offsetHeight);
+    }
+  };
 
   React.useEffect(() => {
     const title = {
@@ -27,14 +36,14 @@ export default function BuilderFrame({useBuilderContext}) {
   }, []);
 
   return <div style={{position: 'relative', height: 'calc(100vh - 50px)'}}>
-    <Resize handleWidth="6px" handleColor={theme.palette.grey?.[300]} onResizeStop={null}  onResizeWindow={null}>
-      <ResizeHorizon width={`${(innerWidth / 6).toFixed()}px`} minWidth="200px">
+    <Resize handleWidth="6px" handleColor={theme.palette.grey[300]} onResizeStop={resizeStop}  onResizeWindow={resizeStop}>
+      <ResizeHorizon width={`${(width / 6).toFixed()}px`} minWidth="200px">
         <ProductStructure context={context} />
       </ResizeHorizon>
-      <ResizeHorizon width={`${(innerWidth * 7 / 12).toFixed()}px`} minWidth="600px">
+      <ResizeHorizon width={`${(width * 7 / 12).toFixed()}px`} minWidth="600px">
         <Builder context={context} />
       </ResizeHorizon>
-      <ResizeHorizon overflow="hidden auto" width={`${(innerWidth * 3 / 12).toFixed()}px`} minWidth="280px">
+      <ResizeHorizon overflow="hidden auto" width={`${(width * 3 / 12).toFixed()}px`} minWidth="280px">
         <Controls context={context} />
       </ResizeHorizon>
     </Resize>

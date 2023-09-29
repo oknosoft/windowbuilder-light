@@ -23,6 +23,12 @@ const repos = [
     dir: '',
     dirFilter: /dist/
   },
+  {
+    local: '@oknosoft/wb/core',
+    remote: '..\\wb-core-v3\\',
+    dir: '',
+    dirFilter: /src/
+  },
 ];
 
 // for(const local of Object.keys(dependencies).filter(v => /^metadata-/.test(v))) {
