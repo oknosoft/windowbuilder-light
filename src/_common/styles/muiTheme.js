@@ -42,7 +42,8 @@ const theme = createTheme({
       styleOverrides: {
         // Name of the slot
         root: ({ ownerState, theme }) => ({
-          minHeight: 52,
+          minHeight: 50,
+          minWidth: 'unset',
         }),
       }
     },

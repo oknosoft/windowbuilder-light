@@ -1,6 +1,7 @@
 import React from 'react';
 import SelectTool from './Toolbar/SelectTool';
-import EditorInvisible from '@oknosoft/wb/core/src/geometry/EditorInvisible';
+import geometry from '@oknosoft/wb/core/src/geometry';
+const {EditorInvisible} = geometry;
 
 export default function Builder({context}) {
 

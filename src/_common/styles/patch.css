@@ -10,13 +10,78 @@
 }
 
 @layer rdg.TextEditor {
-  .tlmcuo07-0-0-beta-37 {
+  .tlmcuo07-0-0-beta-39 {
     appearance: auto;
   }
 }
 
 @layer rdg.HeaderRow {
-  .h197vzie7-0-0-beta-37 {
+  .h197vzie7-0-0-beta-39 {
     font-weight: 400
   }
 }
+
+.tb_img_cnn_ad {background-image: url(imgs/cnn-ad.png);}
+.tb_img_cnn_i {background-image: url(imgs/cnn-i.png);}
+.tb_img_cnn_ii {background-image: url(imgs/cnn-ii.png);}
+.tb_img_cnn_long {background-image: url(imgs/cnn-long.png);}
+.tb_img_cnn_short {background-image: url(imgs/cnn-short.png);}
+.tb_img_cnn_t {background-image: url(imgs/cnn-t.png);}
+.tb_img_cnn_xx {background-image: url(imgs/cnn-xx.png);}
+.tb_img_cnn_xt {background-image: url(imgs/cnn-xt.png);}
+
+.tb_icon-hand {background-image: url(imgs/icon-hand.png);}
+.tb_icon-arrow-white {background-image: url(imgs/icon-arrow-white.png);}
+.tb_cursor-zoom {background-image: url(imgs/cursor-zoom.png);}
+.tb_cursor-pen-freehand {background-image: url(imgs/cursor-pen-freehand.png);}
+.tb_cursor-lay-impost {background-image: url(imgs/cursor-lay-impost.png);}
+.tb_cursor-arc-r {background-image: url(imgs/cursor-arc-r.png);}
+.tb_cursor-cut {background-image: url(imgs/cursor-cut.png);}
+.tb_cursor-uncut {background-image: url(imgs/cursor-uncut.png);}
+.tb_cursor-hv {background-image: url(imgs/cursor-hv.png);}
+.tb_cursor-vh {background-image: url(imgs/cursor-vh.png);}
+.tb_cursor-diagonal {background-image: url(imgs/cursor-diagonal.png);}
+.tb_ruler_ui {background-image: url(imgs/ruler_ui.png);}
+.tb_stamp {background-image: url(imgs/stamp.png);}
+.tb_grid {background-image: url(imgs/grid.png);}
+.tb_line {background-image: url(imgs/line.png);}
+.tb_text {background-image: url(imgs/text.png);}
+.tb_stulp_flap {background-image: url(imgs/stulp-flap.png);}
+.tb_add_segment {background-image: url(imgs/add_segment.png);}
+.tb_align_vert {background-image: url(imgs/align_vert.png); opacity: 0.9;}
+.tb_align_hor {background-image: url(imgs/align_hor.png); opacity: 0.9;}
+.tb_align_vert2 {background-image: url(imgs/align_vert2.png); opacity: 0.9; position: absolute; left: 62px; top: 24px;}
+.tb_align_hor2 {background-image: url(imgs/align_hor2.png); opacity: 0.9;}
+.tb_undo {background-image: url(imgs/tb_undo.png); opacity: 0.9;}
+.tb_redo {background-image: url(imgs/tb_redo.png); opacity: 0.9;}
+
+/* курсоры построителя*/
+.cursor-pen-freehand    { cursor: url(imgs/cursor-pen-freehand.png) 5 2, default; }
+.cursor-lay-impost      { cursor: url(imgs/cursor-lay-impost.png) 7 7, default; }
+.cursor-arrow-cut       { cursor: url(imgs/cursor-arrow-cut.png) 1 1, default; }
+.cursor-arrow-do-cut    { cursor: url(imgs/cursor-arrow-do-cut.png) 1 1, default; }
+.cursor-arrow-do-uncut  { cursor: url(imgs/cursor-arrow-do-uncut.png) 1 1, default; }
+.cursor-arrow-lay       { cursor: url(imgs/cursor-arrow-lay.png) 1 1, default; }
+.cursor-arrow-ruler     { cursor: url(imgs/cursor-arrow-ruler.png) 3 1, default; }
+.cursor-arrow-ruler-light { cursor: url(imgs/cursor-arrow-ruler-light.png) 3 1, default; }
+.cursor-arrow-ruler-dis { cursor: url(imgs/cursor-arrow-ruler-dis.png) 3 1, default; }
+.cursor-pen-adjust      { cursor: url(imgs/cursor-pen-adjust.png) 5 2, default; }
+.cursor-zoom-in         { cursor: url(imgs/cursor-zoom-in.png) 7 7, default; }
+.cursor-zoom-out        { cursor: url(imgs/cursor-zoom-out.png) 7 7, default; }
+.cursor-hand            { cursor: url(imgs/cursor-hand.png) 10 10, default; }
+.cursor-hand-grab       { cursor: url(imgs/cursor-hand-grab.png) 10 10, default; }
+.cursor-arc             { cursor: url(imgs/cursor-arc-r.png) 6 10, default; }
+.cursor-arc-arrow       { cursor: url(imgs/cursor-arc-r-active.png) 3 7, default; }
+.cursor-arrow-black     { cursor: url(imgs/cursor-arrow-black.png) 2 2, default; }
+.cursor-arrow-black-point { cursor: url(imgs/cursor-arrow-black-point.png) 2 2, default; }
+.cursor-arrow-black-shape { cursor: url(imgs/cursor-arrow-black-shape.png) 2 2, default; }
+.cursor-arrow-white     { cursor: url(imgs/cursor-arrow-white.png) 2 2, default; }
+.cursor-arrow-white-point { cursor: url(imgs/cursor-arrow-white-point.png) 2 2, default; }
+.cursor-arrow-white-shape { cursor: url(imgs/cursor-arrow-white-shape.png) 2 2, default; }
+.cursor-arrow-small     { cursor: url(imgs/cursor-arrow-small.png) 2 2, default; }
+.cursor-arrow-small-point { cursor: url(imgs/cursor-arrow-small-point.png) 2 2, default; }
+.cursor-text            { cursor: url(imgs/cursor-text.png) 2 2, default; }
+.cursor-text-add        { cursor: url(imgs/cursor-text-add.png) 2 2, default; }
+.cursor-text-select     { cursor: url(imgs/cursor-text-select.png) 2 2, default; }
+.cursor-stulp-flap     { cursor: url(imgs/cursor-stulp-flap.png) 1 1, default; }
+.cursor-group     { cursor: url(imgs/group.png) 10 10, default; }
