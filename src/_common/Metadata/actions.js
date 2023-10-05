@@ -63,7 +63,7 @@ export function actions(handleIfaceState) {
         .then(() => import('../styles/patch.css'));
     })
     .then(() => {
-      return load_common($p, ['cat.abonents', 'cat.work_center_kinds', 'cat.work_centers']);
+      return load_common($p, ['catalogs.abonents', 'catalogs.work_center_kinds', 'catalogs.work_centers']);
     })
     .then(() => {
       const {classes: {PouchDB}, adapters: {pouch}, jobPrm, md, ui, cat: {users}} = $p;
@@ -102,8 +102,8 @@ export function actions(handleIfaceState) {
                 })
                   .on('change', (change) => {
                     // информируем слушателей текущего сеанса об изменениях
-                    if(change.doc.obj_delivery_state !== 'Шаблон') {
-                      pouch.load_changes({docs: [change.doc]});
+                    if(change.documents.obj_delivery_state !== 'Шаблон') {
+                      pouch.load_changes({docs: [change.documents]});
                       pouch.emit('ram_change', change);
                     }
                   })

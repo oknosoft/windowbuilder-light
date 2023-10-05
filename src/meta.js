@@ -1,9 +1,9 @@
 
-import {meta as cat, classes as catClasses, exclude as catExclude} from './cat/meta';
+import {meta as cat, classes as catClasses, exclude as catExclude} from './catalogs/meta';
 
 export const meta = {
   enm: {
-    plan_detailing: [
+    planDetailing: [
       {
         "order": 0,
         name: "order",
@@ -60,7 +60,8 @@ export const meta = {
         synonym: "Пассивн. створка"
       },
       {
-        "tag": "Детализация планирования"
+        "tag": "Детализация планирования",
+        aliases: ['plan_detailing']
       }
     ],
   },
@@ -151,7 +152,7 @@ export const meta = {
           mandatory: true,
           type: {
             types: [
-              "cat.divisions"
+              "catalogs.divisions"
             ]
           }
         },
@@ -161,7 +162,7 @@ export const meta = {
           tooltip: "",
           type: {
             types: [
-              "cat.work_centers"
+              "catalogs.work_centers"
             ]
           }
         }
@@ -180,7 +181,7 @@ export const meta = {
               mandatory: true,
               type: {
                 types: [
-                  "cat.work_center_kinds"
+                  "catalogs.work_center_kinds"
                 ]
               }
             }

@@ -4,8 +4,8 @@ import {useLoadingContext} from '../Metadata';
 import {Wraper} from '../App/Wraper';
 
 const FrmLogin = React.lazy(() => import('../FrmLogin'));
-const CatRouter = React.lazy(() => import('../../cat/Router'));
-const DocRouter = React.lazy(() => import('../../doc/Router'));
+const CatRouter = React.lazy(() => import('../../catalogs/Router'));
+const DocRouter = React.lazy(() => import('../../documents/Router'));
 const loginRoute = Wraper(FrmLogin);
 const catRoute = Wraper(CatRouter);
 const docRoute = Wraper(DocRouter);

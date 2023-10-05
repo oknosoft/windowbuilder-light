@@ -23,7 +23,7 @@ const items = [
   {
     text: 'Расчёты-заказы',
     icon: <BusinessCenterIcon/>,
-    path: '/doc/calc_order',
+    path: '/documents/calc_order',
   },
   {
     text: 'Производство',
