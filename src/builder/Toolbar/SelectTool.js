@@ -8,16 +8,18 @@ import PenIcon from '../../_common/styles/icons/Pen';
 import ZoomFitIcon from '../../_common/styles/icons/ZoomFit';
 import VideoSettingsIcon from '@mui/icons-material/VideoSettings';
 import {Toolbar, HtmlTooltip} from '../../_common/App/styled';
+import {useBuilderContext} from '../Context';
 
 export default function SelectTool() {
   const [tool, setTool] = React.useState(0);
+  const {editor} = useBuilderContext();
 
   const handleChange = (event, newValue) => {
     setTool(newValue);
   };
   return <Toolbar>
     <HtmlTooltip title="Вписать в окно (масштаб)">
-      <IconButton onClick={null}><ZoomFitIcon/></IconButton>
+      <IconButton onClick={() => editor.project.zoomFit()}><ZoomFitIcon/></IconButton>
     </HtmlTooltip>
     <Tabs value={tool} onChange={handleChange} >
       <Tab value={0} icon={<HtmlTooltip title="Выделить и сдвинуть"><CursorIcon /></HtmlTooltip>} aria-label="select" />
