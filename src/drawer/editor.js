@@ -7,7 +7,7 @@
  */
 
 import paper from 'paper/dist/paper-core';
-import drawer from 'wb-core/drawer';
+import drawer from 'wb-core/dist/drawer';
 import StableZoom from './StableZoom';
 
 export default function ($p) {

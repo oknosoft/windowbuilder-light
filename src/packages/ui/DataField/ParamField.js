@@ -1,8 +1,9 @@
 import React from 'react';
 import RefField from './RefField';
 import Checkbox from './Checkbox';
+import Text from './Text';
 
-export default function PropField({obj, meta, inset, label, onChange, fullWidth=true, ...other}) {
+export default function ParamField({obj, meta, inset, label, onChange, fullWidth=true, ...other}) {
   const {param, cnstr} = obj;
   if(!inset) {
     inset = obj.inset;
@@ -20,8 +21,11 @@ export default function PropField({obj, meta, inset, label, onChange, fullWidth=
   const {types} = meta.type;
 
   if(!meta.type.is_ref) {
-    if(meta.type.types.includes('boolean')) {
+    if(types.includes('boolean')) {
       return <Checkbox obj={obj} meta={meta} fld="value" fullWidth={fullWidth} {...other} />;
+    }
+    if(types.includes('string')) {
+      return <Text obj={obj} meta={meta} fld="value" fullWidth={fullWidth} {...other} />;
     }
     hide = true;
   }

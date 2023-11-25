@@ -5,6 +5,7 @@ export const CellExpand = styled('div')(() => ({
   float: 'right',
   display: 'table',
   blockSize: '100%',
+  width: '100%',
   '& span': {
     display: 'table-cell',
     verticalAlign: 'middle',

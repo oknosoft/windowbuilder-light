@@ -2,7 +2,7 @@ import React from 'react';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 import StyledInput from './StyledInput';
 
-const getOptionLabel = (v) => v?.name || v?.toString() || '';
+const getOptionLabel = (v) => v?.presentation || v?.name || v?.toString() || '';
 
 /**
  * @summary Висящее в воздухе поле ввода

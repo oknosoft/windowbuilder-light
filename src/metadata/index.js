@@ -10,9 +10,9 @@ import proxy_login, {load_common} from '../packages/superlogin-proxy';
 import settings from '../../config/app.settings';
 
 // читаем скрипт инициализации метаданных, полученный в результате выполнения meta:prebuild
-import init_meta from 'wb-core/init_meta';
-import init_sql from 'wb-core/init_sql';
-import init_classes from 'wb-core/init';
+import init_meta from 'wb-core/dist/init_meta';
+import init_sql from 'wb-core/dist/init_sql';
+import init_classes from 'wb-core/dist/init';
 import modifiers from './modifiers';
 
 // подключаем плагины к MetaEngine

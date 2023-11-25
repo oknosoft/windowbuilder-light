@@ -1,7 +1,7 @@
 import React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import Grid from '@mui/material/Unstable_Grid2';
-import PropField from '../../../../packages/ui/DataField/PropField';
+import ParamField from '../../../../packages/ui/DataField/ParamField';
 import {GlassesDetail} from '../../../_common/styled';
 
 
@@ -31,11 +31,11 @@ export default function GlassDetails({row, selected, glob}) {
 
   // параметры изделия
   characteristic.params.find_rows({cnstr: 0, region: 0}, (prow) => {
-    gprops.push(<PropField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} />);
+    gprops.push(<ParamField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} />);
   });
   // параметры вставки
   characteristic.params.find_rows({cnstr: -glassRow.elm, region: 0}, (prow) => {
-    gprops.push(<PropField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} />);
+    gprops.push(<ParamField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} />);
   });
   // параметры рёбер
   const rrows = [];
@@ -43,7 +43,7 @@ export default function GlassDetails({row, selected, glob}) {
     rrows.push(rrow);
   });
   characteristic.params.find_rows({cnstr: {in: rrows.map((v) => -v.elm)}, region: 0}, (prow) => {
-    rprops.push(<PropField
+    rprops.push(<ParamField
       key={`pr-${prow.row}`}
       obj={prow}
       inset={rrows.find((rrow) => rrow.elm === -prow.cnstr).inset}
