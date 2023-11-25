@@ -15,13 +15,19 @@ export default function RefField({obj, fld, meta, label, onChange, fullWidth=tru
   }
 
   const options = React.useMemo(() => {
-    const mgr = obj._manager.value_mgr(obj, fld, meta.type);
+    let mgr = obj._manager.value_mgr(obj, fld, meta.type);
     if(Array.isArray(meta.list)) {
       const {utils} = $p;
       return meta.list.map((v) => utils.is_data_obj(v) ? v : mgr.get(v));
     }
     const res = [];
     const elmOnly = meta.choice_groups_elm === 'elm';
+    for(const {name, path} of (meta.choice_params || [])) {
+      if(name === 'ref' && Array.isArray(path.in)) {
+        mgr = path.in;
+        break;
+      }
+    }
     for(const o of mgr) {
       if(elmOnly && o.is_folder) {
         continue;
