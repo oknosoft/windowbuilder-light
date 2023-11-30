@@ -1,72 +1,10 @@
 
-import {meta as cat, classes as catClasses, exclude as catExclude} from './catalogs/meta';
+import {meta as coreMeta, classes as coreClasses, exclude as coreExclude} from '@oknosoft/wb/core/src';
 
 export const meta = {
-  enm: {
-    planDetailing: [
-      {
-        "order": 0,
-        name: "order",
-        synonym: "Заказ"
-      },
-      {
-        "order": 1,
-        name: "product",
-        synonym: "Изделие"
-      },
-      {
-        "order": 2,
-        name: "layer",
-        synonym: "Контур"
-      },
-      {
-        "order": 3,
-        name: "elm",
-        synonym: "Элемент"
-      },
-      {
-        "order": 4,
-        name: "region",
-        synonym: "Ряд элемента"
-      },
-      {
-        "order": 5,
-        name: "nearest",
-        synonym: "Соседний элем или слой"
-      },
-      {
-        "order": 6,
-        name: "parent",
-        synonym: "Родительский элемент или слой"
-      },
-      {
-        "order": 7,
-        name: "sub_elm",
-        synonym: "Вложенный элемент"
-      },
-      {
-        "order": 8,
-        name: "algorithm",
-        synonym: "Алгоритм"
-      },
-      {
-        "order": 9,
-        name: "layer_active",
-        synonym: "Активн. створка"
-      },
-      {
-        "order": 10,
-        name: "layer_passive",
-        synonym: "Пассивн. створка"
-      },
-      {
-        "tag": "Детализация планирования",
-        aliases: ['plan_detailing']
-      }
-    ],
-  },
+  enm: {...coreMeta.enm},
   cat: {
-    ...cat,
+    ...coreMeta.cat,
     workCenterKinds: {
       name: "ВидыРабочихЦентров",
       synonym: "Этапы производства (Виды РЦ)",
@@ -194,8 +132,8 @@ export const meta = {
       aliases: ['work_centers'],
     },
   }
-}
+};
 
-export const classes = [...catClasses];
+export const classes = [...coreClasses];
 
-export const exclude = [...catExclude];
+export const exclude = [...coreExclude];

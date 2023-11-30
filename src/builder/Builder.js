@@ -13,7 +13,7 @@ export default function Builder({context}) {
         editor = new EditorInvisible();
       }
       if(editor.view?.element !== el) {
-        editor.createScheme(el);
+        editor.createScheme(el, $p);
         setContext({editor});
         window.paper = editor;
       }
