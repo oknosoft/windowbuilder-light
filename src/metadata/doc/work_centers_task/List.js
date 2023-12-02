@@ -78,13 +78,13 @@ export default function WorkCentersTaskList() {
     rows,
     columns,
     create,
-    clone,
+    clone: null,
     open,
     setSelectedRows
   });
 
   return <Content>
-    <ListToolbar create={create} clone={clone} open={open} disabled={Boolean(error)}/>
+    <ListToolbar create={create} clone={null} open={open} disabled={Boolean(error)}/>
     {error ? error.message : <DataGrid
       columns={columns}
       rows={rows}

@@ -186,7 +186,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
         if(!column.renderCell && _fld && _fld.type) {
 
           if(column.key === 'ref' || _fld.type.is_ref) {
-            column.renderCell = !_obj && _fld.type.types[0].includes('.') ? typed_formatter(_fld.type.types[0]) : PresentationFormatter;
+            column.renderCell = !_obj && _fld.type?.types[0]?.includes?.('.') ? typed_formatter(_fld.type.types[0]) : PresentationFormatter;
           }
           else if(_fld.type.date_part) {
             column.renderCell = date_formatter(_fld.type.date_part, !index && !editable, is_doc);

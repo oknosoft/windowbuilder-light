@@ -116,7 +116,7 @@ export function cellKeyDown({rows, columns, create, clone, open, remove, keyFiel
       create();
     }
     else if(key === 'F9') {
-      clone();
+      clone?.();
     }
     else if (key === 'ArrowDown') {
       if (rowIdx < rows.length - 1) {

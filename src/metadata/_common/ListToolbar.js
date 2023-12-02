@@ -12,7 +12,7 @@ export default function ListToolbar({create, clone, open, disabled}) {
       <IconButton onClick={create}><AddIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Создать документ копированием текущего {F9}">
-      <IconButton onClick={clone}><CopyIcon/></IconButton>
+      <IconButton disabled={!clone} onClick={clone}><CopyIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Изменить документ">
       <IconButton onClick={open}><EditIcon/></IconButton>
