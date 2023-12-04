@@ -10,6 +10,7 @@ import CalculateIcon from '@mui/icons-material/Calculate';
 import {useNavigate} from 'react-router-dom';
 import {ListSubheader} from './styled';
 import {Toolbar, HtmlTooltip} from '../../components/App/styled';
+import PostBtn from './PostBtn';
 
 export default function ObjToolbar({obj, mgr, setSettingOpen}) {
   const navigate = useNavigate();
@@ -31,7 +32,8 @@ export default function ObjToolbar({obj, mgr, setSettingOpen}) {
       <HtmlTooltip title="Записать">
         <IconButton onClick={save}><SaveAsIcon/></IconButton>
       </HtmlTooltip>
-      <Divider orientation="vertical" flexItem />
+      <PostBtn obj={obj} />
+      <Divider orientation="vertical" flexItem sx={{m: 1}} />
       <HtmlTooltip title="Пересчитать">
         <IconButton onClick={recalc}><CalculateIcon/></IconButton>
       </HtmlTooltip>
