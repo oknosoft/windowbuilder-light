@@ -6,8 +6,6 @@ import Tree, {buildTree} from './Tree';
 import List from './List';
 import Toolbar from './Toolbar';
 
-import 'metadata-ui/styles/indicator/index.css';
-
 export default function TreeList(props) {
 
   let {mgr, meta, owner} = props;
