@@ -4,7 +4,7 @@ import ProductFormatter from './ProductFormatter';
 
 import {NumberCell, NumberFormatter} from '../../../../packages/ui/DataField/Number';
 // доступные типы вставок
-import {itypes, ioptions, RowProxy} from './RowProxy';
+import {itypes, ioptions, ilist, RowProxy} from './RowProxy';
 
 export const rowHeight = ({row, type}) => {
   if(type === 'DETAIL') {
@@ -93,7 +93,7 @@ export async function recalcRow({row, setBackdrop, setModified, noSave}) {
 
 export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, setSnack, selectedRowsChange}) {
 
-  const {job_prm, utils} = $p;
+  const {job_prm, utils, doc: {calc_order}} = $p;
 
   const add = async (proto, noBackdrop) => {
     !noBackdrop && setBackdrop(true);
@@ -146,6 +146,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   const clear = () => {
     obj.production.clear();
+    selectedRowsChange(new Set(), true);
     setRows([]);
   };
 
@@ -155,47 +156,72 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   const load = async (text) => {
     const rows = [];
+    const regex = /-|\*|х|Х|X|x/g;
     for(const row of text.split('\n')) {
       const values = row.split('\t');
       let strings = 0;
       let numbers = 0;
       let newRow;
-      for(const v of values) {
-        if(v) {
-          const n = parseFloat(v);
-          if(isNaN(n)) {
-            if(!strings && !newRow) {
-              newRow = {inset: v};
-            }
-            strings++;
+      for(const raw of values) {
+        const formula = regex.test(raw) ? raw.replace(regex, 'x') : '';
+        const n = formula ? NaN : parseFloat(raw.replace(/\s/, ''));
+        if(isNaN(n)) {
+          if(!strings && !newRow) {
+            newRow = {formula, note: []};
           }
-          else if(newRow) {
-            if(!numbers) {
-              newRow.len = n;
-            }
-            else if(numbers === 1) {
-              newRow.width = n;
-            }
-            else {
-              newRow.quantity = n;
-            }
-            numbers++;
+          if(strings && raw) {
+            newRow.note.push(raw);
           }
+          strings++;
+        }
+        else if(newRow) {
+          if(!numbers) {
+            newRow.len = n;
+          }
+          else if(numbers === 1) {
+            newRow.width = n;
+          }
+          else if(!newRow.quantity) {
+            newRow.quantity = n;
+          }
+          numbers++;
         }
       }
-      if(newRow?.inset && newRow.width) {
+      if(newRow?.formula && newRow.width) {
         if(!newRow.quantity) {
           newRow.quantity = 1;
         }
+        newRow.formula = newRow.formula.toLowerCase();
+        newRow.note = newRow.note.join('\xA0');
         rows.push(newRow);
       }
     }
     if(rows.length) {
-      for(const {inset, len, width, quantity} of rows) {
-        setBackdrop(true);
-        const row = await add(null, true);
-        //row.row.inset = inset;
-        setBackdrop(true);
+      setBackdrop(true);
+      for(const {formula, len, width, quantity, note} of rows) {
+        const candidates = [];
+        for(const inset of ilist) {
+          const article = inset.article.replace(regex, 'x').toLowerCase();
+          const name = inset.name.replace(regex, 'x').toLowerCase();
+          if(article === formula) {
+            candidates.push({inset, weight: 10});
+          }
+          else if(name === formula) {
+            candidates.push({inset, weight: 9});
+          }
+          else if(article.startsWith(formula)) {
+            candidates.push({inset, weight: 6 - (article.length - formula.length)});
+          }
+          else if(name.startsWith(formula)) {
+            candidates.push({inset, weight: 5 - (name.length - formula.length)});
+          }
+        }
+        if(candidates.length) {
+          candidates.sort((a, b) => b.weight - a.weight);
+          const row = await add(null, true);
+          row.row.inset = candidates[0].inset;
+        }
+        setBackdrop(false);
       }
     }
   };

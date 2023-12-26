@@ -10,9 +10,11 @@ export default function ObjHead({obj}) {
       <TextField label="Номер" value={obj.number_doc}/>
       <TextField label="Дата" value={moment(obj.date).format(moment._masks.date)}/>
       <RefField obj={obj} fld="organization" />
+      <RefField obj={obj} fld="partner"/>
     </Grid>
     <Grid xs={12} lg={4}>
-      <RefField obj={obj} fld="partner"/>
+      <RefField obj={obj} fld="contract"/>
+      <RefField obj={obj} fld="department"/>
       <TextField obj={obj} fld="client_of_dealer"/>
       <TextField label="Адрес доставки" value={obj.shipping_address}/>
     </Grid>

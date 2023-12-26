@@ -16,6 +16,11 @@ function settings(prm = {}) {
       get() {
         return '';
       }
+    },
+    session_zone: {
+      get() {
+        return typeof sessionStorage === 'object' && sessionStorage.key('zone') ? sessionStorage.getItem('zone') : this.zone;
+      }
     }
   });
 

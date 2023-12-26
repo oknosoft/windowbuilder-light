@@ -6,10 +6,16 @@ export const itypes = [inserts_types.glass, inserts_types.composite];
 
 // доступные вставки
 const ioptions = [];
-inserts.find_rows({insert_type: {in: itypes}, available: true}, (o) => {
-  ioptions.push(o);
+const ilist = [];
+inserts.find_rows({insert_type: {in: itypes}}, (o) => {
+  if(o.available) {
+    ioptions.push(o);
+  }
+  if(o.insert_glass_type.empty()) {
+    ilist.push(o);
+  }
 });
-export {ioptions};
+export {ioptions, ilist};
 
 export class RowProxy {
   #row;

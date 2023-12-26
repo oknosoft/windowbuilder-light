@@ -48,11 +48,13 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       if(curr === obj) {
         if(glob.skey) {
           const row = glob.rows.find(({key}) => key === glob.skey);
-          const {characteristic} = row.row;
-          if(characteristic._modified) {
-            const {project} = row.row.editor;
-            project.redraw();
-            await project.save_coordinates();
+          if(row) {
+            const {characteristic} = row.row;
+            if(characteristic._modified) {
+              const {project} = row.row.editor;
+              project.redraw();
+              await project.save_coordinates();
+            }
           }
         }
       }

@@ -26,7 +26,7 @@ const stubDb = {
   }
 };
 
-const {doc: {calc_order: mgr}, wsql} = $p;
+const {doc: {calc_order: mgr}, wsql, job_prm} = $p;
 
 export default function CalcOrderObj() {
 
@@ -48,7 +48,15 @@ export default function CalcOrderObj() {
 
   React.useEffect(() => {
     const {ref} = params;
-    mgr.get(ref, 'promise')
+    let res = Promise.resolve();
+    if(job_prm.builder.glasses_template.is_new()) {
+      for(const doc of mgr) {
+        if(doc.obj_delivery_state.is('Шаблон')) {
+          res = res.then(() => doc.load_templates());
+        }
+      }
+    }
+    res = res.then(() => mgr.get(ref, 'promise'))
       .then((doc) => doc.load_linked_refs())
       .then(setObj)
       .catch(setError)
