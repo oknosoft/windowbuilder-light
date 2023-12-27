@@ -155,7 +155,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
   };
 
   const load = async (text) => {
-    const rows = [];
+    const irows = [];
     const regex = /-|\*|х|Х|X|x/g;
     for(const row of text.split('\n')) {
       const values = row.split('\t');
@@ -179,7 +179,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
             newRow.len = n;
           }
           else if(numbers === 1) {
-            newRow.width = n;
+            newRow.height = n;
           }
           else if(!newRow.quantity) {
             newRow.quantity = n;
@@ -187,18 +187,20 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
           numbers++;
         }
       }
-      if(newRow?.formula && newRow.width) {
+      if(newRow?.formula && newRow.height) {
         if(!newRow.quantity) {
           newRow.quantity = 1;
         }
         newRow.formula = newRow.formula.toLowerCase();
         newRow.note = newRow.note.join('\xA0');
-        rows.push(newRow);
+        irows.push(newRow);
       }
     }
-    if(rows.length) {
+    if(irows.length) {
+      selectedRowsChange(new Set(), true);
       setBackdrop(true);
-      for(const {formula, len, width, quantity, note} of rows) {
+      const newRows = [];
+      for(const {formula, len, height, quantity, note} of irows) {
         const candidates = [];
         for(const inset of ilist) {
           const article = inset.article.replace(regex, 'x').toLowerCase();
@@ -218,11 +220,27 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
         }
         if(candidates.length) {
           candidates.sort((a, b) => b.weight - a.weight);
-          const row = await add(null, true);
-          row.row.inset = candidates[0].inset;
+          const row = new RowProxy(await obj.create_product_row({create: true}));
+          newRows.push({type: 'MASTER', expanded: false, row, key: row.row});
+          const tmp = utils._clone(job_prm.builder.glasses_template.toJSON());
+          utils._mixin(row.characteristic._set_loaded(), tmp, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name'.split(','), true);
+          await row.createEditor();
+          const {editor: {project, eve}, glassRow} = row;
+          const glass = row.editor.elm(glassRow.elm);
+          glass.set_inset(candidates[0].inset, false, true);
+          const {bottom, right} = project.l_dimensions;
+          right.sizes_wnd({wnd: right, size: height, name: 'auto'});
+          bottom.sizes_wnd({wnd: bottom, size: len, name: 'auto'});
+          while (eve._async?.move_points?.timer) {
+            await utils.sleep(20);
+          }
+          project.redraw();
+          await project.save_coordinates({save: false});
+          row.unloadEditor();
         }
-        setBackdrop(false);
       }
+      setRows([...rows, ...newRows]);
+      setBackdrop(false);
     }
   };
 
