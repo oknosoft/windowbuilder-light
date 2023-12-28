@@ -20,6 +20,14 @@ export default function ProductFormatter({row}) {
 
   if(inset.insert_type.is('composite')) {
     main.push(characteristic.owner.toString());
+    const glrow = characteristic.glasses.find({elm: glassRow.elm});
+    if(glrow) {
+      main.push(glrow.formula);
+      other.push(`${glrow.thickness}мм`);
+    }
+    other.push(`${glassRow.s.toFixed(3)}м²`);
+    other.push(`${characteristic.elm_weight(glassRow.elm).round(1)}кг`);
+    other.push(characteristic.note);
 
     // параметры изделия
     characteristic.params.find_rows({cnstr: 0, region: 0}, ({param, value}) => {
@@ -27,7 +35,7 @@ export default function ProductFormatter({row}) {
         main.push(value.toString());
       }
     });
-    other.push(`s: ${glassRow.s.toFixed(3)}`);
+
   }
   else {
     // параметры изделия

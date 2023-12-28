@@ -19,7 +19,12 @@ export default function ObjGlassesDetail({ row, tabIndex, isCellEditable, onRowC
     <CellExpanderFormatter
       expanded={row.expanded}
       tabIndex={tabIndex}
-      onCellExpand={() => onRowChange({ ...row, expanded: !row.expanded })}
+      onCellExpand={async () => {
+        if(!row.expanded && !row.row.editor) {
+          await row.row.createEditor();
+        }
+        onRowChange({ ...row, expanded: !row.expanded });
+      }}
     />
   );
 }

@@ -200,6 +200,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       selectedRowsChange(new Set(), true);
       setBackdrop(true);
       const newRows = [];
+      const problems = new Set();
       for(const {formula, len, height, quantity, note} of irows) {
         const candidates = [];
         for(const inset of ilist) {
@@ -234,13 +235,25 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
           while (eve._async?.move_points?.timer) {
             await utils.sleep(20);
           }
+          row.quantity = project._dp.quantity = quantity;
+          row.note = project._dp.note = project.ox.note = note;
           project.redraw();
-          await project.save_coordinates({save: false});
-          row.unloadEditor();
+          await project.save_coordinates({});
+          row.characteristic._modified = true;
+        }
+        else {
+          problems.add(formula);
         }
       }
       setRows([...rows, ...newRows]);
+      await obj.save();
       setBackdrop(false);
+      if(problems.size) {
+        alert(`Не найдено соответствия для формул:\n ${Array.from(problems).join('\n')}`);
+      }
+    }
+    else {
+      alert('Не найдено подходящих строк для импорта');
     }
   };
 

@@ -11,7 +11,7 @@ inserts.find_rows({insert_type: {in: itypes}}, (o) => {
   if(o.available) {
     ioptions.push(o);
   }
-  if(o.insert_glass_type.empty()) {
+  if(o.insert_glass_type.empty() || o.insert_glass_type.is('Заполнение')) {
     ilist.push(o);
   }
 });
@@ -156,7 +156,7 @@ export class RowProxy {
   }
 
   get glassRow() {
-    const {coordinates} = this.#row.characteristic;
+    const {coordinates} = this.characteristic;
     for(const grow of coordinates) {
       if(itypes.includes(grow.inset.insert_type)) {
         return grow;
@@ -207,4 +207,12 @@ export class RowProxy {
   set amount_internal(v) {
     this.#row.amount_internal = v;
   }
+
+  get note() {
+    return this.#row.note;
+  }
+  set note(v) {
+    this.#row.note = v;
+  }
+
 }

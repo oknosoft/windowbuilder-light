@@ -53,7 +53,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
             if(characteristic._modified) {
               const {project} = row.row.editor;
               project.redraw();
-              await project.save_coordinates();
+              await project.save_coordinates({});
             }
           }
         }
@@ -62,7 +62,12 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
 
     $p.doc.calc_order.on({before_save});
-    return () => $p.doc.calc_order.off({before_save});
+    return () => {
+      $p.doc.calc_order.off({before_save});
+      for(const {row} of glob.rows) {
+        row.unloadEditor();
+      }
+    };
   }, [obj]);
 
   function onRowsChange(rows, {column, indexes }) {
@@ -113,7 +118,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       await recalcRow({row, setBackdrop, setModified, noSave});
       // TODO
       // выгружаем редактор
-      row.row.unloadEditor();
+      //row.row.unloadEditor();
     }
     // создаём редактор для новой строки
     if(newRows.size) {

@@ -35,7 +35,7 @@ export default function ObjToolbar({obj, mgr, setSettingOpen}) {
       <PostBtn obj={obj} />
       <Divider orientation="vertical" flexItem sx={{m: 1}} />
       <HtmlTooltip title="Пересчитать">
-        <IconButton onClick={recalc}><CalculateIcon/></IconButton>
+        <IconButton disabled onClick={recalc}><CalculateIcon/></IconButton>
       </HtmlTooltip>
       <Typography sx={{flex: 1}}></Typography>
       <HtmlTooltip title="Настроить форму">

@@ -14,8 +14,8 @@ const {dependencies} = require(path.resolve(__dirname, '../package.json'));
 const repos = [
   {
     local: 'wb-core',
-    remote: '..\\wb-core\\dist',
-    dir: '',
+    remote: '..\\wb-core',
+    dir: 'dist',
   },
   {
     local: 'metadata-core',
@@ -63,8 +63,8 @@ function fromDir(startPath, filter, callback) {
     else if(filter.test(filename)) {
       callback(filename);
     }
-  };
-};
+  }
+}
 
 // исполняем
 let copied;
