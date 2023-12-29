@@ -5,6 +5,7 @@ import ParamField from '../../../../packages/ui/DataField/ParamField';
 import RefField from '../../../../packages/ui/DataField/RefField';
 import {GlassesDetail} from '../../../_common/styled';
 import CompositeGrid from './CompositeGrid';
+import CompositeRegionProps from './CompositeRegionProps';
 
 const {blank} = $p.utils;
 // http://localhost:2222/doc/calc_order/82f1a0b0-fac8-11ed-bbc3-e1c5499d8d7a
@@ -15,15 +16,7 @@ export default function CompositeDetails({row, selected}) {
   const {fields} = elm.__metadata(false);
 
   fields.inset.list = [elm.inset];
-  const gprops = [
-    <RefField
-      key={`inset`}
-      obj={elm}
-      fld="inset"
-      meta={fields.inset}
-      //handleValueChange={() => this.set_row(null)}
-    />
-  ];
+  const gprops = [];
   const rprops = [];
 
   // параметры изделия
@@ -42,13 +35,27 @@ export default function CompositeDetails({row, selected}) {
   // параметры рёбер - пока пропускаем
   const rrows = [];
 
+  const [selectedRows, setSelectedRows] = React.useState(new Set());
+  const glRowRow = Array.from(selectedRows)[0];
+
   return <GlassesDetail container spacing={2} selected={selected}>
     <Grid sm={12} md={5}>
-      <FormGroup>{gprops}</FormGroup>
-      <CompositeGrid elm={elm} />
+      <FormGroup><RefField
+        key={`inset`}
+        obj={elm}
+        fld="inset"
+        meta={fields.inset}
+        //handleValueChange={() => this.set_row(null)}
+      /></FormGroup>
     </Grid>
     <Grid sm={12} md={5}>
-      <FormGroup>{rprops}</FormGroup>
+      <FormGroup>{gprops}</FormGroup>
+    </Grid>
+    <Grid sm={12} md={5}>
+      <CompositeGrid elm={elm} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
+    </Grid>
+    <Grid sm={12} md={5}>
+      <CompositeRegionProps elm={elm} glRow={glRowRow ? elm.ox.glass_specification.get(glRowRow - 1) : null} />
     </Grid>
   </GlassesDetail>;
 }

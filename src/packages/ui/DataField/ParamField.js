@@ -3,12 +3,19 @@ import RefField from './RefField';
 import Checkbox from './Checkbox';
 import Text from './Text';
 
-export default function ParamField({obj, meta, inset, label, onChange, fullWidth=true, ...other}) {
-  const {param, cnstr} = obj;
+export default function ParamField({obj, fld, param, cnstr, meta, inset, label, onChange, fullWidth=true, ...other}) {
+  if(!param) {
+    param = obj.param;
+  }
+  if(!cnstr) {
+    cnstr = obj.cnstr || 0;
+  }
   if(!inset) {
     inset = obj.inset;
   }
-
+  if(!fld) {
+    fld='value';
+  }
   // вычисляемые скрываем всегда
   let hide = !param.show_calculated && param.is_calculated;
 
@@ -22,10 +29,10 @@ export default function ParamField({obj, meta, inset, label, onChange, fullWidth
 
   if(!meta.type.is_ref) {
     if(types.includes('boolean')) {
-      return <Checkbox obj={obj} meta={meta} fld="value" fullWidth={fullWidth} {...other} />;
+      return <Checkbox obj={obj} meta={meta} fld={fld} fullWidth={fullWidth} {...other} />;
     }
     if(types.includes('string')) {
-      return <Text obj={obj} meta={meta} fld="value" fullWidth={fullWidth} {...other} />;
+      return <Text obj={obj} meta={meta} fld={fld} fullWidth={fullWidth} {...other} />;
     }
     hide = true;
   }
@@ -81,11 +88,17 @@ export default function ParamField({obj, meta, inset, label, onChange, fullWidth
         });
       }
     }
+    else if(oselect && types[0] === 'cat.property_values') {
+      meta.list = [];
+      $p.cat.property_values.find_rows({owner: param}, (v) => {
+        meta.list.push(v);
+      });
+    }
   }
 
   return hide ? null : <RefField
     obj={obj}
-    fld="value"
+    fld={fld}
     meta={meta}
     onChange={onChange}
     fullWidth={fullWidth}
