@@ -2,6 +2,7 @@ import React from 'react';
 import RefField from './RefField';
 import Checkbox from './Checkbox';
 import Text from './Text';
+import {NumberField} from './Number';
 
 export default function ParamField({obj, fld, param, cnstr, meta, inset, label, onChange, fullWidth=true, ...other}) {
   if(!param) {
@@ -23,16 +24,24 @@ export default function ParamField({obj, fld, param, cnstr, meta, inset, label, 
     const {utils} = $p;
     meta = utils._clone(obj._metadata('value'));
     meta.type = utils._clone(param.type);
+    meta.mandatory = param.mandatory;
     meta.synonym = label || param.caption || param.name;
   }
   const {types} = meta.type;
 
   if(!meta.type.is_ref) {
+    let Component;
     if(types.includes('boolean')) {
-      return <Checkbox obj={obj} meta={meta} fld={fld} fullWidth={fullWidth} {...other} />;
+      Component = Checkbox;
     }
-    if(types.includes('string')) {
-      return <Text obj={obj} meta={meta} fld={fld} fullWidth={fullWidth} {...other} />;
+    else if(types.includes('string')) {
+      Component = Text;
+    }
+    if(types.includes('number')) {
+      Component = NumberField;
+    }
+    if(Component) {
+      return <Component obj={obj} meta={meta} fld={fld} fullWidth={fullWidth} {...other} />;
     }
     hide = true;
   }

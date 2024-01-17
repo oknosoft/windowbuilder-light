@@ -47,6 +47,8 @@ export default function RefField({obj, fld, meta, label, onChange, fullWidth=tru
     value={value}
     label={label}
     fullWidth={fullWidth}
+    disableClearable={Boolean(meta.mandatory)}
+    placeholder="Нет"
     {...other}
   />;
 }

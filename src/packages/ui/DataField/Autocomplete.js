@@ -9,7 +9,7 @@ const getOptionLabel = (v) => v?.presentation || v?.name || v?.toString() || '';
  * @desc Это не совсем DataField.
  * Он не редактирует DataObj, но позволяет показать и выбрать из списка, значение DataObj
  */
-export default function Autocomplete({label, fullWidth, disableClearable, ...other}) {
+export default function Autocomplete({label, fullWidth, disableClearable, placeholder, ...other}) {
 
   if(typeof disableClearable !== 'boolean') {
     disableClearable = true;
@@ -18,8 +18,11 @@ export default function Autocomplete({label, fullWidth, disableClearable, ...oth
   return <MuiAutocomplete
     disableListWrap
     disableClearable={disableClearable}
+    clearText="Очистить"
+    openText="Показать список"
+    closeText="Закрыть список"
     getOptionLabel={getOptionLabel}
-    renderInput={(params) => <StyledInput {...params} fullWidth={fullWidth} label={label}/>}
+    renderInput={(params) => <StyledInput {...params} fullWidth={fullWidth} label={label} placeholder={placeholder}/>}
     //renderOption={(props, option, state) => <Typography key={option.ref} noWrap>{option.name}</Typography>}
     {...other}
   />;
