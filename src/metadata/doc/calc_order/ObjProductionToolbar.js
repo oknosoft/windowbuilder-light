@@ -9,10 +9,10 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import {useNavigate} from 'react-router-dom';
 import {useBackdropContext} from '../../../components/App';
-import {ListSubheader} from '../../_common/styled';
+import {ListSubheader} from '../../aggregate/styled';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 import {handlers} from './glasses/data';
-import ClipBoard from '../../_common/ClipBoard';
+import ClipBoard from '../../aggregate/ClipBoard';
 
 export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBackdrop, setModified, selectedRowsChange}) {
 

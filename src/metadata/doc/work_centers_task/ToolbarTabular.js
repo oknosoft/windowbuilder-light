@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/AddBoxOutlined';
 import CopyIcon from '@mui/icons-material/PostAdd';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import {ListSubheader} from '../../_common/styled';
+import {ListSubheader} from '../../aggregate/styled';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
 
 

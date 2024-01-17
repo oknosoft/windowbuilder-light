@@ -38,40 +38,9 @@ export default function ProductFormatter({row}) {
 
   }
   else {
-    // параметры изделия
-    characteristic.params.find_rows({cnstr: 0, region: 0}, ({param, value}) => {
-      if(param.is_calculated || param.predefined_name === 'auto_align') {
-        return;
-      }
-      main.push(value.toString());
-    });
-
-    // параметры вставки
-    characteristic.params.find_rows({cnstr: -glassRow.elm, region: 0}, ({param, value}) => {
-      if(param.type.types.includes('boolean')) {
-        if(value) {
-          other.push(param.caption || param.name);
-        }
-      }
-      else if(value) {
-        other.push(value.toString());
-      }
-    });
-
-    // параметры рёбер
-    const rrows = [];
-    characteristic.coordinates.find_rows({cnstr: glassRow.cnstr, elm_type: 'Рама'}, (rrow) => {
-      rrows.push(rrow);
-    });
-    const rprops = new Set();
-    characteristic.params.find_rows({cnstr: {in: rrows.map((v) => -v.elm)}, region: 0}, ({value}) => {
-      if(!value.empty() && value.toString() !== 'Нет') {
-        rprops.add(value.toString());
-      }
-    });
-    for(const rp of rprops) {
-      other.push(rp);
-    }
+    const parts = characteristic.prod_name2({elm: glassRow.elm, cnstr: glassRow.cnstr});
+    main.push(...parts.main);
+    other.push(...parts.other);
   }
 
 

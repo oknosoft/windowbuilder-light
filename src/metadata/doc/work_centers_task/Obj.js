@@ -4,9 +4,9 @@ import Typography from '@mui/material/Typography';
 import {useParams, unstable_usePrompt as usePrompt} from 'react-router-dom'; // https://www.npmjs.com/package/react-router-prompt
 import {useTitleContext, useBackdropContext} from '../../../components/App';
 import Loading from '../../../components/App/Loading';
-import {Root} from '../../_common/styled';
-import ObjToolbar from '../../_common/ObjToolbar';
-import ObjTabs from '../../_common/ObjTabs';
+import {Root} from '../../aggregate/styled';
+import ObjToolbar from '../../aggregate/ObjToolbar';
+import ObjTabs from '../../aggregate/ObjTabs';
 import ObjHead from './ObjHead';
 import ObjPlan from './ObjPlan';
 import ObjCutsIn from './ObjCutsIn';

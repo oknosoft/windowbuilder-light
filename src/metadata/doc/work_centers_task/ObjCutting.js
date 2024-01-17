@@ -3,7 +3,7 @@ import ObjTabular from './ObjTabular';
 import {NumberCell, NumberFormatter} from '../../../packages/ui/DataField/Number';
 import {PresentationFormatter} from '../../../packages/ui/DataField/RefField';
 import {TextFormatter} from '../../../packages/ui/DataField/Text';
-import ClipBoard from '../../_common/ClipBoard';
+import ClipBoard from '../../aggregate/ClipBoard';
 import Optimize2D from './Optimize2D';
 
 export const columns = [
