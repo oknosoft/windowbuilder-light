@@ -249,7 +249,9 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       await obj.save();
       setBackdrop(false);
       if(problems.size) {
-        alert(`Не найдено соответствия для формул:\n ${Array.from(problems).join('\n')}`);
+        const formulas = Array.from(problems).join('\n');
+        $p.record_log({class: 'formulas', obj: formulas});
+        alert(`Не найдено соответствия для формул:\n ${formulas}`);
       }
     }
     else {
