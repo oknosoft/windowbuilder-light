@@ -1,6 +1,6 @@
 import React from 'react';
 import {Routes, Route} from 'react-router-dom';
-import {useLoadingContext} from '../Metadata';
+import {useLoadingContext} from './index';
 import {Wraper} from '../App/Wraper';
 
 const FrmLogin = React.lazy(() => import('../FrmLogin'));

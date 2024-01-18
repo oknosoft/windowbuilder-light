@@ -12,8 +12,8 @@ import CalculateIcon from '@mui/icons-material/Calculate';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
 import {useNavigate} from 'react-router-dom';
-import {HtmlTooltip} from '../../_common/App/styled';
-import {useLoadingContext} from '../../_common/Metadata';
+import {HtmlTooltip} from '../../aggregate/App/styled';
+import {useLoadingContext} from '../../aggregate/Metadata';
 
 export default function MainToolbar() {
   const navigate = useNavigate();

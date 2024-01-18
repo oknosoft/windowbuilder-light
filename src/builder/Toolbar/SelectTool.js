@@ -3,11 +3,11 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import CursorIcon from '../../_common/styles/icons/Cursor';
-import PenIcon from '../../_common/styles/icons/Pen';
-import ZoomFitIcon from '../../_common/styles/icons/ZoomFit';
+import CursorIcon from '../../aggregate/styles/icons/Cursor';
+import PenIcon from '../../aggregate/styles/icons/Pen';
+import ZoomFitIcon from '../../aggregate/styles/icons/ZoomFit';
 import VideoSettingsIcon from '@mui/icons-material/VideoSettings';
-import {Toolbar, HtmlTooltip} from '../../_common/App/styled';
+import {Toolbar, HtmlTooltip} from '../../aggregate/App/styled';
 import {useBuilderContext} from '../Context';
 
 export default function SelectTool() {

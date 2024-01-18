@@ -12,7 +12,7 @@ import IconHome from '@mui/icons-material/Home';
 import {useNavigate} from 'react-router-dom';
 
 import {drawerWidth, disablePermanent, DrawerHeader} from './styled';
-import menuItems from '../App/menu';
+import menuItems from './menu';
 
 const DrawerLeft = ({drawerOpen, sxColor, handleDrawerClose}) => {
 

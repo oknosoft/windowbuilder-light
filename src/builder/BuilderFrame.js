@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import {Resize, ResizeHorizon} from '@oknosoft/ui/dist/Resize';
-import {useTitleContext} from '../_common/App';
-import {useLoadingContext} from '../_common/Metadata';
-import {contentWidth} from '../_common/styles/muiTheme';
+import {useTitleContext} from '../aggregate/App';
+import {useLoadingContext} from '../aggregate/Metadata';
+import {contentWidth} from '../aggregate/styles/muiTheme';
 import MainToolbar from './Toolbar/Main';
 import ProductStructure from './Structure';
 import Controls from './Controls';
