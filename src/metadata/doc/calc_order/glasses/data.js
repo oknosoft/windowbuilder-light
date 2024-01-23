@@ -121,10 +121,10 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   const clone = () => add(getRow());
 
-  const del = () => {
+  const del = async () => {
     const row = getRow();
     if(row) {
-      selectedRowsChange(new Set(), true);
+      await selectedRowsChange(new Set(), true);
       row.row.unloadEditor();
       obj.production.del(row.row.calc_order_row);
       rows.splice(rows.indexOf(row), 1);
@@ -144,9 +144,9 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     }
   };
 
-  const clear = () => {
+  const clear = async () => {
     obj.production.clear();
-    selectedRowsChange(new Set(), true);
+    await selectedRowsChange(new Set(), true);
     setRows([]);
   };
 
@@ -197,7 +197,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       }
     }
     if(irows.length) {
-      selectedRowsChange(new Set(), true);
+      await selectedRowsChange(new Set(), true);
       setBackdrop(true);
       const newRows = [];
       const problems = new Set();
