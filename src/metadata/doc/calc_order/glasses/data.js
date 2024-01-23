@@ -138,6 +138,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
         tmp.key = tmp.row.row;
       }
       setRows([...rows]);
+      setBackdrop(false);
     }
     else {
       setSnack('Укажите строку табчасти для удаления');
@@ -148,6 +149,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     obj.production.clear();
     await selectedRowsChange(new Set(), true);
     setRows([]);
+    setBackdrop(false);
   };
 
   const open = () => {
