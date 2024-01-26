@@ -60,13 +60,13 @@
     "react-number-format": "^5.3",
     "react-router-dom": "6.20",
     "react-treebeard": "^3.2.4",
-    "react-virtualized-auto-sizer": "^1.0.20",
+    "react-virtualized-auto-sizer": "^1.0.21",
     "react-window": "^1.8",
     "react-window-infinite-loader": "^1.0.9",
     "url-join": "^5.0",
     "url-parse": "^1.5",
     "velocity-react": "^1.4.3",
-    "wb-core": "github:oknosoft/windowbuilder-core#3313e0cddc9bbf2a69c6008fba5c87adfc4c900e"
+    "wb-core": "github:oknosoft/windowbuilder-core#bbdd4e5dee4ccc939074afe79834445e0ce2a6f2"
   },
   "devDependencies": {
     "@babel/core": "^7.23",

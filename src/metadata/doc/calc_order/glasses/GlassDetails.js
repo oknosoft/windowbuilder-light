@@ -1,6 +1,7 @@
 import React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import Grid from '@mui/material/Unstable_Grid2';
+import TextField from '../../../../packages/ui/DataField/Text';
 import ParamField from '../../../../packages/ui/DataField/ParamField';
 import {GlassesDetail} from '../../../aggregate/styled';
 
@@ -8,7 +9,11 @@ import {GlassesDetail} from '../../../aggregate/styled';
 export default function GlassDetails({row, selected, glob}) {
   const {characteristic, inset, glassRow} = row.row;
   const gprops = [];
-  const rprops = [];
+  const rprops = [<TextField
+    obj={row.row}
+    fld="note"
+    onChange={(v) => characteristic.note = v}
+  />];
 
   const [index, setIndex] = React.useState(0);
   React.useEffect(() => {
