@@ -15,13 +15,15 @@ import init_meta from 'wb-core/dist/init_meta';
 import init_sql from 'wb-core/dist/init_sql';
 import init_classes from 'wb-core/dist/init';
 import modifiers from './modifiers';
+import spreadsheet from '../packages/ui/spreadsheet';
 
 // подключаем плагины к MetaEngine
 MetaEngine
   .plugin(plugin_pouchdb)           // подключаем pouchdb-адаптер к прототипу metadata.js
   .plugin(plugin_mime)              // подключаем mime-types
   .plugin(plugin_scheme_settings)
-  .plugin(plugin_log_manager);
+  .plugin(plugin_log_manager)
+  .plugin(spreadsheet);
 
 // создаём экземпляр MetaEngine и экспортируем его глобально
 const $p = global.$p = new MetaEngine();

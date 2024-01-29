@@ -21,6 +21,8 @@ import documents from "./doc";
 import qs from 'qs';
 import ui from '../packages/ui';
 import drawer from '../drawer/editor';
+import './aggregate/rubles';
+import scale_svg from './aggregate/scale_svg';
 
 
 export default function ($p) {
@@ -31,4 +33,5 @@ export default function ($p) {
   catalogs($p);
   documents($p);
   drawer($p);
+  Object.assign($p.utils, {scale_svg});
 }

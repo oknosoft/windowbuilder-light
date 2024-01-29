@@ -11,6 +11,7 @@ import {useNavigate} from 'react-router-dom';
 import {ListSubheader} from './styled';
 import {Toolbar, HtmlTooltip} from '../../components/App/styled';
 import PostBtn from './PostBtn';
+import MenuPrint from './MenuPrint';
 
 export default function ObjToolbar({obj, mgr, setSettingOpen}) {
   const navigate = useNavigate();
@@ -38,6 +39,15 @@ export default function ObjToolbar({obj, mgr, setSettingOpen}) {
         <IconButton disabled onClick={recalc}><CalculateIcon/></IconButton>
       </HtmlTooltip>
       <Typography sx={{flex: 1}}></Typography>
+      <HtmlTooltip title="печать">
+        <MenuPrint
+          mgr={mgr}
+          handlePrint={(model) => {
+            model.execute(obj);
+          }}
+          variant="button"
+        />
+      </HtmlTooltip>
       <HtmlTooltip title="Настроить форму">
         <IconButton onClick={() => setSettingOpen(true)}><SettingsIcon/></IconButton>
       </HtmlTooltip>
