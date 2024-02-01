@@ -17,7 +17,7 @@
     "@mui/material": "^5.15",
     "@oknosoft/metadata": "github:oknosoft/metadata.js#78fa6cb834c69047975d439839851ef6fc420af8",
     "@oknosoft/ui": "github:oknosoft/metadata-ui#d33d8e607ea0819d11b4934fd5cc32f0f123f43f",
-    "@oknosoft/wb/core": "github:oknosoft/windowbuilder-core#cd3366019f6c78265644ea1e780c1893adaa6a3a",
+    "@oknosoft/wb/core": "github:oknosoft/windowbuilder-core#b7ee123a55ccc4905d6e548a0e452891171375e6",
     "deep-equal": "^2.2.3",
     "hammerjs": "^2.0",
     "marked": "^11.1",
