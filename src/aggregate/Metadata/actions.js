@@ -63,7 +63,7 @@ export function actions(handleIfaceState) {
         .then(() => import('../styles/patch.css'));
     })
     .then(() => {
-      return load_common($p, ['catalogs.abonents', 'catalogs.work_center_kinds', 'catalogs.work_centers']);
+      return load_common($p);
     })
     .then(() => {
       const {classes: {PouchDB}, adapters: {pouch}, jobPrm, md, ui, cat: {users}} = $p;
