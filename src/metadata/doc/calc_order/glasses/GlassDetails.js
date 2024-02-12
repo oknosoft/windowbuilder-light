@@ -9,29 +9,62 @@ import {GlassesDetail} from '../../../aggregate/styled';
 export default function GlassDetails({row, selected, glob}) {
   const {characteristic, inset, glassRow} = row.row;
   const gprops = [];
-  const rprops = [<TextField
-    obj={row.row}
-    fld="note"
-    onChange={(v) => characteristic.note = v}
-  />];
+  const rprops = [<TextField key="note" obj={row.row} fld="note" onChange={(v) => characteristic.note = v}/>];
 
   const [index, setIndex] = React.useState(0);
   React.useEffect(() => {
-    const {utils, CatCharacteristicsParamsRow} = $p;
+    const {utils, CatCharacteristicsParamsRow, cat: {characteristics}} = $p;
+    let kb = {shift: false, rows: new Set()};
+
+    function keydown({altKey, shiftKey}) {
+      if(altKey || shiftKey) {
+        kb.shift = true;
+      }
+    }
+
+    function keyup({altKey, shiftKey}) {
+      if(!altKey && !shiftKey) {
+        kb.shift = false;
+      }
+    }
+
     const update = utils.debounce(function update (curr, flds){
       if(curr instanceof CatCharacteristicsParamsRow && curr._owner._owner === characteristic) {
+
+        const fin = () => {
+          kb.rows.clear();
+          setIndex((i) => i + 1);
+        };
+
+        if(kb.shift && curr.cnstr < 0 && !kb.rows.has(curr)) {
+          kb.shift = false;
+          kb.rows.add(curr);
+          const value = curr.value?.valueOf();
+          curr._owner.find_rows({
+            inset: curr.inset,
+            param: curr.param,
+            region: curr.region,
+          }, (row) => {
+            kb.rows.add(row);
+            row._obj.value = value;
+          });
+        }
+
         const {project} = row.row.editor;
         project.redraw();
         project.save_coordinates({})
-          .then(() => {
-            // const pkey = row.key - 1000;
-            // const parent = glob.rows.find(({key}) => key === pkey);
-            setIndex((i) => i + 1);
-          });
+          .then(fin)
+          .catch(fin);
       }
     });
-    characteristic._manager.on({update});
-    return () => characteristic._manager.off({update});
+    characteristics.on({update});
+    window.addEventListener("keydown", keydown);
+    window.addEventListener("keyup", keyup);
+    return () => {
+      characteristics.off({update});
+      window.removeEventListener("keydown", keydown);
+      window.removeEventListener("keyup", keyup);
+    };
   }, [characteristic]);
 
   // параметры изделия
@@ -49,7 +82,7 @@ export default function GlassDetails({row, selected, glob}) {
   });
   characteristic.params.find_rows({cnstr: {in: rrows.map((v) => -v.elm)}, region: 0}, (prow) => {
     rprops.push(<ParamField
-      key={`pr-${prow.row}`}
+      key={`pr-${prow.row}-${index}`}
       obj={prow}
       inset={rrows.find((rrow) => rrow.elm === -prow.cnstr).inset}
       label={`${prow.param.caption || prow.param.name} ${-prow.cnstr}`}

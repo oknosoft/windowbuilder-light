@@ -44,6 +44,8 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
 
   React.useEffect(() => {
 
+    const {doc: {calc_order}, cat: {characteristics}} = $p;
+
     async function before_save(curr) {
       if(curr === obj) {
         if(glob.skey) {
@@ -61,9 +63,10 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       return curr;
     }
 
-    $p.doc.calc_order.on({before_save});
+    calc_order.on({before_save});
     return () => {
-      $p.doc.calc_order.off({before_save});
+      calc_order.off({before_save});
+      characteristics.off({update: value_change});
       for(const {row} of glob.rows) {
         row.unloadEditor();
       }
