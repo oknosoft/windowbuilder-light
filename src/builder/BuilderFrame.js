@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
-import {Resize, ResizeHorizon} from '@oknosoft/ui/dist/Resize';
+import {Resize, ResizeHorizon} from '@oknosoft/ui/Resize';
 import {useTitleContext} from '../aggregate/App';
 import {useLoadingContext} from '../aggregate/Metadata';
 import {contentWidth} from '../aggregate/styles/muiTheme';

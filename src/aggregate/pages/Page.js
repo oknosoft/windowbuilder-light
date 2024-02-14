@@ -1,6 +1,6 @@
 
 import React from 'react';
-import MarkdownDocs from '@oknosoft/ui/dist/Markdown/MarkdownDocs';
+import MarkdownDocs from '@oknosoft/ui/Markdown/MarkdownDocs';
 import {useMatches } from 'react-router-dom';
 import {useTitleContext} from '../App';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Routes, Route} from 'react-router-dom';
-//import DataList from '@oknosoft/ui/dist/DataList';
+//import DataList from '@oknosoft/ui/DataList';
 
 export default function DataRoute() {
   return <Routes>

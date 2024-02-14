@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {Treebeard, decorators, filters} from '@oknosoft/ui/dist/Treebeard';
+import {Treebeard, decorators, filters} from '@oknosoft/ui/Treebeard';
 import getStruct from './getStruct';
 
 export default function StructureTree() {

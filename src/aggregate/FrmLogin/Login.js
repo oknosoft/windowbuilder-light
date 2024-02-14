@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
-import Autocomplete from '@oknosoft/ui/dist/DataField/Autocomplete';
+import Autocomplete from '@oknosoft/ui/DataField/Autocomplete';
 import Provider from './Provider';
 import Creditales from './Creditales';
 import Progress from './Progress';
@@ -11,6 +11,8 @@ import {LoginRoot} from './Root';
 import {abonentInit, abonentDeps} from './initLogin';
 import {useTitleContext} from '../App';
 import {useLoadingContext} from '../Metadata';
+
+import {load_ram} from '../../aggregate/proxy/no_ram';
 
 const title = {title: 'Авторизация', appTitle: <Typography variant="h6" noWrap>Авторизация</Typography>};
 export default function Login({pfilter, common_loaded}) {
@@ -38,7 +40,14 @@ export default function Login({pfilter, common_loaded}) {
 
   const handleLogin = () => {
     if(!user.logged_in && !user.try_log_in) {
-      return $p.adapters.pouch.log_in(login, password);
+      $p.adapters.logIn({username: login, password})
+        .then((user) => {
+          console.log(user);
+          return load_ram($p, /*[]*/);
+        })
+        .catch(err => {
+          console.error(err);
+        });
     }
   };
 

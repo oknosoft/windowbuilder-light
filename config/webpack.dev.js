@@ -16,7 +16,7 @@ module.exports = {
     },
     proxy: [
       {
-        context: ['/couchdb', '/adm'],
+        context: ['/couchdb', '/adm', '/auth'],
         target: process.env.PROXY,
         secure: false,
         xfwd: true,
