@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
-import {Resize, ResizeHorizon} from '@oknosoft/ui/Resize';
+import {Resize, ResizeHorizon, ResizeVertical} from '@oknosoft/ui/Resize';
 import {useTitleContext} from '../aggregate/App';
 import {useLoadingContext} from '../aggregate/Metadata';
 import {contentWidth} from '../aggregate/styles/muiTheme';
@@ -35,13 +35,15 @@ export default function BuilderFrame({useBuilderContext}) {
     }
   }, []);
 
+  const handleColor = theme.palette.grey[300];
+
   return <div style={{position: 'relative', height: 'calc(100vh - 50px)'}}>
-    <Resize handleWidth="6px" handleColor={theme.palette.grey[300]} onResizeStop={resizeStop}  onResizeWindow={resizeStop}>
+    <Resize handleWidth="6px" handleColor={handleColor} onResizeStop={resizeStop} onResizeWindow={resizeStop}>
       <ResizeHorizon width={`${(width / 6).toFixed()}px`} minWidth="200px">
         <ProductStructure context={context} />
       </ResizeHorizon>
       <ResizeHorizon width={`${(width * 7 / 12).toFixed()}px`} minWidth="600px">
-        <Builder context={context} />
+        <Builder context={context} width={width} handleColor={handleColor} resizeStop={resizeStop}/>
       </ResizeHorizon>
       <ResizeHorizon overflow="hidden auto" width={`${(width * 3 / 12).toFixed()}px`} minWidth="280px">
         <Controls context={context} />
