@@ -25,11 +25,11 @@ export default function Builder({context, width, handleColor, resizeStop}) {
   };
 
   return <>
+    <SelectTool />
     <Resize handleWidth="6px" handleColor={handleColor} onResizeStop={resizeStop} >
       <ResizeVertical height="80%" minHeight="400px">
         <Resize handleWidth="6px" handleColor={handleColor}>
           <ResizeHorizon width={`${(width - 100).toFixed()}px`} minWidth="400px">
-            <SelectTool />
             <canvas key="builder-canvas" ref={createEditor} style={{width: '100%', height: '100%'}}/>
           </ResizeHorizon>
           <ResizeHorizon width="100px" minWidth="100px" show={false}>
