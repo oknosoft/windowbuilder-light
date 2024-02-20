@@ -24,6 +24,9 @@ export function rowKeyGetter(row) {
 export function createGlasses({obj}){
   const glasses = [];
   for(const prow of obj.production) {
+    if(prow.characteristic.calc_order !== obj) {
+      continue;
+    }
     const row = new RowProxy(prow);
     glasses.push({
       type: 'MASTER',
@@ -119,7 +122,10 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   const create = () => add();
 
-  const clone = () => add(getRow());
+  const clone = () => {
+    const row = getRow();
+    return add(row ? row.characteristic: null);
+  };
 
   const del = async () => {
     const row = getRow();

@@ -3,7 +3,7 @@ import CellExpanderFormatter from './CellExpanderFormatter';
 import GlassDetails from './GlassDetails';
 import CompositeDetails from './CompositeDetails';
 
-import {useSelectedContext} from './selectedContext';
+import {useSelectedContext} from '../selectedContext';
 
 export default function ObjGlassesDetail({ row, tabIndex, isCellEditable, onRowChange }) {
 

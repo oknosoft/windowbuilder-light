@@ -2,8 +2,9 @@ import React from 'react';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
+import {onKeyUp} from './enterTab';
 
-export default function Text({obj, fld, meta, label, value, onChange, inputProps, fullWidth=true, ...other}) {
+export default function Text({obj, fld, meta, label, value, onChange, inputProps, fullWidth=true, enterTab, ...other}) {
   if((typeof value !== 'string') && obj && fld) {
     value = obj[fld];
   }
@@ -26,8 +27,11 @@ export default function Text({obj, fld, meta, label, value, onChange, inputProps
       obj[fld] = value;
       setVal(value);
     }
-    onChange?.(value)
+    onChange?.(value);
   };
+  if(enterTab && !other.onKeyUp) {
+    other.onKeyUp = onKeyUp;
+  }
   return <FormControl fullWidth={fullWidth} {...other}>
     <InputLabel>{label}</InputLabel>
     <Input

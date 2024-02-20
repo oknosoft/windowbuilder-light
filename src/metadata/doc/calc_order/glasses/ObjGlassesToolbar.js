@@ -8,11 +8,11 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import {useNavigate} from 'react-router-dom';
-import {useBackdropContext} from '../../../components/App';
-import {ListSubheader} from '../../aggregate/styled';
-import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
-import {handlers} from './glasses/data';
-import ClipBoard from '../../aggregate/ClipBoard';
+import {useBackdropContext} from '../../../../components/App';
+import {ListSubheader} from '../../../aggregate/styled';
+import {Toolbar, HtmlTooltip} from '../../../../components/App/styled';
+import {handlers} from './data';
+import ClipBoard from '../../../aggregate/ClipBoard';
 
 export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBackdrop, setModified, selectedRowsChange}) {
 
@@ -24,11 +24,11 @@ export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBac
   return <ListSubheader>
     <Toolbar disableGutters>
       <HtmlTooltip title="Добавить строку {Insert}">
-        <IconButton disabled onClick={create}><AddIcon/></IconButton>
+        <IconButton onClick={create}><AddIcon/></IconButton>
       </HtmlTooltip>
 
       <HtmlTooltip title="Добавить строку копированием текущей {F9}">
-        <IconButton disabled onClick={clone}><CopyIcon/></IconButton>
+        <IconButton disabled={!getRow} onClick={clone}><CopyIcon/></IconButton>
       </HtmlTooltip>
 
       <HtmlTooltip title="Изменить продукцию">
@@ -36,12 +36,14 @@ export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBac
       </HtmlTooltip>
 
       <HtmlTooltip title="Удалить строку {Delete}">
-        <IconButton disabled onClick={del}><DeleteOutlineIcon/></IconButton>
+        <IconButton onClick={del}><DeleteOutlineIcon/></IconButton>
       </HtmlTooltip>
 
       <HtmlTooltip title="Очистить (Удалить все строки)">
-        <IconButton disabled onClick={clear}><DeleteForeverIcon/></IconButton>
+        <IconButton onClick={clear}><DeleteForeverIcon/></IconButton>
       </HtmlTooltip>
+
+      <ClipBoard execute={load}/>
 
       <Typography sx={{flex: 1}}></Typography>
       <HtmlTooltip title="Детали продукции">

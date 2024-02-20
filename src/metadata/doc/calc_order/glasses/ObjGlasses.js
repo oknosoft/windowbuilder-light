@@ -4,8 +4,8 @@ import {useLoadingContext} from '../../../../components/Metadata';
 import {useBackdropContext} from '../../../../components/App';
 import {disablePermanent, drawerWidth} from '../../../../styles/muiTheme';
 import {preventDefault} from '../../../dataGrid';
-import Toolbar from '../ObjProductionToolbar';
-import {SelectedContext} from './selectedContext';
+import Toolbar from './ObjGlassesToolbar';
+import {SelectedContext} from '../selectedContext';
 
 import {rowHeight, createGlasses, rowKeyGetter, handlers, recalcRow} from './data';
 let selectedContext = {};
@@ -44,7 +44,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
 
   React.useEffect(() => {
 
-    const {doc: {calc_order}, cat: {characteristics}} = $p;
+    const {calc_order} = $p.doc;
 
     async function before_save(curr) {
       if(curr === obj) {
@@ -66,7 +66,6 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     calc_order.on({before_save});
     return () => {
       calc_order.off({before_save});
-      characteristics.off({update: value_change});
       for(const {row} of glob.rows) {
         row.unloadEditor();
       }

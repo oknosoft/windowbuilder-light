@@ -45,7 +45,7 @@ export default function ProductFormatter({row}) {
 
 
   return <>
-    <Typography component="span">{`${main.join(', ')}\u00A0`}</Typography>
+    <Typography component="span">{`${main.join(', ')}${other.length ? ',' : ''}\u00A0`}</Typography>
     <Typography component="span" variant="body2" color="primary">{other.join(', ')}</Typography>
   </>;
 }

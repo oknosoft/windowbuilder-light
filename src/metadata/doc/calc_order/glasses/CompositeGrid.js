@@ -1,6 +1,6 @@
 import React from 'react';
 import DataGrid from 'react-data-grid';
-import {SelectedContext} from './selectedContext';
+import {SelectedContext} from '../selectedContext';
 import {PresentationFormatter} from '../../../../packages/ui/DataField/RefField';
 import {cellKeyDown} from '../../../dataGrid';
 import {rowKeyGetter} from './data';

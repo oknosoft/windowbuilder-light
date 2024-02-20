@@ -32,3 +32,9 @@
   line-height: initial;
   outline: none
 }
+
+.cell-input {
+  margin-left: 0;
+  padding-left: 8px;
+  width: 100%;
+}

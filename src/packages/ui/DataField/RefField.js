@@ -1,20 +1,9 @@
 import React from 'react';
 import Autocomplete from './Autocomplete';
+import {onKeyUp} from './enterTab';
 
-export default function RefField({obj, fld, meta, label, onChange, fullWidth=true, ...other}) {
-
-  let [value, setValue] = React.useState();
-  if(value === undefined && obj && fld) {
-    value = obj[fld];
-  }
-  if(!meta && obj && fld) {
-    meta = obj._metadata(fld);
-  }
-  if(!label && meta) {
-    label = meta.synonym;
-  }
-
-  const options = React.useMemo(() => {
+export const getOptions = (obj, fld, meta) => {
+  return () => {
     let mgr = obj._manager.value_mgr(obj, fld, meta.type);
     if(Array.isArray(meta.list)) {
       const {utils} = $p;
@@ -35,7 +24,27 @@ export default function RefField({obj, fld, meta, label, onChange, fullWidth=tru
       res.push(o);
     }
     return res;
-  }, [obj]);
+  };
+};
+
+export default function RefField({obj, fld, meta, label, onChange, fullWidth=true, enterTab, ...other}) {
+
+  let [value, setValue] = React.useState();
+  if(value === undefined && obj && fld) {
+    value = obj[fld];
+  }
+  if(!meta && obj && fld) {
+    meta = obj._metadata(fld);
+  }
+  if(!label && label !== false && meta) {
+    label = meta.synonym;
+  }
+
+  const options = React.useMemo(getOptions(obj, fld, meta), [obj]);
+
+  if(enterTab && !other.onKeyUp) {
+    other.onKeyUp = onKeyUp;
+  }
 
   return <Autocomplete
     options={options}

@@ -8,6 +8,7 @@ import ObjToolbar from '../../aggregate/ObjToolbar';
 import ObjHead from './ObjHead';
 import ObjTabs from '../../aggregate/ObjTabs';
 import ObjProduction from './ObjProduction';
+import ObjNom from './ObjNom';
 import ObjGlasses from './glasses/ObjGlasses';
 import {ObjSetting, key, setting as initSetting} from './ObjSetting';
 
@@ -114,6 +115,7 @@ export default function CalcOrderObj() {
     <ObjHead obj={obj} setting={setting}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
     {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj}/>}
+    {curr.name === 'nom' && <ObjNom tabRef={tabRef} obj={obj} setModified={setModified}/>}
     {curr.name === 'glass' && <ObjGlasses tabRef={tabRef} obj={obj} setModified={setModified}/>}
     {settingOpen && <ObjSetting setSettingOpen={setSettingOpen} />}
   </Root>;

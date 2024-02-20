@@ -113,7 +113,7 @@ export class RowProxy {
 
   get len() {
     const {editor} = this;
-    if(editor) {
+    if(editor?.project?.bounds) {
       return editor.project.bounds.width.round();
     }
     const {x1, x2} = this.glassRow;
@@ -135,7 +135,7 @@ export class RowProxy {
 
   get height() {
     const {editor} = this;
-    if(editor) {
+    if(editor?.project?.bounds) {
       return editor.project.bounds.height.round();
     }
     const {y1, y2} = this.glassRow;

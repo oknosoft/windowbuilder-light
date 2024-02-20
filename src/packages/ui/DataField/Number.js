@@ -136,9 +136,6 @@ export function NumberCell({row, column, onRowChange, onClose}) {
         onChange={({target}) => {
           setValue(target.value);
         }}
-        // onBlur={() => {
-        //   onClose(true);
-        // }}
         onKeyDown={(ev) => {
           const {key} = ev;
           if(key === 'Enter' || key === 'Tab') {

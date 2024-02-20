@@ -7,21 +7,21 @@ import {NumberField} from '../../../packages/ui/DataField/Number';
 export default function ObjHead({obj}) {
   return <Grid container spacing={2} ml={0} mr={0}>
     <Grid xs={12} lg={4}>
-      <TextField label="Номер" value={obj.number_doc}/>
-      <TextField label="Дата" value={moment(obj.date).format(moment._masks.date)}/>
-      <RefField obj={obj} fld="organization" />
-      <RefField obj={obj} fld="partner"/>
+      <TextField label="Номер" value={obj.number_doc} enterTab/>
+      <TextField label="Дата" value={moment(obj.date).format(moment._masks.date)} enterTab/>
+      <RefField obj={obj} fld="organization" enterTab/>
+      <RefField obj={obj} fld="partner" enterTab/>
     </Grid>
     <Grid xs={12} lg={4}>
-      <RefField obj={obj} fld="contract"/>
-      <RefField obj={obj} fld="department"/>
-      <TextField obj={obj} fld="client_of_dealer"/>
-      <TextField label="Адрес доставки" value={obj.shipping_address}/>
+      <RefField obj={obj} fld="contract" enterTab/>
+      <RefField obj={obj} fld="department" enterTab/>
+      <TextField obj={obj} fld="client_of_dealer" enterTab/>
+      <TextField label="Адрес доставки" value={obj.shipping_address} enterTab/>
     </Grid>
     <Grid xs={12} lg={4}>
-      <RefField obj={obj} fld="manager"/>
-      <TextField obj={obj} fld="note"/>
-      <NumberField obj={obj} fld="amount_internal" readOnly/>
+      <RefField obj={obj} fld="manager" enterTab/>
+      <TextField obj={obj} fld="note" enterTab/>
+      <NumberField obj={obj} fld="amount_internal" readOnly enterTab/>
     </Grid>
   </Grid>;
 }
