@@ -19,9 +19,8 @@ const repos = [
   },
   {
     local: '@oknosoft/ui',
-    remote: '..\\metadata-ui\\',
+    remote: '..\\metadata-ui\\dist\\',
     dir: '',
-    dirFilter: /dist/
   },
   {
     local: '@oknosoft/wb/core',

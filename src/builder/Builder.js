@@ -8,6 +8,17 @@ export default function Builder({context, width, handleColor, resizeStop}) {
 
   let {editor, setContext} = context;
 
+  React.useEffect(() => {
+    const {md, utils} = $p;
+    const onRedraw = utils.debounce(function onRedraw(project) {
+      if(editor?.project === project) {
+        setContext({stamp: project.props.stamp})
+      }
+    });
+    md.on('redraw', onRedraw);
+    return () => md.off('redraw', onRedraw);
+  }, [editor]);
+
   const createEditor = (el) => {
     if(el) {
       if(!editor) {
@@ -26,7 +37,7 @@ export default function Builder({context, width, handleColor, resizeStop}) {
 
   return <>
     <SelectTool />
-    <Resize handleWidth="6px" handleColor={handleColor} onResizeStop={resizeStop} >
+    <Resize handleWidth="6px" handleColor={handleColor} onResizeStop={resizeStop} top={50}>
       <ResizeVertical height="80%" minHeight="400px">
         <Resize handleWidth="6px" handleColor={handleColor}>
           <ResizeHorizon width={`${(width - 100).toFixed()}px`} minWidth="400px">

@@ -58,7 +58,7 @@ class BaseItem {
 class Layer extends BaseItem {
   constructor(layer, parent) {
     const {contours, cnstr} = layer;
-    super(layer.presentation(), `l-${cnstr}`, 'icon_layer', layer, parent);
+    super("Слой", `l-${cnstr}`, 'icon_layer', layer, parent);
     const setHiddenRecursive = (layer, value) => {
       layer.hidden = value;
       for(const contour of layer.contours) {
@@ -76,11 +76,13 @@ class Layer extends BaseItem {
     for(const layer of contours) {
       this.children.push(new Layer(layer, this));
     }
-    this.children.push(new Profiles(layer, this));
-    if(layer.cnstr && layer.cnstr !== 1000000) {
-      this.children.push(new Glasses(layer, this));
-      this.children.push(new Insets(layer, this));
-    }
+    /*
+  this.children.push(new Profiles(layer, this));
+      if(layer.cnstr && layer.cnstr !== 1000000) {
+        this.children.push(new Glasses(layer, this));
+        this.children.push(new Insets(layer, this));
+      }
+    */
   }
 }
 
@@ -147,13 +149,26 @@ class Insets extends BaseItem {
 class Struct extends BaseItem {
   constructor(project) {
 
-    //name, key, icon, _owner, _parent
-    super(`Заказ `, 'order', 'icon_order', project);
+    const {ox, contours, l_connective} = project;
 
-    const settings = new BaseItem(`Настройки`, 'settings', 'icon_gear', project, this);
-    this.children.push(settings);
+    //name, key, icon, _owner, _parent
+    //super(`Заказ `, 'order', 'icon_order', project);
+    super(`Настройки `, 'settings', 'icon_gear', project);
+
+    //const settings = new BaseItem(`Настройки`, 'settings', 'icon_gear', project, this);
+    //this.children.push(settings);
+
+    const productName = 'Изделие';
+    const product = new BaseItem(productName, 'root', 'icon_root', project, this);
+    this.children.push(product);
+
+    for(const layer of contours) {
+      product.children.push(new Layer(layer, product));
+    }
 
     this.style = {subtree: {paddingLeft: 0}};
+    this.expand();
+    product.expand();
 
   }
 
@@ -161,6 +176,5 @@ class Struct extends BaseItem {
 
 export default function getStruct(project) {
   const tree = new Struct(project);
-  tree.expand();
   return tree;
 }

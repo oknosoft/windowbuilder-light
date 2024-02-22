@@ -30,6 +30,7 @@ const defaultContext = {
   type: 'root',
   mode: 'editor',
   css: {},
+  stamp: 0,
 };
 
 
