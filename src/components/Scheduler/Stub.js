@@ -1,8 +1,8 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import { Scheduler } from "@aldabil/react-scheduler";
+import {Scheduler} from "@aldabil/react-scheduler";
 import {useTitleContext} from '../App';
-import { ru } from 'date-fns/locale';
+import {ru} from 'date-fns/locale';
 
 const title = {title: 'Календарь', appTitle: <Typography variant="h6" noWrap>Календарь</Typography>};
 
