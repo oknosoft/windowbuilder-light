@@ -3,12 +3,11 @@ import {Routes, Route} from 'react-router-dom';
 import {useLoadingContext} from '../components/Metadata';
 import {Wraper} from '../components/App/Wraper';
 
-const FrmLogin = React.lazy(() => import('../components/FrmLogin'));
-const CatRouter = React.lazy(() => import('./cat/Router'));
-const DocRouter = React.lazy(() => import('./doc/Router'));
-const loginRoute = Wraper(FrmLogin);
-const catRoute = Wraper(CatRouter);
-const docRoute = Wraper(DocRouter);
+const loginRoute = Wraper(React.lazy(() => import('../components/FrmLogin')));
+const catRoute = Wraper(React.lazy(() => import('./cat/Router')));
+const docRoute = Wraper(React.lazy(() => import('./doc/Router')));
+const scheduler = Wraper(React.lazy(() => import('../components/Scheduler/Stub')));
+const rmd = Wraper(React.lazy(() => import('../components/RMD')));
 
 export default function DataRoute() {
   const {ifaceState: {complete_loaded}} = useLoadingContext();
@@ -16,5 +15,7 @@ export default function DataRoute() {
     <Route path="doc/*" element={docRoute}/>
     <Route path="cat/*" element={catRoute} />
     <Route path="cch/*" element={catRoute} />
+    <Route path="scheduler/*" element={scheduler} />
+    <Route path="rmd/*" element={rmd} />
   </Routes> : loginRoute;
 }

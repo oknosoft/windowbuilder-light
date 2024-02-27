@@ -15,8 +15,6 @@ const Home = React.lazy(() => import('../Home'));
 const FrmLogin = React.lazy(() => import('../FrmLogin'));
 const Page = React.lazy(() => import('../Pages/Page'));
 const Help = React.lazy(() => import('../Pages/Help'));
-const Scheduler = React.lazy(() => import('../Scheduler/Stub'));
-const RMD = React.lazy(() => import('../RMD'));
 const DataRoute = React.lazy(() => import('../../metadata/Router'));
 
 const loginRoute = Wraper(FrmLogin);
@@ -30,8 +28,6 @@ export const router = createBrowserRouter([
       {path: "/", element: Wraper(Home)},
       {path: "partners", element: pageRoute},
       {path: "production", element: pageRoute},
-      {path: "scheduler", element: Wraper(Scheduler)},
-      {path: "rmd", element: Wraper(RMD)},
       {path: "store", element: pageRoute},
       {path: "sales", element: pageRoute},
       {path: "about", element: pageRoute},

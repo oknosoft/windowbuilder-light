@@ -5,9 +5,12 @@ import {Toolbar, HtmlTooltip} from '../../components/App/styled';
 export const title = 'РМД';
 
 export function RmdHead() {
-  return <Toolbar>
+  return <>
     <HtmlTooltip title="Добавить строку {Insert}">
       <IconButton onClick={null}>++</IconButton>
     </HtmlTooltip>
-  </Toolbar>;
+    <HtmlTooltip title="Добавить строку {Insert}">
+      <IconButton onClick={null}>--</IconButton>
+    </HtmlTooltip>
+  </>;
 }
