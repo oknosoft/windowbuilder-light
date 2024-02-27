@@ -25,9 +25,9 @@ export default function Builder({context, width, handleColor, resizeStop}) {
         editor = new EditorInvisible();
       }
       if(editor.view?.element !== el) {
+        window.paper = editor;
         editor.createScheme(el, $p);
         setContext({editor});
-        window.paper = editor;
       }
     }
     else {

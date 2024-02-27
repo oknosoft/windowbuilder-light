@@ -15,15 +15,18 @@ import {useNavigate} from 'react-router-dom';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 import {useLoadingContext} from '../../aggregate/Metadata';
 
-export default function MainToolbar() {
+export default function MainToolbar({context}) {
   const navigate = useNavigate();
-  const {close, recalc, save, saveClose} = React.useMemo(() => {
+  const {editor} = context;
+
+  const {close, recalc, template, save, saveClose} = React.useMemo(() => {
     const close = () => navigate(`/`);
     const recalc = () => null;
+    const template = () => editor?.createTestProduct();
     const save = () => null;
     const saveClose = () => null;
-    return {close, recalc, save, saveClose};
-  }, []);
+    return {close, recalc, template, save, saveClose};
+  }, [editor]);
 
   const {ifaceState: {drawerOpen}} = useLoadingContext();
 
@@ -40,7 +43,7 @@ export default function MainToolbar() {
     </HtmlTooltip>
     <Divider orientation="vertical" sx={{mx: 1}} flexItem />
     <HtmlTooltip title="Загрузить из шаблона">
-      <IconButton onClick={recalc}><ArchitectureIcon/></IconButton>
+      <IconButton onClick={template}><ArchitectureIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Скопировать в буфер обмена">
       <IconButton onClick={recalc}><CopyAllIcon/></IconButton>

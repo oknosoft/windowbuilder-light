@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
-import {Resize, ResizeHorizon, ResizeVertical} from '@oknosoft/ui/Resize';
+import {Resize, ResizeHorizon} from '@oknosoft/ui/Resize';
 import {useTitleContext} from '../aggregate/App';
 import {useLoadingContext} from '../aggregate/Metadata';
 import {contentWidth} from '../aggregate/styles/muiTheme';
@@ -33,7 +33,7 @@ export default function BuilderFrame({useBuilderContext}) {
       handleIfaceState({drawerOpen: false});
       return () => handleIfaceState({drawerOpen: true});
     }
-  }, []);
+  }, [context.editor]);
 
   const handleColor = theme.palette.grey[300];
 
