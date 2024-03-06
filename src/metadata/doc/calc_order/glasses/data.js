@@ -4,7 +4,7 @@ import ProductFormatter from './ProductFormatter';
 
 import {NumberCell, NumberFormatter} from '../../../../packages/ui/DataField/Number';
 // доступные типы вставок
-import {itypes, ioptions, ilist, RowProxy} from './RowProxy';
+import {itypes, ioptions, ilist, sublist, RowProxy} from './RowProxy';
 
 export const rowHeight = ({row, type}) => {
   if(type === 'DETAIL') {
@@ -164,7 +164,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   const load = async (text) => {
     const irows = [];
-    const regex = /-|\*|х|Х|X|x/g;
+    const regex = /-|_|\*|х|Х|X|x/g;
     for(const row of text.split('\n')) {
       const values = row.split('\t');
       let strings = 0;
@@ -211,6 +211,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       const problems = new Set();
       for(const {formula, len, height, quantity, note} of irows) {
         const candidates = [];
+        let clarification;
         for(const inset of ilist) {
           const article = inset.article.replace(regex, 'x').toLowerCase();
           const name = inset.name.replace(regex, 'x').toLowerCase();
@@ -227,6 +228,50 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
             candidates.push({inset, weight: 5 - (name.length - formula.length)});
           }
         }
+        if(!candidates.length) {
+          const parts = formula.split('x');
+          const thickness = parts.reduce((sum, curr) => {
+            const v = parseFloat(curr.replace(/[^0-9]+/g, ''));
+            return isNaN(v) ? sum : sum + v;
+          }, 0);
+          const layers = parts.length;
+          // ищем вставку с подходящим числом слоёв
+          for(const inset of ilist) {
+            if(inset.insert_type.is('composite')) {
+              let cl = 0;
+              for(const row of inset.specification) {
+                if(row.quantity && row.nom?.insert_type?.is('glass') &&
+                  row.nom?.insert_glass_type && !row.nom.insert_glass_type.empty()) {
+                  cl += 1;
+                }
+              }
+              if(layers === cl) {
+                let weight = inset.thickness() === thickness ? 5 : 6;
+                candidates.push({inset, weight});
+              }
+            }
+          }
+          if(candidates.length) {
+            clarification = parts.map((id, ind) => {
+              const pre = sublist.find((curr) => curr.name === id || curr.article === id);
+              if(pre) {
+                return pre;
+              }
+              const th = parseFloat(id.replace(/[^0-9]+/g, ''));
+              const c2 = sublist.filter((curr) => {
+                if(curr.thickness() === th) {
+                  const isFrame = curr.insert_glass_type.is('Рамка');
+                  return  ind % 2 ? isFrame : !isFrame;
+                }
+              });
+              if(c2.length) {
+                c2.sort((a, b) => b.priority - a.priority);
+                return c2[0];
+              }
+              return sublist[0]._manager.get();
+            });
+          }
+        }
         if(candidates.length) {
           candidates.sort((a, b) => b.weight - a.weight);
           const row = new RowProxy(await obj.create_product_row({create: true}));
@@ -237,6 +282,20 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
           const {editor: {project, eve}, glassRow} = row;
           const glass = row.editor.elm(glassRow.elm);
           glass.set_inset(candidates[0].inset, false, true);
+          if(clarification) {
+            let ind = 0;
+            for(const sprow of project.ox.glass_specification) {
+              if(sprow.elm === glassRow.elm) {
+               const inset = clarification[ind];
+                ind++;
+                if(inset) {
+                  sprow.inset = inset;
+                }
+              }
+            }
+            const inset = job_prm.builder.composite_formula_err;
+            project.ox.glass_specification.add({elm: glassRow.elm, inset});
+          }
           const {bottom, right} = project.l_dimensions;
           right.sizes_wnd({wnd: right, size: height, name: 'auto'});
           bottom.sizes_wnd({wnd: bottom, size: len, name: 'auto'});
@@ -244,11 +303,12 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
             await utils.sleep(20);
           }
           row.quantity = project._dp.quantity = quantity;
-          row.note = project._dp.note = project.ox.note = note;
+          row.note = project._dp.note = project.ox.note = clarification ? `!${formula}!\xA0${note}` : note;
           project.redraw();
           await project.save_coordinates({});
           row.characteristic._modified = true;
         }
+        // по прямому совпадению не получилось - пробуем по вставкам
         else {
           problems.add(formula);
         }

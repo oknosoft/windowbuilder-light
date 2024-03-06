@@ -7,6 +7,7 @@ export const itypes = [inserts_types.glass, inserts_types.composite];
 // доступные вставки
 const ioptions = [];
 const ilist = [];
+const sublist = [];
 inserts.find_rows({insert_type: {in: itypes}}, (o) => {
   if(o.available) {
     ioptions.push(o);
@@ -14,8 +15,11 @@ inserts.find_rows({insert_type: {in: itypes}}, (o) => {
   if(o.insert_glass_type.empty() || o.insert_glass_type.is('Заполнение')) {
     ilist.push(o);
   }
+  if(!o.insert_glass_type.empty()) {
+    sublist.push(o);
+  }
 });
-export {ioptions, ilist};
+export {ioptions, ilist, sublist};
 
 export class RowProxy {
   #row;
