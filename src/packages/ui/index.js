@@ -1,5 +1,10 @@
 
-export default function ui({md, utils, classes}) {
+import dialogs from './dialogs';
+
+export default function ui($p) {
+
+  const {md, utils, classes} = $p;
+  $p.ui = {dialogs};
 
   Object.defineProperties(classes.DataManager.prototype, {
 

@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import {ThemeProvider} from '@mui/material';  // провайдер тема material=ui
 import theme from '../../styles/muiTheme';      // тема material=ui
 import Loading from '../App/Loading';
+import Alert from '../../packages/ui/App/Alert';
 
 const LoadingContext = React.createContext(null);
 export const useLoadingContext = () => React.useContext(LoadingContext);
@@ -30,17 +31,20 @@ function Metadata({App, initialText}) {
           resetFirst();
         }
         else {
-          actions(handleIfaceState);
+          actions(handleIfaceState)
+            .then(() => $p.ui.dialogs.init({handleIfaceState}));
         }
       });
   }, [first]);
 
   const loading = <Loading {...ifaceState} html={initialText} />;
+  const {meta_loaded, alert} = ifaceState || {};
 
   return <ThemeProvider theme={theme}>
     <LoadingContext.Provider value={{ ifaceState, handleIfaceState }}>
       <React.Suspense fallback={loading}>
-        {ifaceState?.meta_loaded ? <App {...ifaceState}/> : loading }
+        {meta_loaded ? <App {...ifaceState}/> : loading }
+        {alert?.open && <Alert {...alert}/>}
       </React.Suspense>
     </LoadingContext.Provider>
   </ThemeProvider>;
