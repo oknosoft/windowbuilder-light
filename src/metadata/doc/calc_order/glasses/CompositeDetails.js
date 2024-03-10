@@ -3,6 +3,7 @@ import FormGroup from '@mui/material/FormGroup';
 import Grid from '@mui/material/Unstable_Grid2';
 import ParamField from '../../../../packages/ui/DataField/ParamField';
 import RefField from '../../../../packages/ui/DataField/RefField';
+import TextField from '../../../../packages/ui/DataField/Text';
 import {GlassesDetail} from '../../../aggregate/styled';
 import CompositeGrid from './CompositeGrid';
 import CompositeRegionProps from './CompositeRegionProps';
@@ -17,7 +18,6 @@ export default function CompositeDetails({row, selected}) {
 
   fields.inset.list = [elm.inset];
   const gprops = [];
-  const rprops = [];
 
   // параметры изделия
   characteristic.params.find_rows({cnstr: 0, region: 0}, (prow) => {
@@ -40,13 +40,19 @@ export default function CompositeDetails({row, selected}) {
 
   return <GlassesDetail container spacing={2} selected={selected}>
     <Grid sm={12} md={5}>
-      <FormGroup><RefField
-        key={`inset`}
-        obj={elm}
-        fld="inset"
-        meta={fields.inset}
-        //handleValueChange={() => this.set_row(null)}
-      /></FormGroup>
+      <FormGroup>
+        <RefField
+          obj={elm}
+          fld="inset"
+          meta={fields.inset}
+          //handleValueChange={() => this.set_row(null)}
+        />
+        <TextField
+          obj={row.row}
+          fld="note"
+          onChange={(v) => characteristic.note = v}
+        />
+      </FormGroup>
     </Grid>
     <Grid sm={12} md={5}>
       <FormGroup>{gprops}</FormGroup>
