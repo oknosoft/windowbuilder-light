@@ -1,16 +1,19 @@
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
-import {Toolbar, HtmlTooltip} from '../../components/App/styled';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
-export const title = 'РМД';
+import {schemas, initScheme, setScheme} from './data';
 
-export function RmdHead() {
+export function RmdHead({handleIfaceState, rmd}) {
+
+  const value = rmd?.scheme?.ref || initScheme;
+  const handleChange = (event, ref) => setScheme(
+    handleIfaceState, Object.assign({}, rmd, {scheme: $p.cat.scheme_settings.get(ref)}));
+
   return <>
-    <HtmlTooltip title="Добавить строку {Insert}">
-      <IconButton onClick={null}>++</IconButton>
-    </HtmlTooltip>
-    <HtmlTooltip title="Добавить строку {Insert}">
-      <IconButton onClick={null}>--</IconButton>
-    </HtmlTooltip>
+    <Tabs value={value} onChange={handleChange}>
+      {schemas.map((scheme) => <Tab key={scheme.ref} value={scheme.ref} label={scheme.name} />)}
+    </Tabs>
   </>;
 }

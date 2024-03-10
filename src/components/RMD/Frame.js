@@ -4,23 +4,26 @@ import {Resize, ResizeHorizon} from 'metadata-ui/Resize';
 import {useTitleContext} from '../App';
 import {useLoadingContext} from '../Metadata';
 import {contentWidth} from '../../styles/muiTheme';
-import {RmdHead, title} from './Head';
-
+import {RmdHead} from './Head';
+import {title} from './data';
 
 export default function RMD (props) {
 
   const {setTitle} = useTitleContext();
-  const {handleIfaceState, ifaceState: {menu_open}} = useLoadingContext();
+  const {handleIfaceState, ifaceState: {menu_open, rmd}} = useLoadingContext();
   const theme = useTheme();
   const width = contentWidth(menu_open);
 
   React.useEffect(() => {
-    setTitle({title, appTitle: <RmdHead />});
+
     if(menu_open) {
       handleIfaceState({menu_open: false});
       return () => handleIfaceState({menu_open: true});
     }
   }, []);
+  React.useEffect(() => {
+    setTitle({title, appTitle: <RmdHead handleIfaceState={handleIfaceState} rmd={rmd} />});
+  }, [rmd]);
 
   const handleColor = theme.palette.grey[300];
 
