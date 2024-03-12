@@ -43,9 +43,9 @@ export default function ProductFormatter({row}) {
     other.push(...parts.other);
   }
 
-
+  const hasErrors = characteristic.errors(true);
   return <>
-    <Typography component="span">{`${main.join(', ')}${other.length ? ',' : ''}\u00A0`}</Typography>
-    <Typography component="span" variant="body2" color="primary">{other.join(', ')}</Typography>
+    <Typography component="span" color={hasErrors ? 'error' : undefined}>{`${main.join(', ')}${other.length ? ',' : ''}\u00A0`}</Typography>
+    <Typography component="span" variant="body2" color={hasErrors ? 'error' : 'primary'}>{other.join(', ')}</Typography>
   </>;
 }
