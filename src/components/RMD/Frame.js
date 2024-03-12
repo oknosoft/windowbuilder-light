@@ -7,6 +7,7 @@ import {contentWidth} from '../../styles/muiTheme';
 import {RmdHead} from './Head';
 import {title} from './data';
 
+
 export default function RMD (props) {
 
   const {setTitle} = useTitleContext();
@@ -15,7 +16,6 @@ export default function RMD (props) {
   const width = contentWidth(menu_open);
 
   React.useEffect(() => {
-
     if(menu_open) {
       handleIfaceState({menu_open: false});
       return () => handleIfaceState({menu_open: true});

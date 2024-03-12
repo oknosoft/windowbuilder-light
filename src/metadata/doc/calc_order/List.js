@@ -3,8 +3,9 @@ import Typography from '@mui/material/Typography';
 import DataGrid from 'react-data-grid';
 import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
+import GoTo from '../../../components/App/GoTo';
 import {useTitleContext, useBackdropContext} from '../../../components/App';
-import ListToolbar from '../../aggregate/ListToolbar';
+import Toolbar from '../../aggregate/ListToolbar';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../dataGrid';
 
 
@@ -16,7 +17,13 @@ const {fields} = calc_order.metadata();
 const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: calc_order});
 
 const listName = 'Расчёты-заказы (список)';
-const title =  {title: listName, appTitle: <Typography variant="h6" noWrap>{listName}</Typography>};
+const title =  {
+  title: listName,
+  appTitle: <>
+    <Typography variant="h6" noWrap>{listName}</Typography>
+    <Typography sx={{flex: 1}}></Typography>
+    <GoTo items={[{name: 'РМД', path: '/rmd'}]}/>
+  </>};
 
 function loadMoreRows(newRowsCount, skip, ref, backdrop) {
 
@@ -107,7 +114,7 @@ export default function CalcOrderList() {
   });
 
   return <Content>
-    <ListToolbar create={create} clone={clone} open={open} disabled={Boolean(error)}/>
+    <Toolbar create={create} clone={clone} open={open} disabled={Boolean(error)}/>
     {error ? error.message : <DataGrid
       columns={columns}
       rows={rows}

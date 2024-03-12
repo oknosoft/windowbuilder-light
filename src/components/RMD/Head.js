@@ -1,7 +1,8 @@
 import React from 'react';
-import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import GoTo from '../App/GoTo';
 
 import {schemas, initScheme, setScheme} from './data';
 
@@ -15,5 +16,7 @@ export function RmdHead({handleIfaceState, rmd}) {
     <Tabs value={value} onChange={handleChange}>
       {schemas.map((scheme) => <Tab key={scheme.ref} value={scheme.ref} label={scheme.name} />)}
     </Tabs>
+    <Typography sx={{flex: 1}}></Typography>
+    <GoTo items={[{name: 'Расчёты-заказы', path: '/doc/calc_order'}]}/>
   </>;
 }
