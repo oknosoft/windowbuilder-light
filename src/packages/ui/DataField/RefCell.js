@@ -3,11 +3,13 @@ import Autocomplete from './Autocomplete';
 import {CellInput} from './StyledInput';
 import {getOptions} from './RefField';
 
-export default function RefCell({row, column, onRowChange, onClose}) {
+export default function RefCell({row, column, options, onRowChange, onClose}) {
   const obj = row instanceof $p.classes.TabularSectionRow ? row : row.row;
   const fld = column.key;
   const meta = obj._metadata(fld);
-  const options = React.useMemo(getOptions(obj, fld, meta), [obj]);
+  if(!options) {
+    options = React.useMemo(getOptions(obj, fld, meta), [obj]);
+  }
   let [value, setValue] = React.useState(obj[fld]);
 
   return <Autocomplete

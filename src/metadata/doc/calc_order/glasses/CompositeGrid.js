@@ -1,24 +1,27 @@
 import React from 'react';
 import DataGrid from 'react-data-grid';
-import {SelectedContext} from '../selectedContext';
+import RegionInset from './RegionInset';
+import Toolbar from './CompositeToolbar';
 import {PresentationFormatter} from '../../../../packages/ui/DataField/RefField';
 import {cellKeyDown} from '../../../dataGrid';
-import {rowKeyGetter} from './data';
-let selectedContext = {};
+
+function rowKeyGetter(row) {
+  return row.row;
+}
 
 const columns = [
-  {key: "inset", name: "Вставка", width: '*', renderCell: PresentationFormatter},
+  {
+    key: "inset",
+    name: "Вставка",
+    width: '*',
+    renderCell: PresentationFormatter,
+    renderEditCell: RegionInset,
+  },
 ];
 
 const stub = () => null;
 
-export default function CompositeGrid({elm, selectedRows, setSelectedRows}) {
-
-  const {ox} = elm;
-  const rows = [];
-  ox.glass_specification.find_rows({elm: elm.elm}, (row) => {
-    rows.push(row);
-  });
+export default function CompositeGrid({elm, rows, glRow, selectedRows, setSelectedRows}) {
 
 
 
@@ -31,14 +34,18 @@ export default function CompositeGrid({elm, selectedRows, setSelectedRows}) {
   const onCellKeyDown = cellKeyDown({rows, columns, create: stub, clone: stub, remove: stub, setSelectedRows, keyField: 'row'});
 
 
-  return <DataGrid
-    rowKeyGetter={rowKeyGetter}
-    columns={columns}
-    rows={rows}
-    selectedRows={selectedRows}
-    onSelectedRowsChange={setSelectedRows}
-    onCellClick={onCellClick}
-    onCellKeyDown={onCellKeyDown}
-    className="fill-grid"
-  />;
+  return <>
+    <Toolbar elm={elm} glRow={glRow} setSelectedRows={setSelectedRows} />
+    <DataGrid
+      rowKeyGetter={rowKeyGetter}
+      columns={columns}
+      rows={rows}
+      selectedRows={selectedRows}
+      onSelectedRowsChange={setSelectedRows}
+      onCellClick={onCellClick}
+      onCellKeyDown={onCellKeyDown}
+      className="fill-grid"
+      headerRowHeight={0}
+    />
+  </>;
 }

@@ -16,6 +16,19 @@ export default function CompositeDetails({row, selected}) {
   const elm = editor.elm(glassRow.elm);
   const {fields} = elm.__metadata(false);
 
+  const [index, setIndex] = React.useState(0);
+  React.useEffect(function prompt() {
+    function update (curr, flds){
+      if(flds?.inset && curr?._owner?._owner === characteristic) {
+        setIndex((index) => index+1);
+      }
+    }
+    characteristic._manager.on({update});
+    return () => {
+      characteristic._manager.off({update});
+    };
+  }, [characteristic]);
+
   fields.inset.list = [elm.inset];
   const gprops = [];
 
@@ -36,7 +49,13 @@ export default function CompositeDetails({row, selected}) {
   const rrows = [];
 
   const [selectedRows, setSelectedRows] = React.useState(new Set());
-  const glRowRow = Array.from(selectedRows)[0];
+  const rows = [];
+  elm.ox.glass_specification.find_rows({elm: elm.elm}, (row) => {
+    rows.push(row);
+  });
+  const glKey = Array.from(selectedRows)[0];
+  const glRow = glKey !== undefined && rows.find((row) => row.row === glKey);
+  //const glInset = glRow ? glRow.inset : null;
 
   return <GlassesDetail container spacing={2} selected={selected}>
     <Grid sm={12} md={5}>
@@ -54,14 +73,24 @@ export default function CompositeDetails({row, selected}) {
         />
       </FormGroup>
     </Grid>
-    <Grid sm={12} md={5}>
+    <Grid sm={12} md={5} style={{borderBottom: '1px gray dashed'}}>
       <FormGroup>{gprops}</FormGroup>
     </Grid>
     <Grid sm={12} md={5}>
-      <CompositeGrid elm={elm} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
+      <CompositeGrid
+        elm={elm}
+        glRow={glRow}
+        rows={rows}
+        selectedRows={selectedRows}
+        setSelectedRows={setSelectedRows}
+      />
     </Grid>
     <Grid sm={12} md={5}>
-      <CompositeRegionProps elm={elm} glRow={glRowRow ? elm.ox.glass_specification.get(glRowRow - 1) : null} />
+      <CompositeRegionProps
+        elm={elm}
+        glRow={glRow}
+        index={index}
+      />
     </Grid>
   </GlassesDetail>;
 }
