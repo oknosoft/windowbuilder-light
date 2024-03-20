@@ -80,6 +80,7 @@ export default function CompositeDetails({row, selected}) {
       <CompositeGrid
         elm={elm}
         glRow={glRow}
+        elmRow={row}
         rows={rows}
         selectedRows={selectedRows}
         setSelectedRows={setSelectedRows}

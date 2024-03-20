@@ -18,8 +18,7 @@ export default function CompositeRegionProps({elm, glRow}) {
 
   const content = [
     <Typography variant="h5">
-      <small>{`Параметры ряда №${glRow.row}\xA0`}</small>
-      {inset.name}
+      <small>{`Параметры ряда:\xA0`}</small>{`№${glRow.row},\xA0${inset.name}`}
     </Typography>,
     <RefField key={`clr-${inset.ref}-${glRow.row}`} obj={obj} fld="clr" meta={clr} />
   ];

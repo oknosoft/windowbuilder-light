@@ -13,7 +13,7 @@ const columns = [
   {
     key: "inset",
     name: "Вставка",
-    width: '*',
+    //width: '*',
     renderCell: PresentationFormatter,
     renderEditCell: RegionInset,
   },
@@ -21,7 +21,7 @@ const columns = [
 
 const stub = () => null;
 
-export default function CompositeGrid({elm, rows, glRow, selectedRows, setSelectedRows}) {
+export default function CompositeGrid({elm, rows, glRow, elmRow, selectedRows, setSelectedRows}) {
 
 
 
@@ -35,7 +35,7 @@ export default function CompositeGrid({elm, rows, glRow, selectedRows, setSelect
 
 
   return <>
-    <Toolbar elm={elm} glRow={glRow} setSelectedRows={setSelectedRows} />
+    <Toolbar elm={elm} glRow={glRow} elmRow={elmRow} setSelectedRows={setSelectedRows} />
     <DataGrid
       rowKeyGetter={rowKeyGetter}
       columns={columns}
