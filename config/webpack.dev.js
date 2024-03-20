@@ -38,6 +38,9 @@ module.exports = {
     fallback: {
       crypto: false,
       levelup: false,
+      util: false,
+      assert: false,
+      stream: false,
       "pouchdb-adapter-memory": false,
     }
   },
