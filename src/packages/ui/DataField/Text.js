@@ -4,9 +4,12 @@ import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 import {onKeyUp} from './enterTab';
 
-export default function Text({obj, fld, meta, label, value, onChange, inputProps, fullWidth=true, enterTab, ...other}) {
+export default function Text({obj, fld, meta, label, value, onChange, inputProps, fullWidth=true, enterTab, slotProps, ...other}) {
   if((typeof value !== 'string') && obj && fld) {
     value = obj[fld];
+    if(inputProps?.type === 'date') {
+      value = $p.utils.moment(value).format('YYYY-MM-DD');
+    }
   }
   if(!meta && obj && fld) {
     meta = obj._metadata(fld);
@@ -38,6 +41,7 @@ export default function Text({obj, fld, meta, label, value, onChange, inputProps
       inputProps={{placeholder, ...inputProps}}
       value={val}
       onChange={setValue}
+      slotProps={slotProps}
     />
   </FormControl>;
 }

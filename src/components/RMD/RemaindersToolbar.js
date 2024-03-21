@@ -1,17 +1,47 @@
 import React from 'react';
-import IconButton from '@mui/material/IconButton';
-import AddIcon from '@mui/icons-material/AddBoxOutlined';
-import EditIcon from '@mui/icons-material/DriveFileRenameOutline';
 import {Toolbar, HtmlTooltip} from '../App/styled';
+import Input from '@mui/material/InputBase';
+import RefField from '../../packages/ui/DataField/RefField';
+import Text from '../../packages/ui/DataField/Text';
+import {dp} from './data';
 
-export default function RemaindersToolbar() {
+const slot = {
+  input: {
+    min: '2024-01-01',
+    max: '2024-12-31',
+  },
+};
+const style={minWidth: 200};
+
+export default function RemaindersToolbar({scheme}) {
 
   return <Toolbar disableGutters>
-    <HtmlTooltip title="Создать документ {Insert}">
-      <IconButton onClick={null}><AddIcon/></IconButton>
-    </HtmlTooltip>
-    <HtmlTooltip title="Изменить документ">
-      <IconButton onClick={null}><EditIcon/></IconButton>
-    </HtmlTooltip>
+    <Text
+      key={scheme.ref + 'from'}
+      obj={scheme}
+      fld="date_from"
+      label={'\xa0Период'}
+      inputProps={{type: "date"}}
+      fullWidth={false}
+      slotProps={slot}
+      style={style}
+    />
+    <Text
+      key={scheme.ref + 'till'}
+      obj={scheme}
+      fld="date_till"
+      label={'\xa0по'}
+      inputProps={{type: "date"}}
+      fullWidth={false}
+      slotProps={slot}
+      style={style}
+    />
+    <RefField
+      key={scheme.ref + 'phase'}
+      obj={dp}
+      fld="phase"
+      fullWidth={false}
+      label={'\xa0\xa0Фаза'}
+    />
   </Toolbar>;
 }

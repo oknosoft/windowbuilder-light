@@ -6,6 +6,7 @@ import {useLoadingContext} from '../Metadata';
 import {contentWidth} from '../../styles/muiTheme';
 import {RmdHead} from './Head';
 import {title} from './data';
+import Remainders from './Remainders';
 
 
 export default function RMD (props) {
@@ -15,6 +16,7 @@ export default function RMD (props) {
   const theme = useTheme();
   const width = contentWidth(menu_open);
 
+  // при создании компонента, подготовим общие данные
   React.useEffect(() => {
     if(menu_open) {
       handleIfaceState({menu_open: false});
@@ -30,7 +32,7 @@ export default function RMD (props) {
   return <div style={{position: 'relative', height: 'calc(100vh - 50px)'}}>
     <Resize handleWidth="6px" handleColor={handleColor}>
       <ResizeHorizon width={`${(width * 3/4).toFixed()}px`} minWidth="600px">
-        Left
+        <Remainders />
       </ResizeHorizon>
       <ResizeHorizon width={`${(width * 1/4).toFixed()}px`} minWidth="200px">
         Right

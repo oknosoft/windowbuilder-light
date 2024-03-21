@@ -35,6 +35,8 @@ export function createGlasses({obj}){
       key: row.row,
     });
   }
+  const prices = [];
+  const {use_internal} = $p.job_prm.pricing;
   return [[
     {
       key: 'expanded',
@@ -74,9 +76,9 @@ export function createGlasses({obj}){
     {key: 'len', name: 'Ширина', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
     {key: 'height', name: 'Высота', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
     {key: 'quantity', name: 'Колич.', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
-    {key: 'price_internal', name: 'Цена', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
-    {key: 'discount_percent_internal', name: 'Скидка', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
-    {key: 'amount_internal', name: 'Сумма', width: 88, renderCell: NumberFormatter},
+    {key: use_internal === false ? 'price' : 'price_internal', name: 'Цена', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
+    {key: use_internal === false ? 'discount_percent' : 'discount_percent_internal', name: 'Скидка', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
+    {key: use_internal === false ? 'amount' : 'amount_internal', name: 'Сумма', width: 88, renderCell: NumberFormatter},
   ],
     glasses,
     {skey: 0, rows: []}
