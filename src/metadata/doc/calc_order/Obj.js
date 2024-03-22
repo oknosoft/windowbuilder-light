@@ -50,7 +50,7 @@ export default function CalcOrderObj() {
   React.useEffect(() => {
     const {ref} = params;
     let res = Promise.resolve();
-    if(job_prm.builder.glasses_template.is_new()) {
+    if(job_prm.builder.glasses_template?.is_new?.()) {
       for(const doc of mgr) {
         if(doc.obj_delivery_state.is('Шаблон')) {
           res = res.then(() => doc.load_templates());

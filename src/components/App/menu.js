@@ -8,6 +8,7 @@ import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import IconHelp from '@mui/icons-material/Help';
 import FactoryIcon from '@mui/icons-material/Factory';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 //import IconDownload from '@mui/icons-material/CloudDownload';
 //import IconAccessibility from '@mui/icons-material/AccessibilityNew';
 //import IconChart from '@mui/icons-material/InsertChart';
@@ -20,15 +21,20 @@ export const description = 'Заказ дилера';
 
 const items = [
   {
-    text: 'Проекты и лиды',
-    icon: <SafetyDividerIcon/>,
-    path: '/partners',
-    aliases: ['/project', '/projects', '/lead', '/leads'],
+    text: 'РМД',
+    icon: <ManageHistoryIcon/>,
+    path: '/rmd',
   },
   {
     text: 'Расчёты-заказы',
     icon: <BusinessCenterIcon/>,
     path: '/doc/calc_order',
+  },
+  {
+    text: 'Проекты и лиды',
+    icon: <SafetyDividerIcon/>,
+    path: '/partners',
+    aliases: ['/project', '/projects', '/lead', '/leads'],
   },
   {
     text: 'Производство',

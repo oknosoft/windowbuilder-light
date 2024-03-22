@@ -29,7 +29,7 @@ export default function RMDRemainders() {
     return rows.indexOf(row);
   }
   return <Content>
-    <Toolbar scheme={scheme}/>
+    <Toolbar rmd={rmd} scheme={scheme} handleIfaceState={handleIfaceState}/>
     <DataGrid
       columns={columns}
       rows={rows}
