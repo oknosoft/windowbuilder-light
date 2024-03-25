@@ -5,7 +5,7 @@ import plugin_pouchdb from 'metadata-pouchdb';
 import plugin_mime from 'metadata-core/lib/mime.min';
 import plugin_scheme_settings from './cat/scheme_settings/plugin';
 import plugin_log_manager from './ireg/log_manager';
-import proxy_login, {load_common} from '../packages/superlogin-proxy';
+import proxy_login, {load_common} from 'wb-core/dist/superlogin-proxy';
 
 // функция установки параметров сеанса
 import settings from '../../config/app.settings';

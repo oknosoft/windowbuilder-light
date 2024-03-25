@@ -4,7 +4,7 @@
  * Created by Evgeniy Malyarov on 14.02.2021.
  */
 
-import {load_ram} from '../packages/superlogin-proxy';
+import {load_ram} from 'wb-core/dist/superlogin-proxy';
 
 export const init_state = {
   meta_loaded: false,

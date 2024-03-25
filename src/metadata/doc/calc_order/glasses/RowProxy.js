@@ -1,5 +1,6 @@
 
-const {cat: {inserts}, enm: {inserts_types}, doc: {calc_order}, dp: {buyers_order}}  = $p;
+const {cat: {inserts}, enm: {inserts_types}, doc: {calc_order}, dp: {buyers_order}, job_prm}  = $p;
+const {use_internal} = job_prm.pricing;
 
 // доступные типы вставок
 export const itypes = [inserts_types.glass, inserts_types.composite];
@@ -192,24 +193,39 @@ export class RowProxy {
   }
 
   get discount_percent_internal() {
-    return this.#row.discount_percent_internal;
+    return use_internal === false ? this.#row.discount_percent : this.#row.discount_percent_internal;
   }
   set discount_percent_internal(v) {
-    this.#row.discount_percent_internal = v;
+    if(use_internal === false) {
+      this.#row.discount_percent = v;
+    }
+    else {
+      this.#row.discount_percent_internal = v;
+    }
   }
 
   get price_internal() {
-    return this.#row.price_internal;
+    return use_internal === false ? this.#row.price : this.#row.price_internal;
   }
   set price_internal(v) {
-    this.#row.price_internal = v;
+    if(use_internal === false) {
+      this.#row.price = v;
+    }
+    else {
+      this.#row.price_internal = v;
+    }
   }
 
   get amount_internal() {
-    return this.#row.amount_internal;
+    return use_internal === false ? this.#row.amount : this.#row.amount_internal;
   }
   set amount_internal(v) {
-    this.#row.amount_internal = v;
+    if(use_internal === false) {
+      this.#row.amount = v;
+    }
+    else {
+      this.#row.amount_internal = v;
+    }
   }
 
   get note() {

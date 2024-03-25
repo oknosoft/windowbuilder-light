@@ -38,3 +38,9 @@
   padding-left: 8px;
   width: 100%;
 }
+.cell-input::before {
+  display: none;
+}
+.cell-input::after {
+  display: none;
+}
