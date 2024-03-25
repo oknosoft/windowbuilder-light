@@ -2,7 +2,7 @@
 const {cat, rep, utils, wsql, adapters} = $p;
 
 export const title = 'РМД';
-export const dp = rep.planning.create();
+export const dp = rep.planning.create({phase: 'plan'});
 export const schemas = cat.scheme_settings
   .find_schemas('rep.planning.data', true)
   .sort(utils.sort('order'));
