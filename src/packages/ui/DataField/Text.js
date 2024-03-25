@@ -3,6 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 import {onKeyUp} from './enterTab';
+import {autoFocusAndSelect} from './Number'
 
 export default function Text({obj, fld, meta, label, value, onChange, inputProps, fullWidth=true, enterTab, slotProps, ...other}) {
   if((typeof value !== 'string') && obj && fld) {
@@ -65,4 +66,27 @@ export function TextFormatter({row, column}) {
   }, [obj, column.key]);
 
   return value;
+}
+
+export function TextCell({row, column, onRowChange, onClose}) {
+  const obj = row instanceof $p.classes.TabularSectionRow ? row : row.row;
+  const fld = column.key;
+  const [value, setValue] = React.useState(obj[fld]);
+
+  return <input
+    ref={autoFocusAndSelect}
+    className="rdg-text-editor tlmcuo07-0-0-beta-41"
+    value={value}
+    onChange={({target}) => {
+      setValue(target.value);
+    }}
+    onKeyDown={(ev) => {
+      const {key} = ev;
+      if(key === 'Enter' || key === 'Tab') {
+        obj[fld] = value;
+        onRowChange(row instanceof $p.classes.TabularSectionRow ? row : {...row}, true);
+        setValue(obj[fld]);
+      }
+    }}
+  />;
 }

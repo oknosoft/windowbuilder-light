@@ -78,7 +78,7 @@ export function NumberFormatCustom(props) {
   );
 }
 
-function autoFocusAndSelect(input) {
+export function autoFocusAndSelect(input) {
   input?.focus();
   input?.select();
 }
