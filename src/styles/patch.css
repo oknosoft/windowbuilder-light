@@ -44,3 +44,13 @@
 .cell-input::after {
   display: none;
 }
+
+.cell-select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cell-select input {
+  margin: 2px;
+}
+

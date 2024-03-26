@@ -7,10 +7,20 @@ import Toolbar from './RemaindersToolbar';
 
 import {schemas, initScheme, dp} from './data';
 
+function renderCheckbox({ onChange, ...props }) {
+  function handleChange({target, nativeEvent}) {
+    onChange(target.checked, nativeEvent.shiftKey);
+  }
+
+  return <input type="checkbox" {...props} onChange={handleChange} />;
+}
+
 export default function RMDRemainders() {
 
   const {handleIfaceState, ifaceState: {rmd}} = useLoadingContext();
   const [columns, setColumns] = React.useState([]);
+  const [sortColumns, setSortColumns] = React.useState([]);
+  const [selectedRows, setSelectedRows] = React.useState(new Set());
   const scheme = rmd?.scheme || schemas.find(({ref}) => ref === initScheme);
 
   React.useEffect(() => {
@@ -35,13 +45,14 @@ export default function RMDRemainders() {
       rows={rows}
       rowKeyGetter={rowKeyGetter}
       //onRowsChange={setRows}
-      //selectedRows={selectedRows}
-      //onSelectedRowsChange={setSelectedRows}
+      selectedRows={selectedRows}
+      onSelectedRowsChange={setSelectedRows}
       //onCellClick={onCellClick}
       //onCellDoubleClick={open}
       //onCellKeyDown={onCellKeyDown}
       className="fill-grid"
       rowHeight={33}
+      renderers={{ renderCheckbox }}
     />
   </Content>;
 }
