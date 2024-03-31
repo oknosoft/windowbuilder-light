@@ -7,7 +7,7 @@ import {contentWidth} from '../../styles/muiTheme';
 import {RmdHead} from './Head';
 import {title} from './data';
 import Remainders from './Remainders';
-
+import Task from './Task';
 
 export default function RMD (props) {
 
@@ -35,7 +35,7 @@ export default function RMD (props) {
         <Remainders />
       </ResizeHorizon>
       <ResizeHorizon width={`${(width * 1/4).toFixed()}px`} minWidth="200px">
-        Right
+        <Task />
       </ResizeHorizon>
     </Resize>
   </div>;

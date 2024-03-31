@@ -3,9 +3,9 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 import {onKeyUp} from './enterTab';
-import {autoFocusAndSelect} from './Number'
+import {autoFocusAndSelect} from './Number';
 
-export default function Text({obj, fld, meta, label, value, onChange, inputProps, fullWidth=true, enterTab, slotProps, ...other}) {
+export default function Text({obj, fld, meta, label, labelProps, value, onChange, inputProps, fullWidth=true, enterTab, slotProps, ...other}) {
   if((typeof value !== 'string') && obj && fld) {
     value = obj[fld];
     if(inputProps?.type === 'date') {
@@ -37,7 +37,7 @@ export default function Text({obj, fld, meta, label, value, onChange, inputProps
     other.onKeyUp = onKeyUp;
   }
   return <FormControl fullWidth={fullWidth} {...other}>
-    <InputLabel>{label}</InputLabel>
+    <InputLabel {...labelProps}>{label}</InputLabel>
     <Input
       inputProps={{placeholder, ...inputProps}}
       value={val}

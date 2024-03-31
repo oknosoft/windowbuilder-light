@@ -15,6 +15,7 @@ const slot = {
   },
 };
 const style={minWidth: 200};
+const labelProps = {style: {textAlign: 'center', top: -2}};
 
 export default function RemaindersToolbar({rmd, scheme, handleIfaceState}) {
 
@@ -23,7 +24,8 @@ export default function RemaindersToolbar({rmd, scheme, handleIfaceState}) {
       key={scheme.ref + 'from'}
       obj={scheme}
       fld="date_from"
-      label={'\xa0Период'}
+      label="Период"
+      labelProps={labelProps}
       inputProps={{type: "date"}}
       fullWidth={false}
       slotProps={slot}
@@ -33,7 +35,8 @@ export default function RemaindersToolbar({rmd, scheme, handleIfaceState}) {
       key={scheme.ref + 'till'}
       obj={scheme}
       fld="date_till"
-      label={'\xa0по'}
+      label="по"
+      labelProps={labelProps}
       inputProps={{type: "date"}}
       fullWidth={false}
       slotProps={slot}
@@ -44,7 +47,8 @@ export default function RemaindersToolbar({rmd, scheme, handleIfaceState}) {
       obj={dp}
       fld="phase"
       fullWidth={false}
-      label={'\xa0\xa0Фаза'}
+      label="Фаза"
+      labelProps={labelProps}
     />
     <Typography sx={{flex: 1}}></Typography>
     <HtmlTooltip title="Уточнить фильтр">

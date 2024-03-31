@@ -19,6 +19,10 @@ function rx_columns(attr) {
     if(column.key === 'calc_order') {
       column.renderCell = OrderFormatter;
     }
+    else if(column.key === 'obj') {
+      column.renderCell = PKFormatter;
+      delete column.width;
+    }
   }
   if(!dp.phase.is('plan')) {
     columns.unshift({...SelectColumn, headerCellClass: 'cell-select', cellClass: 'cell-select'});
@@ -27,7 +31,8 @@ function rx_columns(attr) {
 }
 
 export const title = 'РМД';
-export const dp = rep.planning.create({phase: 'plan'});
+export const dp = rep.planning.create({phase: 'run'});
+export const tgt = rep.planning.create({phase: 'run'});
 export const schemas = scheme_settings
   .find_schemas('rep.planning.data', true)
   .sort(utils.sort('order'))

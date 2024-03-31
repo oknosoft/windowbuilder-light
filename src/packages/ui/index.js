@@ -6,6 +6,14 @@ export default function ui($p) {
   const {md, utils, classes} = $p;
   $p.ui = {dialogs};
 
+  const {ResizeObserver: NativeObserver} = window;
+  window.ResizeObserver = class ResizeObserver extends NativeObserver {
+    constructor(callback) {
+      callback = utils.debounce(callback, 10);
+      super(callback);
+    }
+  };
+
   Object.defineProperties(classes.DataManager.prototype, {
 
     /**

@@ -78,6 +78,7 @@ module.exports = function (proxy, allowedHost) {
         pathname: sockPath,
         port: sockPort,
       },
+      //overlay: false,
       overlay: {
         errors: true,
         warnings: false,

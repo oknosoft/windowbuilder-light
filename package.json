@@ -67,7 +67,7 @@
     "url-join": "^5.0",
     "url-parse": "^1.5",
     "velocity-react": "^1.4.3",
-    "wb-core": "github:oknosoft/windowbuilder-core#01927db9d3e659a0cf64ac3d5bc050c8f753815e"
+    "wb-core": "github:oknosoft/windowbuilder-core#bec6bea6c459004584770da00a78186a73327749"
   },
   "devDependencies": {
     "@babel/core": "^7.24",
