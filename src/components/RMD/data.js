@@ -73,6 +73,7 @@ export const query = async ({rmd, scheme, handleIfaceState}) => {
     if(ref) {
       create({ref, obj, specimen, elm, type, id: Number(barcode)});
       raw.obj = ref;
+      raw.phase = dp.phase;
       if(!calc_order.by_ref[raw.calc_order]) {
         keys.add(`${calc_order.class_name}|${raw.calc_order}`);
       }
@@ -93,10 +94,23 @@ export const query = async ({rmd, scheme, handleIfaceState}) => {
 
 // фильтрует табчасть при изменении второстепенного отбора
 export const filter = ({rmd, scheme, handleIfaceState}) => {
-  const rows = [];
+  const rows = [], tgtrows = [];
   for(const row of dp.data) {
-    rows.push(row);
+    const {obj, work_center, work_shift, date} = row;
+    const tgtrow = tgt.data.find({
+      obj: obj.valueOf(),
+      work_center: work_center.valueOf(),
+      work_shift: work_shift.valueOf(),
+      date: date,
+    });
+    if(tgtrow) {
+      tgtrows.push(tgtrow);
+    }
+    else {
+      // TODO: фильтр
+      rows.push(row);
+    }
   }
-  handleIfaceState({rmd: Object.assign({}, rmd, {rows})});
+  handleIfaceState({rmd: Object.assign({}, rmd, {rows, tgtrows})});
 };
 

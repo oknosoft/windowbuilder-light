@@ -3,19 +3,28 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import UTurnLeftIcon from '@mui/icons-material/UTurnLeft';
 import {Toolbar, HtmlTooltip} from '../App/styled';
-import {dp, query} from './data';
+import {tgt, filter} from './data';
 
 
-export default function TaskToolbar({rmd, scheme, handleIfaceState}) {
+export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows, handleIfaceState}) {
+
+  const exclude = () => {
+    for(const index of selectedRows) {
+      tgt.data.del(rmd.tgtrows[index]);
+    }
+    setSelectedRows(new Set());
+    filter({rmd, scheme, handleIfaceState});
+  };
 
   return <Toolbar disableGutters>
-    <HtmlTooltip title="Уточнить фильтр">
-      <IconButton onClick={null}><FilterAltOutlinedIcon/></IconButton>
+    <HtmlTooltip title="Исключить из задания">
+      <IconButton disabled={!selectedRows.size} onClick={exclude}><UTurnLeftIcon/></IconButton>
     </HtmlTooltip>
     <Typography sx={{flex: 1}}></Typography>
     <HtmlTooltip title="Освежить данные">
-      <IconButton onClick={null}><CloudSyncIcon/></IconButton>
+      <IconButton disabled={true} onClick={null}><CloudSyncIcon/></IconButton>
     </HtmlTooltip>
   </Toolbar>;
 }

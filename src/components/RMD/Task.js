@@ -21,12 +21,12 @@ export default function RMDRemainders() {
   if(!columns.length) {
     return <Loading />;
   }
-  const rows = [];
+  const rows = rmd?.tgtrows || [];
   function rowKeyGetter (row) {
     return rows.indexOf(row);
   }
   return <>
-    <Toolbar rmd={rmd} scheme={scheme} handleIfaceState={handleIfaceState}/>
+    <Toolbar rmd={rmd} scheme={scheme} selectedRows={selectedRows} setSelectedRows={setSelectedRows} handleIfaceState={handleIfaceState}/>
     <DataGrid
       columns={columns}
       rows={rows}

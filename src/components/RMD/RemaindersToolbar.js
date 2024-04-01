@@ -3,10 +3,12 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import UTurnRightIcon from '@mui/icons-material/UTurnRight';
+import Divider from '@mui/material/Divider';
 import {Toolbar, HtmlTooltip} from '../App/styled';
 import RefField from '../../packages/ui/DataField/RefField';
 import Text from '../../packages/ui/DataField/Text';
-import {dp, query} from './data';
+import {dp, tgt, query, filter} from './data';
 
 const slot = {
   input: {
@@ -17,7 +19,15 @@ const slot = {
 const style={minWidth: 200};
 const labelProps = {style: {textAlign: 'center', top: -2}};
 
-export default function RemaindersToolbar({rmd, scheme, handleIfaceState}) {
+export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelectedRows, handleIfaceState}) {
+
+  const include = () => {
+    for(const index of selectedRows) {
+      tgt.data.add(rmd.rows[index]);
+    }
+    setSelectedRows(new Set());
+    filter({rmd, scheme, handleIfaceState});
+  };
 
   return <Toolbar disableGutters>
     <Text
@@ -51,11 +61,15 @@ export default function RemaindersToolbar({rmd, scheme, handleIfaceState}) {
       labelProps={labelProps}
     />
     <Typography sx={{flex: 1}}></Typography>
+    <HtmlTooltip title="Освежить данные">
+      <IconButton onClick={() => query({rmd, scheme, handleIfaceState})}><CloudSyncIcon/></IconButton>
+    </HtmlTooltip>
+    <Divider orientation="vertical" flexItem sx={{m: 1}} />
     <HtmlTooltip title="Уточнить фильтр">
       <IconButton onClick={null}><FilterAltOutlinedIcon/></IconButton>
     </HtmlTooltip>
-    <HtmlTooltip title="Освежить данные">
-      <IconButton onClick={() => query({rmd, scheme, handleIfaceState})}><CloudSyncIcon/></IconButton>
+    <HtmlTooltip title="Включить в задание">
+      <IconButton disabled={!selectedRows.size} onClick={include}><UTurnRightIcon/></IconButton>
     </HtmlTooltip>
   </Toolbar>;
 }
