@@ -173,9 +173,9 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       let numbers = 0;
       let newRow;
       for(const raw of values) {
-        const formula = regex.test(raw) ? raw.replace(regex, 'x') : '';
+        const formula = (!strings && regex.test(raw)) ? raw.replace(regex, 'x') : '';
         const n = formula ? NaN : parseFloat(raw.replace(/\s/, ''));
-        if(isNaN(n)) {
+        if(isNaN(n) || newRow && numbers >= 3) {
           if(!strings && !newRow) {
             newRow = {formula, note: []};
           }
@@ -254,8 +254,9 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
             }
           }
           if(candidates.length) {
+            const stub = {ilist, sublist};
             clarification = parts.map((id, ind) => {
-              const pre = sublist.find((curr) => curr.name === id || curr.article === id);
+              const pre = sublist.find((curr) => curr.name.toLowerCase() === id || curr.article.toLowerCase() === id);
               if(pre) {
                 return pre;
               }

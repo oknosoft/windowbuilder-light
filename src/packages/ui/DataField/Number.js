@@ -55,7 +55,7 @@ function actions({obj, fld, onChange, value, setValue}) {
 }
 
 export function NumberFormatCustom(props) {
-  const { onChange, min, max, ...other } = props;
+  const { onChange, min, max, enterTab, ...other } = props;
 
   return (
     <NumericFormat

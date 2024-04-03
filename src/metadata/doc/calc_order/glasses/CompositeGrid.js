@@ -46,6 +46,7 @@ export default function CompositeGrid({elm, rows, glRow, elmRow, selectedRows, s
       onCellKeyDown={onCellKeyDown}
       className="fill-grid"
       headerRowHeight={0}
+      style={{maxHeight: 220}}
     />
   </>;
 }

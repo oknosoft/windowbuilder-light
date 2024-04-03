@@ -37,6 +37,9 @@ export const schemas = scheme_settings
   .find_schemas('rep.planning.data', true)
   .sort(utils.sort('order'))
   .map((scheme) => {
+    if(scheme.date_till < moment().add(1, 'day').toDate()) {
+      scheme.date_till = moment(scheme.date_till).add(1, 'week').toDate();
+    }
     if(scheme.hasOwnProperty('rx_columns')) {
       delete scheme.rx_columns;
     }

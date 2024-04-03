@@ -9,7 +9,7 @@ export const itypes = [inserts_types.glass, inserts_types.composite];
 const ioptions = [];
 const ilist = [];
 const sublist = [];
-inserts.find_rows({insert_type: {in: itypes}}, (o) => {
+inserts.find_rows({insert_type: {in: itypes}, _top: 10e6}, (o) => {
   if(o.available) {
     ioptions.push(o);
   }
