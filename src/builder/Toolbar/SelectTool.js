@@ -1,33 +1,40 @@
 import React from 'react';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
+import {styled} from '@mui/material/styles';
 import CursorIcon from '../../aggregate/styles/icons/Cursor';
 import PenIcon from '../../aggregate/styles/icons/Pen';
 import ZoomFitIcon from '../../aggregate/styles/icons/ZoomFit';
-import VideoSettingsIcon from '@mui/icons-material/VideoSettings';
-import {Toolbar, HtmlTooltip} from '../../aggregate/App/styled';
+import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
+import {Vertical, HtmlTooltip} from '../../aggregate/App/styled';
 import {useBuilderContext} from '../Context';
 
-export default function SelectTool() {
+const Show3dIcon = styled(VerticalAlignBottomIcon, {
+  shouldForwardProp: (prop) => prop !== 'show3d',
+})(({ theme, show3d }) => ({
+  ...(!show3d && {transform: 'rotate(180deg)'}),
+}));
+
+export default function SelectTool({show3d, toggle3D}) {
   const [tool, setTool] = React.useState(0);
   const {editor} = useBuilderContext();
 
   const handleChange = (event, newValue) => {
     setTool(newValue);
   };
-  return <Toolbar>
+  return <Vertical>
     <HtmlTooltip title="Вписать в окно (масштаб)">
-      <IconButton onClick={() => editor.project.zoomFit()}><ZoomFitIcon/></IconButton>
+      <IconButton sx={{ml: 1}} onClick={() => editor.project.zoomFit()}><ZoomFitIcon/></IconButton>
     </HtmlTooltip>
-    <Tabs value={tool} onChange={handleChange} >
+    <Tabs value={tool} orientation="vertical" onChange={handleChange} >
       <Tab value={0} icon={<HtmlTooltip title="Выделить и сдвинуть"><CursorIcon /></HtmlTooltip>} aria-label="select" />
       <Tab value={1} icon={<HtmlTooltip title="Нарисовать профиль"><PenIcon /></HtmlTooltip>} aria-label="draw" />
     </Tabs>
-    <Typography sx={{flex: 1}}></Typography>
-    <HtmlTooltip title="Настройки отображения">
-      <IconButton onClick={null}><VideoSettingsIcon/></IconButton>
+    <Box sx={{flex: 1}} />
+    <HtmlTooltip title={show3d ? 'Скрыть вид 3D' : 'Показать вид 3D'}>
+      <IconButton sx={{ml: 1}} onClick={toggle3D}><Show3dIcon show3d={show3d}/></IconButton>
     </HtmlTooltip>
-  </Toolbar>
+  </Vertical>
 }

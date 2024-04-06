@@ -59,6 +59,16 @@ export const Space = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
+export const Vertical = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'relative',
+  width: 50,
+  backgroundColor: theme.palette.grey["50"],
+  //paddingLeft: theme.spacing(),
+  paddingTop: theme.spacing(),
+}));
+
 export const Root = styled('div')(() => ({display: 'flex'}));
 
 export const Relative = styled('div')(() => ({

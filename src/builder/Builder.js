@@ -1,12 +1,23 @@
 import React from 'react';
+import {styled} from '@mui/material/styles';
 import SelectTool from './Toolbar/SelectTool';
-import {Resize, ResizeHorizon, ResizeVertical} from '@oknosoft/ui/Resize';
+import {Resize, ResizeVertical} from '@oknosoft/ui/Resize';
 import geometry from '@oknosoft/wb/core/src/geometry';
 const {EditorInvisible} = geometry;
+
+export const Row = styled('div')(() => ({display: 'flex', height: '100%'}));
 
 export default function Builder({context, width, handleColor, resizeStop}) {
 
   let {editor, setContext} = context;
+  const [show3d, setShow3d] = React.useState(true);
+  const toggle3D = () => {
+    setShow3d(!show3d);
+    Promise.resolve().then(() => {
+      resizeStop();
+      editor.project.zoomFit();
+    });
+  }
 
   React.useEffect(() => {
     const {md, utils} = $p;
@@ -35,23 +46,16 @@ export default function Builder({context, width, handleColor, resizeStop}) {
     }
   };
 
-  return <>
-    <SelectTool />
-    <Resize handleWidth="6px" handleColor={handleColor} onResizeStop={resizeStop} top={50}>
-      <ResizeVertical height="80%" minHeight="400px">
-        <Resize handleWidth="6px" handleColor={handleColor}>
-          <ResizeHorizon width={`${(width - 100).toFixed()}px`} minWidth="400px">
-            <canvas key="builder-canvas" ref={createEditor} style={{width: '100%', height: '100%'}}/>
-          </ResizeHorizon>
-          <ResizeHorizon width="100px" minWidth="100px" show={false}>
-            Right
-          </ResizeHorizon>
-        </Resize>
-      </ResizeVertical>
-      <ResizeVertical minHeight="140px">
-        Вид сверху
-      </ResizeVertical>
-    </Resize>
-  </>;
+  return <Resize handleWidth="6px" handleColor={handleColor} onResizeStop={resizeStop}>
+    <ResizeVertical height="75%" minHeight="400px">
+      <Row>
+        <SelectTool show3d={show3d} toggle3D={toggle3D} />
+        <canvas key="builder-canvas" ref={createEditor} style={{width: 'calc(100% - 50px)', height: '100%'}}/>
+      </Row>
+    </ResizeVertical>
+    <ResizeVertical minHeight="25%" show={show3d}>
+      Вид сверху
+    </ResizeVertical>
+  </Resize>;
 }
 

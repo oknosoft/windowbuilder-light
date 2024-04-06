@@ -58,7 +58,7 @@
     "run:dev": "webpack serve -c config/webpack.dev.js",
     "lib:link": "node ./scripts/link.js",
     "build:meta": "node ./scripts/core/build.js",
-    "build:prod": "node ./scripts/core/build.js"
+    "build:prod": "webpack -c config/webpack.prod.js"
   },
   "repository": {
     "type": "git",
