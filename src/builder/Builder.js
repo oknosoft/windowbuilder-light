@@ -1,8 +1,9 @@
 import React from 'react';
 import {styled} from '@mui/material/styles';
-import SelectTool from './Toolbar/SelectTool';
 import {Resize, ResizeVertical} from '@oknosoft/ui/Resize';
 import geometry from '@oknosoft/wb/core/src/geometry';
+import SelectTool from './Toolbar/SelectTool';
+import Canvas3D from './3D'
 const {EditorInvisible} = geometry;
 
 export const Row = styled('div')(() => ({height: '100%'}));
@@ -54,7 +55,7 @@ export default function Builder({context, width, handleColor, resizeStop}) {
       </Row>
     </ResizeVertical>
     <ResizeVertical minHeight={show3d ? "30%" : "5%"} show={show3d}>
-      Вид сверху
+      <Canvas3D />
     </ResizeVertical>
   </Resize>;
 }

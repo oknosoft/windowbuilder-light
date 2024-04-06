@@ -19,6 +19,8 @@
     "@oknosoft/metadata": "file:../metadata-v3",
     "@oknosoft/ui": "file:../metadata-ui/dist",
     "@oknosoft/wb/core": "file:../wb-core-v3",
+    "@react-three/drei": "^9.105",
+    "@react-three/fiber": "^8.16",
     "deep-equal": "^2.2.3",
     "hammerjs": "^2.0",
     "marked": "^12.0",
@@ -34,6 +36,7 @@
     "react-number-format": "^5.3",
     "react-router-dom": "6.22",
     "shallowequal": "^1.1.0",
+    "three": "0.163",
     "url-join": "^5.0",
     "url-parse": "^1.5"
   },

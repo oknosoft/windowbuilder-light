@@ -47,7 +47,7 @@ const theme = createTheme({
             minWidth: 'unset',
           };
           if(ownerState.accent && ownerState.selected) {
-            res.backgroundColor = '#eee';
+            res.backgroundColor = theme.palette.primary[50];
           }
           return res;
         },
