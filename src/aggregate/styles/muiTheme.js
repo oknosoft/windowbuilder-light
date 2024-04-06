@@ -41,10 +41,16 @@ const theme = createTheme({
     MuiTab: {
       styleOverrides: {
         // Name of the slot
-        root: ({ ownerState, theme }) => ({
-          minHeight: 50,
-          minWidth: 'unset',
-        }),
+        root: ({ ownerState, theme }) => {
+          const res = {
+            minHeight: 48,
+            minWidth: 'unset',
+          };
+          if(ownerState.accent && ownerState.selected) {
+            res.backgroundColor = '#eee';
+          }
+          return res;
+        },
       }
     },
 

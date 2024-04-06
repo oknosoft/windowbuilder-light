@@ -8,13 +8,23 @@ import CursorIcon from '../../aggregate/styles/icons/Cursor';
 import PenIcon from '../../aggregate/styles/icons/Pen';
 import ZoomFitIcon from '../../aggregate/styles/icons/ZoomFit';
 import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
-import {Vertical, HtmlTooltip} from '../../aggregate/App/styled';
+import {HtmlTooltip} from '../../aggregate/App/styled';
 import {useBuilderContext} from '../Context';
 
 const Show3dIcon = styled(VerticalAlignBottomIcon, {
   shouldForwardProp: (prop) => prop !== 'show3d',
 })(({ theme, show3d }) => ({
   ...(!show3d && {transform: 'rotate(180deg)'}),
+}));
+
+const Vertical = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'absolute',
+  width: 50,
+  backgroundColor: theme.palette.grey["50"],
+  paddingTop: theme.spacing(),
+  height: '100%',
 }));
 
 export default function SelectTool({show3d, toggle3D}) {
@@ -24,13 +34,14 @@ export default function SelectTool({show3d, toggle3D}) {
   const handleChange = (event, newValue) => {
     setTool(newValue);
   };
+
   return <Vertical>
     <HtmlTooltip title="Вписать в окно (масштаб)">
       <IconButton sx={{ml: 1}} onClick={() => editor.project.zoomFit()}><ZoomFitIcon/></IconButton>
     </HtmlTooltip>
     <Tabs value={tool} orientation="vertical" onChange={handleChange} >
-      <Tab value={0} icon={<HtmlTooltip title="Выделить и сдвинуть"><CursorIcon /></HtmlTooltip>} aria-label="select" />
-      <Tab value={1} icon={<HtmlTooltip title="Нарисовать профиль"><PenIcon /></HtmlTooltip>} aria-label="draw" />
+      <Tab value={0} accent icon={<HtmlTooltip title="Выделить и сдвинуть"><CursorIcon /></HtmlTooltip>} aria-label="select" />
+      <Tab value={1} accent icon={<HtmlTooltip title="Нарисовать профиль"><PenIcon /></HtmlTooltip>} aria-label="draw" />
     </Tabs>
     <Box sx={{flex: 1}} />
     <HtmlTooltip title={show3d ? 'Скрыть вид 3D' : 'Показать вид 3D'}>
