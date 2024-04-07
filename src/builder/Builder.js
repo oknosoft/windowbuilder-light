@@ -4,6 +4,8 @@ import {Resize, ResizeVertical} from '@oknosoft/ui/Resize';
 import geometry from '@oknosoft/wb/core/src/geometry';
 import SelectTool from './Toolbar/SelectTool';
 import Canvas3D from './3D'
+import {Wraper} from '../aggregate/App/Wraper';
+
 const {EditorInvisible} = geometry;
 
 export const Row = styled('div')(() => ({height: '100%'}));
@@ -11,7 +13,7 @@ export const Row = styled('div')(() => ({height: '100%'}));
 export default function Builder({context, width, handleColor, resizeStop}) {
 
   let {editor, setContext} = context;
-  const [show3d, setShow3d] = React.useState(true);
+  const [show3d, setShow3d] = React.useState(false);
   const toggle3D = () => {
     setShow3d(!show3d);
     Promise.resolve().then(() => {
@@ -48,14 +50,14 @@ export default function Builder({context, width, handleColor, resizeStop}) {
   };
 
   return <Resize handleWidth="6px" handleColor={handleColor} onResizeStop={resizeStop}>
-    <ResizeVertical height={show3d ? "70%" : "95%"} minHeight="400px">
+    <ResizeVertical height={show3d ? "60%" : "95%"} minHeight="400px">
       <Row>
         <SelectTool show3d={show3d} toggle3D={toggle3D} />
         <canvas key="builder-canvas" ref={createEditor} style={{left: 51, width: '100%', height: '100%'}}/>
       </Row>
     </ResizeVertical>
-    <ResizeVertical minHeight={show3d ? "30%" : "5%"} show={show3d}>
-      <Canvas3D />
+    <ResizeVertical minHeight={show3d ? "40%" : "5%"} show={show3d}>
+      {show3d ? Wraper(Canvas3D) : null}
     </ResizeVertical>
   </Resize>;
 }
