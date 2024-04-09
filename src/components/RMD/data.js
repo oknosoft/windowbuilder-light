@@ -48,9 +48,13 @@ export const schemas = scheme_settings
   });
 
 export const initScheme = wsql.get_user_param('rmd.scheme') || schemas[0]?.ref;
-export const setScheme = (handleIfaceState, rmd) => {
-  wsql.set_user_param('rmd.scheme', rmd.scheme.ref);
-  handleIfaceState({rmd});
+export const setScheme = (handleIfaceState, rmd, ref) => {
+  wsql.set_user_param('rmd.scheme', ref);
+  handleIfaceState({rmd: Object.assign({}, rmd, {scheme: scheme_settings.get(ref)})});
+};
+export const setTgt = (handleIfaceState, rmd, doc) => {
+  tgt = doc;
+  handleIfaceState({rmd: Object.assign({}, rmd, {tgt})});
 };
 
 // перезаполняет табчасть при изменении основного отбора

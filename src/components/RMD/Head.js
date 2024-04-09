@@ -9,8 +9,7 @@ import {schemas, initScheme, setScheme} from './data';
 export function RmdHead({handleIfaceState, rmd}) {
 
   const value = rmd?.scheme?.ref || initScheme;
-  const handleChange = (event, ref) => setScheme(
-    handleIfaceState, Object.assign({}, rmd, {scheme: $p.cat.scheme_settings.get(ref)}));
+  const handleChange = (event, ref) => setScheme(handleIfaceState, rmd, ref);
 
   return <>
     <Tabs value={value} onChange={handleChange}>
