@@ -4,7 +4,7 @@ import {SelectColumn} from 'react-data-grid';
 const {
   CatCharacteristics,
   cat: {scheme_settings, planning_keys, characteristics},
-  doc: {calc_order},
+  doc: {calc_order, work_centers_task},
   rep, utils, wsql, adapters} = $p;
 
 function rx_columns(attr) {
@@ -32,7 +32,7 @@ function rx_columns(attr) {
 
 export const title = 'РМД';
 export const dp = rep.planning.create({phase: 'run'});
-export const tgt = rep.planning.create({phase: 'run'});
+export let tgt = work_centers_task.create({date: new Date()}, false, true);
 export const schemas = scheme_settings
   .find_schemas('rep.planning.data', true)
   .sort(utils.sort('order'))
@@ -100,7 +100,9 @@ export const filter = ({rmd, scheme, handleIfaceState}) => {
   const rows = [], tgtrows = [];
   for(const row of dp.data) {
     const {obj, work_center, work_shift, date} = row;
-    const tgtrow = tgt.data.find({
+    const tgtrow = tgt.set.find({
+      record_kind: -1,
+      phase: dp.phase,
       obj: obj.valueOf(),
       work_center: work_center.valueOf(),
       work_shift: work_shift.valueOf(),

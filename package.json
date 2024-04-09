@@ -30,8 +30,8 @@
   "proxy2": "https://dvlp.ecookna.ru/",
   "proxy3": "https://brusnika.oknosoft.ru/",
   "proxy4": "https://phototech.oknosoft.ru/",
-  "proxy": "https://phototech.oknosoft.ru:2300/",
-  "proxy6": "http://localhost:3016/",
+  "proxy5": "https://phototech.oknosoft.ru:2300/",
+  "proxy": "http://localhost:3016/",
   "proxy7": "http://192.168.9.27:3016/",
   "proxy8": "https://steklotorg.oknosoft.ru:2310/",
   "proxy9": "https://steklotorg.oknosoft.ru/",
@@ -67,7 +67,7 @@
     "url-join": "^5.0",
     "url-parse": "^1.5",
     "velocity-react": "^1.4.3",
-    "wb-core": "github:oknosoft/windowbuilder-core#bec6bea6c459004584770da00a78186a73327749"
+    "wb-core": "github:oknosoft/windowbuilder-core#9a3f750826dac1b791109dc6d3823ccde3e30aa3"
   },
   "devDependencies": {
     "@babel/core": "^7.24",
