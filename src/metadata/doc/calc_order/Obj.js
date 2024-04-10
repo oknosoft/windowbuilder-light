@@ -75,7 +75,7 @@ export default function CalcOrderObj() {
 
   //useBeforeUnload(update);
   //
-  React.useEffect(function prompt() {
+  React.useEffect(function onMount() {
     function update (curr, flds){
       if(!modified && (curr === obj || curr?._owner?._owner === obj)) {
         if(flds?.production) {
