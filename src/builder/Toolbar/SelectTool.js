@@ -36,15 +36,15 @@ export default function SelectTool({show3d, toggle3D}) {
   };
 
   return <Vertical>
-    <HtmlTooltip title="Вписать в окно (масштаб)">
+    <HtmlTooltip title="Вписать в окно (масштаб)" placement="right">
       <IconButton sx={{ml: 1}} onClick={() => editor.project.zoomFit()}><ZoomFitIcon/></IconButton>
     </HtmlTooltip>
     <Tabs value={tool} orientation="vertical" onChange={handleChange} >
-      <Tab value={0} accent icon={<HtmlTooltip title="Выделить и сдвинуть"><CursorIcon /></HtmlTooltip>} aria-label="select" />
-      <Tab value={1} accent icon={<HtmlTooltip title="Нарисовать профиль"><PenIcon /></HtmlTooltip>} aria-label="draw" />
+      <Tab value={0} accent icon={<HtmlTooltip title="Выделить и сдвинуть" placement="right"><CursorIcon /></HtmlTooltip>} aria-label="select" />
+      <Tab value={1} accent icon={<HtmlTooltip title="Нарисовать профиль" placement="right"><PenIcon /></HtmlTooltip>} aria-label="draw" />
     </Tabs>
     <Box sx={{flex: 1}} />
-    <HtmlTooltip title={show3d ? 'Скрыть вид 3D' : 'Показать вид 3D'}>
+    <HtmlTooltip title={show3d ? 'Скрыть вид 3D' : 'Показать вид 3D'} placement="right">
       <IconButton sx={{ml: 1}} onClick={toggle3D}><Show3dIcon show3d={show3d}/></IconButton>
     </HtmlTooltip>
   </Vertical>

@@ -8,11 +8,11 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import CloseIcon from '@mui/icons-material/Close';
 import CalculateIcon from '@mui/icons-material/Calculate';
-import ArchitectureIcon from '@mui/icons-material/Architecture';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
 import {useNavigate} from 'react-router-dom';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 import {useLoadingContext} from '../../aggregate/Metadata';
+import TestProducts from './TestProducts';
 
 export default function MainToolbar({context}) {
   const navigate = useNavigate();
@@ -41,9 +41,7 @@ export default function MainToolbar({context}) {
       <IconButton onClick={recalc}><CalculateIcon/></IconButton>
     </HtmlTooltip>
     <Divider orientation="vertical" sx={{mx: 1}} flexItem />
-    <HtmlTooltip title="Загрузить из шаблона">
-      <IconButton onClick={template}><ArchitectureIcon/></IconButton>
-    </HtmlTooltip>
+    <TestProducts editor={editor} />
     <HtmlTooltip title="Скопировать в буфер обмена">
       <IconButton onClick={recalc}><CopyAllIcon/></IconButton>
     </HtmlTooltip>
