@@ -1,9 +1,14 @@
 
 import dialogs from './dialogs';
+import qs from 'qs';
 
 export default function ui($p) {
 
   const {md, utils, classes} = $p;
+  utils.prm = function prm() {
+    return qs.parse(location.search.replace('?',''));
+  };
+
   $p.ui = {dialogs};
 
   const {ResizeObserver: NativeObserver} = window;

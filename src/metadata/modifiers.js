@@ -18,8 +18,7 @@ import documents from "./doc";
 // модификаторы отчетов
 //import reports from "./reports";
 
-import qs from 'qs';
-import ui from '../packages/ui';
+import ui from 'metadata-ui';
 import drawer from '../drawer/editor';
 import './aggregate/rubles';
 import scale_svg from './aggregate/scale_svg';
@@ -27,9 +26,6 @@ import scale_svg from './aggregate/scale_svg';
 
 export default function ($p) {
   ui($p);
-  $p.utils.prm = function prm() {
-    return qs.parse(location.search.replace('?',''));
-  };
   catalogs($p);
   documents($p);
   drawer($p);
