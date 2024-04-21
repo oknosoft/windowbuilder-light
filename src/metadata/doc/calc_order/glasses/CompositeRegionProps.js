@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import ParamField from '../../../../packages/ui/DataField/ParamField';
-import RefField from '../../../../packages/ui/DataField/RefField';
+import ParamField from 'metadata-ui/DataField/ParamField';
+import RefField from 'metadata-ui/DataField/RefField';
 
 export default function CompositeRegionProps({elm, glRow}) {
   if (!glRow) {
