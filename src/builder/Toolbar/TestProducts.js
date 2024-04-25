@@ -77,7 +77,7 @@ function testProducts({editor, handleClose}) {
     },
 
     grid20() {
-      grid100(null, 14);
+      grid100(null, 6);
     },
 
     grid100,
@@ -118,7 +118,7 @@ export default function TestProducts({editor}) {
       }}
     >
       <MenuItem onClick={imposts}>Импосты</MenuItem>
-      <MenuItem onClick={grid20}>Сетка 14</MenuItem>
+      <MenuItem onClick={grid20}>Сетка 6</MenuItem>
       <MenuItem onClick={grid100}>Сетка 40</MenuItem>
     </Menu>
   </>;
