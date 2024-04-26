@@ -4,7 +4,7 @@ import Loading from '../App/Loading';
 import {useLoadingContext} from '../Metadata';
 import Toolbar from './TaskToolbar';
 import {renderCheckbox} from './Formatters';
-import {schemas, initScheme, tgt} from './data';
+import {schemas, initScheme} from './data';
 
 export default function RMDRemainders() {
 
@@ -14,6 +14,7 @@ export default function RMDRemainders() {
   const scheme = rmd?.scheme || schemas.find(({ref}) => ref === initScheme);
 
   const columns = React.useMemo(() => {
+    const {tgt} = rmd;
     const {fields} = tgt._metadata('set');
     return scheme.rx_columns({mode: 'ts', fields, _mgr: tgt._manager});
   }, []);

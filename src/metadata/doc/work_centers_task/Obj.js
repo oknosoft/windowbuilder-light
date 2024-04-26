@@ -52,7 +52,6 @@ export default function WorkCentersTaskObj() {
     message: 'Документ изменён -- закрыть без сохранения?'
   });
 
-  //useBeforeUnload(update);
   //
   React.useEffect(function prompt() {
     function update (curr, flds){
@@ -85,7 +84,7 @@ export default function WorkCentersTaskObj() {
   const curr = setting.tabs.filter(({visible}) => visible)[tab];
 
   return <Root>
-    <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} />
+    <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} modified={modified} setModified={setModified}/>
     <ObjHead obj={obj} setting={setting}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
     {curr.name === 'planning' && <ObjPlan obj={obj} tabRef={tabRef} />}

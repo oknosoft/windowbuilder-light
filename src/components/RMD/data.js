@@ -32,7 +32,6 @@ function rx_columns(attr) {
 
 export const title = 'РМД';
 export const dp = rep.planning.create({phase: 'run'});
-export let tgt = work_centers_task.create({date: new Date()}, false, true);
 export const schemas = scheme_settings
   .find_schemas('rep.planning.data', true)
   .sort(utils.sort('order'))
@@ -52,9 +51,16 @@ export const setScheme = (handleIfaceState, rmd, ref) => {
   wsql.set_user_param('rmd.scheme', ref);
   handleIfaceState({rmd: Object.assign({}, rmd, {scheme: scheme_settings.get(ref)})});
 };
-export const setTgt = (handleIfaceState, rmd, doc) => {
-  tgt = doc;
+
+
+export const setTgt = (handleIfaceState, rmd, tgt) => {
   handleIfaceState({rmd: Object.assign({}, rmd, {tgt})});
+};
+
+export const checkTgt = (handleIfaceState, rmd) => {
+  if(!rmd?.tgt) {
+    setTgt(handleIfaceState, rmd, work_centers_task.create({date: new Date()}, false, true));
+  }
 };
 
 // перезаполняет табчасть при изменении основного отбора
@@ -101,6 +107,7 @@ export const query = async ({rmd, scheme, handleIfaceState}) => {
 
 // фильтрует табчасть при изменении второстепенного отбора
 export const filter = ({rmd, scheme, handleIfaceState}) => {
+  const {tgt} = rmd;
   const rows = [], tgtrows = [];
   for(const row of dp.data) {
     const {obj, work_center, work_shift, date} = row;

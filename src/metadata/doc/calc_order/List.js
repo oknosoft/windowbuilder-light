@@ -20,9 +20,11 @@ const listName = 'Расчёты-заказы (список)';
 const title =  {
   title: listName,
   appTitle: <>
-    <Typography variant="h6" noWrap>{listName}</Typography>
-    <Typography sx={{flex: 1}}></Typography>
-    <GoTo items={[{name: 'РМД', path: '/rmd'}]}/>
+    <Typography variant="h6" sx={{flex: 1}} noWrap>{listName}</Typography>
+    <GoTo items={[
+      {name: 'РМД', path: '/rmd'},
+      {name: 'Задания на производство', path: '/doc/work_centers_task'},
+    ]}/>
   </>};
 
 function loadMoreRows(newRowsCount, skip, ref, backdrop) {

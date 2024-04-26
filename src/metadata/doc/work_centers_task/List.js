@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import DataGrid from 'react-data-grid';
 import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
+import GoTo from '../../../components/App/GoTo';
 import {useTitleContext, useBackdropContext} from '../../../components/App';
 import ListToolbar from '../../aggregate/ListToolbar';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../dataGrid';
@@ -16,7 +17,13 @@ const {fields} = work_centers_task.metadata();
 const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: work_centers_task});
 
 const listName = 'Задания на производство (список)';
-const title =  {title: listName, appTitle: <Typography variant="h6" noWrap>{listName}</Typography>};
+const title =  {title: listName, appTitle: <>
+    <Typography variant="h6" sx={{flex: 1}} noWrap>{listName}</Typography>
+    <GoTo items={[
+      {name: 'РМД', path: '/rmd'},
+      {name: 'Расчёты-заказы', path: '/doc/calc_order'},
+    ]}/>
+  </>};
 
 function loadMoreRows(newRowsCount, skip, ref, backdrop) {
 

@@ -16,6 +16,10 @@ export function RmdHead({handleIfaceState, rmd}) {
       {schemas.map((scheme) => <Tab key={scheme.ref} value={scheme.ref} label={scheme.name} />)}
     </Tabs>
     <Typography sx={{flex: 1}}></Typography>
-    <GoTo items={[{name: 'Расчёты-заказы', path: '/doc/calc_order'}]}/>
+    <GoTo items={[
+      {name: 'Расчёты-заказы', path: '/doc/calc_order'},
+      {name: 'Текущее задание', path: `/doc/work_centers_task/${rmd?.tgt?.ref}?return=/rmd&modified=false`},
+      {name: 'Список заданий', path: '/doc/work_centers_task'},
+    ]}/>
   </>;
 }

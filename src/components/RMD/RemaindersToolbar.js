@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import {Toolbar, HtmlTooltip} from '../App/styled';
 import RefField from '../../packages/ui/DataField/RefField';
 import Text from '../../packages/ui/DataField/Text';
-import {dp, tgt, query, filter} from './data';
+import {dp, query, filter} from './data';
 
 const slot = {
   input: {
@@ -22,6 +22,7 @@ const labelProps = {style: {textAlign: 'center', top: -2}};
 export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelectedRows, handleIfaceState}) {
 
   const include = () => {
+    const {tgt} = rmd;
     for(const index of selectedRows) {
       const src = rmd.rows[index];
       const row = tgt.set.add(src);

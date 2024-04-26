@@ -13,11 +13,18 @@ import {Toolbar, HtmlTooltip} from '../../components/App/styled';
 import PostBtn from './PostBtn';
 import MenuPrint from './MenuPrint';
 
-export default function ObjToolbar({obj, mgr, setSettingOpen}) {
+const {utils} = $p;
+
+export default function ObjToolbar({obj, mgr, setSettingOpen, modified, setModified}) {
   const navigate = useNavigate();
   const {close, recalc, save, saveClose} = React.useMemo(() => {
     const close = () => {
-      navigate(`/${mgr.class_name.replace('.', '/')}${obj?.ref ? `?ref=${obj.ref}` : ''}`);
+      const searchParams = utils.prm();
+      const url = searchParams.return || `/${mgr.class_name.replace('.', '/')}${obj?.ref ? `?ref=${obj.ref}` : ''}`;
+      if(searchParams.modified === 'false' && (modified || obj._modified)) {
+        setModified(false);
+      }
+      setTimeout(() => navigate(url));
     };
     const recalc = () => obj.recalc();
     const save = () => obj.save();
