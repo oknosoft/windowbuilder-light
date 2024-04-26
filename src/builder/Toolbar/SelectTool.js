@@ -33,6 +33,7 @@ export default function SelectTool({show3d, toggle3D}) {
 
   const handleChange = (event, newValue) => {
     setTool(newValue);
+    editor.tools[newValue]?.activate?.();
   };
 
   return <Vertical>

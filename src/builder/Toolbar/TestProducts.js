@@ -8,8 +8,6 @@ import {HtmlTooltip} from '../../aggregate/App/styled';
 
 function testProducts({editor, handleClose}) {
 
-  const {project} = editor;
-
   function grid100(ev, count) {
     if(typeof count !== 'number') {
       count = 39;
@@ -18,6 +16,7 @@ function testProducts({editor, handleClose}) {
     const step = count > 20 ? 400 : 600;
     const size = step * count;
 
+    const {project} = editor;
     const {activeLayer, props} = project;
     props.loading = true;
     for(const profile of activeLayer.profiles.reverse()) {
@@ -51,7 +50,7 @@ function testProducts({editor, handleClose}) {
 
   return {
     imposts() {
-
+      const {project} = editor;
       const {activeLayer, props} = project;
       props.loading = true;
       for(const profile of activeLayer.profiles.reverse()) {
