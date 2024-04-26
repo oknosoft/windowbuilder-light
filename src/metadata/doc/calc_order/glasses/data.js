@@ -21,6 +21,8 @@ export function rowKeyGetter(row) {
   return row.key;
 }
 
+const importParams = [$p.cch.properties.by_name('Маркировка')];
+
 export function createGlasses({obj}){
   const glasses = [];
   for(const prow of obj.production) {
@@ -166,13 +168,20 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   const load = async (text) => {
     const irows = [];
+    const iparams = new Map();
     const regex = /-|_|\*|х|Х|X|x/g;
     for(const row of text.split('\n')) {
       const values = row.split('\t');
       let strings = 0;
       let numbers = 0;
       let newRow;
-      for(const raw of values) {
+      values.forEach((raw, index) => {
+        if(!irows.length && raw) {
+          const prm = importParams.find(param => param.name.toLowerCase() == raw.toLowerCase());
+          if(prm) {
+            iparams.set(index, prm);
+          }
+        }
         const formula = (!strings && regex.test(raw)) ? raw.replace(regex, 'x') : '';
         const n = formula ? NaN : parseFloat(raw.replace(/\s/, ''));
         if(isNaN(n) || newRow && numbers >= 3) {
@@ -180,7 +189,13 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
             newRow = {formula, note: []};
           }
           if(strings && raw) {
-            newRow.note.push(raw);
+            const prm = iparams.get(index);
+            if(prm) {
+              newRow[prm.ref] = raw;
+            }
+            else {
+              newRow.note.push(raw);
+            }
           }
           strings++;
         }
@@ -196,7 +211,8 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
           }
           numbers++;
         }
-      }
+      });
+
       if(newRow?.formula && newRow.height) {
         if(!newRow.quantity) {
           newRow.quantity = 1;
@@ -211,7 +227,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       setBackdrop(true);
       const newRows = [];
       const problems = new Set();
-      for(const {formula, len, height, quantity, note} of irows) {
+      for(const {formula, len, height, quantity, note, ...params} of irows) {
         const candidates = [];
         let clarification;
         for(const inset of ilist) {
@@ -281,6 +297,13 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
           newRows.push({type: 'MASTER', expanded: false, row, key: row.row});
           const tmp = utils._clone(job_prm.builder.glasses_template.toJSON());
           utils._mixin(row.characteristic._set_loaded(), tmp, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name'.split(','), true);
+          // параметры из колонок
+          for(const param in params) {
+            const prow = row.characteristic.params.find({cnstr: 0, param});
+            if(prow) {
+              prow.value = params[param];
+            }
+          }
           await row.createEditor();
           const {editor: {project, eve}, glassRow} = row;
           const glass = row.editor.elm(glassRow.elm);
