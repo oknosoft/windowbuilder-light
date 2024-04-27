@@ -1,6 +1,8 @@
+import pluginBuilder from './builder/plugin';
+import pluginCat from './catalogs/plugin'
 
-import catClasses from './catalogs/meta'
-
-const plugins = [...catClasses];
-
-export default plugins;
+export default function plugins(...args) {
+  for(const plugin of [...pluginCat, ...pluginBuilder]) {
+    plugin(...args);
+  }
+};

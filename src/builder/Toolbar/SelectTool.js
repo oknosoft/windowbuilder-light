@@ -22,18 +22,20 @@ const Vertical = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   position: 'absolute',
   width: 50,
-  backgroundColor: theme.palette.grey["50"],
+  backgroundColor: theme.palette.grey['50'],
   paddingTop: theme.spacing(),
   height: '100%',
 }));
 
 export default function SelectTool({show3d, toggle3D}) {
   const [tool, setTool] = React.useState(0);
-  const {editor} = useBuilderContext();
+  const {editor, setContext} = useBuilderContext();
 
   const handleChange = (event, newValue) => {
     setTool(newValue);
-    editor.tools[newValue]?.activate?.();
+    const tool = editor.tools[newValue];
+    tool?.activate?.();
+    setContext({tool});
   };
 
   return <Vertical>

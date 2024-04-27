@@ -3,7 +3,8 @@ import {meta as coreMeta, classes as coreClasses, exclude as coreExclude} from '
 
 export const meta = {
   enm: {...coreMeta.enm},
-  cat: {...coreMeta.cat}
+  cat: {...coreMeta.cat},
+  dp: {...coreMeta.dp},
 };
 
 export const classes = [...coreClasses];
