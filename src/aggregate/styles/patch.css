@@ -65,6 +65,7 @@
 .cursor-arrow-ruler     { cursor: url(imgs/cursor-arrow-ruler.png) 3 1, default; }
 .cursor-arrow-ruler-light { cursor: url(imgs/cursor-arrow-ruler-light.png) 3 1, default; }
 .cursor-arrow-ruler-dis { cursor: url(imgs/cursor-arrow-ruler-dis.png) 3 1, default; }
+.cursor-autodesk        { cursor: url(imgs/cursor-autodesk.png) 16 16, default; }
 .cursor-pen-adjust      { cursor: url(imgs/cursor-pen-adjust.png) 5 2, default; }
 .cursor-zoom-in         { cursor: url(imgs/cursor-zoom-in.png) 7 7, default; }
 .cursor-zoom-out        { cursor: url(imgs/cursor-zoom-out.png) 7 7, default; }

@@ -15,9 +15,9 @@ function PenWnd({editor, layer}) {
   }
 
   const [elm_type, set_elm_type] = React.useState(profile.elm_type);
-  const elm_type_change = ({target}) => {
-    profile.elm_type = target.value;
-    profile.inset = project.default_inset({elm_type: profile.elm_type, elm: project});
+  const elm_type_change = (value) => {
+    profile.elm_type = value;
+    //profile.inset = project.default_inset({elm_type: profile.elm_type, elm: project});
     set_elm_type(profile.elm_type);
   };
 
