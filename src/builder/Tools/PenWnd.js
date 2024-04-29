@@ -27,8 +27,10 @@ function PenWnd({editor, layer}) {
       <Input readOnly value={layer?.presentation ? layer.presentation() : '-'}/>
     </FormControl>
     <RefField obj={profile} fld="elm_type" onChange={elm_type_change}/>
+    {/*
     <Checkbox obj={profile} fld="bind_generatrix" />
     <Checkbox obj={profile} fld="bind_node" />
+    */}
     <Checkbox obj={profile} fld="bind_sys" />
     <NumberField obj={profile} fld="grid"/>
   </>;

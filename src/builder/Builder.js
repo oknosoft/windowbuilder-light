@@ -10,6 +10,12 @@ const {EditorInvisible} = geometry;
 
 export const Row = styled('div')(() => ({height: '100%'}));
 
+function resetContex(ev) {
+  ev.preventDefault();
+  ev.stopPropagation();
+  return false;
+}
+
 export default function Builder({context, width, handleColor, resizeStop}) {
 
   let {editor, setContext} = context;
@@ -53,7 +59,12 @@ export default function Builder({context, width, handleColor, resizeStop}) {
     <ResizeVertical height={show3d ? "60%" : "95%"} minHeight="400px">
       <Row>
         <SelectTool show3d={show3d} toggle3D={toggle3D} />
-        <canvas key="builder-canvas" ref={createEditor} style={{left: 51, width: '100%', height: '100%'}}/>
+        <canvas
+          key="builder-canvas"
+          ref={createEditor}
+          style={{left: 51, width: '100%', height: '100%'}}
+          onContextMenu={resetContex}
+        />
       </Row>
     </ResizeVertical>
     <ResizeVertical minHeight={show3d ? "40%" : "5%"} show={show3d}>
