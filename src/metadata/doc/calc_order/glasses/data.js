@@ -110,6 +110,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     }
     const tmp = utils._clone(proto.toJSON());
     utils._mixin(row.characteristic, tmp, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name'.split(','), true);
+    row.calc_order_row.note = tmp.note;
     const newRow = {
       type: 'MASTER',
       expanded: false,
@@ -128,7 +129,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   const clone = () => {
     const row = getRow();
-    return add(row ? row.characteristic: null);
+    return add(row?.row?.characteristic);
   };
 
   const del = async () => {
