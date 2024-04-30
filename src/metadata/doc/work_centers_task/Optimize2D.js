@@ -1,33 +1,11 @@
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import FilterListOffIcon from '@mui/icons-material/FilterListOff';
+import SegmentIcon from '@mui/icons-material/Segment';
+import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import {HtmlTooltip} from '../../../components/App/styled';
 
-function params(obj) {
-  const res = {
-    products: [],
-    scraps: [],
-    options: {}
-  };
-  for(const row of obj.cuts) {
-    if(row.record_kind.empty()) {
-      row.record_kind = 'debit';
-    }
-    if(!row.stick) {
-      row.stick = obj.cuts.aggregate([], ['stick'], 'max') + 1;
-    }
-    if(row.record_kind.is('debit') && row.width && row.len && row.quantity) {
-      res.scraps.push({stick: row.stick, length: row.len, height: row.width, quantity: row.quantity});
-    }
-  }
-  for(const row of obj.cutting) {
-    if(row.width && row.len) {
-      res.products.push({id: row.row, length: row.len, height: row.width, quantity: 1, info: row.row});
-    }
-  }
-  return res;
-}
+const {adapters: {pouch}, ui: {dialogs}, utils, classes} = $p;
 
 function setSticks(obj, data) {
   if(data.error) {
@@ -69,12 +47,35 @@ function resetSticks(obj) {
   }
 }
 
+export function run1D(obj, setBackdrop) {
+  return () => {
+    setBackdrop(true);
+    return (classes.Cutting ? Promise.resolve() : import('wb-cutting')
+      .then((module) => classes.Cutting = module.default))
+      .then(() => obj.optimize({}))
+      .then((res) => {
+        setBackdrop(false);
+        return res;
+      })
+      .catch((err) => {
+        setBackdrop(false);
+        dialogs.alert({
+          title: 'Раскрой 2D',
+          text: err?.message || err,
+        });
+      });
+  };
+}
+
 export default function Optimize2D({setBackdrop, obj}) {
 
-  const run = () => Promise.resolve(params(obj))
+  const run2D = () => Promise.resolve(obj.fragments2D())
     .then((params) => {
+      if(!params.products.length || !params.scraps.length) {
+        throw new Error('В задании нет изделий или заготовок для раскроя 2D');
+      }
       setBackdrop(true);
-      return $p.adapters.pouch.fetch('/adm/api/cut', {
+      return pouch.fetch('/adm/api/cut', {
         method: 'POST',
         body: JSON.stringify(params),
       });
@@ -84,15 +85,21 @@ export default function Optimize2D({setBackdrop, obj}) {
     .then(() => setBackdrop(false))
     .catch((err) => {
       setBackdrop(false);
-      alert(err?.message || err);
+      dialogs.alert({
+        title: 'Раскрой 2D',
+        text: err?.message || err,
+      });
     });
 
   return <>
+    <HtmlTooltip title="Оптимизировать раскрой профиля">
+      <IconButton onClick={run1D(obj, setBackdrop)}><SegmentIcon/></IconButton>
+    </HtmlTooltip>
     <HtmlTooltip title="Оптимизировать раскрой 2D">
-      <IconButton onClick={run}><FilterListIcon/></IconButton>
+      <IconButton onClick={run2D}><ViewQuiltIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Удалить данные оптимизации раскроя">
-      <IconButton onClick={() => resetSticks(obj)}><FilterListOffIcon/></IconButton>
+      <IconButton onClick={() => resetSticks(obj)}><PlaylistRemoveIcon/></IconButton>
     </HtmlTooltip>
   </>;
 }

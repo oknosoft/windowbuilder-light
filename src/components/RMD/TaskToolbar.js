@@ -3,13 +3,16 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import BalanceOutlinedIcon from '@mui/icons-material/BalanceOutlined';
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import UTurnLeftIcon from '@mui/icons-material/UTurnLeft';
+import {useBackdropContext} from '../App';
 import {Toolbar, HtmlTooltip} from '../App/styled';
 import {filter} from './data';
+import {run1D} from '../../metadata/doc/work_centers_task/Optimize2D';
 
 
 export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows, handleIfaceState}) {
+
+  const {setBackdrop} = useBackdropContext();
 
   const {tgt} = rmd;
   const exclude = () => {
@@ -22,6 +25,10 @@ export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows,
 
   const cutting = () => {
     tgt.fill_by_keys({c2d: true});
+    run1D(tgt, setBackdrop)()
+      .then((res) => {
+        console.log(res.statuses.length);
+      });
   };
 
   return <Toolbar disableGutters>
