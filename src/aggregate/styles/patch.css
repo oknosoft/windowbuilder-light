@@ -21,6 +21,35 @@
   }
 }
 
+.sz_div {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: radial-gradient(ellipse, #fff, rgba(255,255,255,.4));
+}
+.sz_div2 {
+  display: flex;
+}
+
+.sz_btn {
+  margin: 2px;
+  width: 22px;
+  height: 22px;
+  background-position: 1px 1px;
+  cursor: pointer;
+}
+.sz_btn:hover {
+  background-color: #ccc;
+}
+
+.sz_input {
+  padding: 2px;
+  width: 4rem;
+  text-align: center;
+  border: none;
+}
+
 .tb_img_cnn_ad {background-image: url(imgs/cnn-ad.png);}
 .tb_img_cnn_i {background-image: url(imgs/cnn-i.png);}
 .tb_img_cnn_ii {background-image: url(imgs/cnn-ii.png);}

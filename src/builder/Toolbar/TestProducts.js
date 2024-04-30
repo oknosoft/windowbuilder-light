@@ -8,6 +8,15 @@ import {HtmlTooltip} from '../../aggregate/App/styled';
 
 function testProducts({editor, handleClose}) {
 
+  function clear(activeLayer) {
+    for(const profile of activeLayer.profiles.reverse()) {
+      profile.remove();
+    }
+    activeLayer.children.dimensions.clear();
+    activeLayer.children.dimensions.removeChildren();
+    activeLayer.children.visualization.clear();
+  }
+
   function grid100(ev, count) {
     if(typeof count !== 'number') {
       count = 39;
@@ -19,9 +28,7 @@ function testProducts({editor, handleClose}) {
     const {project} = editor;
     const {activeLayer, props} = project;
     props.loading = true;
-    for(const profile of activeLayer.profiles.reverse()) {
-      profile.remove();
-    }
+    clear(activeLayer);
     const profiles = [];
     // стойки
     for(let x = 0; x < size; x += step) {
@@ -53,9 +60,7 @@ function testProducts({editor, handleClose}) {
       const {project} = editor;
       const {activeLayer, props} = project;
       props.loading = true;
-      for(const profile of activeLayer.profiles.reverse()) {
-        profile.remove();
-      }
+      clear(activeLayer);
       const profiles = [
         activeLayer.createProfile({b: [1400, 1000], e: [100, 1000]}),
         activeLayer.createProfile({b: [100, 1000], e: [100, 0]}),
