@@ -57,7 +57,7 @@ function testProducts({editor, handleClose}) {
 
   return {
     imposts() {
-      const {project} = editor;
+      const {project, DimensionLine} = editor;
       const {activeLayer, props} = project;
       props.loading = true;
       clear(activeLayer);
@@ -73,6 +73,26 @@ function testProducts({editor, handleClose}) {
       for(const profile of profiles) {
         activeLayer.skeleton.addProfile(profile);
       }
+      new DimensionLine({
+        parent: activeLayer.children.dimensions,
+        project,
+        elm1: profiles[0],
+        elm2: profiles[0],
+        p1: 'b',
+        p2: 'e',
+        pos: 'bottom',
+        offset: -180,
+      });
+      new DimensionLine({
+        parent: activeLayer.children.dimensions,
+        project,
+        elm1: profiles[3],
+        elm2: profiles[3],
+        p1: 'b',
+        p2: 'e',
+        pos: 'right',
+        offset: -180,
+      });
       props.loading = false;
       project.redraw();
       project.zoomFit();
