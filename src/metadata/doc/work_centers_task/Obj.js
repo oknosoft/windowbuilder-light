@@ -8,7 +8,7 @@ import {Root} from '../../aggregate/styled';
 import ObjToolbar from '../../aggregate/ObjToolbar';
 import ObjTabs from '../../aggregate/ObjTabs';
 import ObjHead from './ObjHead';
-import ObjPlan from './ObjPlan';
+import ObjPlan from './ObjRegistry';
 import ObjCutsIn from './ObjCutsIn';
 import ObjCutsOut from './ObjCutsOut';
 import ObjCutting from './ObjCutting';
@@ -37,7 +37,14 @@ export default function WorkCentersTaskObj() {
   React.useEffect(() => {
     const {ref} = params;
     mgr.get(ref, 'promise')
-      .then((doc) => doc.load_linked_refs())
+      .then((doc) => {
+        return doc.load_keys()
+          .then(() => doc.load_linked_refs())
+          .catch((err) => {
+            console.error(err);
+            return doc;
+          });
+      })
       .then(setObj)
       .catch(setError)
       .then(() => setBackdrop(false));

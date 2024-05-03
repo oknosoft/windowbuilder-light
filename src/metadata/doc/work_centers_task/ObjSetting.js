@@ -18,11 +18,11 @@ if(!Object.keys(setting).length) {
     {text: 'Комментарий, Сумма', visible: true}
   ];
   setting.tabs = [
-    {name: 'planning', text: 'Планирование', visible: true},
-    {name: 'demand', text: 'Потребность', visible: true},
     {name: 'cuts_in', text: 'Заготовки', visible: true},
     {name: 'cutting', text: 'Раскрой', visible: true},
     {name: 'cuts_out', text: 'Обрезь', visible: true},
+    {name: 'demand', text: 'Потребность', visible: false},
+    {name: 'planning', text: 'Планирование', visible: true},
   ];
 }
 

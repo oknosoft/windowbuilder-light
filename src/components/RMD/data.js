@@ -82,11 +82,12 @@ export const query = async ({rmd, scheme, handleIfaceState}) => {
     return key;
   }
   const keys = new Set();
-  for(const {ref, obj, specimen, elm, type, barcode, ...raw} of rows) {
+  for(const {ref, obj, specimen, elm, type, barcode, shift, ...raw} of rows) {
     if(ref) {
-      create({ref, obj, specimen, elm, type, id: Number(barcode)});
+      create({ref, obj, specimen, elm, type, id: Number(barcode), calc_order: raw.calc_order});
       raw.obj = ref;
       raw.phase = dp.phase;
+      raw.work_shift = shift;
       if(!calc_order.by_ref[raw.calc_order]) {
         keys.add(`${calc_order.class_name}|${raw.calc_order}`);
       }

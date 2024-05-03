@@ -27,7 +27,7 @@ export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelecte
       const src = rmd.rows[index];
       const row = tgt.set.add(src);
       row.record_kind = -1;
-      //row.phase = dp.phase;
+      row.phase = dp.phase;
     }
     setSelectedRows(new Set());
     filter({rmd, scheme, handleIfaceState});
