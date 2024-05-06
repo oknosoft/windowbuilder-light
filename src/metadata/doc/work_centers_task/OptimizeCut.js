@@ -3,7 +3,11 @@ import IconButton from '@mui/material/IconButton';
 import SegmentIcon from '@mui/icons-material/Segment';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
 import {HtmlTooltip} from '../../../components/App/styled';
+import CuttingReport from './CuttingReport';
 
 const {adapters: {pouch}, ui: {dialogs}, utils, classes} = $p;
 
@@ -40,25 +44,22 @@ function setSticks(obj, data) {
   }
 }
 
-function resetSticks(obj) {
-  for(const row of obj.cutting) {
-    row.stick = 0;
-    row.pair = 0;
-  }
-}
-
-export function run1D(obj, setBackdrop) {
+export function run1D(obj, setBackdrop, setExt) {
   return () => {
     setBackdrop(true);
+    setExt('Выполняем раскрой');
+    obj.reset_sticks('1D');
     return (classes.Cutting ? Promise.resolve() : import('wb-cutting')
       .then((module) => classes.Cutting = module.default))
       .then(() => obj.optimize({}))
       .then((res) => {
         setBackdrop(false);
+        setExt(null);
         return res;
       })
       .catch((err) => {
         setBackdrop(false);
+        setExt(null);
         dialogs.alert({
           title: 'Раскрой 2D',
           text: err?.message || err,
@@ -67,9 +68,9 @@ export function run1D(obj, setBackdrop) {
   };
 }
 
-export default function Optimize2D({setBackdrop, obj}) {
-
-  const run2D = () => Promise.resolve(obj.fragments2D())
+export function run2D(obj, setBackdrop) {
+  obj.reset_sticks('2D');
+  return () => Promise.resolve(obj.fragments2D())
     .then((params) => {
       if(!params.products.length || !params.scraps.length) {
         throw new Error('В задании нет изделий или заготовок для раскроя 2D');
@@ -90,16 +91,33 @@ export default function Optimize2D({setBackdrop, obj}) {
         text: err?.message || err,
       });
     });
+}
+
+export default function OptimizeCut({obj, setBackdrop, ext, setExt}) {
+
+  const report = () => {
+    if(ext) {
+      setExt(null);
+    }
+    else {
+      setExt(<CuttingReport obj={obj} />);
+    }
+  };
 
   return <>
+    <Divider orientation="vertical" flexItem sx={{m: 1}} />
     <HtmlTooltip title="Оптимизировать раскрой профиля">
-      <IconButton onClick={run1D(obj, setBackdrop)}><SegmentIcon/></IconButton>
+      <IconButton onClick={run1D(obj, setBackdrop, setExt)}><SegmentIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Оптимизировать раскрой 2D">
-      <IconButton onClick={run2D}><ViewQuiltIcon/></IconButton>
+      <IconButton onClick={run2D(obj, setBackdrop, setExt)}><ViewQuiltIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Удалить данные оптимизации раскроя">
-      <IconButton onClick={() => resetSticks(obj)}><PlaylistRemoveIcon/></IconButton>
+      <IconButton onClick={() => obj.reset_sticks()}><PlaylistRemoveIcon/></IconButton>
+    </HtmlTooltip>
+    <Box sx={{flex: 1}}/>
+    <HtmlTooltip title="Статистика раскроя">
+      <IconButton onClick={report}><AssessmentOutlinedIcon/></IconButton>
     </HtmlTooltip>
   </>;
 }

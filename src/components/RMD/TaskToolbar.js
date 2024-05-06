@@ -7,7 +7,7 @@ import UTurnLeftIcon from '@mui/icons-material/UTurnLeft';
 import {useBackdropContext} from '../App';
 import {Toolbar, HtmlTooltip} from '../App/styled';
 import {filter} from './data';
-import {run1D} from '../../metadata/doc/work_centers_task/Optimize2D';
+import {run1D} from '../../metadata/doc/work_centers_task/OptimizeCut';
 
 
 export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows, handleIfaceState}) {

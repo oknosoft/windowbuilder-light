@@ -3,8 +3,11 @@ import ObjTabular from './ObjTabular';
 import {NumberCell, NumberFormatter} from '../../../packages/ui/DataField/Number';
 import {PresentationFormatter} from '../../../packages/ui/DataField/RefField';
 import {TextFormatter} from '../../../packages/ui/DataField/Text';
+import {useLoadingContext} from '../../../components/Metadata';
+import {tabularStyle} from '../../dataGrid';
+import ToolbarTabular from './ToolbarTabular';
 import ClipBoard from '../../aggregate/ClipBoard';
-import Optimize2D from './Optimize2D';
+import OptimizeCut from './OptimizeCut';
 
 export const columns = [
   {key: "production", name: "Объект", width: 200, renderCell: PresentationFormatter},
@@ -49,17 +52,27 @@ const load = (obj) => {
   };
 };
 
+const stub = () => null;
+
 export default function ObjCutting({tabRef, obj, setBackdrop}) {
 
+  const rootStyle = tabularStyle(tabRef, useLoadingContext());
   const execute = React.useMemo(() => load(obj), [obj]);
+  const [ext, setExt] = React.useState(null);
+  const buttons = <>
+    <ClipBoard execute={execute}/>
+    <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt}/>
+  </>;
 
-  return <ObjTabular
-    tabRef={tabRef}
-    tabular={obj.cutting}
-    columns={columns}
-    buttons={<>
-      <ClipBoard execute={execute}/>
-      <Optimize2D obj={obj} setBackdrop={setBackdrop}/>
-    </>}
-  />;
+  return ext ?
+    <div style={rootStyle}>
+      <ToolbarTabular clear={stub} create={stub} clone={stub} remove={stub} buttons={buttons}/>
+      {ext}
+    </div> :
+    <ObjTabular
+      rootStyle={rootStyle}
+      tabular={obj.cutting}
+      columns={columns}
+      buttons={buttons}
+    />;
 }
