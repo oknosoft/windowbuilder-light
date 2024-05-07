@@ -56,6 +56,7 @@ export default function ObjCutsIn({tabRef, obj}) {
           columns={columns}
           rootStyle={{height: style.height - 50}}
           selectedRowsChange={selectedRowsChange}
+          selection={{record_kind: 'Расход'}}
         />
       </ResizeHorizon>
       <ResizeHorizon overflow="hidden auto" width={`${(style.width * 4/12).toFixed()}px`} minWidth="200px">

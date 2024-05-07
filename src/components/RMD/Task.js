@@ -10,6 +10,7 @@ export default function RMDRemainders() {
 
   const {handleIfaceState, ifaceState: {rmd}} = useLoadingContext();
   const [sortColumns, setSortColumns] = React.useState([]);
+  const [ext, setExt] = React.useState(null);
   const [selectedRows, setSelectedRows] = React.useState(new Set());
   const scheme = rmd?.scheme || schemas.find(({ref}) => ref === initScheme);
 
@@ -27,8 +28,8 @@ export default function RMDRemainders() {
     return rows.indexOf(row);
   }
   return <>
-    <Toolbar rmd={rmd} scheme={scheme} selectedRows={selectedRows} setSelectedRows={setSelectedRows} handleIfaceState={handleIfaceState}/>
-    <DataGrid
+    <Toolbar rmd={rmd} scheme={scheme} selectedRows={selectedRows} setSelectedRows={setSelectedRows} handleIfaceState={handleIfaceState} ext={ext} setExt={setExt}/>
+    {ext ? ext : <DataGrid
       columns={columns}
       rows={rows}
       rowKeyGetter={rowKeyGetter}
@@ -41,6 +42,6 @@ export default function RMDRemainders() {
       className="fill-grid"
       rowHeight={33}
       renderers={{ renderCheckbox }}
-    />
+    />}
   </>;
 }

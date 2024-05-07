@@ -4,13 +4,27 @@ import {useLoadingContext} from '../../../components/Metadata';
 import ToolbarTabular from './ToolbarTabular';
 import {cellKeyDown, tabularCreate, tabularStyle} from '../../dataGrid';
 
-export default function ObjTabular({tabRef, tabular, columns, buttons, rootStyle, selectedRowsChange}) {
+export default function ObjTabular({tabRef, tabular, selection, columns, buttons, rootStyle, selectedRowsChange}) {
 
   if(!rootStyle) {
     rootStyle = tabularStyle(tabRef, useLoadingContext());
   }
 
-  const [rows, setRows] = React.useState(Array.from(tabular));
+  if(!selection) {
+    selection = () => Array.from(tabular);
+  }
+  else {
+    const select = selection;
+    selection = () => {
+      const res = [];
+      tabular.find_rows(select, (row) => {
+        res.push(row);
+      });
+      return res;
+    };
+  }
+
+  const [rows, setRows] = React.useState(selection());
   const [selectedRows, rawSetSelectedRows] = React.useState(new Set());
   const setSelectedRows = (selectedRows) => {
     rawSetSelectedRows(selectedRows);
@@ -19,7 +33,7 @@ export default function ObjTabular({tabRef, tabular, columns, buttons, rootStyle
 
   React.useEffect(() => {
     const update = () => {
-      setRows(Array.from(tabular));
+      setRows(selection());
       setSelectedRows(new Set());
     };
     tabular._owner._manager.on('rows', update);

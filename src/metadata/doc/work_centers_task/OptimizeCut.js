@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import {HtmlTooltip} from '../../../components/App/styled';
 import CuttingReport from './CuttingReport';
+import CuttingProgress1D from './CuttingProgress1D';
 
 const {adapters: {pouch}, ui: {dialogs}, utils, classes} = $p;
 
@@ -44,14 +45,38 @@ function setSticks(obj, data) {
   }
 }
 
-export function run1D(obj, setBackdrop, setExt) {
+export function run1D(obj, setBackdrop, setExt, state) {
+
+  if(!state) {
+    state = {statuses: []};
+  }
+  // вызывается из раскроя
+  const onStep = (status) => {
+    const {nom, characteristic} = status.cut_row;
+    const statuses = utils._clone(state.statuses);
+    let row;
+    if(!statuses.some((elm) => {
+      if(elm.nom === nom && elm.characteristic === characteristic) {
+        row = elm;
+        return true;
+      }
+    })) {
+      row = {nom, characteristic};
+      statuses.push(row);
+    }
+    Object.assign(row, status);
+    Object.assign(state, {statuses});
+    
+    setExt(<CuttingProgress1D statuses={statuses}/>);
+  };
+
   return () => {
     setBackdrop(true);
-    setExt('Выполняем раскрой');
+    setExt(<CuttingProgress1D statuses={state.statuses}/>);
     obj.reset_sticks('1D');
     return (classes.Cutting ? Promise.resolve() : import('wb-cutting')
       .then((module) => classes.Cutting = module.default))
-      .then(() => obj.optimize({}))
+      .then(() => obj.optimize({onStep, state}))
       .then((res) => {
         setBackdrop(false);
         setExt(null);
@@ -95,6 +120,8 @@ export function run2D(obj, setBackdrop) {
 
 export default function OptimizeCut({obj, setBackdrop, ext, setExt}) {
 
+  const state = React.useMemo(() => ({statuses: []}), [obj]);
+
   const report = () => {
     if(ext) {
       setExt(null);
@@ -107,7 +134,7 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt}) {
   return <>
     <Divider orientation="vertical" flexItem sx={{m: 1}} />
     <HtmlTooltip title="Оптимизировать раскрой профиля">
-      <IconButton onClick={run1D(obj, setBackdrop, setExt)}><SegmentIcon/></IconButton>
+      <IconButton onClick={run1D(obj, setBackdrop, setExt, state)}><SegmentIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Оптимизировать раскрой 2D">
       <IconButton onClick={run2D(obj, setBackdrop, setExt)}><ViewQuiltIcon/></IconButton>
