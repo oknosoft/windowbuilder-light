@@ -56,7 +56,7 @@ export default function Builder({context, width, handleColor, resizeStop}) {
   };
 
   return <Resize handleWidth="6px" handleColor={handleColor} onResizeStop={resizeStop}>
-    <ResizeVertical height={show3d ? "60%" : "95%"} minHeight="400px">
+    <ResizeVertical height={show3d ? "50%" : "95%"} minHeight="400px">
       <Row>
         <SelectTool show3d={show3d} toggle3D={toggle3D} />
         <canvas
@@ -67,7 +67,7 @@ export default function Builder({context, width, handleColor, resizeStop}) {
         />
       </Row>
     </ResizeVertical>
-    <ResizeVertical minHeight={show3d ? "40%" : "5%"} show={show3d}>
+    <ResizeVertical minHeight={show3d ? "50%" : "5%"} show={show3d}>
       {show3d ? Wraper(Canvas3D) : null}
     </ResizeVertical>
   </Resize>;
