@@ -1,5 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
 import DataGrid from 'react-data-grid';
 import {useNavigate} from 'react-router-dom';
 import {Content} from '../../../components/App/styled';
@@ -64,9 +65,17 @@ export default function CalcOrderList() {
   const [selectedRows, setSelectedRows] = React.useState(new Set());
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
+  const [refresh, rawSetRefresh] = React.useState(0);
   const navigate = useNavigate();
   const backdrop = useBackdropContext();
   const {setTitle} = useTitleContext();
+
+  // для обновления динсписка
+  const setRefresh = () => {
+    setSelectedRows(new Set());
+    setRows([]);
+    rawSetRefresh(refresh + 1);
+  };
 
   React.useEffect(() => {
     setTitle(title);
@@ -100,7 +109,7 @@ export default function CalcOrderList() {
         });
       })
       .catch(setError);
-  }, []);
+  }, [refresh]);
 
   const [create, clone, open] = mgrCreate({mgr: calc_order, navigate, selectedRows, backdrop});
 
@@ -116,19 +125,29 @@ export default function CalcOrderList() {
   });
 
   return <Content>
-    <Toolbar create={create} clone={clone} open={open} disabled={Boolean(error)}/>
-    {error ? error.message : <DataGrid
-      columns={columns}
-      rows={rows}
-      rowKeyGetter={rowKeyGetter}
-      onRowsChange={setRows}
-      selectedRows={selectedRows}
-      onSelectedRowsChange={setSelectedRows}
-      onCellClick={onCellClick}
-      onCellDoubleClick={open}
-      onCellKeyDown={onCellKeyDown}
-      className="fill-grid"
-      rowHeight={33}
-    />}
+    <Toolbar create={create} clone={clone} open={open} disabled={Boolean(error)} scheme={scheme} setRefresh={setRefresh}/>
+    {error ? error.message :
+      <Grid container spacing={0}>
+    <Grid xs={12} md={10} style={{height: `calc(100vh - 101px)`}}>
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        rowKeyGetter={rowKeyGetter}
+        onRowsChange={setRows}
+        selectedRows={selectedRows}
+        onSelectedRowsChange={setSelectedRows}
+        onCellClick={onCellClick}
+        onCellDoubleClick={open}
+        onCellKeyDown={onCellKeyDown}
+        className="fill-grid"
+        rowHeight={33}
+      />
+    </Grid>
+    <Grid xs={0} md={2}>
+      xs=0 md=3
+    </Grid>
+  </Grid>
+
+      }
   </Content>;
 }

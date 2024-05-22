@@ -3,9 +3,11 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
 import CopyIcon from '@mui/icons-material/PostAdd';
 import EditIcon from '@mui/icons-material/DriveFileRenameOutline';
+import Typography from '@mui/material/Typography';
 import {Toolbar, HtmlTooltip} from '../../components/App/styled';
+import SearchField from './Search';
 
-export default function ListToolbar({create, clone, open, disabled}) {
+export default function ListToolbar({create, clone, open, disabled, scheme, setRefresh}) {
 
   return <Toolbar disableGutters disabled={disabled}>
     <HtmlTooltip title="Создать документ {Insert}">
@@ -17,5 +19,7 @@ export default function ListToolbar({create, clone, open, disabled}) {
     <HtmlTooltip title="Изменить документ">
       <IconButton onClick={open}><EditIcon/></IconButton>
     </HtmlTooltip>
+    <Typography sx={{flex: 1}}></Typography>
+    <SearchField scheme={scheme} setRefresh={setRefresh} />
   </Toolbar>;
 }
