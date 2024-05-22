@@ -18,25 +18,23 @@ function PaperComponent(props) {
   );
 }
 
-export default function DraggableDialog({open, onClose, onOk, title, children, actions}) {
+export default function DraggableDialog({open, onClose, onOk, title, raw, children, actions, ...other}) {
 
   return <Dialog
     open={open}
     onClose={onClose}
     PaperComponent={PaperComponent}
     aria-labelledby="draggable-dialog-title"
+    {...other}
   >
     {title ? <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">{title}</DialogTitle> : null}
-    <DialogContent>
-      {children}
-    </DialogContent>
-    <DialogActions>
+    {raw ? children : null}
+    {!raw ? <DialogContent>{children}</DialogContent> : null}
+    {!raw ? <DialogActions>
       {actions || <>
-        <Button autoFocus onClick={onClose}>
-          Отмена
-        </Button>
+        <Button autoFocus onClick={onClose}>Отмена</Button>
         <Button onClick={onOk || onClose}>Ок</Button>
       </>}
-    </DialogActions>
+    </DialogActions> : null}
   </Dialog>;
 }

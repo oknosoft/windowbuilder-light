@@ -2,6 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '../../../packages/ui/DataField/Text';
 import RefField from '../../../packages/ui/DataField/RefField';
+import PartnerField from '../../../packages/ui/PartnerField';
 import {NumberField} from '../../../packages/ui/DataField/Number';
 
 export default function ObjHead({obj}) {
@@ -10,7 +11,7 @@ export default function ObjHead({obj}) {
       <TextField label="Номер" value={obj.number_doc} enterTab/>
       <TextField label="Дата" value={moment(obj.date).format(moment._masks.date)} enterTab/>
       <RefField obj={obj} fld="organization" enterTab/>
-      <RefField obj={obj} fld="partner" enterTab/>
+      <PartnerField obj={obj} fld="partner" enterTab/>
     </Grid>
     <Grid xs={12} lg={4}>
       <RefField obj={obj} fld="contract" enterTab/>
