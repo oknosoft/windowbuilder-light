@@ -20,7 +20,7 @@ html, body, input, textarea, select, button {
   left: 48%;
   margin-left: -255px;
   margin-top: 140px;
-  background-image: url(splash.gif);
+  background-image: url(imgs/splash.gif);
 }
 .description {
   position: absolute;
