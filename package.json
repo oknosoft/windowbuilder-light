@@ -19,6 +19,7 @@
     "@oknosoft/metadata": "file:../metadata-v3",
     "@oknosoft/ui": "file:../metadata-ui/dist",
     "@oknosoft/wb/core": "file:../wb-core-v3",
+    "@react-three/csg": "^3.2.0",
     "@react-three/drei": "^9.105",
     "@react-three/fiber": "^8.16",
     "deep-equal": "^2.2.3",
