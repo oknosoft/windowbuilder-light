@@ -8,12 +8,12 @@ import {HtmlTooltip} from '../../aggregate/App/styled';
 
 function testProducts({editor, handleClose}) {
 
-  function clear(activeLayer) {
+  function clear(activeLayer, project) {
     for(const profile of activeLayer.profiles.reverse()) {
       profile.remove();
     }
-    activeLayer.children.dimensions.clear();
-    activeLayer.children.dimensions.removeChildren();
+    project.dimensions.clear();
+    project.dimensions.removeChildren();
     activeLayer.children.visualization.clear();
   }
 
@@ -28,11 +28,12 @@ function testProducts({editor, handleClose}) {
     const {project} = editor;
     const {activeLayer, props} = project;
     props.loading = true;
-    clear(activeLayer);
+    clear(activeLayer, project);
     const profiles = [];
     // стойки
     for(let x = 0; x < size; x += step) {
-      profiles.push(activeLayer.createProfile({b: [x, size], e: [x, step / 2]}));
+      const attr = x < size - step ? {b: [x, size], e: [x, step / 2]} : {e: [x, size], b: [x, step / 2]};
+      profiles.push(activeLayer.createProfile(attr));
     }
     for(const profile of profiles) {
       activeLayer.skeleton.addProfile(profile);
@@ -40,6 +41,7 @@ function testProducts({editor, handleClose}) {
     profiles.length = 0;
     // ригели
     for(let x = 0; x < size - step; x += step) {
+      // находим примыкающие стойки и сообщаем их узлам
       for(let y = step / 2; y < size; y += step) {
         profiles.push(activeLayer.createProfile({b: [x, size - y], e: [x + step, size - y]}));
       }
@@ -60,7 +62,7 @@ function testProducts({editor, handleClose}) {
       const {project, DimensionLine} = editor;
       const {activeLayer, props} = project;
       props.loading = true;
-      clear(activeLayer);
+      clear(activeLayer, project);
       const profiles = [
         activeLayer.createProfile({b: [1400, 1000], e: [100, 1000]}),
         activeLayer.createProfile({b: [100, 1000], e: [100, 0]}),
@@ -73,24 +75,48 @@ function testProducts({editor, handleClose}) {
         activeLayer.skeleton.addProfile(profile);
       }
       new DimensionLine({
-        parent: activeLayer.children.dimensions,
         project,
+        owner: activeLayer,
+        parent: project.dimensions,
         elm1: profiles[0],
         elm2: profiles[0],
         p1: 'b',
         p2: 'e',
         pos: 'bottom',
-        offset: -180,
+        offset: -220,
       });
       new DimensionLine({
-        parent: activeLayer.children.dimensions,
         project,
+        owner: activeLayer,
+        parent: project.dimensions,
+        elm1: profiles[0],
+        elm2: profiles[4],
+        p1: 'e',
+        p2: 'b',
+        pos: 'bottom',
+        offset: -120,
+      });
+      new DimensionLine({
+        project,
+        owner: activeLayer,
+        parent: project.dimensions,
         elm1: profiles[3],
         elm2: profiles[3],
         p1: 'b',
         p2: 'e',
         pos: 'right',
-        offset: -180,
+        offset: -240,
+      });
+      new DimensionLine({
+        project,
+        owner: activeLayer,
+        parent: project.dimensions,
+        elm1: profiles[5],
+        elm2: profiles[3],
+        p1: 'b',
+        p2: 'e',
+        pos: 'right',
+        offset: -120,
       });
       props.loading = false;
       project.redraw();
