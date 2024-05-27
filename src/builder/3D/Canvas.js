@@ -11,32 +11,39 @@ export default function Canvas3D() {
   return <Canvas shadows="basic" onCreated={(state) => {
     const {camera} = state;
     //camera.rotation.set(0, THREE.MathUtils.degToRad(Math.random() * 60 - 30), 0);
-    //camera.matrix.makeRotationX(-0.5);
-    // camera.matrix.elements = [
-    //   3.976202115312729,
-    //   -3.469446951953614e-18,
-    //   -0.4356796279177863,
+    // camera.matrix.fromArray([
+    //   3.981561494649535,
     //   0,
-    //   -0.04551477008888723,
-    //   3.978112809891009,
-    //   -0.4153876231724023,
+    //   -0.38362490055282356,
     //   0,
-    //   0.43329567720707357,
-    //   0.4178737510074807,
-    //   3.9544451424103233,
+    //   -0.07363251594862906,
+    //   3.9256275608563165,
+    //   -0.7642162691544592,
     //   0,
-    //   1466.0330759517567,
-    //   980.2315075277418,
-    //   4534.64812522537,
+    //   0.3764921206602319,
+    //   0.7677553343645915,
+    //   3.907531884660121,
+    //   0,
+    //   1577.8100110104212,
+    //   1315.1773142198153,
+    //   4757.031889676556,
     //   1
-    // ];
-    camera.lookAt(new THREE.Vector3(2000, 1000, 0));
+    // ]);
+    // camera.quaternion.fromArray([-0.09630746632955606, 0.047784792001915495, 0.004628911550445007, 0.9941931697413603]);
+
+    camera.lookAt(new THREE.Vector3(1000, 800, 0));
   }}>
     <OrthographicCamera
       makeDefault
       scale={[4, 4, 4]}
       up={[0, 1, 0]}
-      position={[2000, 400, 4600]}
+      position={[1000, 600, 5000]}
+      onUpdate={camera => {
+        //camera.matrixAutoUpdate = false;
+        //camera.lookAt(2000, 1000, 0);
+        //camera.updateProjectionMatrix();
+        //camera.updateMatrix();
+      }}
       //rotation={[-.12, 0.21, 0.27]}
     />
     <ambientLight intensity={Math.PI / 2} />
@@ -44,12 +51,12 @@ export default function Canvas3D() {
     <pointLight position={[-2000, 3000, -4000]} decay={0} intensity={Math.PI / 2} />
     <Product />
     <gridHelper args={[4000, 40, '#ccc', '#eee']} position={[100, 0, 0]} rotation={[0, 0, 0]} />
-    <CameraControls makeDefault onChange={({type, target}) => {
-      const {camera} = target;
-      if(type === 'transitionstart') {
-        console.log(camera.toJSON().object.matrix);
-      }
-    }}/>
+    <CameraControls
+      ref={target => {
+        target?.setLookAt(1000, 800, 5000, 1200, 400, 0);
+      }}
+      makeDefault
+    />
   </Canvas>;
 }
 

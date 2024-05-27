@@ -55,7 +55,7 @@ export function profileExtrude(profile, profiles) {
   return <mesh
     key={`p-${profile.elm}`}
     geometry={geometry}
-    material={new THREE.MeshLambertMaterial({color: 0xccccdd, wireframe: false})}
+    material={new THREE.MeshLambertMaterial({color: 0xddeeee, wireframe: false})}
   >
     <Edges color="grey" />
   </mesh>;
