@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import TextField from '../../../packages/ui/DataField/Text';
+import TextField from 'metadata-ui/DataField/Text';
 import RefField from '../../../packages/ui/DataField/RefField';
 import {NumberField} from '../../../packages/ui/DataField/Number';
 

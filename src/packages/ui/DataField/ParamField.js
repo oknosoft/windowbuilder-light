@@ -1,7 +1,7 @@
 import React from 'react';
 import RefField from './RefField';
 import Checkbox from './Checkbox';
-import Text from './Text';
+import Text from 'metadata-ui/DataField/Text';
 import {NumberField} from './Number';
 
 export default function ParamField({obj, fld, param, cnstr, meta, inset, label, onChange, fullWidth=true, ...other}) {

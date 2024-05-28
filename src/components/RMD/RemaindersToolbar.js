@@ -6,8 +6,8 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import UTurnRightIcon from '@mui/icons-material/UTurnRight';
 import Divider from '@mui/material/Divider';
 import {Toolbar, HtmlTooltip} from '../App/styled';
-import RefField from '../../packages/ui/DataField/RefField';
-import Text from '../../packages/ui/DataField/Text';
+import RefField from 'metadata-ui/DataField/RefField';
+import Text from 'metadata-ui/DataField/Text';
 import {dp, query, filter} from './data';
 
 const slot = {

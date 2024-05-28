@@ -3,7 +3,7 @@ import FormGroup from '@mui/material/FormGroup';
 import Grid from '@mui/material/Unstable_Grid2';
 import ParamField from '../../../../packages/ui/DataField/ParamField';
 import RefField from '../../../../packages/ui/DataField/RefField';
-import TextField from '../../../../packages/ui/DataField/Text';
+import TextField from 'metadata-ui/DataField/Text';
 import {GlassesDetail} from '../../../aggregate/styled';
 import CompositeGrid from './CompositeGrid';
 import CompositeRegionProps from './CompositeRegionProps';

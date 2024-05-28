@@ -7,6 +7,7 @@ import {Content} from '../../../components/App/styled';
 import GoTo from '../../../components/App/GoTo';
 import {useTitleContext, useBackdropContext} from '../../../components/App';
 import Toolbar from '../../aggregate/ListToolbar';
+import Selection from '../../cat/scheme_settings/Selection';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../dataGrid';
 
 
@@ -144,7 +145,7 @@ export default function CalcOrderList() {
       />
     </Grid>
     <Grid xs={0} md={2}>
-      xs=0 md=3
+      <Selection scheme={scheme}/>
     </Grid>
   </Grid>
 

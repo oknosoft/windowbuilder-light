@@ -4,7 +4,7 @@ import {useLoadingContext} from '../../../components/Metadata';
 import {disablePermanent, drawerWidth} from '../../../styles/muiTheme';
 import RefCell from '../../../packages/ui/DataField/RefCell';
 import {NumberCell, NumberFormatter} from '../../../packages/ui/DataField/Number';
-import {TextCell} from '../../../packages/ui/DataField/Text';
+import {TextCell} from 'metadata-ui/DataField/Text';
 import ObjNomToolbar from './ObjNomToolbar';
 import {SelectedContext} from './selectedContext';
 

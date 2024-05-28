@@ -2,7 +2,7 @@ import React from 'react';
 import ObjTabular from './ObjTabular';
 import {NumberCell, NumberFormatter} from '../../../packages/ui/DataField/Number';
 import {PresentationFormatter} from '../../../packages/ui/DataField/RefField';
-import {TextFormatter} from '../../../packages/ui/DataField/Text';
+import {TextFormatter} from 'metadata-ui/DataField/Text';
 import {useLoadingContext} from '../../../components/Metadata';
 import {tabularStyle} from '../../dataGrid';
 import ToolbarTabular from './ToolbarTabular';

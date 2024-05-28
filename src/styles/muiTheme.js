@@ -68,7 +68,7 @@ const theme = createTheme({
       styleOverrides: {
         // Name of the slot
         root: ({ ownerState, theme }) => ({
-          minWidth: 300,
+          minWidth: ownerState.minWidth || 300,
           paddingRight: theme.spacing(),
           borderBottom: '1px solid #e8e8e8',
         }),
@@ -101,11 +101,17 @@ const theme = createTheme({
 
     MuiInput: {
       styleOverrides: {
-        root: {
-          marginLeft: '40%',
-          'label + &': {
-            marginTop: 0,
-          }
+        root: ({ ownerState, theme }) => {
+          const {inputProps} = ownerState;
+          return inputProps?.label?.show === false ? {
+            marginLeft: theme.spacing(),
+            //marginRight: theme.spacing(),
+          } : {
+            marginLeft: '40%',
+            'label + &': {
+              marginTop: 0,
+            }
+          };
         },
       }
     },
