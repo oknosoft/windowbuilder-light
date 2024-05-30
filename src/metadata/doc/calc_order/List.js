@@ -145,7 +145,7 @@ export default function CalcOrderList() {
       />
     </Grid>
     <Grid xs={0} md={2}>
-      <Selection scheme={scheme}/>
+      <Selection scheme={scheme} setRefresh={setRefresh}/>
     </Grid>
   </Grid>
 

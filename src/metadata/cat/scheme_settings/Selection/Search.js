@@ -1,10 +1,9 @@
 import * as React from 'react';
 import FormControl, { useFormControl } from '@mui/material/FormControl';
 import Input from '@mui/material/InputBase';
-import FormHelperText from '@mui/material/FormHelperText';
 import SearchIcon from '@mui/icons-material/Search';
-import {contentWidth} from '../../styles/muiTheme';
-import {useLoadingContext} from '../../components/Metadata';
+import {contentWidth} from '../../../../styles/muiTheme';
+import {useLoadingContext} from '../../../../components/Metadata';
 
 function listenCtrlF (ev, inputRef) {
   if(ev.ctrlKey && ev.code === 'KeyF') {
@@ -12,7 +11,7 @@ function listenCtrlF (ev, inputRef) {
     ev.preventDefault();
     inputRef?.current?.firstChild?.focus();
   }
-};
+}
 
 function Icon() {
   const state = useFormControl();
@@ -36,8 +35,8 @@ export default function SearchField({scheme, setRefresh}) {
     return () => removeEventListener('keydown', listen);
   }, []);
 
-  const onBlur = () => {
-    const {value} = inputRef.current.firstChild;
+  const onBlur = (ev) => {
+    const {value} = ev.target;
     if(value !== scheme._search) {
       scheme._search = value;
       setRefresh();
@@ -47,7 +46,19 @@ export default function SearchField({scheme, setRefresh}) {
     if(ev.key === 'Enter') {
       ev.stopPropagation();
       ev.preventDefault();
-      inputRef?.current?.firstChild?.blur();
+      if(ev.ctrlKey) {
+        scheme._search = ev.target.value;
+        setRefresh();
+      }
+      else {
+        inputRef?.current?.firstChild?.blur();
+      }
+    }
+  };
+  const onInput = (ev) => {
+    if(!ev.target.value) {
+      scheme._search = '';
+      setRefresh();
     }
   };
 
@@ -59,7 +70,8 @@ export default function SearchField({scheme, setRefresh}) {
         placeholder="Введите текст для поиска"
         endAdornment={<Icon />}
         onBlur={onBlur}
-        inputProps={{onKeyDown}}
+        inputProps={{onKeyDown, onInput}}
+        defaultValue={scheme._search}
       />
     </FormControl>
   );

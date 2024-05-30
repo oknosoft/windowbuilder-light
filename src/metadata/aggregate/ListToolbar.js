@@ -5,7 +5,7 @@ import CopyIcon from '@mui/icons-material/PostAdd';
 import EditIcon from '@mui/icons-material/DriveFileRenameOutline';
 import Typography from '@mui/material/Typography';
 import {Toolbar, HtmlTooltip} from '../../components/App/styled';
-import SearchField from './Search';
+import SearchField from '../cat/scheme_settings/Selection/Search';
 
 export default function ListToolbar({create, clone, open, disabled, scheme, setRefresh}) {
 
