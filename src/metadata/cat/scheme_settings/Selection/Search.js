@@ -10,6 +10,7 @@ function listenCtrlF (ev, inputRef) {
     ev.stopPropagation();
     ev.preventDefault();
     inputRef?.current?.firstChild?.focus();
+    inputRef?.current?.firstChild?.select();
   }
 }
 
