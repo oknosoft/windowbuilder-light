@@ -41,6 +41,7 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
   };
 
   const selector = scheme.mango_selector(sprm);
+  scheme.append_selection(selector);
   if(ref) {
     selector.ref = ref;
   }

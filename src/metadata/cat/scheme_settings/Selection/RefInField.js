@@ -9,7 +9,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function RefInField({row, placeholder}) {
+export default function RefInField({row, placeholder, setRefresh}) {
   const [states, setStates] = React.useState([]);
   const [mgr, options] = React.useMemo(() => {
     const mgr = $p.md.mgr_by_class_name(row.right_value_type);
@@ -34,7 +34,9 @@ export default function RefInField({row, placeholder}) {
     disableCloseOnSelect
     ChipProps={{size: 'small'}}
     onChange={(e,v) => {
+      row.right_value = v.map(v => v.ref).join(',');
       setStates(v);
+      setRefresh();
     }}
     getOptionLabel={(option) => {
       return option.name;

@@ -14,8 +14,6 @@ const labelProps = {style: {textAlign: 'center', top: -2}};
 
 export default function Period({scheme, setRefresh}) {
 
-  const onChange = $p.utils.debounce(setRefresh, 900);
-
   return <Stack direction="row" spacing={2}>
     <Text
       obj={scheme}
@@ -24,7 +22,7 @@ export default function Period({scheme, setRefresh}) {
       fullWidth={false}
       slotProps={slot}
       style={dateStyle}
-      onInput={onChange}
+      onInput={setRefresh}
     />
     <Text
       obj={scheme}
@@ -33,7 +31,7 @@ export default function Period({scheme, setRefresh}) {
       fullWidth={false}
       slotProps={slot}
       style={dateStyle}
-      onInput={onChange}
+      onInput={setRefresh}
     />
   </Stack>;
 }
