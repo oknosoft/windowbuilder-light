@@ -3,8 +3,7 @@ import * as THREE from 'three';
 import {Edges} from '@react-three/drei';
 //import { Geometry, Base, Subtraction, Intersection, Difference, ReverseSubtraction } from '@react-three/csg';
 
-import ramaShape from './ramaShape';
-import impostShape from './impostShape';
+import {rama, impost} from './shapes';
 
 function profilePath(profile, bounds) {
   const {b, e, generatrix} = profile;
@@ -39,7 +38,7 @@ export function profilesGeometry(profiles, bounds) {
       bevelEnabled: false,
       extrudePath: profilePath(profile, bounds),
     };
-    res.set(profile, new THREE.ExtrudeGeometry(profile.b.isT ? impostShape : ramaShape, extrudeSettings));
+    res.set(profile, new THREE.ExtrudeGeometry(profile.b.isT ? impost : rama, extrudeSettings));
   }
   return res;
 }

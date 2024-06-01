@@ -55,7 +55,7 @@ module.exports = {
         }
       },
       {
-        test: /\.md$/,
+        test: /\.(md|png)$/,
         loader: 'raw-loader',
       },
       {
