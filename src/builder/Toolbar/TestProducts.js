@@ -74,6 +74,8 @@ function testProducts({editor, handleClose}) {
       for(const profile of profiles) {
         activeLayer.skeleton.addProfile(profile);
       }
+      activeLayer.containers.sync();
+      activeLayer.containers.children['5_2_3_6'].createChild({kind: 'flap'});
       new DimensionLine({
         project,
         owner: activeLayer,
