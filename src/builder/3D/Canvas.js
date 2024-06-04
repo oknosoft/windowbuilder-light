@@ -1,5 +1,4 @@
 import React from 'react';
-import * as THREE from 'three';
 import {Canvas} from '@react-three/fiber';
 import {PivotControls, OrbitControls, CameraControls, PerspectiveCamera, OrthographicCamera} from '@react-three/drei';
 import Box from './Box';

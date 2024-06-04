@@ -3,9 +3,9 @@ import * as THREE from 'three';
 import {Edges} from '@react-three/drei';
 //import { Geometry, Base, Subtraction, Intersection, Difference, ReverseSubtraction } from '@react-three/csg';
 
-import {rama, impost} from './shapes';
+import {rama, impost, flap} from './shapes';
 
-function profilePath(profile, bounds) {
+function profilePath(profile, bounds, pos) {
   const {b, e, generatrix} = profile;
   const y = bounds.height + bounds.top;
   let pb = b.point;
@@ -23,22 +23,29 @@ function profilePath(profile, bounds) {
     pe = generatrix.getPointAt(generatrix.length - 38);
   }
 
-  const v1 = new THREE.Vector3(pb.x, (y - pb.y), 0);
-  const v2 = new THREE.Vector3(pe.x, (y - pe.y), 0);
+  const v1 = new THREE.Vector3(pb.x - pos[0], (y - pb.y), 0);
+  const v2 = new THREE.Vector3(pe.x - pos[0], (y - pe.y), 0);
   const path = new THREE.CurvePath();
   path.add( new THREE.LineCurve3( v1, v2 ) );
   return path;
 }
 
-export function profilesGeometry(profiles, bounds) {
+export function profilesGeometry(profiles, bounds, pos) {
   const res = new Map();
   for(const profile of profiles) {
     const extrudeSettings = {
       steps: 10,
       bevelEnabled: false,
-      extrudePath: profilePath(profile, bounds),
+      extrudePath: profilePath(profile, bounds, pos),
     };
-    res.set(profile, new THREE.ExtrudeGeometry(profile.b.isT ? impost : rama, extrudeSettings));
+    let shape = rama;
+    if(profile.b.isT || profile.e.isT) {
+      shape = impost;
+    }
+    else if(pos[2]) {
+      shape = flap;
+    }
+    res.set(profile, new THREE.ExtrudeGeometry(shape, extrudeSettings));
   }
   return res;
 }
@@ -54,7 +61,7 @@ export function profileExtrude(profile, profiles) {
   return <mesh
     key={`p-${profile.elm}`}
     geometry={geometry}
-    material={new THREE.MeshLambertMaterial({color: 0xddeeee, wireframe: false})}
+    material={new THREE.MeshLambertMaterial({color: 0xeeffee, wireframe: false})}
   >
     <Edges color="grey" />
   </mesh>;

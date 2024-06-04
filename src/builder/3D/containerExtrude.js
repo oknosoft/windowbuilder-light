@@ -6,7 +6,7 @@ import * as THREE from 'three';
 //const texture = loader.load('./glass.png');
 //const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg');
 
-function glassPath(container, bounds, i) {
+function glassPath(container, bounds, pos) {
   const y = bounds.height + bounds.top;
   const {perimeter, pathInner} = container;
   const points = pathInner.map(v => {
@@ -15,8 +15,8 @@ function glassPath(container, bounds, i) {
   })
   const start = points[0];
 
-  const v1 = new THREE.Vector3(start.x, start.y, i ? -26 : 52);
-  const v2 = new THREE.Vector3(start.x, start.y, i ? -66 : -16);
+  const v1 = new THREE.Vector3(start.x - pos[0], start.y, pos[2] -26);
+  const v2 = new THREE.Vector3(start.x - pos[0], start.y, pos[2] -66);
   const extrudePath = new THREE.CurvePath();
   extrudePath.add( new THREE.LineCurve3( v1, v2 ) );
   const shape = new THREE.Shape();
@@ -29,18 +29,18 @@ function glassPath(container, bounds, i) {
   return {extrudePath, shape};
 }
 
-export function containersGeometry(containers, bounds) {
+export function containersGeometry(containers, bounds, pos) {
   const res = new Map();
-  let i = 0;
   for(const container of containers) {
-    const {extrudePath, shape} = glassPath(container, bounds, i);
-    const extrudeSettings = {
-      steps: 2,
-      bevelEnabled: false,
-      extrudePath,
-    };
-    res.set(container, new THREE.ExtrudeGeometry(shape, extrudeSettings));
-    i++;
+    if(container.kind === 'glass') {
+      const {extrudePath, shape} = glassPath(container, bounds, pos);
+      const extrudeSettings = {
+        steps: 2,
+        bevelEnabled: false,
+        extrudePath,
+      };
+      res.set(container, new THREE.ExtrudeGeometry(shape, extrudeSettings));
+    }
   }
   return res;
 }
@@ -56,21 +56,36 @@ export function containerExtrude(profile, profiles) {
   return <mesh
     key={`p-${profile.key}`}
     geometry={geometry}
-    material={new THREE.MeshPhongMaterial({
+    material={
+//     new THREE.MeshPhysicalMaterial({
+//       metalness: .9,
+//       roughness: .05,
+//       envMapIntensity: 0.9,
+//       clearcoat: 1,
+//       transparent: true,
+// // transmission: .95,
+//       opacity: .5,
+//       reflectivity: 0.2,
+//       refractionRatio: 0.985,
+//       ior: 0.9,
+//       side: THREE.BackSide,
+//     })
+      new THREE.MeshPhongMaterial({
       color: 0x8080c0,
       //map: texture,
-      metalness: .1,
+      //metalness: .1,
       //roughness: .2,
       //envMapIntensity: 0.6,
       //clearcoat: 1,
-      transparent: true,
-      transmission: .95,
-      opacity: .2,
-      reflectivity: 0.8,
+      //transmission: .95,
       // refractionRatio: 0.985,
-      ior: 0.9,
+      //ior: 0.9,
+      transparent: true,
+      opacity: .14,
+      reflectivity: 0.8,
       side: THREE.DoubleSide,
-    })}
+    })
+  }
   >
   </mesh>;
 }

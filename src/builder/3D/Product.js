@@ -9,5 +9,5 @@ export default function Product() {
     return null;
   }
   const {bounds} = editor.project;
-  return editor.project.contours.map((layer, index) => <Contour key={`c-${index}`} layer={layer} bounds={bounds}/>);
+  return editor.project.contours.map((layer) => <Contour key={`c-${layer.id}`} layer={layer} bounds={bounds}/>);
 }
