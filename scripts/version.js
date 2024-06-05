@@ -16,6 +16,7 @@ const paths = require('../config/paths');
 const packageData = require('../package.json');
 const moment = require('moment');
 const build = `{"build": "v${packageData.version} (${packageData.dependencies['metadata-core']}), ${moment().format()}"}`;
+fs.remove(paths.appBuild + '/dynamic-settings.js');
 fs.writeFile(path.resolve(paths.appBuild + '/build.json').replace(/\\/g, '/'), build, 'utf8', function (err) {
   if(err) {
     console.log(err);

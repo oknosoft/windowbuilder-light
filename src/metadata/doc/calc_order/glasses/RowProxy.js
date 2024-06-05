@@ -1,5 +1,5 @@
 
-const {cat: {inserts}, enm: {inserts_types}, doc: {calc_order}, dp: {buyers_order}, job_prm}  = $p;
+const {cat: {inserts}, enm: {inserts_types}, doc: {calc_order}, dp: {buyers_order}, job_prm, utils}  = $p;
 const {use_internal} = job_prm.pricing;
 
 // доступные типы вставок
@@ -20,6 +20,7 @@ inserts.find_rows({insert_type: {in: itypes}, _top: 10e6}, (o) => {
     sublist.push(o);
   }
 });
+sublist.sort(utils.sort('name'));
 export {ioptions, ilist, sublist};
 
 export class RowProxy {

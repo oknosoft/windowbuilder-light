@@ -4,7 +4,7 @@ import {sublist} from './RowProxy';
 
 const options = sublist.filter(opt => {
   const thickness = opt.thickness();
-  return thickness > 0 && thickness < 20;
+  return thickness > 0 && thickness < 28;
 });
 
 export default function RegionInset(props) {
