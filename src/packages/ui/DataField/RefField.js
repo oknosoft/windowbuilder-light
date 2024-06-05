@@ -2,29 +2,64 @@ import React from 'react';
 import Autocomplete from './Autocomplete';
 import {onKeyUp} from './enterTab';
 
-export const getOptions = (obj, fld, meta) => {
-  return () => {
-    let mgr = obj._manager.value_mgr(obj, fld, meta.type);
-    if(Array.isArray(meta.list)) {
-      const {utils} = $p;
-      return meta.list.map((v) => utils.is_data_obj(v) ? v : mgr.get(v));
+export const getOptions = (obj, fld, meta, value) => {
+  const {utils} = $p;
+  let mgr = value?._manager || obj._manager.value_mgr(obj, fld, meta.type);
+  if(Array.isArray(meta.list)) {
+    return meta.list.map((v) => utils.is_data_obj(v) ? v : mgr.get(v));
+  }
+  const res = [];
+  const elmOnly = meta.choice_groups_elm === 'elm';
+  for(const {name, path} of (meta.choice_params || [])) {
+    if(name === 'ref') {
+      if(Array.isArray(path)) {
+        mgr = path.map(ref => mgr.get(ref));
+      }
+      else if(Array.isArray(path.in)) {
+        mgr = path.in.map(ref => mgr.get(ref));
+      }
+      break;
     }
-    const res = [];
-    const elmOnly = meta.choice_groups_elm === 'elm';
-    for(const {name, path} of (meta.choice_params || [])) {
-      if(name === 'ref' && Array.isArray(path.in)) {
-        mgr = path.in;
-        break;
+  }
+  for(const o of mgr) {
+    if(elmOnly && o.is_folder) {
+      continue;
+    }
+    // для связей параметров выбора, значение берём из объекта
+    let stop;
+    for(const choice of meta.choice_links || []) {
+      if(choice.name?.[0] == 'selection') {
+        // if(choice.name[1] == 'owner' && !meta.has_owners) {
+        //   continue;
+        // }
+        if(utils.is_tabular(obj)) {
+          if(choice.path.length < 2) {
+            if(o[choice.name[1]] != obj[choice.path[0]]) {
+              stop = true;
+              break;
+            }
+          }
+          else {
+            if(o[choice.name[1]] != obj[choice.path[1]]) {
+              stop = true;
+              break;
+            }
+          }
+        }
+        else {
+          if(o[choice.name[1]] != obj[choice.path[0]]) {
+            stop = true;
+            break;
+          }
+        }
       }
     }
-    for(const o of mgr) {
-      if(elmOnly && o.is_folder) {
-        continue;
-      }
+
+    if(!stop) {
       res.push(o);
     }
-    return res;
-  };
+  }
+  return res;
 };
 
 export default function RefField({obj, fld, meta, label, onChange, fullWidth=true, enterTab, ...other}) {
@@ -40,7 +75,19 @@ export default function RefField({obj, fld, meta, label, onChange, fullWidth=tru
     label = meta.synonym;
   }
 
-  const options = React.useMemo(getOptions(obj, fld, meta), [obj]);
+  React.useEffect(() => {
+    function update (curr, flds){
+      if(fld in flds && (curr === obj || obj.equals?.(curr))) {
+        setValue(obj[fld]);
+      }
+    }
+    obj._manager.on({update});
+    return () => {
+      obj._manager.off({update});
+    };
+  }, [obj]);
+
+  const options = getOptions(obj, fld, meta, value);
 
   if(enterTab && !other.onKeyUp) {
     other.onKeyUp = onKeyUp;
