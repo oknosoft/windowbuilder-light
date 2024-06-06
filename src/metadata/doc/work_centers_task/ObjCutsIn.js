@@ -1,7 +1,7 @@
 import React from 'react';
 import {Resize, ResizeHorizon} from 'metadata-ui/Resize';
-import {NumberCell, NumberFormatter} from '../../../packages/ui/DataField/Number';
-import {PresentationFormatter} from '../../../packages/ui/DataField/RefField';
+import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
+import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {TextFormatter} from 'metadata-ui/DataField/Text';
 import {tabularStyle} from '../../dataGrid';
 import {useLoadingContext} from '../../../components/Metadata';
@@ -56,7 +56,7 @@ export default function ObjCutsIn({tabRef, obj}) {
           columns={columns}
           rootStyle={{height: style.height - 50}}
           selectedRowsChange={selectedRowsChange}
-          selection={{record_kind: 'Расход'}}
+          selection={{record_kind: 'debit'}}
         />
       </ResizeHorizon>
       <ResizeHorizon overflow="hidden auto" width={`${(style.width * 4/12).toFixed()}px`} minWidth="200px">

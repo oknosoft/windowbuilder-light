@@ -9,7 +9,7 @@ process.on('unhandledRejection', err => {
 });
 
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs-extra');
 //const glob = require('glob');
 
 const paths = require('../config/paths');

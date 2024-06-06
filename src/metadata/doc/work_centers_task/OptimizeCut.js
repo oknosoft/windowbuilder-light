@@ -66,7 +66,7 @@ export function run1D(obj, setBackdrop, setExt, state) {
     }
     Object.assign(row, status);
     Object.assign(state, {statuses});
-    
+
     setExt(<CuttingProgress1D statuses={statuses}/>);
   };
 
@@ -94,7 +94,7 @@ export function run1D(obj, setBackdrop, setExt, state) {
 }
 
 export function run2D(obj, setBackdrop) {
-  obj.reset_sticks('2D');
+  //obj.reset_sticks('2D');
   return () => Promise.resolve(obj.fragments2D())
     .then((params) => {
       if(!params.products.length || !params.scraps.length) {
