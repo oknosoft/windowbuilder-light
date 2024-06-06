@@ -21,6 +21,7 @@ export const columns = [
   {key: "cell", width: 100, name: "Ячейка", tooltip: "№ ячейки (откуда брать заготовку или куда помещать деловой обрезок)", renderCell: TextFormatter}
 ];
 
+const record_kind = $p.enm.debit_credit_kinds.debit;
 
 export default function ObjCutsIn({tabRef, obj}) {
   const lc = useLoadingContext();
@@ -56,7 +57,7 @@ export default function ObjCutsIn({tabRef, obj}) {
           columns={columns}
           rootStyle={{height: style.height - 50}}
           selectedRowsChange={selectedRowsChange}
-          selection={{record_kind: 'debit'}}
+          selection={{record_kind}}
         />
       </ResizeHorizon>
       <ResizeHorizon overflow="hidden auto" width={`${(style.width * 4/12).toFixed()}px`} minWidth="200px">

@@ -8,7 +8,7 @@ const FragmentNom = styled('div')(({ theme }) => ({marginTop: theme.spacing(2)})
 
 export default function CuttingReport1D({obj}) {
   const res = [];
-  const {debit_credit_kinds} = $p.enm;
+  const {debit, credit} = $p.enm.debit_credit_kinds;
   const _top = 10e6;
 
   // бежим по свёрнутой табчасти раскроя
@@ -16,8 +16,8 @@ export default function CuttingReport1D({obj}) {
   fragments.forEach((characteristics, nom) => {
     for(const [characteristic] of characteristics) {
       const crows = obj.cutting.find_rows({_top, nom, characteristic});
-      const cuts_in = obj.cuts.find_rows({_top, record_kind: debit_credit_kinds.credit, nom, characteristic});
-      const cuts_out = obj.cuts.find_rows({_top, record_kind: debit_credit_kinds.debit, nom, characteristic});
+      const cuts_in = obj.cuts.find_rows({_top, record_kind: credit, nom, characteristic});
+      const cuts_out = obj.cuts.find_rows({_top, record_kind: debit, nom, characteristic});
 
       const products_len = crows.reduce((sum, row) => sum + row.len, 0);
       const workpieces_len = cuts_in.reduce((sum, row) => sum + row.len, 0);

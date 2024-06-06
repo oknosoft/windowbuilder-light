@@ -60,7 +60,7 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
   return [create, clone, open];
 }
 
-export function tabularCreate({tabular, setRows, selectedRows, setSelectedRows}) {
+export function tabularCreate({tabular, selection, find_rows, setRows, selectedRows, setSelectedRows}) {
 
   const getRow = () => {
     const selectedKey = selectedRows.size && Array.from(selectedRows)[0];
@@ -71,9 +71,12 @@ export function tabularCreate({tabular, setRows, selectedRows, setSelectedRows})
 
   const add = (proto) => {
     const selected = new Set();
+    if(!proto) {
+      proto = selection;
+    }
     const row = tabular.add(proto).row;
     selected.add(row);
-    setRows(Array.from(tabular));
+    setRows(find_rows ? find_rows() : Array.from(tabular));
     setSelectedRows(selected);
     return row;
   };

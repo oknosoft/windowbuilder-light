@@ -10,21 +10,15 @@ export default function ObjTabular({tabRef, tabular, selection, columns, buttons
     rootStyle = tabularStyle(tabRef, useLoadingContext());
   }
 
-  if(!selection) {
-    selection = () => Array.from(tabular);
-  }
-  else {
-    const select = selection;
-    selection = () => {
-      const res = [];
-      tabular.find_rows(select, (row) => {
-        res.push(row);
-      });
-      return res;
-    };
-  }
+  const find_rows = selection ? () => {
+    const res = [];
+    tabular.find_rows(selection, (row) => {
+      res.push(row);
+    });
+    return res;
+  } : () => Array.from(tabular);
 
-  const [rows, setRows] = React.useState(selection());
+  const [rows, setRows] = React.useState(find_rows());
   const [selectedRows, rawSetSelectedRows] = React.useState(new Set());
   const setSelectedRows = (selectedRows) => {
     rawSetSelectedRows(selectedRows);
@@ -33,14 +27,14 @@ export default function ObjTabular({tabRef, tabular, selection, columns, buttons
 
   React.useEffect(() => {
     const update = () => {
-      setRows(selection());
+      setRows(find_rows());
       setSelectedRows(new Set());
     };
     tabular._owner._manager.on('rows', update);
     return () => tabular._owner._manager.off('rows', update);
   }, [tabular]);
 
-  const {getRow, create, clone, remove, clear} = tabularCreate({tabular, setRows, selectedRows, setSelectedRows});
+  const {getRow, create, clone, remove, clear} = tabularCreate({tabular, selection, find_rows, setRows, selectedRows, setSelectedRows});
 
   const onCellClick = ({row, column, selectCell}) => {
     if(!selectedRows.size || Array.from(selectedRows)[0] !== row.row) {
