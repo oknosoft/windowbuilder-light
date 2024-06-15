@@ -104,7 +104,7 @@ export default function CalcOrderObj() {
 
   if(!obj) {
     return <Loading>
-      <Typography>Загрузка...</Typography>
+      <Typography>Загрузка шаблонов...</Typography>
     </Loading>;
   }
 
