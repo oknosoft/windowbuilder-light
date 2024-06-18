@@ -49,6 +49,11 @@ function testProducts({editor, handleClose}) {
     handleClose();
   }
 
+  function clear() {
+    editor.project.clear();
+    handleClose();
+  }
+
   return {
     imposts() {
       const {project, DimensionLine} = editor;
@@ -125,6 +130,7 @@ function testProducts({editor, handleClose}) {
     },
 
     grid100,
+    clear,
   };
 }
 
@@ -140,7 +146,7 @@ export default function TestProducts({editor}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const {imposts, grid20, grid100} = testProducts({editor, handleClose});
+  const {imposts, grid20, grid100, clear} = testProducts({editor, handleClose});
 
   return <>
     <HtmlTooltip title="Тестовые изделия">
@@ -164,6 +170,7 @@ export default function TestProducts({editor}) {
       <MenuItem onClick={imposts}>Импосты</MenuItem>
       <MenuItem onClick={grid20}>Сетка 6</MenuItem>
       <MenuItem onClick={grid100}>Сетка 40</MenuItem>
+      <MenuItem onClick={clear}>Очистить</MenuItem>
     </Menu>
   </>;
 }
