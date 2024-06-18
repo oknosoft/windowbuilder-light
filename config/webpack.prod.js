@@ -7,7 +7,11 @@ module.exports = {
   output:{
     path: path.resolve(__dirname, "../build"),  // путь к каталогу выходных файлов - папка public
     publicPath: "./",
-    filename: "bundle.js"                       // название создаваемого файла
+    //filename: "bundle.js",                      // название создаваемого файла
+    filename: 'static/js/[name].[contenthash:8].js',
+    // There are also additional JS chunk files if you use code splitting.
+    chunkFilename: 'static/js/[name].[contenthash:8].chunk.js',
+    assetModuleFilename: 'static/media/[name].[hash:8][ext]',
   },
   devtool: false,
   plugins: [],

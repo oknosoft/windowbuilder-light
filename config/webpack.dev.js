@@ -7,7 +7,9 @@ module.exports = {
   output:{
     path: path.resolve(__dirname, "../build"),  // путь к каталогу выходных файлов - папка public
     publicPath: "/build/",
-    filename: "bundle.js"                       // название создаваемого файла
+    filename: "static/js/bundle.js",            // название создаваемого файла
+    chunkFilename: 'static/js/[name].chunk.js',
+    assetModuleFilename: 'static/media/[name].[hash][ext]',
   },
   devServer: {
     historyApiFallback: true,
