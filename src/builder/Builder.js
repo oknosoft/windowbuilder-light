@@ -48,6 +48,7 @@ export default function Builder({context, width, handleColor, resizeStop}) {
         window.paper = editor;
         editor.createScheme(el, $p);
         setContext({editor});
+        el.addEventListener('mousewheel', editor.stableZoom.mousewheel, false);
       }
     }
     else {
