@@ -1,20 +1,24 @@
 const path = require("path");
 const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   mode: process.env.NODE_ENV || "production",  // production
-  entry: "./src/index.js",                      // входная точка - исходный файл
+  entry: path.resolve(__dirname, "../src/index.js"),                      // входная точка - исходный файл
   output:{
-    path: path.resolve(__dirname, "../build"),  // путь к каталогу выходных файлов - папка public
-    publicPath: "./",
-    //filename: "bundle.js",                      // название создаваемого файла
+    path: path.resolve(__dirname, "../build"),  // путь к каталогу выходных файлов - папка build
+    //publicPath: "./",
     filename: 'static/js/[name].[contenthash:8].js',
     // There are also additional JS chunk files if you use code splitting.
     chunkFilename: 'static/js/[name].[contenthash:8].chunk.js',
-    assetModuleFilename: 'static/media/[name].[hash:8][ext]',
+    assetModuleFilename: 'static/media33/[name].[hash:8][ext]',
   },
   devtool: false,
-  plugins: [],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "../public/index.html")
+    }),
+  ],
   resolve: {
     fallback: {
       crypto: false,

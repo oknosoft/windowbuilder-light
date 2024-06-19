@@ -1,15 +1,16 @@
 const path = require("path");
 const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   mode: process.env.NODE_ENV || "development",  // production
   entry: "./src/index.js",                      // входная точка - исходный файл
   output:{
     path: path.resolve(__dirname, "../build"),  // путь к каталогу выходных файлов - папка public
-    publicPath: "/build/",
+    //publicPath: "./",
     filename: "static/js/bundle.js",            // название создаваемого файла
     chunkFilename: 'static/js/[name].chunk.js',
-    assetModuleFilename: 'static/media/[name].[hash][ext]',
+    assetModuleFilename: 'static/media33/[name].[hash][ext]',
   },
   devServer: {
     historyApiFallback: true,
@@ -35,7 +36,12 @@ module.exports = {
     open: true
   },
   devtool: false,
-  plugins: [new webpack.SourceMapDevToolPlugin({})],
+  plugins: [
+    new webpack.SourceMapDevToolPlugin({}),
+    new HtmlWebpackPlugin({
+      template: "public/index.html"
+    }),
+  ],
   resolve: {
     fallback: {
       crypto: false,
