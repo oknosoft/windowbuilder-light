@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Dialog from '../../../packages/ui/App/Dialog';
+import Dialog from 'metadata-ui/App/Dialog';
 
 const schemas = {
   planning: 'c864d895-ac50-42be-8760-203cc46d208f',

@@ -2,7 +2,7 @@ import React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from 'metadata-ui/DataField/Text';
-import ParamField from '../../../../packages/ui/DataField/ParamField';
+import ParamField from 'metadata-ui/DataField/ParamField';
 import {GlassesDetail} from '../../../aggregate/styled';
 
 

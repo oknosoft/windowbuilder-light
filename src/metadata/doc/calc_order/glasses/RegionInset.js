@@ -1,5 +1,5 @@
 import React from 'react';
-import RefCell from '../../../../packages/ui/DataField/RefCell';
+import RefCell from 'metadata-ui/DataField/RefCell';
 import {sublist} from './RowProxy';
 
 const options = sublist.filter(opt => {

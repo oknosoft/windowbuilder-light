@@ -1,8 +1,8 @@
 import React from 'react';
-import Dialog from '../../../packages/ui/App/Dialog';
+import Dialog from 'metadata-ui/App/Dialog';
 import DialogContentText from '@mui/material/DialogContentText';
 import Button from '@mui/material/Button';
-import RefField from '../DataField/RefField';
+import RefField from 'metadata-ui/DataField/RefField';
 
 export default function DialogCreate({raw, obj, fld, handleClose, handleSubmit}) {
   const curr = raw[0];

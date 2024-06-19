@@ -1,7 +1,7 @@
 import React from 'react';
 import ObjTabular from './ObjTabular';
-import {NumberCell, NumberFormatter} from '../../../packages/ui/DataField/Number';
-import {PresentationFormatter} from '../../../packages/ui/DataField/RefField';
+import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
+import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 
 const columns = [
   {key: "obj", name: "Объект", width: '*', renderCell: PresentationFormatter},

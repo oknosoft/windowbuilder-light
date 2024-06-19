@@ -2,7 +2,7 @@ import React from 'react';
 import ObjGlassesDetail from './ObjGlassesDetail';
 import ProductFormatter from './ProductFormatter';
 
-import {NumberCell, NumberFormatter} from '../../../../packages/ui/DataField/Number';
+import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
 // доступные типы вставок
 import {itypes, ioptions, ilist, sublist, RowProxy} from './RowProxy';
 

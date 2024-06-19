@@ -2,7 +2,7 @@ import React from 'react';
 import DataGrid from 'react-data-grid';
 import RegionInset from './RegionInset';
 import Toolbar from './CompositeToolbar';
-import {PresentationFormatter} from '../../../../packages/ui/DataField/RefField';
+import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {cellKeyDown} from '../../../dataGrid';
 
 function rowKeyGetter(row) {

@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import {styled} from '@mui/material/styles';
 import {HtmlTooltip} from '../../components/App/styled';
-import Dialog from '../../packages/ui/App/Dialog';
+import Dialog from 'metadata-ui/App/Dialog';
 
 const Textarea = styled('textarea')(() => ({
   fontFamily: 'monospace',

@@ -68,7 +68,7 @@
     "url-join": "^5.0",
     "url-parse": "^1.5",
     "velocity-react": "^1.4.3",
-    "wb-core": "github:oknosoft/windowbuilder-core#0a037742964b6645d503cb6ed2666f74a89aece7",
+    "wb-core": "github:oknosoft/windowbuilder-core#dc0b0ad80bc5318052fb26aef7c1bf30fef1476c",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {
@@ -108,10 +108,10 @@
     "postcss-preset-env": "^7.0.1",
     "prompts": "^2.4.2",
     "raw-loader": "^4.0",
-    "react": "^18.2.0",
+    "react": "^18.3",
     "react-app-polyfill": "^3.0.0",
     "react-dev-utils": "^12.0.1",
-    "react-dom": "^18.2.0",
+    "react-dom": "^18.3",
     "react-refresh": "^0.14",
     "resolve": "^1.22",
     "resolve-url-loader": "^4.0.0",
@@ -122,7 +122,7 @@
     "tailwindcss": "^3.0.2",
     "terser-webpack-plugin": "^5.2.5",
     "web-vitals": "^2.1.4",
-    "webpack": "^5.90",
+    "webpack": "^5.92",
     "webpack-dev-server": "^4.15",
     "webpack-manifest-plugin": "^4.0.2",
     "workbox-webpack-plugin": "^6.5"

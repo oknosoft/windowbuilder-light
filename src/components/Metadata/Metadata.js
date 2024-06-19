@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import {ThemeProvider} from '@mui/material';  // провайдер тема material=ui
 import theme from '../../styles/muiTheme';      // тема material=ui
 import Loading from '../App/Loading';
-import Alert from '../../packages/ui/App/Alert';
+import Alert from 'metadata-ui/App/Alert';
 
 const LoadingContext = React.createContext(null);
 export const useLoadingContext = () => React.useContext(LoadingContext);

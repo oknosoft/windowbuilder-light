@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Dialog from '../../../packages/ui/App/Dialog';
+import Dialog from 'metadata-ui/App/Dialog';
 
 import FunctionsIcon from '@mui/icons-material/Functions';
 import FormatShapesIcon from '@mui/icons-material/FormatShapes';

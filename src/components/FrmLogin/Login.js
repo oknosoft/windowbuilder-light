@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
-import Autocomplete from '../../packages/ui/DataField/Autocomplete';
+import Autocomplete from 'metadata-ui/DataField/Autocomplete';
 import Provider from './Provider';
 import Creditales from './Creditales';
 import Progress from './Progress';
