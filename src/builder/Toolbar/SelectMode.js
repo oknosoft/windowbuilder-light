@@ -1,8 +1,9 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import {styled} from '@mui/material/styles';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
@@ -21,22 +22,59 @@ const SplitscreenIcon = styled(Splitscreen)(({ theme }) => (
   {transform: 'rotate(90deg)'}
 ));
 
-export default function SelectMode({show3d, toggle3D}) {
+const map = {
+  carcass: ["Проволочная модель", PolylineIcon],
+  normal: ["Профили", AutoFixNormalIcon],
+  plane: ["Плоскости", SplitscreenIcon],
+};
 
-  const [view, setView] = React.useState('list');
+export default function SelectMode({show3d, toggle3D, editor}) {
 
-  const handleChange = (event, nextView) => {
-    setView(nextView);
+  const [view, setView] = React.useState(editor?.project?.props?.carcass || 'carcass');
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleChange = (nextView) => {
+    if(editor?.project) {
+      editor.project.props.carcass = nextView;
+      setView(nextView);
+      if(nextView === 'plane') {
+        editor.project.deselectAll();
+      }
+    }
+    handleClose();
+  };
+
+  const [title, Icon] = map[view];
 
   return <>
     <Box sx={{flex: 1}} />
-    <Tabs value={view} orientation="vertical" onChange={handleChange} >
-      <Tab value="list" accent icon={<HtmlTooltip title="Проволочная модель" placement="right"><PolylineIcon /></HtmlTooltip>} aria-label="select" />
-      <Tab value="module" accent icon={<HtmlTooltip title="Профили 2D" placement="right"><AutoFixNormalIcon /></HtmlTooltip>} aria-label="draw" />
-      <Tab value="quilt" accent icon={<HtmlTooltip title="Плоскости" placement="right"><SplitscreenIcon /></HtmlTooltip>} aria-label="draw" />
-    </Tabs>
+    <HtmlTooltip title={`Текущий режим: ${title}`} placement="right">
+      <IconButton sx={{ml: 1}} onClick={handleClick}><Icon/></IconButton>
+    </HtmlTooltip>
+    <Menu
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={handleClose}
+      onClick={handleClose}
+      >
+      {Object.keys(map).map((key) => {
+        const [title, Icon] = map[key];
+        return <MenuItem key={key} onClick={() => handleChange(key)}>
+          <ListItemIcon>
+            <Icon />
+          </ListItemIcon>
+          {title}
+        </MenuItem>;
+      })}
 
+    </Menu>
     <HtmlTooltip title={show3d ? 'Скрыть вид 3D' : 'Показать вид 3D'} placement="right">
       <IconButton sx={{ml: 1}} onClick={toggle3D}><Show3dIcon show3d={show3d}/></IconButton>
     </HtmlTooltip>
