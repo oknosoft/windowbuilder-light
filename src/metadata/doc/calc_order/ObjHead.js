@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from 'metadata-ui/DataField/Text';
 import RefField from 'metadata-ui/DataField/RefField';
-import PartnerField from '../../../packages/ui/PartnerField';
+import PartnerField from 'metadata-ui/PartnerField';
 import {NumberField} from 'metadata-ui/DataField/Number';
 
 export default function ObjHead({obj}) {
