@@ -119,6 +119,17 @@ class SelectableGroup extends BaseItem {
   }
 }
 
+class Product extends SelectableGroup {
+  constructor(project, index, parent) {
+    super(`Изделие №${index+1}`, `root-${index+1}`, 'icon_root', project, parent);
+    this.type = 'product';
+    this.active = project === parent._owner.project;
+    for(const layer of project.contours) {
+      this.children.push(new Layer(layer, this));
+    }
+  }
+}
+
 class Profiles extends SelectableGroup {
   constructor(owner, parent) {
     const {cnstr} = owner;
@@ -147,28 +158,24 @@ class Insets extends BaseItem {
 }
 
 class Struct extends BaseItem {
-  constructor(project) {
+  constructor(editor) {
 
-    const {ox, contours, l_connective} = project;
+
 
     //name, key, icon, _owner, _parent
     //super(`Заказ `, 'order', 'icon_order', project);
-    super(`Настройки `, 'settings', 'icon_gear', project);
+    super(`Настройки `, 'settings', 'icon_gear', editor);
 
     //const settings = new BaseItem(`Настройки`, 'settings', 'icon_gear', project, this);
     //this.children.push(settings);
 
-    const productName = 'Изделие';
-    const product = new BaseItem(productName, 'root', 'icon_root', project, this);
-    this.children.push(product);
-
-    for(const layer of contours) {
-      product.children.push(new Layer(layer, product));
-    }
+    editor.projects.forEach((project, index) => {
+      this.children.push(new Product(project, index, this));
+    });
 
     this.style = {subtree: {paddingLeft: 0}};
     this.expand();
-    product.expand();
+    //product.expand();
 
   }
 

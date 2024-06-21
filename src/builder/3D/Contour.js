@@ -6,7 +6,7 @@ import {containersGeometry, containerExtrude} from './containerExtrude';
 export default function Contour({layer, bounds}) {
 
   const pos = [
-    layer.layer ? 90 : layer.bounds.x - bounds.x,
+    0,
     0,
     layer.layer ? 12 : 0,
   ];
@@ -28,9 +28,9 @@ export default function Contour({layer, bounds}) {
     requestAnimationFrame(rotate, 50);
   }
 
-  if(pos[2]) {
-    setTimeout(rotate, 1000);
-  }
+  // if(pos[2]) {
+  //   setTimeout(rotate, 1000);
+  // }
 
   const res = [];
   for(const [profile] of profiles) {

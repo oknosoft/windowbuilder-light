@@ -55,6 +55,49 @@ function testProducts({editor, handleClose}) {
   }
 
   return {
+    square() {
+      const {project, DimensionLine} = editor;
+      const {props} = project;
+      props.loading = true;
+      project.clear();
+      const {activeLayer} = project;
+      const profiles = [
+        activeLayer.createProfile({b: [1800, 1100], e: [800, 1100]}),
+        activeLayer.createProfile({b: [800, 1100], e: [800, 100]}),
+        activeLayer.createProfile({b: [800, 100], e: [1800, 100]}),
+        activeLayer.createProfile({b: [1800, 100], e: [1800, 1100]}),
+      ];
+      for(const profile of profiles) {
+        activeLayer.skeleton.addProfile(profile);
+      }
+      activeLayer.containers.sync();
+      new DimensionLine({
+        project,
+        owner: activeLayer,
+        parent: project.dimensions,
+        elm1: profiles[0],
+        elm2: profiles[0],
+        p1: 'b',
+        p2: 'e',
+        pos: 'bottom',
+        offset: -220,
+      });
+      new DimensionLine({
+        project,
+        owner: activeLayer,
+        parent: project.dimensions,
+        elm1: profiles[3],
+        elm2: profiles[3],
+        p1: 'b',
+        p2: 'e',
+        pos: 'right',
+        offset: -240,
+      });
+      props.loading = false;
+      project.redraw();
+      project.zoomFit();
+      handleClose();
+    },
     imposts() {
       const {project, DimensionLine} = editor;
       const {props} = project;
@@ -146,7 +189,7 @@ export default function TestProducts({editor}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const {imposts, grid20, grid100, clear} = testProducts({editor, handleClose});
+  const {imposts, square, grid20, grid100, clear} = testProducts({editor, handleClose});
 
   return <>
     <HtmlTooltip title="Тестовые изделия">
@@ -168,6 +211,7 @@ export default function TestProducts({editor}) {
       }}
     >
       <MenuItem onClick={imposts}>Импосты</MenuItem>
+      <MenuItem onClick={square}>Квадрат</MenuItem>
       <MenuItem onClick={grid20}>Сетка 6</MenuItem>
       <MenuItem onClick={grid100}>Сетка 40</MenuItem>
       <MenuItem onClick={clear}>Очистить</MenuItem>

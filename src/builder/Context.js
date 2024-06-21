@@ -6,13 +6,9 @@ import React from 'react';
  * @property {Contour} layer - активный слой редактора
  * @property {Tool} tool - текущий инструмент редактора
  * @property {DocCalcOrder} calcOrder - расчёт-заказ покупателя
- * @property {DocCalcOrder} ox - текущее изделие
  * @property {DocCalcOrderProductionRow} orderRow - текущая строка расчёта
- * @property {DocWorkCentersTask} task - задание на производство
- * @property {DocPurchaseOrder} purchase - заказ поставщику
  * @property {Boolean} history - включен просмотр истории
  * @property {Boolean} clipboard - открыта форма буфера обмена
- * @property {Boolean} sketchView - текущий вид на эскиз
  * @property {String} type - тип выделения в дереве структуры изделия
  * @property {String} mode - текущий режим (рисовалка, заказ, раскрой и т.д)
  */
@@ -22,7 +18,6 @@ const defaultContext = {
   layer: null,
   tool: null,
   calcOrder: null,
-  ox: null,
   orderRow: null,
   history: false,
   clipboard: false,
