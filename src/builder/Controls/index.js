@@ -1,13 +1,26 @@
 import React from 'react';
 import controlsToolbar from './Toolbar';
+import ProfileProps from './ProfileProps';
+import LayerProps from './LayerProps';
+
 import {useBuilderContext} from '../Context';
 
 export default function Controls() {
-  const Toolbar = controlsToolbar();
-  const {editor, tool, layer} = useBuilderContext();
-  const ToolWnd = tool?.constructor?.ToolWnd;
+  const {editor, tool, type, project, layer, elm, node} = useBuilderContext();
+  const props = {editor, tool, project, layer, elm, node}
+  let ToolWnd = tool?.constructor?.ToolWnd;
+  const Toolbar = controlsToolbar({tool, type});
+  if(!ToolWnd) {
+    if(type === 'layer') {
+      ToolWnd = LayerProps;
+    }
+    else if(type === 'elm' || type === 'node') {
+      ToolWnd = ProfileProps;
+    }
+  }
+
   return <>
-    <Toolbar>Controls</Toolbar>
-    {ToolWnd ? <ToolWnd editor={editor} tool={tool} layer={layer}/> : null}
+    <Toolbar {...props}/>
+    {ToolWnd ? <ToolWnd {...props}/> : null}
   </>;
 }

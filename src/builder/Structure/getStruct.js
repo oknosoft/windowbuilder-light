@@ -59,23 +59,18 @@ class Layer extends BaseItem {
   constructor(layer, parent) {
     const {contours, cnstr} = layer;
     super("Слой", `l-${cnstr}`, 'icon_layer', layer, parent);
-    const setHiddenRecursive = (layer, value) => {
-      layer.hidden = value;
-      for(const contour of layer.contours) {
-        setHiddenRecursive(contour, value);
-      }
-    };
+    this.type = 'layer';
+    for(const layer of contours) {
+      this.children.push(new Layer(layer, this));
+    }
     Object.defineProperty(this, 'checked', {
       get() {
         return !layer.hidden;
       },
       set(v) {
-        setHiddenRecursive(layer, !v);
+        layer.hidden = !v;
       }
     });
-    for(const layer of contours) {
-      this.children.push(new Layer(layer, this));
-    }
     /*
   this.children.push(new Profiles(layer, this));
       if(layer.cnstr && layer.cnstr !== 1000000) {
@@ -83,6 +78,14 @@ class Layer extends BaseItem {
         this.children.push(new Insets(layer, this));
       }
     */
+  }
+  get active() {
+    const {_owner} = this;
+    const {project} = _owner;
+    return project === project._scope.project && _owner === project.activeLayer;
+  }
+  set active(v) {
+
   }
 }
 
@@ -123,10 +126,27 @@ class Product extends SelectableGroup {
   constructor(project, index, parent) {
     super(`Изделие №${index+1}`, `root-${index+1}`, 'icon_root', project, parent);
     this.type = 'product';
-    this.active = project === parent._owner.project;
     for(const layer of project.contours) {
       this.children.push(new Layer(layer, this));
     }
+    this.expand();
+  }
+
+  get nodeStyle() {
+    return {
+      activeLink: {
+        fontWeight: 500,
+        background: 'rgba(128, 128, 128, 0.1)',
+      }
+    };
+  }
+
+  get active() {
+    const {_owner} = this;
+    return _owner === _owner._scope.project;
+  }
+  set active(v) {
+
   }
 }
 

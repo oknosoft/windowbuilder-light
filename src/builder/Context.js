@@ -14,7 +14,9 @@ import React from 'react';
  */
 const defaultContext = {
   editor: null,
+  project: null,
   elm: null,
+  node: '',
   layer: null,
   tool: null,
   calcOrder: null,

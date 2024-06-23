@@ -6,10 +6,10 @@ import {useBuilderContext} from '../Context';
 
 
 export default function StructureTree() {
-  const {editor, stamp, setContext} = useBuilderContext();
+  const {editor, project, elm, layer, stamp, setContext} = useBuilderContext();
   const struct = React.useMemo(() => {
     return editor ? getStruct(editor) : null;
-  }, [stamp]);
+  }, [editor, stamp]);
   const [index, setIndex] = React.useState(0);
 
   if(!struct) {
@@ -17,13 +17,31 @@ export default function StructureTree() {
   }
 
   const onClickHeader = (node) => {
+    struct.deselect();
+    const curr = {project, elm: null, layer: null, type: 'root'};
     if(node.type === 'product') {
-      struct.deselect();
-      editor.project.deselectAll();
-      const project = node._owner;
-      project.activate();
-      editor.refreshTools();
-      setContext({stamp: project.props.stamp, tool: editor.tool});
+      if(curr.project !== node._owner) {
+        curr.project?.deselectAll?.();
+        curr.project = node._owner;
+        curr.project.activate();
+        editor.refreshTools();
+      }
+      setContext({stamp: curr.project.props.stamp, tool: editor.tool, ...curr});
+    }
+    else if(node.type === 'layer') {
+      const curr = {project, elm: null, layer, type: 'layer'};
+      if(curr.project !== node._owner.project) {
+        curr.project?.deselectAll?.();
+        curr.project = node._owner.project;
+        curr.project.activate();
+        editor.refreshTools();
+      }
+      if(curr.layer !== node._owner) {
+        curr.layer = node._owner;
+        curr.layer.activate();
+        editor.eve.emit_promise('select', {...curr});
+      }
+      setContext({stamp: curr.project.props.stamp, tool: editor.tool, ...curr});
     }
   };
 

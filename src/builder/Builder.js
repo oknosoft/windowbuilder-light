@@ -32,11 +32,14 @@ export default function Builder({context, width, handleColor, resizeStop}) {
     const {md, utils} = $p;
     const onRedraw = utils.debounce(function onRedraw(project) {
       if(editor?.project === project) {
-        setContext({stamp: project.props.stamp})
+        setContext({project, stamp: project.props.stamp})
       }
     });
-    md.on('redraw', onRedraw);
-    return () => md.off('redraw', onRedraw);
+    const onSelect = utils.debounce(function onSelect(select) {
+      setContext({...select})
+    });
+    md.on({redraw: onRedraw, select: onSelect});
+    return () => md.off({redraw: onRedraw, select: onSelect});
   }, [editor]);
 
   const createEditor = (el) => {
@@ -57,7 +60,7 @@ export default function Builder({context, width, handleColor, resizeStop}) {
   };
 
   return <Resize handleWidth="6px" handleColor={handleColor} onResizeStop={resizeStop}>
-    <ResizeVertical height={show3d ? "50%" : "95%"} minHeight="400px">
+    <ResizeVertical height={show3d ? "50%" : "95%"} minHeight="200px">
       <Row>
         <SelectTool show3d={show3d} toggle3D={toggle3D} />
         <canvas
@@ -68,7 +71,7 @@ export default function Builder({context, width, handleColor, resizeStop}) {
         />
       </Row>
     </ResizeVertical>
-    <ResizeVertical minHeight={show3d ? "50%" : "5%"} show={show3d}>
+    <ResizeVertical minHeight={show3d ? "50%" : "5%"} show={show3d} minHeight="200px">
       {show3d ? Wraper(Canvas3D) : null}
     </ResizeVertical>
   </Resize>;

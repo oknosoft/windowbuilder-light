@@ -1,12 +1,11 @@
 import React from 'react';
-import structureToolbar from './Toolbar';
+import StructureToolbar from './Toolbar';
 import StructureTree from './Tree';
 import './styles/designer.css';
 
 export default function ProductStructure() {
-  const Toolbar = structureToolbar();
   return <>
-    <Toolbar />
+    <StructureToolbar />
     <StructureTree />
   </>;
 }

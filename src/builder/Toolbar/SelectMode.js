@@ -11,6 +11,7 @@ import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import Splitscreen from '@mui/icons-material/Splitscreen';
+import BalanceOutlinedIcon from '@mui/icons-material/BalanceOutlined';
 
 const Show3dIcon = styled(VerticalAlignBottomIcon, {
   shouldForwardProp: (prop) => prop !== 'show3d',
@@ -25,7 +26,7 @@ const SplitscreenIcon = styled(Splitscreen)(({ theme }) => (
 const map = {
   carcass: ["Проволочная модель", PolylineIcon],
   normal: ["Профили", AutoFixNormalIcon],
-  plane: ["Плоскости", SplitscreenIcon],
+  pick: ["Выбор вставок", BalanceOutlinedIcon],
 };
 
 export default function SelectMode({show3d, toggle3D, editor}) {
@@ -44,7 +45,7 @@ export default function SelectMode({show3d, toggle3D, editor}) {
     if(editor?.project) {
       editor.project.props.carcass = nextView;
       setView(nextView);
-      if(nextView === 'plane') {
+      if(nextView === 'pick') {
         editor.project.deselectAll();
       }
     }
