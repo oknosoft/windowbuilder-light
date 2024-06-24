@@ -51,6 +51,7 @@ export default function GlassDetails({row, selected, glob}) {
         }
 
         const {project} = row.row.editor;
+        project.register_change();
         project.redraw();
         project.save_coordinates({})
           .then(fin)

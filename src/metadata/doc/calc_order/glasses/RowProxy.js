@@ -118,12 +118,15 @@ export class RowProxy {
   }
 
   get len() {
-    const {editor} = this;
+    const {editor, characteristic} = this;
     if(editor?.project?.bounds) {
       return editor.project.bounds.width.round();
     }
+    else if(characteristic.x) {
+      return characteristic.x.round();
+    }
     const {x1, x2} = this.glassRow;
-    return Math.abs(x2 - x1);
+    return Math.abs(x2 - x1).round();
   }
   set len(v) {
     const {editor} = this;
@@ -140,12 +143,15 @@ export class RowProxy {
   }
 
   get height() {
-    const {editor} = this;
+    const {editor, characteristic} = this;
     if(editor?.project?.bounds) {
       return editor.project.bounds.height.round();
     }
+    else if(characteristic.y) {
+      return characteristic.y.round();
+    }
     const {y1, y2} = this.glassRow;
-    return Math.abs(y2 - y1);
+    return Math.abs(y2 - y1).round();
   }
   set height(v) {
     const {editor} = this;
