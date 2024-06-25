@@ -68,6 +68,7 @@ export const Relative = styled('div')(() => ({
 }));
 
 export const Padding = styled('div')(({ theme }) => ({padding: theme.spacing()}));
+export const PaddingLeft = styled('div')(({ theme }) => ({paddingLeft: theme.spacing()}));
 
 export const Content = styled('div')(({ theme }) => ({
   height: `calc(100vh - ${toolbarHeight + 1}px)`,

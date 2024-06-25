@@ -5,6 +5,7 @@
  */
 
 import {load_common} from '../proxy';
+import {load_raw} from '../proxy/raw';
 
 export const init_state = {
   meta_loaded: false,
@@ -46,9 +47,8 @@ export function actions(handleIfaceState) {
         //.then(() => import('react-data-grid/lib/styles.css'))
         .then(() => import('../styles/patch.css'));
     })
-    .then(() => {
-      return load_common($p);
-    })
+    .then(() => load_common($p))
+    .then(() => load_raw($p))
     .then(() => {
       const {classes: {PouchDB}, adapters: {pouch}, jobPrm, md, ui, cat: {users}} = $p;
       handleIfaceState({common_loaded: true});

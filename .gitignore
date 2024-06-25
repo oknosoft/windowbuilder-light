@@ -15,6 +15,7 @@
 
 # Exclude compiled files
 /build
+/public/raw
 /scripts/stats.json
 /src/_common/styles/steklotorg.png
 *.map
@@ -32,3 +33,4 @@
 
 *.log*
 yarn.lock
+

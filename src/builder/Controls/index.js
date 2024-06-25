@@ -2,6 +2,7 @@ import React from 'react';
 import controlsToolbar from './Toolbar';
 import ProfileProps from './ProfileProps';
 import LayerProps from './LayerProps';
+import {PaddingLeft} from '../../aggregate/App/styled';
 
 import {useBuilderContext} from '../Context';
 
@@ -21,6 +22,8 @@ export default function Controls() {
 
   return <>
     <Toolbar {...props}/>
-    {ToolWnd ? <ToolWnd {...props}/> : null}
+    <PaddingLeft>
+      {ToolWnd ? <ToolWnd {...props}/> : null}
+    </PaddingLeft>
   </>;
 }
