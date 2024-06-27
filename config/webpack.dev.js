@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   mode: process.env.NODE_ENV || "development",  // production
@@ -10,12 +11,13 @@ module.exports = {
     //publicPath: "./",
     filename: "static/js/bundle.js",            // название создаваемого файла
     chunkFilename: 'static/js/[name].chunk.js',
-    assetModuleFilename: 'static/media33/[name].[hash][ext]',
+    assetModuleFilename: 'static/media/[name].[hash][ext]',
   },
   devServer: {
     historyApiFallback: true,
     static: {
       directory: path.join(__dirname, "../build"),
+      watch: false,
     },
     proxy: [
       {
@@ -33,13 +35,22 @@ module.exports = {
       },
     ],
     port: 8031,
-    open: true
+    open: true,
+    liveReload: false,
+    hot: false,
   },
   devtool: false,
   plugins: [
     new webpack.SourceMapDevToolPlugin({}),
     new HtmlWebpackPlugin({
       template: "public/index.html"
+    }),
+    new WorkboxPlugin.GenerateSW({
+      // these options encourage the ServiceWorkers to get in there fast
+      // and not allow any straggling "old" SWs to hang around
+      clientsClaim: true,
+      skipWaiting: true,
+      maximumFileSizeToCacheInBytes: 180 * 1024 * 1024,
     }),
   ],
   resolve: {

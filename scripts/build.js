@@ -1,10 +1,11 @@
 const path = require('node:path');
-const fs = require('node:fs');
+const fs = require('fs-extra');
 const webpack = require('webpack');
 const config = require('../config/webpack.prod');
 
 function rimraf(tmpPath) {
   console.log('Чистим каталог build...');
+  return Promise.resolve();
   return new Promise((resolve, reject) => {
     fs.readdir(tmpPath, (err, files) => {
       if (!err) {
@@ -23,6 +24,14 @@ function rimraf(tmpPath) {
       }
     });
   })
+}
+
+function copyPublicFolder(appPublic, appBuild) {
+  const appHtml = path.resolve(appPublic, 'index.html');
+  fs.copySync(appPublic, appBuild, {
+    dereference: true,
+    filter: file => file !== appHtml,
+  });
 }
 
 function build(previousFileSizes) {
@@ -57,7 +66,8 @@ function build(previousFileSizes) {
   });
 }
 
-rimraf(path.resolve(__dirname, "../build"))
+rimraf(path.resolve(__dirname, '../build'))
   .then(() => build(0))
+  .then(() => copyPublicFolder(path.resolve(__dirname, '../public'), path.resolve(__dirname, '../build')))
   .catch(console.error);
 

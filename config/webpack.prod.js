@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   mode: process.env.NODE_ENV || "production",  // production
@@ -11,12 +12,23 @@ module.exports = {
     filename: 'static/js/[name].[contenthash:8].js',
     // There are also additional JS chunk files if you use code splitting.
     chunkFilename: 'static/js/[name].[contenthash:8].chunk.js',
-    assetModuleFilename: 'static/media33/[name].[hash:8][ext]',
+    assetModuleFilename: 'static/media/[name].[hash:8][ext]',
+    clean: true,
   },
   devtool: false,
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "../public/index.html")
+    }),
+    new WorkboxPlugin.InjectManifest({
+      swSrc: './src/service-worker.js',
+      dontCacheBustURLsMatching: new RegExp('(^/auth/|^/adm/|^/user/|^/couchdb/|^/help/|^/r/|^/a/|\.[0-9a-f]{8}\.)'),
+
+      exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/],
+      // Bump up the default maximum size (2mb) that's precached,
+      // to make lazy-loading failure scenarios less likely.
+      // See https://github.com/cra-template/pwa/issues/13#issuecomment-722667270
+      maximumFileSizeToCacheInBytes: 180 * 1024 * 1024,
     }),
   ],
   resolve: {

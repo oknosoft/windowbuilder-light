@@ -11,3 +11,13 @@ const root = ReactDOM.createRoot(elm);
 root.render(<React.Suspense fallback={<Loading/>}>
     <Metadata App={App} initialText={initialText} />
   </React.Suspense>);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then(registration => {
+      console.log('SW registered: ', registration);
+    }).catch(registrationError => {
+      console.log('SW registration failed: ', registrationError);
+    });
+  });
+}
