@@ -38,7 +38,6 @@
     "react-number-format": "^5.4",
     "react-router-dom": "6.24",
     "shallowequal": "^1.1.0",
-    "three": "0.165",
     "url-join": "^5.0",
     "url-parse": "^1.5"
   },

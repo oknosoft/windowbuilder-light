@@ -13,10 +13,13 @@ export default function LayerToolbar({project, layer, setContext}) {
     //setContext({stamp: project.props.stamp, tool: editor.tool});
   };
   const removeFlap = () => {
+    const {props} = project;
     const parent = layer.layer;
     parent?.activate();
     layer.remove();
-    setContext({layer: parent || null, stamp: project.props.stamp});
+    project.redraw();
+    project.zoomFit();
+    setContext({layer: parent || null, stamp: props.stamp});
   };
   return <Toolbar disableGutters>
     <HtmlTooltip title="Добавить створку">

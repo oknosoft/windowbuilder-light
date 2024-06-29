@@ -43,6 +43,7 @@ function testProducts({editor, handleClose}) {
     }
 
     props.loading = false;
+    props.registerChange();
     project.redraw();
     project.zoomFit();
 
@@ -94,6 +95,7 @@ function testProducts({editor, handleClose}) {
         offset: -240,
       });
       props.loading = false;
+      props.registerChange();
       project.redraw();
       project.zoomFit();
       handleClose();
@@ -162,6 +164,7 @@ function testProducts({editor, handleClose}) {
         offset: -120,
       });
       props.loading = false;
+      props.registerChange();
       project.redraw();
       project.zoomFit();
 

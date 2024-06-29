@@ -6,8 +6,8 @@ import {containersGeometry, containerExtrude} from './containerExtrude';
 export default function Contour({layer, bounds}) {
 
   const pos = [
-    0,
-    0,
+    layer.bounds.x - bounds.x,
+    layer.bounds.y - bounds.y,
     layer.layer ? 12 : 0,
   ];
   const profiles = profilesGeometry(layer.profiles, bounds, pos);

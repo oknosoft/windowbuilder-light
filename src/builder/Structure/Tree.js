@@ -15,6 +15,7 @@ export default function StructureTree() {
   if(!struct) {
     return 'Загрузка...';
   }
+  //struct.refresh({project, elm, layer});
 
   const onClickHeader = (node) => {
     struct.deselect();

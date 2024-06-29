@@ -36,7 +36,7 @@ export default function Builder({context, width, handleColor, resizeStop}) {
       }
     });
     const onSelect = utils.debounce(function onSelect(select) {
-      setContext({...select})
+      setContext({...select});
     });
     md.on({redraw: onRedraw, select: onSelect});
     return () => md.off({redraw: onRedraw, select: onSelect});

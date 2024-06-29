@@ -12,10 +12,10 @@ export default function Controls() {
   let ToolWnd = tool?.constructor?.ToolWnd;
   const Toolbar = controlsToolbar({tool, type});
   if(!ToolWnd) {
-    if(type === 'layer') {
+    if(type === 'layer' && layer) {
       ToolWnd = LayerProps;
     }
-    else if(type === 'elm' || type === 'node') {
+    else if((type === 'elm' || type === 'node') && elm) {
       ToolWnd = ProfileProps;
     }
   }

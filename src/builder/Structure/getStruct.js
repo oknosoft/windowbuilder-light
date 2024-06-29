@@ -198,7 +198,6 @@ class Struct extends BaseItem {
     //product.expand();
 
   }
-
 }
 
 export default function getStruct(project) {
