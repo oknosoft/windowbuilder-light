@@ -48,7 +48,9 @@ export function actions(handleIfaceState) {
         .then(() => import('../styles/patch.css'));
     })
     .then(() => load_common($p))
+    .then(() => handleIfaceState({common_loaded: true}))
     .then(() => load_raw($p))
+    .then(() => handleIfaceState({complete_loaded: true}))
     .then(() => {
       const {classes: {PouchDB}, adapters: {pouch}, jobPrm, md, ui, cat: {users}} = $p;
       handleIfaceState({common_loaded: true});

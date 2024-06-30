@@ -2,7 +2,9 @@ import React from 'react';
 import Autocomplete from '@oknosoft/ui/DataField/Autocomplete';
 import {onKeyUp} from '@oknosoft/ui/DataField/enterTab';
 
-const options = [...$p.cat.productionParams].sort($p.utils.sort('name'));
+const options = (({cat, utils}) =>  [...cat.productionParams]
+  .filter(v => v.elmnts.length)
+  .sort(utils.sort('name')))($p);
 
 export default function FieldSys({obj, fld, onChange, fullWidth=true, enterTab, ...other}) {
 

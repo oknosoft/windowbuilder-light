@@ -6,7 +6,15 @@ import MenuItem from '@mui/material/MenuItem';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 
-function testProducts({editor, handleClose}) {
+function testProducts({editor, setContext, handleClose}) {
+
+  function prepare(project) {
+    const {props} = project;
+    props.loading = true;
+    project.clear();
+    setContext({project, type: 'product', layer: null, elm: null});
+    return project;
+  }
 
   function grid100(ev, count) {
     if(typeof count !== 'number') {
@@ -17,10 +25,7 @@ function testProducts({editor, handleClose}) {
     const size = step * count;
 
     const {project} = editor;
-    const {props} = project;
-    props.loading = true;
-    project.clear();
-    const {activeLayer} = project;
+    const {props, activeLayer} = prepare(project);
     const profiles = [];
     // стойки
     for(let x = 0; x < size; x += step) {
@@ -52,16 +57,14 @@ function testProducts({editor, handleClose}) {
 
   function clear() {
     editor.project.clear();
+    setContext({project, type: 'product', layer: null, elm: null});
     handleClose();
   }
 
   return {
     square() {
       const {project, DimensionLine} = editor;
-      const {props} = project;
-      props.loading = true;
-      project.clear();
-      const {activeLayer} = project;
+      const {props, activeLayer} = prepare(project);
       const profiles = [
         activeLayer.createProfile({b: [1800, 1100], e: [800, 1100]}),
         activeLayer.createProfile({b: [800, 1100], e: [800, 100]}),
@@ -102,10 +105,7 @@ function testProducts({editor, handleClose}) {
     },
     imposts() {
       const {project, DimensionLine} = editor;
-      const {props} = project;
-      props.loading = true;
-      project.clear();
-      const {activeLayer} = project;
+      const {props, activeLayer} = prepare(project);
       const profiles = [
         activeLayer.createProfile({b: [1400, 1000], e: [100, 1000]}),
         activeLayer.createProfile({b: [100, 1000], e: [100, 0]}),
@@ -182,7 +182,7 @@ function testProducts({editor, handleClose}) {
 
 
 
-export default function TestProducts({editor}) {
+export default function TestProducts({editor, setContext}) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -192,7 +192,7 @@ export default function TestProducts({editor}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const {imposts, square, grid20, grid100, clear} = testProducts({editor, handleClose});
+  const {imposts, square, grid20, grid100, clear} = testProducts({editor, setContext, handleClose});
 
   return <>
     <HtmlTooltip title="Тестовые изделия">

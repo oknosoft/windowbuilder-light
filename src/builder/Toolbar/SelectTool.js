@@ -23,11 +23,9 @@ const Vertical = styled('div')(({ theme }) => ({
 }));
 
 export default function SelectTool({show3d, toggle3D}) {
-  const [tool, setTool] = React.useState(0);
-  const {editor, setContext} = useBuilderContext();
+  const {editor, tool, setContext} = useBuilderContext();
 
   const handleChange = (event, newValue) => {
-    setTool(newValue);
     const tool = editor.tools[newValue];
     tool?.activate?.();
     setContext({tool});
