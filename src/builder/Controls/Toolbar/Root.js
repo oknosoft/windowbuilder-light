@@ -1,6 +1,6 @@
 import React from 'react';
 import {Toolbar} from '../../../aggregate/App/styled';
 
-export default function RootToolbar() {
-  return <Toolbar disableGutters>Controls</Toolbar>
+export default function RootToolbar({type}) {
+  return <Toolbar disableGutters>{type}</Toolbar>
 }

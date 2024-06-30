@@ -1,0 +1,22 @@
+import React from 'react';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import {Toolbar, HtmlTooltip} from '../../../aggregate/App/styled';
+import AddHomeWorkOutlinedIcon from '@mui/icons-material/AddHomeWorkOutlined';
+import FolderOffOutlinedIcon from '@mui/icons-material/FolderOffOutlined';
+
+
+// style={{fontFamily: 'GOST type B'}}
+
+export default function ElmToolbar({editor, setContext}) {
+
+  return <Toolbar disableGutters>
+    <HtmlTooltip title="Добавить узел">
+      <IconButton disabled><i className="tb_add_segment gl disabled"/></IconButton>
+    </HtmlTooltip>
+    <Box sx={{flex: 1}} />
+    <HtmlTooltip title="Удалить элемент">
+      <IconButton disabled><i className="fa fa-trash-o" /></IconButton>
+    </HtmlTooltip>
+  </Toolbar>
+}

@@ -57,6 +57,23 @@
   border: none;
 }
 
+.gl.disabled { pointer-events: none; opacity: 0.4}
+
+[class*="tb_"] {
+  background-repeat: no-repeat;
+  background-position-top: 4px;
+  width: 24px;
+  height: 24px;
+}
+
+[class*="tb_img"] {
+  background-position: 1px;
+  display: inline-flex;
+  min-width: 32px;
+  margin-bottom: -6px;
+  flex-shrink: 0;
+}
+
 .tb_img_cnn_ad {background-image: url(imgs/cnn-ad.png);}
 .tb_img_cnn_i {background-image: url(imgs/cnn-i.png);}
 .tb_img_cnn_ii {background-image: url(imgs/cnn-ii.png);}

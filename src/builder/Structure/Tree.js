@@ -6,7 +6,7 @@ import {useBuilderContext} from '../Context';
 
 
 export default function StructureTree() {
-  const {editor, project, elm, layer, stamp, setContext} = useBuilderContext();
+  const {editor, project, type, elm, layer, stamp, setContext} = useBuilderContext();
   const struct = React.useMemo(() => {
     return editor ? getStruct(editor) : null;
   }, [editor, stamp]);

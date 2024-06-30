@@ -1,5 +1,5 @@
 import RootToolbar from './Root';
 
-export default function controlsToolbar (mode) {
+export default function controlsToolbar ({type}) {
   return RootToolbar;
 }
