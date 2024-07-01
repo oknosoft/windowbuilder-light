@@ -3,34 +3,16 @@ import * as THREE from 'three';
 import {profilesGeometry, profileExtrude} from './profileExtrude';
 import {containersGeometry, containerExtrude} from './containerExtrude';
 
-export default function Contour({layer, bounds}) {
+export default function Contour({layer, bounds, position, rotation, quaternion}) {
 
   const pos = [
-    layer.bounds.x - bounds.x,
-    layer.bounds.y - bounds.y,
-    layer.layer ? 12 : 0,
+    bounds.x - position.x,
+    position.y + bounds.y + bounds.height,
+    position.z + (layer.layer ? 12 : 0),
   ];
-  const profiles = profilesGeometry(layer.profiles, bounds, pos);
-  const containers = containersGeometry(layer.containers, bounds, pos);
-  const ref = React.useRef();
 
-  const rotate = () => {
-    const {current} = ref;
-    if(current) {
-      if(current.rotation.y < -2.2) {
-        ref.sign = 1;
-      }
-      else if(current.rotation.y > -0.01) {
-        ref.sign = -1;
-      }
-      current.rotation.y += ref.sign * 0.003;
-    }
-    requestAnimationFrame(rotate, 50);
-  }
-
-  // if(pos[2]) {
-  //   setTimeout(rotate, 1000);
-  // }
+  const profiles = profilesGeometry(layer.profiles, pos);
+  const containers = containersGeometry(layer.containers, pos);
 
   const res = [];
   for(const [profile] of profiles) {
@@ -40,7 +22,7 @@ export default function Contour({layer, bounds}) {
     res.push(containerExtrude(container, containers));
   }
   for(const contour of layer.contours) {
-    res.push(<Contour key={`c-${contour.id}`} layer={contour} bounds={bounds} />);
+    res.push(<Contour key={`c-${contour.id}`} layer={contour} bounds={bounds} position={position} rotation={[0,0,0]} quaternion={[0, 0, 0, 1]}/>);
   }
-  return <group ref={ref} >{res}</group>;
+  return <group rotation={rotation}>{res}</group>;
 }

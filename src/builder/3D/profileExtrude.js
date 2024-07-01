@@ -5,9 +5,8 @@ import {Edges} from '@react-three/drei';
 
 import {rama, impost, flap} from './shapes';
 
-function profilePath(profile, bounds, pos) {
+function profilePath(profile, pos) {
   const {b, e, generatrix} = profile;
-  const y = bounds.height + bounds.top;
   let pb = b.point;
   let pe = e.point;
   if(b.isT) {
@@ -23,20 +22,20 @@ function profilePath(profile, bounds, pos) {
     pe = generatrix.getPointAt(generatrix.length - 38);
   }
 
-  const v1 = new THREE.Vector3(pb.x - pos[0], (y - pb.y), pos[2]);
-  const v2 = new THREE.Vector3(pe.x - pos[0], (y - pe.y), pos[2]);
+  const v1 = new THREE.Vector3(pb.x - pos[0], pos[1] - pb.y, pos[2]);
+  const v2 = new THREE.Vector3(pe.x - pos[0], pos[1] - pe.y, pos[2]);
   const path = new THREE.CurvePath();
   path.add( new THREE.LineCurve3( v1, v2 ) );
   return path;
 }
 
-export function profilesGeometry(profiles, bounds, pos) {
+export function profilesGeometry(profiles, pos) {
   const res = new Map();
   for(const profile of profiles) {
     const extrudeSettings = {
       steps: 10,
       bevelEnabled: false,
-      extrudePath: profilePath(profile, bounds, pos),
+      extrudePath: profilePath(profile, pos),
     };
     let shape = rama;
     if(profile.b.isT || profile.e.isT) {

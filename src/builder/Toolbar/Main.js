@@ -32,21 +32,21 @@ export default function MainToolbar({context}) {
   return <>
     {drawerOpen ? null : <Divider orientation="vertical" sx={{mr: 1}} flexItem />}
     <HtmlTooltip title="Записать и закрыть">
-      <IconButton onClick={saveClose}><SaveIcon/></IconButton>
+      <IconButton disabled onClick={saveClose}><SaveIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Записать">
-      <IconButton onClick={save}><SaveAsIcon/></IconButton>
+      <IconButton disabled onClick={save}><SaveAsIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Пересчитать">
-      <IconButton onClick={recalc}><CalculateIcon/></IconButton>
+      <IconButton disabled onClick={recalc}><CalculateIcon/></IconButton>
     </HtmlTooltip>
     <Divider orientation="vertical" sx={{mx: 1}} flexItem />
     <TestProducts editor={editor} setContext={setContext} />
     <HtmlTooltip title="Скопировать в буфер обмена">
-      <IconButton onClick={recalc}><CopyAllIcon/></IconButton>
+      <IconButton disabled onClick={recalc}><CopyAllIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Загрузить из буфера обмена">
-      <IconButton onClick={recalc}><ContentPasteGoIcon/></IconButton>
+      <IconButton disabled onClick={recalc}><ContentPasteGoIcon/></IconButton>
     </HtmlTooltip>
     <Typography sx={{flex: 1}}></Typography>
     <HtmlTooltip title="Закрыть редактор">

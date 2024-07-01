@@ -6,17 +6,16 @@ import * as THREE from 'three';
 //const texture = loader.load('./glass.png');
 //const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg');
 
-function glassPath(container, bounds, pos) {
-  const y = bounds.height + bounds.top;
+function glassPath(container, pos) {
   const {perimeter, pathInner} = container;
   const points = pathInner.map(v => {
     //const {point} = v.endVertex;
-    return {x: v.x, y: y - v.y};
+    return {x: v.x - pos[0], y: pos[1] - v.y};
   })
   const start = points[0];
 
-  const v1 = new THREE.Vector3(start.x - pos[0], start.y, pos[2] -26);
-  const v2 = new THREE.Vector3(start.x - pos[0], start.y, pos[2] -66);
+  const v1 = new THREE.Vector3(start.x, start.y, pos[2] -26);
+  const v2 = new THREE.Vector3(start.x, start.y, pos[2] -66);
   const extrudePath = new THREE.CurvePath();
   extrudePath.add( new THREE.LineCurve3( v1, v2 ) );
   const shape = new THREE.Shape();
@@ -29,11 +28,11 @@ function glassPath(container, bounds, pos) {
   return {extrudePath, shape};
 }
 
-export function containersGeometry(containers, bounds, pos) {
+export function containersGeometry(containers, pos) {
   const res = new Map();
   for(const container of containers) {
     if(container.kind === 'glass') {
-      const {extrudePath, shape} = glassPath(container, bounds, pos);
+      const {extrudePath, shape} = glassPath(container, pos);
       const extrudeSettings = {
         steps: 2,
         bevelEnabled: false,

@@ -29,9 +29,9 @@ const map = {
   pick: ["Выбор вставок", BalanceOutlinedIcon],
 };
 
-export default function SelectMode({show3d, toggle3D, editor}) {
+export default function SelectMode({view, setView, show3d, toggle3D, editor}) {
 
-  const [view, setView] = React.useState(editor?.project?.props?.carcass || 'carcass');
+
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {

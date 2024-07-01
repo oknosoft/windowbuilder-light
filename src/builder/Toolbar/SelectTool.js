@@ -22,7 +22,7 @@ const Vertical = styled('div')(({ theme }) => ({
   height: '100%',
 }));
 
-export default function SelectTool({show3d, toggle3D}) {
+export default function SelectTool({view, setView, show3d, toggle3D}) {
   const {editor, tool, setContext} = useBuilderContext();
 
   const handleChange = (event, newValue) => {
@@ -31,16 +31,16 @@ export default function SelectTool({show3d, toggle3D}) {
     setContext({tool});
   };
 
-  return <Vertical>
+  return editor ? <Vertical>
     <HtmlTooltip title="Вписать в окно (масштаб)" placement="right">
       <IconButton sx={{ml: 1}} onClick={() => editor.project.zoomFit()}><ZoomFitIcon/></IconButton>
     </HtmlTooltip>
-    <Tabs value={tool} orientation="vertical" onChange={handleChange} >
+    <Tabs value={editor.tools.indexOf(tool)} orientation="vertical" onChange={handleChange} >
       <Tab value={0} accent icon={<HtmlTooltip title="Выделить и сдвинуть" placement="right"><CursorIcon /></HtmlTooltip>} aria-label="select" />
       <Tab value={1} accent icon={<HtmlTooltip title="Панорама и сдвиг" placement="right"><WavingHandOutlinedIcon /></HtmlTooltip>} aria-label="draw" />
       <Tab value={2} accent icon={<HtmlTooltip title="Нарисовать элемент" placement="right"><PenIcon /></HtmlTooltip>} aria-label="draw" />
     </Tabs>
     <Divider flexItem/>
-    <SelectMode show3d={show3d} toggle3D={toggle3D} editor={editor} />
-  </Vertical>
+    <SelectMode view={view} setView={setView} show3d={show3d} toggle3D={toggle3D} editor={editor} />
+  </Vertical> : null;
 }

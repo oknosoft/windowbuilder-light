@@ -27,6 +27,7 @@ export default function Builder({context, width, handleColor, resizeStop}) {
       editor.project.zoomFit();
     });
   }
+  const [view, setView] = React.useState(editor?.project?.props?.carcass || 'carcass');
 
   React.useEffect(() => {
     const {md, utils} = $p;
@@ -62,7 +63,7 @@ export default function Builder({context, width, handleColor, resizeStop}) {
   return <Resize handleWidth="6px" handleColor={handleColor} onResizeStop={resizeStop}>
     <ResizeVertical height={show3d ? "50%" : "95%"} minHeight="200px">
       <Row>
-        <SelectTool show3d={show3d} toggle3D={toggle3D} />
+        <SelectTool view={view} setView={setView} show3d={show3d} toggle3D={toggle3D} />
         <canvas
           key="builder-canvas"
           ref={createEditor}

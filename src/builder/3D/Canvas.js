@@ -11,7 +11,7 @@ export default function Canvas3D() {
   return <Canvas shadows="basic">
     <OrthographicCamera
       makeDefault
-      scale={[4, 4, 4]}
+      scale={[5, 5, 5]}
       up={[0, 1, 0]}
       position={[1000, 800, 5000]}
     />
