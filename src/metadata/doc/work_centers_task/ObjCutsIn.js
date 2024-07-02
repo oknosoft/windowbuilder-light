@@ -5,7 +5,7 @@ import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {TextFormatter} from 'metadata-ui/DataField/Text';
 import {tabularStyle} from '../../dataGrid';
 import {useLoadingContext} from '../../../components/Metadata';
-import ObjTabular from './ObjTabular';
+import ObjTabular from '../../aggregate/ObjTabular';
 import ObjCuttingSvg from './ObjCuttingSvg';
 
 export const columns = [

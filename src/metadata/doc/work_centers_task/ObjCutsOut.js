@@ -1,5 +1,5 @@
 import React from 'react';
-import ObjTabular from './ObjTabular';
+import ObjTabular from '../../aggregate/ObjTabular';
 import {columns} from './ObjCutsIn';
 
 const record_kind = $p.enm.debit_credit_kinds.credit;

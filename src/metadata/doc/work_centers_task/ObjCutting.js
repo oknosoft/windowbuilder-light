@@ -1,11 +1,11 @@
 import React from 'react';
-import ObjTabular from './ObjTabular';
+import ObjTabular from '../../aggregate/ObjTabular';
 import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
 import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {TextFormatter} from 'metadata-ui/DataField/Text';
 import {useLoadingContext} from '../../../components/Metadata';
 import {tabularStyle} from '../../dataGrid';
-import ToolbarTabular from './ToolbarTabular';
+import ToolbarTabular from '../../aggregate/ToolbarTabular';
 import ClipBoard from '../../aggregate/ClipBoard';
 import OptimizeCut from './OptimizeCut';
 

@@ -1,10 +1,9 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import {useParams, unstable_usePrompt as usePrompt} from 'react-router-dom'; // https://www.npmjs.com/package/react-router-prompt
-import {useTitleContext, useBackdropContext} from '../../../components/App';
-import Loading from '../../../components/App/Loading';
+import frmObj from '../../aggregate/frmObj';
 import {Root} from '../../aggregate/styled';
 import ObjToolbar from '../../aggregate/ObjToolbar';
+import Loading from '../../../components/App/Loading';
 import ObjHead from './ObjHead';
 import ObjTabs from '../../aggregate/ObjTabs';
 import ObjProduction from './ObjProduction';
@@ -27,25 +26,19 @@ const stubDb = {
   }
 };
 
-const {doc: {calc_order: mgr}, wsql, job_prm} = $p;
+const {doc: {calc_order: mgr}, job_prm} = $p;
 
 export default function CalcOrderObj() {
 
-  const [obj, setObj] = React.useState(null);
-  const [error, setError] = React.useState(null);
-  const [tab, setTab] = React.useState(0);
-  const tabRef = React.useRef(null);
-  const [modified, setModified] = React.useState(false);
-  const [settingOpen, setSettingOpen] = React.useState(false);
-  const [setting, setSetting] = React.useState(initSetting);
-  const saveSetting = (setting) => {
-    wsql.set_user_param(key, setting);
-    setSetting(setting);
-  };
-
-  const params = useParams();
-  const {setTitle} = useTitleContext();
-  const {setBackdrop} = useBackdropContext();
+  const {
+    obj, setObj,
+    error, setError,
+    tab, setTab, tabRef,
+    modified, setModified,
+    settingOpen, setSettingOpen,
+    setting, saveSetting,
+    params, usePrompt, setTitle, setBackdrop,
+  } = frmObj({initSetting});
 
   React.useEffect(() => {
     const {ref} = params;

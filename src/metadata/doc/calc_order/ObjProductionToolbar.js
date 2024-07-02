@@ -48,7 +48,7 @@ export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBac
         <IconButton disabled={!getRow} onClick={() => {
           const row = getRow();
           if(row) {
-            navigate(`/cat/characteristics/${row.row.characteristic.ref}`);
+            navigate(`/cat/characteristics/${row.row.characteristic.ref}?return=-1`);
           }
           else {
             setSnack('Укажите строку табчасти для открытия деталей продукции');

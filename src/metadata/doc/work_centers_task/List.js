@@ -55,9 +55,17 @@ export default function WorkCentersTaskList() {
   const [selectedRows, setSelectedRows] = React.useState(new Set());
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
+  const [refresh, rawSetRefresh] = React.useState(0);
   const navigate = useNavigate();
   const backdrop = useBackdropContext();
   const {setTitle} = useTitleContext();
+
+  // для обновления динсписка
+  const setRefresh = () => {
+    setSelectedRows(new Set());
+    setRows([]);
+    rawSetRefresh(refresh + 1);
+  };
 
   React.useEffect(() => {
     setTitle(title);
@@ -75,7 +83,7 @@ export default function WorkCentersTaskList() {
         });
       })
       .catch(setError);
-  }, []);
+  }, [refresh]);
 
   const [create, clone, open] = mgrCreate({mgr: work_centers_task, navigate, selectedRows, backdrop});
 
@@ -91,7 +99,7 @@ export default function WorkCentersTaskList() {
   });
 
   return <Content>
-    <ListToolbar create={create} clone={null} open={open} disabled={Boolean(error)}/>
+    <ListToolbar create={create} clone={null} open={open} disabled={Boolean(error)} scheme={scheme} setRefresh={setRefresh}/>
     {error ? error.message : <DataGrid
       columns={columns}
       rows={rows}

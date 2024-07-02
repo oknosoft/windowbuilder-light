@@ -1,5 +1,5 @@
 import React from 'react';
-import ObjTabular from './ObjTabular';
+import ObjTabular from '../../aggregate/ObjTabular';
 import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
 import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 
