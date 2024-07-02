@@ -4,8 +4,8 @@ import AddIcon from '@mui/icons-material/AddBoxOutlined';
 import CopyIcon from '@mui/icons-material/PostAdd';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import {ListSubheader} from '../../aggregate/styled';
-import {Toolbar, HtmlTooltip} from '../../../components/App/styled';
+import {ListSubheader} from './styled';
+import {Toolbar, HtmlTooltip} from '../../components/App/styled';
 
 
 export default function ToolbarTabular({clear, create, clone, remove, buttons=null}) {

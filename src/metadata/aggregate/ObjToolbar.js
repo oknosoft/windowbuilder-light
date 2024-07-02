@@ -24,7 +24,7 @@ export default function ObjToolbar({obj, mgr, setSettingOpen, modified, setModif
       if(searchParams.modified === 'false' && (modified || obj._modified)) {
         setModified(false);
       }
-      setTimeout(() => navigate(url));
+      setTimeout(() => navigate(url == '-1' ? -1 : url));
     };
     const recalc = () => obj.recalc();
     const save = () => obj.save();
@@ -58,7 +58,7 @@ export default function ObjToolbar({obj, mgr, setSettingOpen, modified, setModif
       <HtmlTooltip title="Настроить форму">
         <IconButton onClick={() => setSettingOpen(true)}><SettingsIcon/></IconButton>
       </HtmlTooltip>
-      <HtmlTooltip title="Закрыть форму документа">
+      <HtmlTooltip title="Закрыть форму">
         <IconButton onClick={close}><CloseIcon/></IconButton>
       </HtmlTooltip>
     </Toolbar>

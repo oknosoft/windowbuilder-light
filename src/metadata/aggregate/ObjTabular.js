@@ -1,8 +1,8 @@
 import React from 'react';
 import DataGrid from 'react-data-grid';
-import {useLoadingContext} from '../../../components/Metadata';
+import {useLoadingContext} from '../../components/Metadata';
 import ToolbarTabular from './ToolbarTabular';
-import {cellKeyDown, tabularCreate, tabularStyle} from '../../dataGrid';
+import {cellKeyDown, tabularCreate, tabularStyle} from '../dataGrid';
 
 export default function ObjTabular({tabRef, tabular, selection, columns, buttons, rootStyle, selectedRowsChange}) {
 
