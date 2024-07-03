@@ -4,7 +4,7 @@ import Text from 'metadata-ui/DataField/Text';
 
 const slot = {
   input: {
-    min: '2024-01-01',
+    min: '2023-01-01',
     max: '2024-12-31',
   },
 };
