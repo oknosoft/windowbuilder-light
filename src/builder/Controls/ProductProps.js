@@ -14,7 +14,6 @@ export default function ProductProps({editor, project}) {
     <NumberField obj={position} fld="x" meta={meta} onChange={onChange} label="Смещение X" />
     <NumberField obj={position} fld="y" meta={meta} onChange={onChange} label="Смещение Y" />
     <NumberField obj={position} fld="z" meta={meta} onChange={onChange} label="Смещение Z" />
-    <Divider />
     <NumberField obj={degree} fld="x" meta={meta} onChange={onChange} label="Поворот X" />
     <NumberField obj={degree} fld="y" meta={meta} onChange={onChange} label="Поворот Y" />
     <NumberField obj={degree} fld="z" meta={meta} onChange={onChange} label="Поворот Z" />

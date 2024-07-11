@@ -57,8 +57,11 @@ function testProducts({editor, setContext, handleClose}) {
 
   function clear() {
     const {project} = editor;
+    const {props} = project;
+    props.loading = true;
     project.clear();
-    setContext({project, type: 'product', layer: null, elm: null});
+    props.loading = false;
+    setContext({stamp: props.stamp, project, type: 'product', layer: null, elm: null});
     handleClose();
   }
 
