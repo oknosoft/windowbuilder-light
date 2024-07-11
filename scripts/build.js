@@ -5,7 +5,7 @@ const config = require('../config/webpack.prod');
 
 function rimraf(tmpPath) {
   console.log('Чистим каталог build...');
-  return Promise.resolve();
+  //return Promise.resolve();
   return new Promise((resolve, reject) => {
     fs.readdir(tmpPath, (err, files) => {
       if (!err) {

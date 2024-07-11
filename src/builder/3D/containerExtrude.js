@@ -14,8 +14,8 @@ function glassPath(container, pos) {
   })
   const start = points[0];
 
-  const v1 = new THREE.Vector3(start.x, start.y, pos[2] -26);
-  const v2 = new THREE.Vector3(start.x, start.y, pos[2] -66);
+  const v1 = new THREE.Vector3(start.x, start.y,  -26);
+  const v2 = new THREE.Vector3(start.x, start.y,  -66);
   const extrudePath = new THREE.CurvePath();
   extrudePath.add( new THREE.LineCurve3( v1, v2 ) );
   const shape = new THREE.Shape();

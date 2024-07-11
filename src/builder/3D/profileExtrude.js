@@ -22,8 +22,8 @@ function profilePath(profile, pos) {
     pe = generatrix.getPointAt(generatrix.length - 38);
   }
 
-  const v1 = new THREE.Vector3(pb.x - pos[0], pos[1] - pb.y, pos[2]);
-  const v2 = new THREE.Vector3(pe.x - pos[0], pos[1] - pe.y, pos[2]);
+  const v1 = new THREE.Vector3(pb.x - pos[0], pos[1] - pb.y, 0);
+  const v2 = new THREE.Vector3(pe.x - pos[0], pos[1] - pe.y, 0);
   const path = new THREE.CurvePath();
   path.add( new THREE.LineCurve3( v1, v2 ) );
   return path;
