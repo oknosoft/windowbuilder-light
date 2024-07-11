@@ -8,7 +8,6 @@ export default function Contour({layer, bounds, position, rotation}) {
   const pos = [
     bounds.x,
     bounds.y + bounds.height,
-    layer.layer ? 12 : 0,
   ];
 
   const profiles = profilesGeometry(layer.profiles, pos);
@@ -24,5 +23,5 @@ export default function Contour({layer, bounds, position, rotation}) {
   for(const contour of layer.contours) {
     res.push(<Contour key={`c-${contour.id}`} layer={contour} bounds={bounds} position={new THREE.Vector3()}/>);
   }
-  return <group position={[position.x, position.y, position.z]} rotation={rotation}>{res}</group>;
+  return <group position={[position.x, position.y, position.z + (layer.layer ? 14 : 0)]} rotation={rotation}>{res}</group>;
 }
