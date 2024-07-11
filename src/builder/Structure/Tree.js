@@ -20,7 +20,11 @@ export default function StructureTree() {
   const onClickHeader = (node) => {
     struct.deselect();
     const curr = {project, elm: null, layer: null, type: 'root'};
-    if(node.type === 'product') {
+    if(node._owner === editor) {
+      setContext(curr);
+    }
+    else if(node.type === 'product') {
+      curr.type = 'product';
       if(curr.project !== node._owner) {
         curr.project?.deselectAll?.();
         curr.project = node._owner;

@@ -12,7 +12,7 @@ function testProducts({editor, setContext, handleClose}) {
     const {props} = project;
     props.loading = true;
     project.clear();
-    setContext({project, type: 'root', layer: null, elm: null});
+    setContext({project, type: 'product', layer: null, elm: null});
     return project;
   }
 
@@ -56,8 +56,9 @@ function testProducts({editor, setContext, handleClose}) {
   }
 
   function clear() {
-    editor.project.clear();
-    setContext({project, type: 'root', layer: null, elm: null});
+    const {project} = editor;
+    project.clear();
+    setContext({project, type: 'product', layer: null, elm: null});
     handleClose();
   }
 

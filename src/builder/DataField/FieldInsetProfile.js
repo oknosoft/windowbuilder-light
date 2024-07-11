@@ -12,21 +12,25 @@ export default function FieldInsetProfile({obj, fld, onChange, fullWidth=true, e
 
 
   React.useEffect(() => {
-    function update (curr, flds){
-      if((!flds || fld in flds) && (curr === obj || obj.equals?.(curr))) {
+    if(obj.isInserted()) {
+      const {project, layer} = obj;
+
+      function update (curr, flds){
+        if((!flds || fld in flds) && (curr === obj || obj.equals?.(curr))) {
+          setValue(obj[fld]);
+        }
+      }
+      if(value !== obj[fld]) {
         setValue(obj[fld]);
       }
-    }
-    if(value !== obj[fld]) {
-      setValue(obj[fld]);
-    }
 
-    setOptions(obj.layer.sys.inserts({elm: obj}))
+      setOptions(layer.sys.inserts({elm: obj}))
 
-    obj.project.on({update});
-    return () => {
-      obj.project.off({update});
-    };
+      project.on({update});
+      return () => {
+        project.off({update});
+      };
+    }
   }, [obj]);
 
   if(enterTab && !other.onKeyUp) {
