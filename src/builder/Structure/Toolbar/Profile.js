@@ -8,7 +8,7 @@ import FolderOffOutlinedIcon from '@mui/icons-material/FolderOffOutlined';
 
 // style={{fontFamily: 'GOST type B'}}
 
-export default function ElmToolbar({editor, setContext}) {
+export default function ProfileToolbar({editor, setContext}) {
 
   return <Toolbar disableGutters>
     <HtmlTooltip title="Добавить узел">

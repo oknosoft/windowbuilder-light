@@ -1,6 +1,6 @@
 import RootToolbar from './Root';
 import LayerToolbar from './Layer';
-import ElmToolbar from './Elm';
+import ElmToolbar from './Profile';
 import {useBuilderContext} from '../../Context';
 
 export default function StructureToolbar () {

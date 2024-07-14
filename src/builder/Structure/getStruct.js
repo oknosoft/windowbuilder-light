@@ -57,8 +57,9 @@ class BaseItem {
 
 class Layer extends BaseItem {
   constructor(layer, parent) {
-    const {contours, cnstr} = layer;
-    super("Слой", `l-${cnstr}`, 'icon_layer', layer, parent);
+    const {contours, index, level} = layer;
+    const name = `${level ? 'Створка' : 'Рама'} №${index}`;
+    super(name, `l-${index}`, 'icon_layer', layer, parent);
     this.type = 'layer';
     for(const layer of contours) {
       this.children.push(new Layer(layer, this));
