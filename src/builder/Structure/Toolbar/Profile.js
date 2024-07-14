@@ -8,7 +8,12 @@ import FolderOffOutlinedIcon from '@mui/icons-material/FolderOffOutlined';
 
 // style={{fontFamily: 'GOST type B'}}
 
-export default function ProfileToolbar({editor, setContext}) {
+export default function ProfileToolbar({editor, project, layer, elm, setContext}) {
+
+  const remove = () => {
+    elm?.remove();
+    project?.redraw();
+  }
 
   return <Toolbar disableGutters>
     <HtmlTooltip title="Добавить узел">
@@ -16,7 +21,7 @@ export default function ProfileToolbar({editor, setContext}) {
     </HtmlTooltip>
     <Box sx={{flex: 1}} />
     <HtmlTooltip title="Удалить элемент">
-      <IconButton disabled><i className="fa fa-trash-o" /></IconButton>
+      <IconButton onClick={remove}><i className="fa fa-trash-o" /></IconButton>
     </HtmlTooltip>
   </Toolbar>
 }

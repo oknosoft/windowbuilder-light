@@ -15,7 +15,12 @@ export default function StructureTree() {
   if(!struct) {
     return 'Загрузка...';
   }
-  //struct.refresh({project, elm, layer});
+  if(type === 'elm' && elm) {
+    const node = struct?.find_node(layer);
+    if(node && !node.toggled) {
+      node.expand();
+    }
+  }
 
   const onClickHeader = (node) => {
     struct.deselect();

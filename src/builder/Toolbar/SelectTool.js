@@ -36,9 +36,9 @@ export default function SelectTool({view, setView, show3d, toggle3D}) {
       <IconButton sx={{ml: 1}} onClick={() => editor.project.zoomFit()}><ZoomFitIcon/></IconButton>
     </HtmlTooltip>
     <Tabs value={tool ? editor.tools.indexOf(tool) : 0} orientation="vertical" onChange={handleChange} >
-      <Tab value={0} accent icon={<HtmlTooltip title="Выделить и сдвинуть" placement="right"><CursorIcon /></HtmlTooltip>} aria-label="select" />
-      <Tab value={1} accent icon={<HtmlTooltip title="Панорама и сдвиг" placement="right"><WavingHandOutlinedIcon /></HtmlTooltip>} aria-label="draw" />
-      <Tab value={2} accent icon={<HtmlTooltip title="Нарисовать элемент" placement="right"><PenIcon /></HtmlTooltip>} aria-label="draw" />
+      <Tab value={0} accent="true" icon={<HtmlTooltip title="Выделить и сдвинуть" placement="right"><CursorIcon /></HtmlTooltip>} aria-label="select" />
+      <Tab value={1} accent="true" icon={<HtmlTooltip title="Панорама и сдвиг" placement="right"><WavingHandOutlinedIcon /></HtmlTooltip>} aria-label="draw" />
+      <Tab value={2} accent="true" icon={<HtmlTooltip title="Нарисовать элемент" placement="right"><PenIcon /></HtmlTooltip>} aria-label="draw" />
     </Tabs>
     <Divider flexItem/>
     <SelectMode view={view} setView={setView} show3d={show3d} toggle3D={toggle3D} editor={editor} />

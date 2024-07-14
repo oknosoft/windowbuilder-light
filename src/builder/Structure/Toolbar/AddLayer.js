@@ -9,6 +9,7 @@ import LibraryAddOutlinedIcon from '@mui/icons-material/LibraryAddOutlined';
 import AddchartOutlinedIcon from '@mui/icons-material/AddchartOutlined';
 import AddHomeWorkOutlinedIcon from '@mui/icons-material/AddHomeWorkOutlined';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+import AddRoadIcon from '@mui/icons-material/AddRoad';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
 
 const StyledMenu = styled((props) => (
@@ -59,6 +60,14 @@ export default function AddLayer() {
         <LibraryAddOutlinedIcon />
         Слой створки
       </MenuItem>
+      <MenuItem onClick={handleClose} disableRipple>
+        <AddBoxOutlinedIcon />
+        Заполнение
+      </MenuItem>
+      <MenuItem disabled onClick={handleClose} disableRipple>
+        <AddRoadIcon />
+        Штульповые створки
+      </MenuItem>
       <MenuItem disabled onClick={handleClose} disableRipple>
         <AddchartOutlinedIcon />
         Виртуальный слой
@@ -66,10 +75,6 @@ export default function AddLayer() {
       <MenuItem disabled onClick={handleClose} disableRipple>
         <AddHomeWorkOutlinedIcon />
         Вложенное изделие
-      </MenuItem>
-      <MenuItem onClick={handleClose} disableRipple>
-        <AddBoxOutlinedIcon />
-        Заполнение
       </MenuItem>
     </StyledMenu>
   </>;

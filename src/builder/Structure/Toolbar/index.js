@@ -1,6 +1,7 @@
 import RootToolbar from './Root';
 import LayerToolbar from './Layer';
-import ElmToolbar from './Profile';
+import ProfileToolbar from './Profile';
+import FillingToolbar from './Filling';
 import {useBuilderContext} from '../../Context';
 
 export default function StructureToolbar () {
@@ -9,7 +10,9 @@ export default function StructureToolbar () {
     return LayerToolbar({project, layer, elm, setContext});
   }
   else if(type === 'elm' && elm) {
-    return ElmToolbar({project, layer, elm, setContext});
+    return elm instanceof editor.Filling ?
+      FillingToolbar({editor, project, layer, elm, setContext}) :
+      ProfileToolbar({editor, project, layer, elm, setContext});
   }
   return RootToolbar({editor, project, layer, setContext});
 }
