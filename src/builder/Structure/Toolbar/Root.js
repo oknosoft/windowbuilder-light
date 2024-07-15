@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import {Toolbar, HtmlTooltip} from '../../../aggregate/App/styled';
+import {HtmlTooltip} from '../../../aggregate/App/styled';
 import AddHomeWorkOutlinedIcon from '@mui/icons-material/AddHomeWorkOutlined';
 import FolderOffOutlinedIcon from '@mui/icons-material/FolderOffOutlined';
 
@@ -27,7 +27,7 @@ export default function RootToolbar({editor, setContext}) {
     }
     project.remove();
   };
-  return <Toolbar disableGutters>
+  return <>
     <HtmlTooltip title="Добавить изделие">
       <IconButton onClick={addPlane}><AddHomeWorkOutlinedIcon /></IconButton>
     </HtmlTooltip>
@@ -35,5 +35,5 @@ export default function RootToolbar({editor, setContext}) {
     <HtmlTooltip title="Удалить изделие">
       <IconButton onClick={removePlane} disabled={!editor || editor.projects.length < 2}><i className="fa fa-trash-o" /></IconButton>
     </HtmlTooltip>
-  </Toolbar>
+  </>;
 }

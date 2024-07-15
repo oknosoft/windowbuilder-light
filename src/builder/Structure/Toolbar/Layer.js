@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import {Toolbar, HtmlTooltip} from '../../../aggregate/App/styled';
+import {HtmlTooltip} from '../../../aggregate/App/styled';
 import AddLayer from './AddLayer';
 import {useBuilderContext} from '../../Context';
 
@@ -28,11 +28,11 @@ export default function LayerToolbar({project, layer, elm, setContext}) {
     project.redraw();
     project.zoomFit();
   };
-  return <Toolbar disableGutters>
+  return <>
     <AddLayer project={project} layer={layer} elm={elm} />
     <Box sx={{flex: 1}} />
     <HtmlTooltip title="Удалить текуший слой">
       <IconButton onClick={removeFlap}><i className="fa fa-trash-o" /></IconButton>
     </HtmlTooltip>
-  </Toolbar>
+  </>
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import {Toolbar, HtmlTooltip} from '../../../aggregate/App/styled';
+import {HtmlTooltip} from '../../../aggregate/App/styled';
 import AddHomeWorkOutlinedIcon from '@mui/icons-material/AddHomeWorkOutlined';
 import FolderOffOutlinedIcon from '@mui/icons-material/FolderOffOutlined';
 
@@ -15,7 +15,7 @@ export default function ProfileToolbar({editor, project, layer, elm, setContext}
     project?.redraw();
   }
 
-  return <Toolbar disableGutters>
+  return <>
     <HtmlTooltip title="Добавить узел">
       <IconButton disabled><i className="tb_add_segment gl disabled"/></IconButton>
     </HtmlTooltip>
@@ -23,5 +23,5 @@ export default function ProfileToolbar({editor, project, layer, elm, setContext}
     <HtmlTooltip title="Удалить элемент">
       <IconButton onClick={remove}><i className="fa fa-trash-o" /></IconButton>
     </HtmlTooltip>
-  </Toolbar>
+  </>
 }

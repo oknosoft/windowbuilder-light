@@ -1,6 +1,6 @@
 import React from 'react';
-import {Toolbar} from '../../../aggregate/App/styled';
+import {HtmlTooltip} from '../../../aggregate/App/styled';
 
 export default function RootToolbar({type}) {
-  return <Toolbar disableGutters>{type}</Toolbar>
+  return <>{type}</>;
 }

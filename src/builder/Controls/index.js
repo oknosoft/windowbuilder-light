@@ -1,5 +1,5 @@
 import React from 'react';
-import controlsToolbar from './Toolbar';
+import ControlsToolbar from './Toolbar';
 import ProfileProps from './ProfileProps';
 import PairProps from './PairProps';
 import LayerProps from './LayerProps';
@@ -14,7 +14,6 @@ export default function Controls() {
   const {editor, tool, type, project, layer, elm, node, setContext} = useBuilderContext();
   const props = {editor, tool, type, project, layer, elm, node};
   let ToolWnd = tool?.constructor?.ToolWnd;
-  const Toolbar = controlsToolbar({tool, type});
   if(!ToolWnd) {
     if(type === 'layer' && layer) {
       ToolWnd = LayerProps;
@@ -31,7 +30,7 @@ export default function Controls() {
   }
 
   return <>
-    <Toolbar {...props}/>
+    {ControlsToolbar(props)}
     <PaddingLeft>
       {ToolWnd ? <ToolWnd {...props}/> : null}
     </PaddingLeft>

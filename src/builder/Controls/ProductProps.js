@@ -1,6 +1,6 @@
 import React from 'react';
 import {NumberField} from '@oknosoft/ui/DataField/Number';
-import Divider from '@mui/material/Divider';
+import FieldSys from '../DataField/FieldSys';
 
 const meta = {};
 export default function ProductProps({editor, project}) {
@@ -11,6 +11,7 @@ export default function ProductProps({editor, project}) {
   };
   return <>
     {`Изделие №${editor.projects.indexOf(project) + 1}`}
+    <FieldSys obj={project.props} fld="sys" />
     <NumberField obj={position} fld="x" meta={meta} onChange={onChange} label="Смещение X" />
     <NumberField obj={position} fld="y" meta={meta} onChange={onChange} label="Смещение Y" />
     <NumberField obj={position} fld="z" meta={meta} onChange={onChange} label="Смещение Z" />

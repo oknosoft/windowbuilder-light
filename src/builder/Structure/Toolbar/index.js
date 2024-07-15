@@ -1,3 +1,6 @@
+import React from 'react';
+import {Toolbar} from '../../../aggregate/App/styled';
+import Indicator from './Indicator'
 import RootToolbar from './Root';
 import LayerToolbar from './Layer';
 import ProfileToolbar from './Profile';
@@ -6,13 +9,16 @@ import {useBuilderContext} from '../../Context';
 
 export default function StructureToolbar () {
   const {editor, type, project, layer, elm, setContext} = useBuilderContext();
+  let Buttons = RootToolbar;
   if(type === 'layer' && layer) {
-    return LayerToolbar({project, layer, elm, setContext});
+    Buttons = LayerToolbar;
   }
   else if(type === 'elm' && elm) {
-    return elm instanceof editor.Filling ?
-      FillingToolbar({editor, project, layer, elm, setContext}) :
-      ProfileToolbar({editor, project, layer, elm, setContext});
+    Buttons = elm instanceof editor.Filling ? FillingToolbar : ProfileToolbar;
   }
-  return RootToolbar({editor, project, layer, setContext});
+  const props = {editor, project, layer, elm, type, setContext};
+  return <Toolbar disableGutters>
+    {Indicator(props)}
+    {Buttons(props)}
+  </Toolbar>;
 }
