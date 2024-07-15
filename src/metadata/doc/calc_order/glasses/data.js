@@ -170,7 +170,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
   const load = async (text) => {
     const irows = [];
     const iparams = new Map();
-    const regex = /-|_|\*|х|Х|X|x/g;
+    const regex = /-|_|\/|\\|\*|х|Х|X|x/g;
     for(const row of text.split('\n')) {
       const values = row.split('\t');
       let strings = 0;
