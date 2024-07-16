@@ -168,7 +168,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
   };
 
   const regex = /-|_|\/|\\|\*|х|Х|X|x/g;
-  const regexM = /^(\d+)(м|М|m|M)/;
+  const regexM = /^(\d+)(м|m)/ui;
 
   const load = async (text) => {
     const irows = [];
@@ -186,10 +186,10 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
           }
         }
         const formula = (!strings && (regex.test(raw) || regexM.test(raw))) ? raw.replace(regex, 'x') : '';
-        const n = formula ? NaN : parseFloat(raw.replace(/\s/, ''));
+        const n = formula ? NaN : parseFloat(raw.replace(/\s/g, ''));
         if(isNaN(n) || newRow && numbers >= 3) {
           if(!strings && !newRow) {
-            newRow = {formula, note: []};
+            newRow = {formula: formula?.replace(/\s/g, '') || '', note: []};
           }
           if(strings && raw) {
             const prm = iparams.get(index);
