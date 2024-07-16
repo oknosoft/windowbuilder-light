@@ -1,9 +1,7 @@
 import React from 'react';
 import Autocomplete from '@oknosoft/ui/DataField/Autocomplete';
-import {onKeyUp} from '@oknosoft/ui/DataField/enterTab';
 
 const mgr = $p.cat.inserts;
-const options = [...mgr].sort($p.utils.sort('name'));
 
 export default function FieldInsetProfile({obj, fld, onChange, fullWidth=true, enterTab, ...other}) {
 
@@ -24,7 +22,7 @@ export default function FieldInsetProfile({obj, fld, onChange, fullWidth=true, e
         setValue(obj[fld]);
       }
 
-      setOptions(layer.sys.inserts({elm: obj}))
+      setOptions(layer.sys.inserts({elm: obj}));
 
       project.on({update});
       return () => {
@@ -32,10 +30,6 @@ export default function FieldInsetProfile({obj, fld, onChange, fullWidth=true, e
       };
     }
   }, [obj]);
-
-  if(enterTab && !other.onKeyUp) {
-    other.onKeyUp = onKeyUp;
-  }
 
   return <Autocomplete
     options={options}

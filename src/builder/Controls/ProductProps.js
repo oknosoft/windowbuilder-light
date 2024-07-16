@@ -1,6 +1,6 @@
 import React from 'react';
 import {NumberField} from '@oknosoft/ui/DataField/Number';
-import FieldSys from '../DataField/FieldSys';
+import FieldSys from '../DataField/Sys';
 
 const meta = {};
 export default function ProductProps({editor, project}) {

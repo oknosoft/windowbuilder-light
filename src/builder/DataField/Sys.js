@@ -1,6 +1,5 @@
 import React from 'react';
 import Autocomplete from '@oknosoft/ui/DataField/Autocomplete';
-import {onKeyUp} from '@oknosoft/ui/DataField/enterTab';
 
 const options = (({cat, utils}) =>  [...cat.productionParams]
   .filter(v => v.elmnts.length)
@@ -27,10 +26,6 @@ export default function FieldSys({obj, fld, onChange, fullWidth=true, enterTab, 
       obj.project.off({update});
     };
   }, [obj]);
-
-  if(enterTab && !other.onKeyUp) {
-    other.onKeyUp = onKeyUp;
-  }
 
   return <Autocomplete
     options={options}
