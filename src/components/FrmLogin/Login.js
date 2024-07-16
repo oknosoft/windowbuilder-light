@@ -38,7 +38,10 @@ export default function Login({pfilter, common_loaded}) {
 
   const handleLogin = () => {
     if(!user.logged_in && !user.try_log_in) {
-      return $p.adapters.pouch.log_in(login, password);
+      const {adapters, wsql} = $p;
+      adapters.pouch.props._auth_provider = provider;
+      wsql.set_user_param('auth_provider', provider);
+      return adapters.pouch.log_in(login, password);
     }
   };
 

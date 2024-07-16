@@ -30,23 +30,6 @@ export const init_state = {
   wnd_portal: null,
 };
 
-function log_in() {
-  return fetch('/auth/couchdb')
-    .then((res) => res.json())
-    .then((res) => {
-      const {classes: {PouchDB}, adapters: {pouch}, cat: {users}}= $p;
-      const {props, remote, fetch} = pouch;
-      props._auth = {username: res.id};
-      props._suffix = res.suffix || '';
-      props._user = res.ref;
-
-      remote.ram = new PouchDB(pouch.dbpath('ram'), {skip_setup: true, owner: pouch, fetch});
-      remote.doc = new PouchDB(pouch.dbpath('doc'), {skip_setup: true, owner: pouch, fetch});
-
-      return users.create(res, false, true);
-    });
-}
-
 export function actions(handleIfaceState) {
 
   // скрипт инициализации структуры метаданных и модификаторы
@@ -84,12 +67,10 @@ export function actions(handleIfaceState) {
               log_error: '',
             }});
 
-          const {remote, fetch} = pouch;
-          remote.ram = new PouchDB(pouch.dbpath('ram'), {skip_setup: true, owner: pouch, fetch});
-
           return load_ram($p)
             .then(() => {
-              const {roles} = $p.current_user || {};
+              const {roles, branch} = $p.current_user || {};
+              sessionStorage.setItem('branch', branch && !branch.empty() ? branch.valueOf() : '');
               if(!roles && (roles.includes('ram_editor') || roles.includes('doc_full'))) {
                 pouch.local.sync.ram = pouch.remote.ram.changes({
                   since: 'now',
