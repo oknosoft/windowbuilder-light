@@ -167,10 +167,12 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   };
 
+  const regex = /-|_|\/|\\|\*|х|Х|X|x/g;
+  const regexM = /^(\d+)(м|М|m|M)/;
+
   const load = async (text) => {
     const irows = [];
     const iparams = new Map();
-    const regex = /-|_|\/|\\|\*|х|Х|X|x/g;
     for(const row of text.split('\n')) {
       const values = row.split('\t');
       let strings = 0;
@@ -183,7 +185,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
             iparams.set(index, prm);
           }
         }
-        const formula = (!strings && regex.test(raw)) ? raw.replace(regex, 'x') : '';
+        const formula = (!strings && (regex.test(raw) || regexM.test(raw))) ? raw.replace(regex, 'x') : '';
         const n = formula ? NaN : parseFloat(raw.replace(/\s/, ''));
         if(isNaN(n) || newRow && numbers >= 3) {
           if(!strings && !newRow) {

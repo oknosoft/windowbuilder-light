@@ -70,7 +70,9 @@ export default function GlassDetails({row, selected, glob}) {
 
   // параметры изделия
   characteristic.params.find_rows({cnstr: 0, region: 0}, (prow) => {
-    gprops.push(<ParamField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} />);
+    if(prow.param.predefined_name !== 'auto_align') {
+      gprops.push(<ParamField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} />);
+    }
   });
   // параметры вставки
   characteristic.params.find_rows({cnstr: -glassRow.elm, region: 0}, (prow) => {

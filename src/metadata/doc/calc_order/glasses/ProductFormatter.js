@@ -1,6 +1,8 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 
+const {builder} = $p.job_prm;
+
 export default function ProductFormatter({row}) {
   const {characteristic, inset, glassRow} = row.row;
   const main = [];
@@ -18,7 +20,7 @@ export default function ProductFormatter({row}) {
     return () => characteristic._manager.off({update});
   }, [characteristic]);
 
-  if(inset.insert_type.is('composite')) {
+  if(inset.insert_type.is('composite') || !builder.glass_prod_name2) {
     main.push(characteristic.owner.toString());
     const glrow = characteristic.glasses.find({elm: glassRow.elm});
     if(glrow) {
