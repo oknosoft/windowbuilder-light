@@ -9,6 +9,11 @@ import {itypes, ioptions, ilist, sublist, RowProxy} from './RowProxy';
 export const rowHeight = ({row, type}) => {
   if(type === 'DETAIL') {
     let {length} = row.inset.used_params();
+    if(row.inset.insert_type.is('composite')) {
+      row.characteristic.glass_specification.find_rows({elm: row.glassRow.elm}, (row) => {
+        length++;
+      });
+    }
     if(length < 6) {
       length = 6;
     }
@@ -167,7 +172,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   };
 
-  const regex = /-|_|\/|\\|\*|х|Х|X|x/g;
+  const regex = /-|_|\*|х|Х|X|x/g;
   const regexM = /^(\d+)(м|m)/ui;
 
   const load = async (text) => {

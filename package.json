@@ -60,7 +60,7 @@
     "react-helmet": "^6.1",
     "react-highlight-words": "^0.20",
     "react-number-format": "^5.4",
-    "react-router-dom": "6.22",
+    "react-router-dom": "6.25",
     "react-treebeard": "^3.2.4",
     "react-virtualized-auto-sizer": "^1.0.24",
     "react-window": "^1.8",
@@ -127,7 +127,7 @@
     "webpack-manifest-plugin": "^4.0.2",
     "workbox-webpack-plugin": "^6.5"
   },
-  "packageManager": "yarn@1.22.21",
+  "packageManager": "yarn@1.22.22",
   "files": [
     "LICENSE",
     "LICENSE.ru.md"
