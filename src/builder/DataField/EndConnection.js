@@ -4,51 +4,60 @@
 
 
 import React from 'react';
+import MenuItem  from '@mui/material/MenuItem';
 import Autocomplete from '@oknosoft/ui/DataField/Autocomplete';
 
 const mgr = $p.cat.cnns;
 
 function renderOption(props, option) {
-  return 'cnn';
+  return <MenuItem value={option.valueOf()}>
+    <div className={option.cnn_type.css} />
+    {option.toString()}
+  </MenuItem>;
 }
 
-export default function FieldEndConnection({obj, onChange, fullWidth=true, enterTab, ...other}) {
+export default function FieldEndConnection({obj, fld, onChange, fullWidth=true, enterTab, ...other}) {
 
-  const [cnn, setCnn] = React.useState(obj.cnn);
-  const [cnnOuter, setCnnOuter] = React.useState(obj.cnnOuter);
-  const [cnnOptions, setCnnOptions] = React.useState([cnn]);
-  const [outerOptions, setOuterOptions] = React.useState(cnnOuter ? [cnnOuter] : []);
+  const [cnn, setCnn] = React.useState(obj[fld]);
+  const [cnns, setCnns] = React.useState([cnn]);
 
+  let {name, owner, profile, profilePoint, hasOuter} = obj;
+  if(fld === 'cnnOuter') {
+    profile = obj.profileOuter;
+    profilePoint = obj.profilePointOuter;
+  }
   React.useEffect(() => {
-    if(obj.owner.isInserted()) {
-      const {project} = obj.owner;
+    if(owner.isInserted()) {
+      const {project} = owner;
+      const {md, utils} = project.root;
+      const redraw = utils.debounce(function onRedraw (curr, flds){
+        if(curr === project) {
+          setCnn(obj[fld]);
+          const cnns = obj[fld === 'cnn' ? 'cnns' : 'cnnsOuter'];
+          if(!cnns.includes(cnn)) {
+            cnns.unshift(cnn);
+          }
+          setCnns(cnns);
+        }
+      });
 
-      function update (curr, flds){
-        setCnn(obj.cnn);
-        setCnnOuter(obj.cnnOuter);
-      }
-
-      setCnnOptions([cnn]);
-      setOuterOptions(cnnOuter ? [cnnOuter] : []);
-
-      project.on({update});
-      return () => {
-        project.off({update});
-      };
+      redraw(project);
+      md.on({redraw});
+      return () => md.off({redraw});
     }
   }, [obj]);
 
-  const {name, owner, profile, profilePoint} = obj
 
-  return <Autocomplete
-    options={cnnOptions}
+
+  return fld === 'cnnOuter' && !hasOuter ? null : <Autocomplete
+    options={cnns}
     onChange={(event, newValue, reason, details) => {
-      obj.cnn = newValue;
+      obj[fld] = newValue;
       onChange?.(newValue);
-      setCnn(obj.cnn);
+      setCnn(obj[fld]);
     }}
     value={cnn}
-    label={`Соедин ${name} -> ${profile._index + 1}${profilePoint?.name || 't'} (${obj.vertex.key})`}
+    label={`Соедин ${name} -> ${profile ? profile._index + 1 : ''}${profile ? (profilePoint?.name || 't') : 'i'} (${obj.vertex.key})`}
     fullWidth={fullWidth}
     disableClearable
     placeholder="Нет"
