@@ -8,5 +8,5 @@ export default function Products() {
   if(!editor) {
     return null;
   }
-  return editor.projects.map((project, ind) => <Product key={`prod-${ind}`} project={project} />);
+  return editor.projects.map((project, ind) => <Product key={`prod-${ind}`} editor={editor} project={project} />);
 }
