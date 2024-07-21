@@ -55,6 +55,55 @@ function testProducts({editor, setContext, handleClose}) {
     handleClose();
   }
 
+  function square(profiles) {
+    const {project, DimensionLine} = editor;
+    const {props, activeLayer} = prepare(project);
+    let i2 = 3;
+    if(Array.isArray(profiles)) {
+      i2 = 4;
+      profiles = profiles.map((attr) => activeLayer.createProfile(attr));
+    }
+    else {
+      profiles = [
+        activeLayer.createProfile({b: [1800, 1100], e: [800, 1100]}),
+        activeLayer.createProfile({b: [800, 1100], e: [800, 100]}),
+        activeLayer.createProfile({b: [800, 100], e: [1800, 100]}),
+        activeLayer.createProfile({b: [1800, 100], e: [1800, 1100]}),
+      ];
+    }
+    for(const profile of profiles) {
+      activeLayer.skeleton.addProfile(profile);
+    }
+    activeLayer.containers.sync();
+    new DimensionLine({
+      project,
+      owner: activeLayer,
+      parent: project.dimensions,
+      elm1: profiles[0],
+      elm2: profiles[0],
+      p1: 'b',
+      p2: 'e',
+      pos: 'bottom',
+      offset: -220,
+    });
+    new DimensionLine({
+      project,
+      owner: activeLayer,
+      parent: project.dimensions,
+      elm1: profiles[i2],
+      elm2: profiles[i2],
+      p1: 'b',
+      p2: 'e',
+      pos: 'right',
+      offset: -240,
+    });
+    props.loading = false;
+    props.registerChange();
+    project.redraw();
+    project.zoomFit();
+    handleClose();
+  }
+
   function clear() {
     const {project} = editor;
     const {props} = project;
@@ -66,47 +115,7 @@ function testProducts({editor, setContext, handleClose}) {
   }
 
   return {
-    square() {
-      const {project, DimensionLine} = editor;
-      const {props, activeLayer} = prepare(project);
-      const profiles = [
-        activeLayer.createProfile({b: [1800, 1100], e: [800, 1100]}),
-        activeLayer.createProfile({b: [800, 1100], e: [800, 100]}),
-        activeLayer.createProfile({b: [800, 100], e: [1800, 100]}),
-        activeLayer.createProfile({b: [1800, 100], e: [1800, 1100]}),
-      ];
-      for(const profile of profiles) {
-        activeLayer.skeleton.addProfile(profile);
-      }
-      activeLayer.containers.sync();
-      new DimensionLine({
-        project,
-        owner: activeLayer,
-        parent: project.dimensions,
-        elm1: profiles[0],
-        elm2: profiles[0],
-        p1: 'b',
-        p2: 'e',
-        pos: 'bottom',
-        offset: -220,
-      });
-      new DimensionLine({
-        project,
-        owner: activeLayer,
-        parent: project.dimensions,
-        elm1: profiles[3],
-        elm2: profiles[3],
-        p1: 'b',
-        p2: 'e',
-        pos: 'right',
-        offset: -240,
-      });
-      props.loading = false;
-      props.registerChange();
-      project.redraw();
-      project.zoomFit();
-      handleClose();
-    },
+    square,
     imposts() {
       const {project, DimensionLine} = editor;
       const {props, activeLayer} = prepare(project);
@@ -174,6 +183,17 @@ function testProducts({editor, setContext, handleClose}) {
 
       handleClose();
     },
+    cut() {
+      const profiles = [
+        {b: [1600, 1000], e: [800, 1000]},
+        {b: [800, 1000], e: [0, 1000]},
+        {b: [0, 1000], e: [0, 0]},
+        {b: [0, 0], e: [1600, 0]},
+        {b: [1600, 0], e: [1600, 1000]},
+        {b: [800, 1000], e: [800, 0]},
+      ];
+      return square(profiles);
+    },
 
     grid20() {
       grid100(null, 6);
@@ -196,7 +216,7 @@ export default function TestProducts({editor, setContext}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const {imposts, square, grid20, grid100, clear} = testProducts({editor, setContext, handleClose});
+  const {imposts, square, cut, grid20, grid100, clear} = testProducts({editor, setContext, handleClose});
 
   return <>
     <HtmlTooltip title="Тестовые изделия">
@@ -219,6 +239,7 @@ export default function TestProducts({editor, setContext}) {
     >
       <MenuItem onClick={imposts}>Импосты</MenuItem>
       <MenuItem onClick={square}>Квадрат</MenuItem>
+      <MenuItem onClick={cut}>Разрыв</MenuItem>
       <MenuItem onClick={grid20}>Сетка 6</MenuItem>
       <MenuItem onClick={grid100}>Сетка 40</MenuItem>
       <MenuItem onClick={clear}>Очистить</MenuItem>

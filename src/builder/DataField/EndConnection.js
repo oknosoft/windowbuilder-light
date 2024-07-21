@@ -49,7 +49,7 @@ export default function FieldEndConnection({obj, fld, onChange, fullWidth=true, 
 
 
 
-  return fld === 'cnnOuter' && !hasOuter ? null : <Autocomplete
+  return fld === 'cnnOuter' && (!hasOuter || !profile) ? null : <Autocomplete
     options={cnns}
     onChange={(event, newValue, reason, details) => {
       obj[fld] = newValue;
