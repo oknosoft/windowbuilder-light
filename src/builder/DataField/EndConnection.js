@@ -11,7 +11,7 @@ const mgr = $p.cat.cnns;
 
 function renderOption(props, option) {
   return <MenuItem value={option.valueOf()}>
-    <div className={option.cnn_type.css} />
+    <div className={option.cnn_type._raw('css')} />
     {option.toString()}
   </MenuItem>;
 }

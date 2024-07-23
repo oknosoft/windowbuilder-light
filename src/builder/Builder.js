@@ -40,6 +40,15 @@ export default function Builder({context, width, handleColor, resizeStop}) {
       setContext({...select});
     });
     md.on({redraw: onRedraw, select: onSelect});
+    if(editor && !editor.project.bounds) {
+      Promise.resolve().then(() => {
+        editor.project.redraw();
+        editor.project.zoomFit(new paper.Rectangle({
+          point: [0, 0],
+          size: [1200, 1200]
+        }));
+      })
+    }
     return () => md.off({redraw: onRedraw, select: onSelect});
   }, [editor]);
 

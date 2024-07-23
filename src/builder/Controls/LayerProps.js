@@ -3,7 +3,7 @@ import FieldSys from '../DataField/Sys';
 
 export default function LayerProps({layer}) {
   return <>
-    {`Слой ${layer.index}`}
+    {layer.presentation}
     <FieldSys obj={layer} fld="sys" />
   </>;
 }
