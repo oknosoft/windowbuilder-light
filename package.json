@@ -38,12 +38,12 @@
   "proxy10": "https://steklotorg.oknosoft.ru/",
   "dependencies": {
     "@aldabil/react-scheduler": "^2.9",
-    "@emotion/react": "^11.11",
-    "@emotion/styled": "^11.11",
+    "@emotion/react": "^11.13",
+    "@emotion/styled": "^11.13",
     "@fontsource/roboto": "^5.0",
     "@mui/icons-material": "^5.16",
     "@mui/material": "^5.16",
-    "@mui/x-date-pickers": "^7.10",
+    "@mui/x-date-pickers": "^7.11",
     "clsx": "^2.1",
     "dataframe": "2.0",
     "date-fns": "^3.6",
@@ -55,7 +55,7 @@
     "metadata-pouchdb": "2.0.35-beta.1",
     "metadata-ui": "file:../metadata-ui/dist",
     "paper-jsdom-canvas": "0.12.17",
-    "react-data-grid": "7.0.0-beta.41",
+    "react-data-grid": "7.0.0-beta.44",
     "react-draggable": "^4.4",
     "react-helmet": "^6.1",
     "react-highlight-words": "^0.20",
@@ -68,7 +68,7 @@
     "url-join": "^5.0",
     "url-parse": "^1.5",
     "velocity-react": "^1.4.3",
-    "wb-core": "github:oknosoft/windowbuilder-core#4f134a805bd576c92657e7493326113d081738f2",
+    "wb-core": "github:oknosoft/windowbuilder-core#37b1fcb9c98bbafbf4bd9092f6dc3a4373f38bff",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {
