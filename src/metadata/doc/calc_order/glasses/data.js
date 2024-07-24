@@ -67,7 +67,7 @@ export function createGlasses({obj}){
         const {row, onRowChange} = props;
         return <select
           autoFocus
-          className="rdg-text-editor tlmcuo07-0-0-beta-41"
+          className="rdg-text-editor tlmcuo07-0-0-beta-44"
           value={row.row.inset}
           onChange={({target}) => {
             row.row.inset = target.value;
@@ -172,8 +172,44 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   };
 
-  const regex = /-|_|\*|х|Х|X|x/g;
-  const regexM = /^(\d+)(м|m)/ui;
+
+  const normalize = {
+    symbol: 'ₓ',
+    regex: /-|_|\*|х|Х|X|x/g,
+    regexM: /^(\d+)([a-zа-яё])/ui,
+    map: [['ext', 'e×t'], ['lux', 'lu×'], ['mex', 'me×'], ['nix', 'ni×']],
+    exec(str = '') {
+      str = str.toLowerCase();
+      for(const [s, t] of this.map) {
+        while (str.includes(s)) {
+          str = str.replace(s, t);
+        }
+      }
+      str = str.replace(this.regex, this.symbol);
+      for(const [s, t] of this.map) {
+        while (str.includes(t)) {
+          str = str.replace(t, s);
+        }
+      }
+      return str;
+    },
+    test(strings, str) {
+      return !strings && (this.regex.test(str) || this.regexM.test(str));
+    },
+    split(str = '') {
+      return str.split(this.symbol);
+    },
+    number(str) {
+      const parts = str.replace(/\s/g, '').split(/(\d+)/);
+      for(const part of parts) {
+        const num = part ? parseInt(part) : NaN;
+        if(!isNaN(num)) {
+          return num;
+        }
+      }
+      return NaN;
+    }
+  };
 
   const load = async (text) => {
     const irows = [];
@@ -190,8 +226,8 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
             iparams.set(index, prm);
           }
         }
-        const formula = (!strings && (regex.test(raw) || regexM.test(raw))) ? raw.replace(regex, 'x') : '';
-        const n = formula ? NaN : parseFloat(raw.replace(/\s/g, ''));
+        const formula = normalize.test(strings, raw) ? normalize.exec(raw) : '';
+        const n = formula ? NaN : normalize.number(raw);
         if(isNaN(n) || newRow && numbers >= 3) {
           if(!strings && !newRow) {
             newRow = {formula: formula?.replace(/\s/g, '') || '', note: []};
@@ -239,8 +275,8 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
         const candidates = [];
         let clarification;
         for(const inset of ilist) {
-          const article = inset.article.replace(regex, 'x').toLowerCase();
-          const name = inset.name.replace(regex, 'x').toLowerCase();
+          const article = normalize.exec(inset.article);
+          const name = normalize.exec(inset.name);
           if(article === formula) {
             candidates.push({inset, weight: 10});
           }
@@ -255,9 +291,9 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
           }
         }
         if(!candidates.length) {
-          const parts = formula.split('x');
+          const parts = normalize.split(formula);
           const thickness = parts.reduce((sum, curr) => {
-            const v = parseFloat(curr.replace(/[^0-9]+/g, ''));
+            const v = normalize.number(curr);
             return isNaN(v) ? sum : sum + v;
           }, 0);
           const layers = parts.length;
@@ -284,7 +320,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
               if(pre) {
                 return pre;
               }
-              const th = parseFloat(id.replace(/[^0-9]+/g, ''));
+              const th = normalize.number(id);
               const c2 = sublist.filter((curr) => {
                 if(curr.thickness() === th) {
                   const isFrame = curr.insert_glass_type.is('Рамка');
