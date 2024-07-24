@@ -12,14 +12,14 @@ import {dp, query, filter} from './data';
 
 const slot = {
   input: {
-    min: '2023-01-01',
-    max: '2024-12-31',
+    min: `${new Date().getFullYear() - 1}-01-01`,
+    max: `${new Date().getFullYear()}-12-31`,
   },
 };
 const style={minWidth: 200};
 const labelProps = {style: {textAlign: 'center', top: -2}};
 
-export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelectedRows, handleIfaceState}) {
+export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelectedRows, handleIfaceState, tunes, setTunes}) {
 
   const include = () => {
     const {tgt} = rmd;
@@ -70,7 +70,7 @@ export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelecte
     </HtmlTooltip>
     <Divider orientation="vertical" flexItem sx={{m: 1}} />
     <HtmlTooltip title="Уточнить фильтр">
-      <IconButton onClick={null}><FilterAltOutlinedIcon/></IconButton>
+      <IconButton onClick={() => setTunes(!tunes)}><FilterAltOutlinedIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Включить в задание">
       <IconButton disabled={!selectedRows.size} onClick={include}><UTurnRightIcon/></IconButton>

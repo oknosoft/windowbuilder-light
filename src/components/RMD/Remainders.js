@@ -4,6 +4,7 @@ import {Content} from '../App/styled';
 import Loading from '../App/Loading';
 import {useLoadingContext} from '../Metadata';
 import Toolbar from './RemaindersToolbar';
+import SchemeSettingsTunes from '../../metadata/cat/scheme_settings/Tunes'
 import {renderCheckbox} from './Formatters';
 import {schemas, initScheme, dp} from './data';
 
@@ -11,7 +12,7 @@ export default function RMDRemainders() {
 
   const {handleIfaceState, ifaceState: {rmd}} = useLoadingContext();
   const [columns, setColumns] = React.useState([]);
-  const [sortColumns, setSortColumns] = React.useState([]);
+  const [tunes, setTunes] = React.useState(false);
   const [selectedRows, setSelectedRows] = React.useState(new Set());
   const scheme = rmd?.scheme || schemas.find(({ref}) => ref === initScheme);
 
@@ -29,20 +30,35 @@ export default function RMDRemainders() {
     return rows.indexOf(row);
   }
   return <Content>
-    <Toolbar rmd={rmd} scheme={scheme} selectedRows={selectedRows} setSelectedRows={setSelectedRows} handleIfaceState={handleIfaceState}/>
-    <DataGrid
-      columns={columns}
-      rows={rows}
-      rowKeyGetter={rowKeyGetter}
-      //onRowsChange={setRows}
+    <Toolbar
+      rmd={rmd}
+      scheme={scheme}
       selectedRows={selectedRows}
-      onSelectedRowsChange={setSelectedRows}
-      //onCellClick={onCellClick}
-      //onCellDoubleClick={open}
-      //onCellKeyDown={onCellKeyDown}
-      className="fill-grid"
-      rowHeight={33}
-      renderers={{ renderCheckbox }}
+      setSelectedRows={setSelectedRows}
+      handleIfaceState={handleIfaceState}
+      tunes={tunes}
+      setTunes={setTunes}
     />
+    {
+      tunes ?
+        <SchemeSettingsTunes
+          obj={scheme}
+        />
+        :
+        <DataGrid
+          columns={columns}
+          rows={rows}
+          rowKeyGetter={rowKeyGetter}
+          //onRowsChange={setRows}
+          selectedRows={selectedRows}
+          onSelectedRowsChange={setSelectedRows}
+          //onCellClick={onCellClick}
+          //onCellDoubleClick={open}
+          //onCellKeyDown={onCellKeyDown}
+          className="fill-grid"
+          rowHeight={33}
+          renderers={{ renderCheckbox }}
+        />
+    }
   </Content>;
 }
