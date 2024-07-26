@@ -5,7 +5,6 @@
 const path = require('path');
 const fs = require('fs');
 const md5File = require('md5-file');
-const {appWebpackCache} = require('../config/paths');
 
 const localNodeModules = path.resolve(__dirname, '../node_modules');
 const {dependencies} = require(path.resolve(__dirname, '../package.json'));
@@ -42,7 +41,7 @@ const repos = [
 //   });
 // }
 
-function fromDir(startPath, filter, callback) {
+function fromDir(startPath, filter, dirFilter, callback) {
 
   if(!fs.existsSync(startPath)) {
     console.log('no dir ', startPath);
@@ -52,13 +51,15 @@ function fromDir(startPath, filter, callback) {
   const files = fs.readdirSync(startPath);
   for (let i = 0; i < files.length; i++) {
     const filename = path.join(startPath, files[i]);
-    if(/node_modules|\\src\\|\/src\//.test(filename)){
+    if(/node_modules/.test(filename)){
       continue;
     }
     const stat = fs.lstatSync(filename);
     if(stat.isDirectory()) {
-      callback(filename, true);
-      fromDir(filename, filter, callback); //recurse
+      if(!dirFilter || dirFilter.test(files[i]) || dirFilter.test(startPath)) {
+        callback(filename, true);
+        fromDir(filename, filter, dirFilter, callback); //recurse
+      }
     }
     else if(filter.test(filename)) {
       callback(filename);
@@ -68,11 +69,11 @@ function fromDir(startPath, filter, callback) {
 
 // исполняем
 let copied;
-for(const {local, remote, dir} of repos) {
+for(const {local, remote, dir, dirFilter} of repos) {
   const lpath = path.resolve(localNodeModules, local, dir);
   const rpath = path.resolve(remote, dir);
   let i = 0;
-  fromDir(rpath, /\.(css|js|mjs|md|map|gif|png|ts)$/, (rname, isDir) => {
+  fromDir(rpath, /\.(css|js|mjs|md|map|gif|png|ts|json)$/, dirFilter, (rname, isDir) => {
     const name = rname.replace(rpath, '');
     const lame = path.join(lpath, name);
     if(isDir) {
@@ -94,7 +95,8 @@ for(const {local, remote, dir} of repos) {
 
 if(copied){
   // чистим cache webpack
-  fs.rm(appWebpackCache, {recursive: true, force: true}, () => null);
+  console.log(`clearing cache`);
+  fs.rm(path.resolve(__dirname, '../node_modules/.cache'), {recursive: true, force: true}, () => null);
 }
 else {
   console.log(`all files match`);

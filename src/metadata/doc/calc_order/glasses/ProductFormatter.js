@@ -25,9 +25,9 @@ export default function ProductFormatter({row}) {
     const glrow = characteristic.glasses.find({elm: glassRow.elm});
     if(glrow) {
       main.push(glrow.formula);
-      other.push(`${glrow.thickness}мм`);
+      other.push(`${glrow.thickness.round(1)}мм`);
     }
-    other.push(`${glassRow.s.toFixed(3)}м²`);
+    other.push(`${glassRow.s.round(3)}м²`);
     other.push(`${characteristic.elm_weight(glassRow.elm).round(1)}кг`);
     other.push(characteristic.note);
 

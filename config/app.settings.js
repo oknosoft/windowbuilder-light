@@ -35,7 +35,7 @@ function settings(prm = {}) {
     guests: [],
 
     // расположение couchdb для nodejs
-    couch_local: process.env.COUCHLOCAL || `http://cou221:5984/${local_storage_prefix}`,
+    couch_local: `http://cou221:5984/${local_storage_prefix}`,
 
     // расположение couchdb для браузера
     get couch_path() {
