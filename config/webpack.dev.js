@@ -2,13 +2,14 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const package = require('../package.json')
 
 module.exports = {
   mode: process.env.NODE_ENV || "development",  // production
   entry: "./src/index.js",                      // входная точка - исходный файл
   output:{
     path: path.resolve(__dirname, "../build"),  // путь к каталогу выходных файлов - папка public
-    //publicPath: "./",
+    publicPath: "/",
     filename: "static/js/bundle.js",            // название создаваемого файла
     chunkFilename: 'static/js/[name].chunk.js',
     assetModuleFilename: 'static/media/[name].[hash][ext]',
@@ -21,8 +22,8 @@ module.exports = {
     },
     proxy: [
       {
-        context: ['/couchdb', '/adm', '/auth'],
-        target: process.env.PROXY,
+        context: ['/couchdb', '/adm', '/auth', '/r/'],
+        target: process.env.PROXY || package.proxy,
         secure: false,
         xfwd: true,
         //pathRewrite: { '^/api': '' },
@@ -34,7 +35,7 @@ module.exports = {
         // },
       },
     ],
-    port: 8031,
+    port: process.env.PORT || 8031,
     open: true,
     liveReload: false,
     hot: false,

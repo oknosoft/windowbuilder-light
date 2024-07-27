@@ -1,7 +1,17 @@
+'use strict';
+
 const path = require('node:path');
 const fs = require('fs-extra');
 const webpack = require('webpack');
 const config = require('../config/webpack.prod');
+const appBuild = path.resolve(__dirname, '../build');
+
+// Makes the script crash on unhandled rejections instead of silently
+// ignoring them. In the future, promise rejections that are not handled will
+// terminate the Node.js process with a non-zero exit code.
+process.on('unhandledRejection', err => {
+  throw err;
+});
 
 function rimraf(tmpPath) {
   console.log('Чистим каталог build...');
@@ -26,7 +36,7 @@ function rimraf(tmpPath) {
   })
 }
 
-function copyPublicFolder(appPublic, appBuild) {
+function copyPublicFolder(appPublic) {
   const appHtml = path.resolve(appPublic, 'index.html');
   fs.copySync(appPublic, appBuild, {
     dereference: true,
@@ -61,6 +71,16 @@ function build(previousFileSizes) {
         ...messages,
       };
 
+      if (process.env.WRITE_STAT) {
+        return new Promise((resolve, reject) => {
+          fs.write(appBuild + '/bundle-stats.json', stats.toJson(), (err) => {
+            err ? reject(err) : resolve();
+          });
+        })
+          .then(() => resolve(resolveArgs))
+          .catch(error => reject(new Error(error)));
+      }
+
       return resolve(resolveArgs);
     });
   });
@@ -68,6 +88,6 @@ function build(previousFileSizes) {
 
 rimraf(path.resolve(__dirname, '../build'))
   .then(() => build(0))
-  .then(() => copyPublicFolder(path.resolve(__dirname, '../public'), path.resolve(__dirname, '../build')))
+  .then(() => copyPublicFolder(path.resolve(__dirname, '../public')))
   .catch(console.error);
 

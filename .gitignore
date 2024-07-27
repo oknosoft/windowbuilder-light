@@ -17,7 +17,8 @@
 /build
 /public/raw
 /scripts/stats.json
-/src/_common/styles/steklotorg.png
+/src/aggregate/styles/steklotorg.png
+/src/builder/3D/links.md
 *.map
 
 # misc
@@ -33,3 +34,4 @@
 
 *.log*
 yarn.lock
+
