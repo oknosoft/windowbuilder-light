@@ -38,7 +38,7 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function AddLayer() {
+export default function AddLayer({editor, project, layer, elm, setContext}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -47,20 +47,38 @@ export default function AddLayer() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const addFlap = () => {
+    const {container} = (elm || layer);
+    const child = container?.createChild({kind: 'flap'});
+    if(child) {
+      setContext({type: 'layer', layer: child, elm: null});
+      project.redraw();
+    }
+    handleClose();
+  };
+  const addGlass = () => {
+    const {container} = (elm || layer);
+    const child = container?.createChild({kind: 'glass'});
+    if(child) {
+      setContext({type: 'elm', layer: child.layer, elm: child});
+      project.redraw();
+    }
+    handleClose();
+  };
   return <>
     <HtmlTooltip title="Добавить/заменить элемент">
       <IconButton onClick={handleClick}><DataSaverOnIcon /></IconButton>
     </HtmlTooltip>
     <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-      <MenuItem onClick={handleClose} disableRipple>
+      <MenuItem disabled onClick={handleClose} disableRipple>
         <AddPhotoAlternateOutlinedIcon />
         Слой рамы
       </MenuItem>
-      <MenuItem onClick={handleClose} disableRipple>
+      <MenuItem disabled={!elm} onClick={addFlap} disableRipple>
         <LibraryAddOutlinedIcon />
         Слой створки
       </MenuItem>
-      <MenuItem onClick={handleClose} disableRipple>
+      <MenuItem disabled={(elm instanceof editor.Filling)} onClick={addGlass} disableRipple>
         <AddBoxOutlinedIcon />
         Заполнение
       </MenuItem>

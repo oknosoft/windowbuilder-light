@@ -7,7 +7,8 @@ import {useBuilderContext} from '../../Context';
 
 // style={{fontFamily: 'GOST type B'}}
 
-export default function LayerToolbar({project, layer, elm, setContext}) {
+export default function LayerToolbar(props) {
+  const {editor, project, layer, elm, setContext} = props;
   const addRoot = () => {
     const layer= project.addLayer();
     project.redraw();
@@ -29,7 +30,7 @@ export default function LayerToolbar({project, layer, elm, setContext}) {
     project.zoomFit();
   };
   return <>
-    <AddLayer project={project} layer={layer} elm={elm} />
+    <AddLayer {...props} />
     <Box sx={{flex: 1}} />
     <HtmlTooltip title="Удалить текуший слой">
       <IconButton onClick={removeFlap}><i className="fa fa-trash-o" /></IconButton>
