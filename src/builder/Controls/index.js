@@ -19,7 +19,7 @@ export default function Controls() {
       ToolWnd = LayerProps;
     }
     else if((type === 'elm' || type === 'node') && elm) {
-      ToolWnd = elm instanceof editor.Filling ? FillingProps : ProfileProps;
+      ToolWnd = (elm instanceof editor.Filling || elm instanceof editor.ContainerBlank) ? FillingProps : ProfileProps;
     }
     else if((type === 'product') && project) {
       ToolWnd = ProductProps;

@@ -15,7 +15,7 @@ export default function FillingToolbar({editor, project, layer, elm, setContext}
     <AddLayer project={project} layer={layer} elm={elm} />
     <Box sx={{flex: 1}} />
     <HtmlTooltip title="Удалить элемент">
-      <IconButton onClick={remove}><i className="fa fa-trash-o" /></IconButton>
+      <IconButton disabled={!(elm instanceof editor.Filling)} onClick={remove}><i className="fa fa-trash-o" /></IconButton>
     </HtmlTooltip>
   </>
 }

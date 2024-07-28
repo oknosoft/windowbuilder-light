@@ -6,7 +6,7 @@ export default function Indicator({type, editor, elm}) {
   let icon, title;
   switch (type) {
     case 'elm':
-      if(elm instanceof editor.Filling) {
+      if(elm instanceof editor.Filling || elm instanceof editor.ContainerBlank) {
         icon = 'icon_glass';
         title = 'заполнения';
       }
