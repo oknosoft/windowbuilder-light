@@ -31,11 +31,11 @@
   "proxy3": "https://brusnika.oknosoft.ru/",
   "proxy4": "https://brusnika.oknosoft.ru:2210/",
   "proxy5": "https://phototech.oknosoft.ru/",
-  "proxy": "https://phototech.oknosoft.ru:2300/",
+  "proxy6": "https://phototech.oknosoft.ru:2300/",
   "proxy7": "http://localhost:3016/",
   "proxy8": "http://192.168.9.27:3016/",
   "proxy9": "https://steklotorg.oknosoft.ru:2310/",
-  "proxy10": "https://steklotorg.oknosoft.ru/",
+  "proxy": "https://steklotorg.oknosoft.ru",
   "dependencies": {
     "@aldabil/react-scheduler": "^2.9",
     "@emotion/react": "^11.13",
@@ -68,12 +68,12 @@
     "url-join": "^5.0",
     "url-parse": "^1.5",
     "velocity-react": "^1.4.3",
-    "wb-core": "github:oknosoft/windowbuilder-core#37b1fcb9c98bbafbf4bd9092f6dc3a4373f38bff",
+    "wb-core": "github:oknosoft/windowbuilder-core#e4c78665c7aed228791e5580f88f611036da09ba",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {
     "@babel/core": "^7.24",
-    "@babel/preset-env": "^7.24",
+    "@babel/preset-env": "^7.25",
     "@babel/preset-react": "^7.24",
     "babel-loader": "^9.1",
     "css-loader": "^7.1",
@@ -85,7 +85,7 @@
     "react-dom": "^18.3",
     "style-loader": "^4.0",
     "typescript": "^5.5",
-    "webpack": "^5.92",
+    "webpack": "^5.93",
     "webpack-cli": "^5.1",
     "webpack-dev-server": "^5.0",
     "workbox-webpack-plugin": "^7.1"
