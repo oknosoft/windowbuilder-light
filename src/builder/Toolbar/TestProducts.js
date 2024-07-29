@@ -32,9 +32,7 @@ function testProducts({editor, setContext, handleClose}) {
       const attr = x < size - step ? {b: [x, size], e: [x, step / 2]} : {e: [x, size], b: [x, step / 2]};
       profiles.push(activeLayer.createProfile(attr));
     }
-    for(const profile of profiles) {
-      activeLayer.skeleton.addProfile(profile);
-    }
+    activeLayer.skeleton.addProfiles(profiles);
     profiles.length = 0;
     // ригели
     for(let x = 0; x < size - step; x += step) {
@@ -43,9 +41,7 @@ function testProducts({editor, setContext, handleClose}) {
         profiles.push(activeLayer.createProfile({b: [x, size - y], e: [x + step, size - y]}));
       }
     }
-    for(const profile of profiles) {
-      activeLayer.skeleton.addProfile(profile);
-    }
+    activeLayer.skeleton.addProfiles(profiles);
 
     props.loading = false;
     props.registerChange();
@@ -71,9 +67,7 @@ function testProducts({editor, setContext, handleClose}) {
         activeLayer.createProfile({b: [1800, 100], e: [1800, 1100]}),
       ];
     }
-    for(const profile of profiles) {
-      activeLayer.skeleton.addProfile(profile);
-    }
+    activeLayer.skeleton.addProfiles(profiles);
     activeLayer.containers.sync();
     new DimensionLine({
       project,
@@ -127,9 +121,7 @@ function testProducts({editor, setContext, handleClose}) {
         activeLayer.createProfile({b: [600, 1000], e: [600, 0]}),
         activeLayer.createProfile({b: [600, 500], e: [1400, 500]}),
       ];
-      for(const profile of profiles) {
-        activeLayer.skeleton.addProfile(profile);
-      }
+      activeLayer.skeleton.addProfiles(profiles);
       activeLayer.containers.sync();
       activeLayer.containers.children['5_2_3_6'].createChild({kind: 'flap'});
       new DimensionLine({

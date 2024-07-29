@@ -9,8 +9,8 @@ import Autocomplete from '@oknosoft/ui/DataField/Autocomplete';
 
 const mgr = $p.cat.cnns;
 
-function renderOption(props, option) {
-  return <MenuItem value={option.valueOf()}>
+function renderOption(props, option, state, ownerState) {
+  return <MenuItem value={option.valueOf()} {...props}>
     <div className={option.cnn_type._raw('css')} />
     {option.toString()}
   </MenuItem>;
