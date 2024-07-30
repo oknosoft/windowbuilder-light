@@ -70,7 +70,7 @@ const theme = createTheme({
         root: ({ ownerState, theme }) => ({
           minWidth: ownerState.minWidth || 300,
           paddingRight: theme.spacing(),
-          borderBottom: '1px solid #e8e8e8',
+          ...(ownerState.noBorder ? null : {borderBottom: '1px solid #e8e8e8'}),
         }),
       }
     },

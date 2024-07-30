@@ -5,7 +5,7 @@ import QuickSelection from '../../metadata/cat/scheme_settings/Selection/Quick';
 export default function RemaindersQuickFilter({obj}) {
   const rows = [];
   for(const row of obj.selection) {
-    if(row.left_value !== 'phase' && row.left_value !== 'stage') {
+    if(row.left_value !== 'phase') {
       rows.push(<QuickSelection key={row.row} row={row} />);
     }
   }

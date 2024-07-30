@@ -7,16 +7,22 @@ import Toolbar from './RemaindersToolbar';
 import RemaindersQuickFilter from './RemaindersQuickFilter';
 import SchemeSettingsTunes from '../../metadata/cat/scheme_settings/Tunes';
 import {renderCheckbox} from './Formatters';
-import {schemas, initScheme, dp} from './data';
+import {schemas, initScheme, dp, filter} from './data';
 
 export default function RMDRemainders() {
 
   const {handleIfaceState, ifaceState: {rmd}} = useLoadingContext();
   const [columns, setColumns] = React.useState([]);
-  const [tunes, setTunes] = React.useState(false);
+  const [tunes, rawSetTunes] = React.useState(false);
   const [selectedRows, setSelectedRows] = React.useState(new Set());
   const scheme = rmd?.scheme || schemas.find(({ref}) => ref === initScheme);
 
+  const setTunes = (tunes) => {
+    if(!tunes) {
+      filter({rmd, scheme, handleIfaceState});
+    }
+    rawSetTunes(tunes);
+  }
   const updateColumns = () => {
     const {fields} = dp._metadata('data');
     const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: dp._manager});
