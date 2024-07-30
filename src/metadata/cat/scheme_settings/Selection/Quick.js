@@ -10,11 +10,21 @@ import InputLabel from '@mui/material/InputLabel';
 
 function selectionObj(row, checked, setChecked) {
   return React.useMemo(() => {
-    const mgr = $p.md.mgr_by_class_name(row.right_value_type);
+    const {md, utils} = $p;
+    const mgr = md.mgr_by_class_name(row.right_value_type);
     const typeMeta = mgr.metadata();
     const label = row.caption || (typeMeta?.obj_presentation || typeMeta?.synonym || row.left_value);
+    const list = [];
+    for(const o of mgr) {
+      if(!o.is_folder) {
+        list.push(o);
+      }
+    }
+    list.sort(utils.sort('name'));
     const meta = {
       synonym: label,
+      choice_groups_elm: 'elm',
+      list,
       type: {
         is_ref: Boolean(mgr),
         types: [row.right_value_type]
@@ -49,7 +59,7 @@ function selectionObj(row, checked, setChecked) {
         return true;
       }
     };
-    return new Proxy(row, selectionHandler);
+    return [new Proxy(row, selectionHandler), meta];
 
   }, [row]);
 }
@@ -68,12 +78,13 @@ export default function QuickSelection({row}) {
     setChecked(row.use);
   };
 
-  const obj = selectionObj(row, checked, setChecked);
+  const [obj, meta] = selectionObj(row, checked, setChecked);
   const Component = obj._manager ? RefField : Text;
 
   return <Component
     obj={obj}
     fld="value"
+    meta={meta}
     label={<span>
       <Checkbox checked={checked} onChange={handleChange}/>
       {obj.label}
