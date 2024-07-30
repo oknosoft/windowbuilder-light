@@ -3,16 +3,13 @@ import RefField from 'metadata-ui/DataField/RefField';
 import Text from 'metadata-ui/DataField/Text';
 import {NumberField} from 'metadata-ui/DataField/Number';
 import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 
 
 function selectionObj(row, checked, setChecked) {
   return React.useMemo(() => {
     const {md, utils} = $p;
     const mgr = md.mgr_by_class_name(row.right_value_type);
-    const typeMeta = mgr.metadata();
+    const typeMeta = mgr?.metadata();
     const label = row.caption || (typeMeta?.obj_presentation || typeMeta?.synonym || row.left_value);
     const list = [];
     for(const o of mgr) {
@@ -41,6 +38,11 @@ function selectionObj(row, checked, setChecked) {
             return mgr;
           case 'label':
             return label;
+          case 'Component':
+            if(mgr) {
+              return RefField;
+            }
+            return target.right_value_type.includes('number') ? NumberField : Text;
         }
       },
       set(target, prop, val, receiver) {
@@ -79,7 +81,7 @@ export default function QuickSelection({row}) {
   };
 
   const [obj, meta] = selectionObj(row, checked, setChecked);
-  const Component = obj._manager ? RefField : Text;
+  const {Component} = obj;
 
   return <Component
     obj={obj}
