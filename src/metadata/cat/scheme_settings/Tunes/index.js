@@ -5,14 +5,33 @@ import Selection from './Selection';
 import Sorting from './Sorting';
 import Grouping from './Grouping';
 
-export default function SchemeSettingsTunes({obj}) {
-  const [tab, setTab] = React.useState("selection");
+function Stub() {
+  return 'не реализовано';
+}
+
+function component(tab, tabs) {
+  const Component = tabs?.[tab];
+  if(!Component) {
+    switch (tab) {
+      case 'columns':
+        return Columns;
+      case 'selection':
+        return Selection;
+      case 'sorting':
+        return Sorting;
+      case 'grouping':
+        return Grouping;
+    }
+  }
+  return Component || Stub;
+}
+
+export default function SchemeSettingsTunes({obj, tabs}) {
+  const [tab, setTab] = React.useState("params");
   const tabRef = React.useRef(null);
+  const Component = component(tab, tabs);
   return <>
     <Tabs ref={tabRef} obj={obj} tab={tab} setTab={setTab}/>
-    {tab === 'columns' && <Columns obj={obj} tabRef={tabRef}/>}
-    {tab === 'selection' && <Selection obj={obj} tabRef={tabRef}/>}
-    {tab === 'sorting' && <Sorting obj={obj} tabRef={tabRef}/>}
-    {tab === 'grouping' && <Grouping obj={obj} tabRef={tabRef}/>}
+    <Component obj={obj} tabRef={tabRef}/>
   </>;
 }

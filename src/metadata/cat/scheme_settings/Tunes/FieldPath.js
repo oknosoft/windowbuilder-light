@@ -4,6 +4,6 @@ export function PathEditor() {
 
 }
 
-export function PathFormatter() {
-
+export function PathFormatter({row, column, onRowChange, onClose}) {
+  return <div>{row[column.key]}</div>;
 }

@@ -4,7 +4,8 @@ import {Content} from '../App/styled';
 import Loading from '../App/Loading';
 import {useLoadingContext} from '../Metadata';
 import Toolbar from './RemaindersToolbar';
-import SchemeSettingsTunes from '../../metadata/cat/scheme_settings/Tunes'
+import RemaindersQuickFilter from './RemaindersQuickFilter';
+import SchemeSettingsTunes from '../../metadata/cat/scheme_settings/Tunes';
 import {renderCheckbox} from './Formatters';
 import {schemas, initScheme, dp} from './data';
 
@@ -16,11 +17,25 @@ export default function RMDRemainders() {
   const [selectedRows, setSelectedRows] = React.useState(new Set());
   const scheme = rmd?.scheme || schemas.find(({ref}) => ref === initScheme);
 
-  React.useEffect(() => {
+  const updateColumns = () => {
     const {fields} = dp._metadata('data');
     const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: dp._manager});
     setColumns(columns);
-  }, [rmd]);
+  };
+
+  React.useEffect(updateColumns, [rmd]);
+
+  React.useEffect(() => {
+    if(scheme) {
+      const update = $p.utils.debounce((obj, flds) => {
+        if(obj._owner?._owner === scheme && 'use' in flds) {
+          updateColumns();
+        }
+      });
+      scheme._manager.on({update});
+      return () => scheme._manager.off({update});
+    }
+  }, [scheme]);
 
   if(!columns.length) {
     return <Loading />;
@@ -43,6 +58,7 @@ export default function RMDRemainders() {
       tunes ?
         <SchemeSettingsTunes
           obj={scheme}
+          tabs={{params: RemaindersQuickFilter}}
         />
         :
         <DataGrid

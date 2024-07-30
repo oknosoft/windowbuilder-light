@@ -1,11 +1,14 @@
 import React from 'react';
+import {SelectColumn} from 'react-data-grid';
 import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {TextFormatter, TextCell} from 'metadata-ui/DataField/Text';
 import {NumberFormatter, NumberCell} from 'metadata-ui/DataField/Number';
 import {PathEditor, PathFormatter} from './FieldPath';
 import ObjTabular from '../../../aggregate/ObjTabular';
+import {renderCheckbox} from '../../../../components/RMD/Formatters';
 
 const columns = [
+  {...SelectColumn, headerCellClass: 'cell-select', cellClass: 'cell-select'},
   {key: "field", maxWidth: 160, name: "Поле", renderCell: PathFormatter, renderEditCell: PathEditor},
   {key: "caption", maxWidth: 160, name: "Заголовок", renderCell: TextFormatter, renderEditCell: TextCell},
   {key: "width", maxWidth: 160, name: "Ширина", renderCell: NumberFormatter, renderEditCell: NumberCell},
@@ -16,9 +19,12 @@ const columns = [
 ];
 
 export default function SchemeSettingsColumns({obj, tabRef}) {
+
   return <ObjTabular
     tabRef={tabRef}
     tabular={obj.fields}
     columns={columns}
+    renderers={{ renderCheckbox }}
+    select="use"
   />;
 }

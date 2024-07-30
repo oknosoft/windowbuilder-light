@@ -110,7 +110,7 @@ export const query = async ({rmd, scheme, handleIfaceState}) => {
 export const filter = ({rmd, scheme, handleIfaceState}) => {
   const {tgt} = rmd;
   const rows = [], tgtrows = [];
-  for(const row of dp.data) {
+  for(const row of scheme.filter(dp.data)) {
     const {obj, work_center, work_shift, date} = row;
     const tgtrow = tgt.set.find({
       record_kind: -1,
