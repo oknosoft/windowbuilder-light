@@ -1,4 +1,4 @@
-import {OrderFormatter, PKFormatter} from './Formatters';
+import {OrderFormatter, PKFormatter, renderSummaryDate, colSpan, renderSummaryObj, renderSummaryPower} from './Formatters';
 import {SelectColumn} from 'react-data-grid';
 
 const {
@@ -16,12 +16,20 @@ function rx_columns(attr) {
     });
 
   for(const column of columns) {
+    if(column.key === 'date' && columns.length > 3) {
+      column.colSpan = colSpan;
+      column.renderSummaryCell = renderSummaryDate;
+    }
     if(column.key === 'calc_order') {
       column.renderCell = OrderFormatter;
     }
     else if(column.key === 'obj') {
       column.renderCell = PKFormatter;
+      column.renderSummaryCell = renderSummaryObj;
       delete column.width;
+    }
+    else if(column.key === 'power') {
+      column.renderSummaryCell = renderSummaryPower;
     }
   }
   if(!dp.phase.is('plan')) {
@@ -130,4 +138,27 @@ export const filter = ({rmd, scheme, handleIfaceState}) => {
   }
   handleIfaceState({rmd: Object.assign({}, rmd, {rows, tgtrows})});
 };
+
+export function rowKeyGetter (row) {
+  return row.row;
+}
+
+export const summary = (rows, selectedRows) => {
+  const res = {
+    top: {id: 'total_top', count: 0, area:0, power: 0},
+    bottom: {id: 'total_bottom',count: 0, area:0, power: 0}
+  };
+  for(const {row, obj, power} of rows) {
+    const {s} = obj.obj;
+    res.bottom.count += 1;
+    res.bottom.area += s;
+    res.bottom.power += power;
+    if(selectedRows.has(row)) {
+      res.top.count += 1;
+      res.top.area += s;
+      res.top.power += power;
+    }
+  }
+  return res;
+}
 

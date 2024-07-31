@@ -7,7 +7,7 @@ import Toolbar from './RemaindersToolbar';
 import RemaindersQuickFilter from './RemaindersQuickFilter';
 import SchemeSettingsTunes from '../../metadata/cat/scheme_settings/Tunes';
 import {renderCheckbox} from './Formatters';
-import {schemas, initScheme, dp, filter} from './data';
+import {schemas, initScheme, dp, filter, summary, rowKeyGetter} from './data';
 
 export default function RMDRemainders() {
 
@@ -47,9 +47,7 @@ export default function RMDRemainders() {
     return <Loading />;
   }
   const rows = rmd?.rows || [];
-  function rowKeyGetter (row) {
-    return rows.indexOf(row);
-  }
+  const summaryRows = (tunes || dp.phase.is('plan')) ? null : summary(rows, selectedRows);
   return <Content>
     <Toolbar
       rmd={rmd}
@@ -70,6 +68,8 @@ export default function RMDRemainders() {
         <DataGrid
           columns={columns}
           rows={rows}
+          topSummaryRows={summaryRows && [summaryRows.top]}
+          bottomSummaryRows={summaryRows && [summaryRows.bottom]}
           rowKeyGetter={rowKeyGetter}
           //onRowsChange={setRows}
           selectedRows={selectedRows}

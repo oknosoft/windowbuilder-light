@@ -4,7 +4,7 @@ import Loading from '../App/Loading';
 import {useLoadingContext} from '../Metadata';
 import Toolbar from './TaskToolbar';
 import {renderCheckbox} from './Formatters';
-import {schemas, initScheme} from './data';
+import {schemas, initScheme, rowKeyGetter} from './data';
 
 export default function RMDRemainders() {
 
@@ -24,9 +24,7 @@ export default function RMDRemainders() {
     return <Loading />;
   }
   const rows = rmd?.tgtrows || [];
-  function rowKeyGetter (row) {
-    return rows.indexOf(row);
-  }
+
   return <>
     <Toolbar rmd={rmd} scheme={scheme} selectedRows={selectedRows} setSelectedRows={setSelectedRows} handleIfaceState={handleIfaceState} ext={ext} setExt={setExt}/>
     {ext ? ext : <DataGrid

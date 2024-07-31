@@ -24,7 +24,7 @@ export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelecte
   const include = () => {
     const {tgt} = rmd;
     for(const index of selectedRows) {
-      const src = rmd.rows[index];
+      const src = rmd.rows.find(row => row.row === index);
       const row = tgt.set.add(src);
       row.record_kind = -1;
       row.phase = dp.phase;

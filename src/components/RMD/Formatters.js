@@ -1,4 +1,5 @@
 import React from 'react';
+import Typography from '@mui/material/Typography';
 
 export function OrderFormatter(props) {
   const {calc_order} = props.row;
@@ -21,4 +22,26 @@ export function renderCheckbox({ onChange, ...props }) {
   }
 
   return <input type="checkbox" {...props} onChange={handleChange} />;
+}
+
+export function renderSummaryDate({row}) {
+  return <span style={{textDecoration: 'underline'}}>{row.id === 'total_top' ? 'В выделенных строках:' : 'Итого:'}</span>;
+}
+
+export function renderSummaryPower({row}) {
+  const v = row.power.toFixed(2);
+  return <div style={{textAlign: 'right'}} title={v}>{v}</div>;
+}
+
+export function renderSummaryObj({row}) {
+  const v = `Штук: ${row.count}, Площадь: ${row.area.toFixed(2)}`;
+  return <div style={{display: 'flex'}}>
+    <div>{`Штук: ${row.count}`}</div>
+    <div style={{flex: 1}}/>
+    <div>{`Площадь: ${row.area.toFixed(2)}`}</div>
+  </div>;
+}
+
+export function colSpan({type}) {
+  return type === 'SUMMARY' ? 2 : undefined;
 }
