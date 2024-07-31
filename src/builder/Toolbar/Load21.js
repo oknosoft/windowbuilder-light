@@ -4,6 +4,7 @@ import {onKeyUp} from '@oknosoft/ui/DataField/enterTab';
 
 export default function load21({editor, setContext, handleClose}) {
   handleClose();
+  setContext({type: 'product', project: editor.project, layer: null, elm: null});
   const {utils, ui, adapters} = $p;
   const stub = {
     uid: location.pathname.replace('/builder/', ''),
@@ -13,7 +14,7 @@ export default function load21({editor, setContext, handleClose}) {
       }
     },
   }
-  $p.ui.dialogs.alert({
+  ui.dialogs.alert({
     timeout: 0,
     title: 'Изделие из старой базы',
     Component: Load21,

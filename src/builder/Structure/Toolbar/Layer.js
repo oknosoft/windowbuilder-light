@@ -14,9 +14,6 @@ export default function LayerToolbar(props) {
     project.redraw();
     setContext({type: 'layer', layer, elm: null});
   };
-  const addFlap = () => {
-    //setContext({stamp: project.props.stamp, tool: editor.tool});
-  };
   const removeFlap = () => {
     const {props} = project;
     const parent = layer.layer;

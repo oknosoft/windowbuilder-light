@@ -7,8 +7,12 @@ import AddLayer from './AddLayer';
 export default function FillingToolbar(props) {
   const {editor, project, layer, elm, setContext} = props;
   const remove = () => {
-    elm?.remove();
-    project?.redraw();
+    if(elm) {
+      const {container} = elm;
+      elm.remove();
+      container?.createChild({kind: 'blank'});
+      project?.redraw();
+    }
   }
 
   return <>
