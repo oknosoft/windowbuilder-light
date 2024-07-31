@@ -2,7 +2,10 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WorkboxPlugin = require('workbox-webpack-plugin');
-const package = require('../package.json')
+const package = require('../package.json');
+
+const proxyTarget = process.env.PROXY || package.proxy;
+const proxyHost = new URL(proxyTarget).host;
 
 module.exports = {
   mode: process.env.NODE_ENV || "development",  // production
@@ -23,7 +26,7 @@ module.exports = {
     proxy: [
       {
         context: ['/couchdb', '/adm', '/auth', '/r/'],
-        target: process.env.PROXY || package.proxy,
+        target: proxyTarget,
         secure: false,
         xfwd: true,
         //pathRewrite: { '^/api': '' },
@@ -33,6 +36,9 @@ module.exports = {
         //     return '/index.html';
         //   }
         // },
+        onProxyReq(proxyReq, req, res) {
+          proxyReq.setHeader('host', proxyHost);
+        },
       },
     ],
     port: process.env.PORT || 8031,
