@@ -1357,6 +1357,15 @@ export default {
       get right_value_type() {return this._getter('right_value_type');}
       set right_value_type(v) {this._setter('right_value_type', v);}
 
+      get quick() {return this._getter('quick');}
+      set quick(v) {this._setter('quick', v);}
+
+      get list() {return this._getter('list');}
+      set list(v) {this._setter('list', v);}
+
+      get caption() {return this._getter('caption');}
+      set caption(v) {this._setter('caption', v);}
+
       check(row) {
         const {comparison_types: ct} = enm;
         let {left_value, left_value_type, right_value, right_value_type, comparison_type} = this;

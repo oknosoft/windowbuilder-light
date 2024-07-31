@@ -11,10 +11,12 @@ function selectionObj(row, checked, setChecked) {
     const mgr = md.mgr_by_class_name(row.right_value_type);
     const typeMeta = mgr?.metadata();
     const label = row.caption || (typeMeta?.obj_presentation || typeMeta?.synonym || row.left_value);
-    const list = [];
-    for(const o of mgr) {
-      if(!o.is_folder) {
-        list.push(o);
+    const list = row.list ? JSON.parse(row.list).map(v => mgr.get(v)) : [];
+    if(!list.length) {
+      for(const o of mgr) {
+        if(!o.is_folder) {
+          list.push(o);
+        }
       }
     }
     list.sort(utils.sort('name'));
