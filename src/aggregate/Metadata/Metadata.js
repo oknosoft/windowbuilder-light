@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import {ThemeProvider} from '@mui/material';  // провайдер тема material=ui
 import theme from '../styles/muiTheme';      // тема material=ui
 import Loading from '../App/Loading';
+import DialogsUI from '../App/DialogsUI';
 
 const LoadingContext = React.createContext(null);
 export const useLoadingContext = () => React.useContext(LoadingContext);
@@ -41,6 +42,7 @@ function Metadata({App, initialText}) {
     <LoadingContext.Provider value={{ ifaceState, handleIfaceState }}>
       <React.Suspense fallback={loading}>
         {ifaceState?.meta_loaded ? <App {...ifaceState}/> : loading }
+        <DialogsUI ifaceState={ifaceState}/>
       </React.Suspense>
     </LoadingContext.Provider>
   </ThemeProvider>;

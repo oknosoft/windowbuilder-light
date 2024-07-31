@@ -5,6 +5,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
 import {HtmlTooltip} from '../../aggregate/App/styled';
+import load21 from './Load21';
 
 function testProducts({editor, setContext, handleClose}) {
 
@@ -234,6 +235,7 @@ export default function TestProducts({editor, setContext}) {
       <MenuItem onClick={cut}>Разрыв</MenuItem>
       <MenuItem onClick={grid20}>Сетка 6</MenuItem>
       <MenuItem onClick={grid100}>Сетка 40</MenuItem>
+      <MenuItem onClick={() => load21({editor, setContext, handleClose})}>Из старой базы</MenuItem>
       <MenuItem onClick={clear}>Очистить</MenuItem>
     </Menu>
   </>;

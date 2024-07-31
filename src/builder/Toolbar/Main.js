@@ -18,13 +18,12 @@ export default function MainToolbar({context}) {
   const navigate = useNavigate();
   const {editor, setContext} = context;
 
-  const {close, recalc, template, save, saveClose} = React.useMemo(() => {
+  const {close, recalc, save, saveClose} = React.useMemo(() => {
     const close = () => navigate(`/`);
     const recalc = () => null;
-    const template = () => editor?.createTestProduct();
     const save = () => null;
     const saveClose = () => null;
-    return {close, recalc, template, save, saveClose};
+    return {close, recalc, save, saveClose};
   }, [editor]);
 
   const {ifaceState: {drawerOpen}} = useLoadingContext();
