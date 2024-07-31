@@ -40,11 +40,13 @@ export default function Login({pfilter, common_loaded}) {
 
   const handleLogin = () => {
     if(!user.logged_in && !user.try_log_in) {
-      $p.adapters.logIn({username: login, password})
+      const {md, adapters} = $p;
+      adapters.logIn({username: login, password})
         .then((user) => {
-          console.log(user);
+          md.emit('log_in', user);
           return load_ram($p, /*[]*/);
         })
+        .then(() => md.emit('complete_loaded'))
         .catch(err => {
           console.error(err);
         });

@@ -49,12 +49,25 @@ export function actions(handleIfaceState) {
     })
     .then(() => load_common($p))
     .then(() => handleIfaceState({common_loaded: true}))
-    .then(() => load_raw($p))
-    .then(() => handleIfaceState({complete_loaded: true}))
+    //.then(() => load_raw($p))
+    //.then(() => handleIfaceState({complete_loaded: true}))
     .then(() => {
       const {classes: {PouchDB}, adapters: {pouch}, jobPrm, md, ui, cat: {users}} = $p;
-      handleIfaceState({common_loaded: true});
 
+      md.on({
+        log_in(user) {
+          handleIfaceState({user: {
+              user,
+              name: user.name,
+              logged_in: true,
+              try_log_in: false,
+              log_error: '',
+            }});
+        },
+        complete_loaded() {
+          handleIfaceState({complete_loaded: true});
+        }
+      })
       /*
 
       pouch.on({
@@ -100,14 +113,12 @@ export function actions(handleIfaceState) {
             });
         }
       });
-
-      */
-
-
       md.once('predefined_elmnts_inited', () => {
         let res = Promise.resolve();
         res.then(() => pouch.emit('pouch_complete_loaded'));
       });
+      */
+
 
     });
 }

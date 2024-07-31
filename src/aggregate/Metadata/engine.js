@@ -24,7 +24,7 @@ export function init(handleIfaceState) {
   try{
 
     // сообщяем адаптерам пути, суффиксы и префиксы
-    const {jobPrm, classes, adapters: {pouch}} = $p;
+    const {jobPrm, classes, adapters: {pouch}, ui} = $p;
     if(jobPrm.get('couch_path') !== jobPrm.couch_path && process.env.NODE_ENV !== 'development') {
       jobPrm.set('couch_path', jobPrm.couch_path);
     }
@@ -37,6 +37,7 @@ export function init(handleIfaceState) {
 
     // выполняем модификаторы
     //modifiers($p);
+    ui.dialogs.init({handleIfaceState});
 
     // информируем хранилище о готовности MetaEngine
     handleIfaceState({meta_loaded: true});
