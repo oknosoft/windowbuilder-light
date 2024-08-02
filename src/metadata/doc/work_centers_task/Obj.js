@@ -94,9 +94,9 @@ export default function WorkCentersTaskObj() {
     <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} modified={modified} setModified={setModified}/>
     <ObjHead obj={obj} setting={setting}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
-    {curr.name === 'planning' && <ObjPlan obj={obj} tabRef={tabRef} />}
-    {curr.name === 'cuts_in' && <ObjCutsIn obj={obj} tabRef={tabRef} />}
-    {curr.name === 'cuts_out' && <ObjCutsOut obj={obj} tabRef={tabRef} />}
+    {curr.name === 'planning' && <ObjPlan obj={obj} tabRef={tabRef} setBackdrop={setBackdrop}/>}
+    {curr.name === 'cuts_in' && <ObjCutsIn obj={obj} tabRef={tabRef} setBackdrop={setBackdrop}/>}
+    {curr.name === 'cuts_out' && <ObjCutsOut obj={obj} tabRef={tabRef} setBackdrop={setBackdrop}/>}
     {curr.name === 'cutting' && <ObjCutting obj={obj} tabRef={tabRef} setBackdrop={setBackdrop} />}
     {settingOpen && <ObjSetting setSettingOpen={setSettingOpen} />}
   </Root>;

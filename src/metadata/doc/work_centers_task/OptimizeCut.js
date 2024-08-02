@@ -1,11 +1,12 @@
 import React from 'react';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import SegmentIcon from '@mui/icons-material/Segment';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
-import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
+import LayersIcon from '@mui/icons-material/Layers';
 import {HtmlTooltip} from '../../../components/App/styled';
 import CuttingReport from './CuttingReport';
 import CuttingProgress1D from './CuttingProgress1D';
@@ -131,6 +132,12 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt}) {
     }
   };
 
+  const reset_sticks = () => {
+    setBackdrop(true);
+    obj.reset_sticks();
+    Promise.resolve().then(setBackdrop);
+  };
+
   return <>
     <Divider orientation="vertical" flexItem sx={{m: 1}} />
     <HtmlTooltip title="Оптимизировать раскрой профиля">
@@ -140,11 +147,26 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt}) {
       <IconButton onClick={run2D(obj, setBackdrop, setExt)}><ViewQuiltIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Удалить данные оптимизации раскроя">
-      <IconButton onClick={() => obj.reset_sticks()}><PlaylistRemoveIcon/></IconButton>
+      <IconButton onClick={reset_sticks}><PlaylistRemoveIcon/></IconButton>
     </HtmlTooltip>
     <Box sx={{flex: 1}}/>
     <HtmlTooltip title="Статистика раскроя">
       <IconButton onClick={report}><AssessmentOutlinedIcon/></IconButton>
     </HtmlTooltip>
+  </>;
+}
+
+export function CutsInBtns({obj, setBackdrop, ext, setExt}) {
+  const fill_cuts = () => {
+    setBackdrop(true);
+    obj.fill_cuts();
+    Promise.resolve().then(setBackdrop);
+  };
+  return <>
+    <Divider orientation="vertical" flexItem sx={{m: 1}} />
+    <HtmlTooltip title="Добавить типовые заготовки">
+      <IconButton onClick={fill_cuts}><LayersIcon/></IconButton>
+    </HtmlTooltip>
+    <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt}/>
   </>;
 }
