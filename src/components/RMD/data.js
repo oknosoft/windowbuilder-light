@@ -1,4 +1,4 @@
-import {OrderFormatter, PKFormatter, renderSummaryDate, colSpan, renderSummaryObj, renderSummaryPower} from './Formatters';
+import {OrderFormatter, PKFormatter, renderSummaryDate, colSpan, renderSummaryObj, renderSummaryPower, renderSummaryTask} from './Formatters';
 import {SelectColumn} from 'react-data-grid';
 
 const {
@@ -8,7 +8,7 @@ const {
   rep, utils, wsql, adapters} = $p;
 
 function rx_columns(attr) {
-  const {mode, fields, _mgr} = attr;
+  const {mode, fields, _mgr, target} = attr;
   const hide = ['calc_order', 'obj'];
   const columns = this.constructor.prototype.rx_columns.call(this, attr)
     .filter((column) => {
@@ -18,17 +18,24 @@ function rx_columns(attr) {
   for(const column of columns) {
     if(column.key === 'date' && columns.length > 3) {
       column.colSpan = colSpan;
-      column.renderSummaryCell = renderSummaryDate;
+      if(target === 'task') {
+        column.renderSummaryCell = renderSummaryTask;
+      }
+      else {
+        column.renderSummaryCell = renderSummaryDate;
+      }
     }
     if(column.key === 'calc_order') {
       column.renderCell = OrderFormatter;
     }
     else if(column.key === 'obj') {
       column.renderCell = PKFormatter;
-      column.renderSummaryCell = renderSummaryObj;
+      if(target !== 'task') {
+        column.renderSummaryCell = renderSummaryObj;
+      }
       delete column.width;
     }
-    else if(column.key === 'power') {
+    else if(column.key === 'power' && target !== 'task') {
       column.renderSummaryCell = renderSummaryPower;
     }
   }
@@ -150,13 +157,15 @@ export const summary = (rows, selectedRows) => {
   };
   for(const {row, obj, power} of rows) {
     const {s} = obj.obj;
-    res.bottom.count += 1;
-    res.bottom.area += s;
-    res.bottom.power += power;
     if(selectedRows.has(row)) {
       res.top.count += 1;
       res.top.area += s;
       res.top.power += power;
+    }
+    else {
+      res.bottom.count += 1;
+      res.bottom.area += s;
+      res.bottom.power += power;
     }
   }
   return res;

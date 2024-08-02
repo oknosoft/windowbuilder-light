@@ -25,7 +25,9 @@ export function renderCheckbox({ onChange, ...props }) {
 }
 
 export function renderSummaryDate({row}) {
-  return <span style={{textDecoration: 'underline'}}>{row.id === 'total_top' ? 'В выделенных строках:' : 'Итого:'}</span>;
+  return <span style={{textDecoration: 'underline'}}>{
+    row.id === 'total_top' ? 'В выделенных строках:' : 'Итого без выделенных:'
+  }</span>;
 }
 
 export function renderSummaryPower({row}) {
@@ -41,6 +43,15 @@ export function renderSummaryObj({row}) {
     <div>{`Площадь: ${row.area.toFixed(2)}`}</div>
   </div>;
 }
+
+export function renderSummaryTask({row}) {
+  return <div style={{display: 'flex'}}>
+    <div>{`q:${row.count}, s:${row.area.toFixed(2)}`}</div>
+    <div style={{flex: 1}}/>
+    <div>{row.power.toFixed(2)}</div>
+  </div>;
+}
+
 
 export function colSpan({type}) {
   return type === 'SUMMARY' ? 2 : undefined;

@@ -18,8 +18,12 @@ export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows,
 
   const {tgt} = rmd;
   const exclude = () => {
+    const rm = [];
     for(const index of selectedRows) {
-      tgt.set.del(rmd.tgtrows.find(row => row.row === index));
+      rm.push(rmd.tgtrows.find(row => row.row === index));
+    }
+    for(const row of rm) {
+      tgt.set.del(row);
     }
     setSelectedRows(new Set());
     filter({rmd, scheme, handleIfaceState});
