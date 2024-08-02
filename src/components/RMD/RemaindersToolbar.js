@@ -68,10 +68,10 @@ export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelecte
     <HtmlTooltip title="Освежить данные">
       <IconButton onClick={() => query({rmd, scheme, handleIfaceState})}><CloudSyncIcon/></IconButton>
     </HtmlTooltip>
-    <Divider orientation="vertical" flexItem sx={{m: 1}} />
     <HtmlTooltip title="Уточнить фильтр">
       <IconButton onClick={() => setTunes(!tunes)}><FilterAltOutlinedIcon/></IconButton>
     </HtmlTooltip>
+    <Divider orientation="vertical" flexItem sx={{m: 1}} />
     <HtmlTooltip title="Включить в задание">
       <IconButton disabled={!selectedRows.size} onClick={include}><UTurnRightIcon/></IconButton>
     </HtmlTooltip>
