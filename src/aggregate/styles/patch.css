@@ -80,8 +80,14 @@
 .tb_img_cnn_long {background-image: url(imgs/cnn-long.png);}
 .tb_img_cnn_short {background-image: url(imgs/cnn-short.png);}
 .tb_img_cnn_t {background-image: url(imgs/cnn-t.png);}
+.tb_img_cnn_tt {background-image: url(imgs/cnn-tt.png);}
+.tb_img_cnn_tt_90 {background-image: url(imgs/cnn-tt.png); transform: rotate(90deg);}
 .tb_img_cnn_xx {background-image: url(imgs/cnn-xx.png);}
 .tb_img_cnn_xt {background-image: url(imgs/cnn-xt.png);}
+.tb_img_cnn_cut0 {background-image: url(imgs/cnn-cut0.png);}
+.tb_img_cnn_cut0_90 {background-image: url(imgs/cnn-cut0.png); transform: rotate(90deg);}
+.tb_img_cnn_cut0_180 {background-image: url(imgs/cnn-cut0.png); transform: rotate(180deg);}
+.tb_img_cnn_cut0_270 {background-image: url(imgs/cnn-cut0.png); transform: rotate(270deg);}
 
 .tb_icon-hand {background-image: url(imgs/icon-hand.png);}
 .tb_icon-arrow-white {background-image: url(imgs/icon-arrow-white.png);}

@@ -38,6 +38,14 @@ const theme = createTheme({
       },
     },
 
+    MuiSelect: {
+      styleOverrides: {
+        icon: {
+          right: 0,
+        },
+      }
+    },
+
     MuiTab: {
       styleOverrides: {
         // Name of the slot
