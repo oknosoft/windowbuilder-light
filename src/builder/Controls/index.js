@@ -11,8 +11,8 @@ import {PaddingLeft} from '../../aggregate/App/styled';
 import {useBuilderContext} from '../Context';
 
 export default function Controls() {
-  const {editor, tool, type, project, layer, elm, node, setContext} = useBuilderContext();
-  const props = {editor, tool, type, project, layer, elm, node};
+  const {editor, tool, type, project, layer, elm, node, stamp, setContext} = useBuilderContext();
+  const props = {editor, tool, type, project, layer, elm, node, stamp};
   let ToolWnd = tool?.constructor?.ToolWnd;
   if(!ToolWnd) {
     if(type === 'layer' && layer) {

@@ -6,67 +6,44 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
-function getStyles(name, personName, theme) {
+function getStyles(curr, value, theme) {
   return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
+    fontWeight: value === curr ? theme.typography.fontWeightMedium : theme.typography.fontWeightRegular,
   };
 }
 
-export default function FieldCnnType() {
+export default function FieldCnnType({CnnPoint}) {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
+  const {vertex} = CnnPoint;
+  const {cnnType, cnnTypes} = vertex;
+  const [index, setIndex] = React.useState(0);
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
+  const handleChange = ({target}) => {
+    vertex.cnnType = target.value;
+    setIndex(index + 1);
   };
 
   return <FormControl fullWidth>
-    <InputLabel>Тип соединения</InputLabel>
+    <InputLabel>{`Тип соедин (${vertex.value})`}</InputLabel>
     <Select
       displayEmpty
-      value={personName}
+      value={cnnType}
       onChange={handleChange}
       input={<OutlinedInput />}
-      renderValue={(selected) => {
-        if (selected.length === 0) {
-          return <em>Не задан</em>;
-        }
-
-        return selected.join(', ');
+      renderValue={(curr) => {
+        return curr.empty() ? <em>Не задан</em> : curr.synonym;
       }}
     >
-      <MenuItem disabled value="">
+      <MenuItem disabled value={null}>
         <em>Доступные типы</em>
       </MenuItem>
-      {names.map((name) => (
+      {cnnTypes.map((curr) => (
         <MenuItem
-          key={name}
-          value={name}
-          style={getStyles(name, personName, theme)}
+          key={curr.valueOf()}
+          value={curr}
+          style={getStyles(curr, cnnType, theme)}
         >
-          {name}
+          {curr.synonym}
         </MenuItem>
       ))}
     </Select>

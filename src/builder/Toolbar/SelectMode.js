@@ -42,11 +42,14 @@ export default function SelectMode({view, setView, show3d, toggle3D, editor}) {
   };
 
   const handleChange = (nextView) => {
-    if(editor?.project) {
-      editor.project.props.carcass = nextView;
+    const {project} = editor || {};
+    if(project) {
+      project.props.registerChange();
+      project.props.carcass = nextView;
+      project.root.md.emit_promise('redraw', project);
       setView(nextView);
       if(nextView === 'pick') {
-        editor.project.deselectAll();
+        project.deselectAll();
       }
     }
     handleClose();

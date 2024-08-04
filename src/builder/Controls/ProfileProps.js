@@ -11,7 +11,8 @@ export default function ProfileProps({project, layer, elm, node}) {
   return <>
     {`Слой ${layer.index}, Профиль ${elm._index+1}, Узлы ${b.vertex.key}-${e.vertex.key}`}
     <FieldInsetProfile obj={elm} fld="inset" meta={fields.inset}/>
-    <FieldCnnType />
+    <FieldCnnType CnnPoint={b} />
+    <FieldCnnType CnnPoint={e} />
     {carcass !== 'carcass' && <>
       <FieldEndConnection obj={b} fld="cnn"/>
       <FieldEndConnection obj={b} fld="cnnOuter"/>
