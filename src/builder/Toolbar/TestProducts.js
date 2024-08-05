@@ -7,13 +7,18 @@ import ArchitectureIcon from '@mui/icons-material/Architecture';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 import load21 from './Load21';
 
-function testProducts({editor, setContext, handleClose}) {
+function testProducts({editor, type, layer, setContext, handleClose}) {
 
   function prepare(project) {
     const {props} = project;
     props.loading = true;
-    project.clear();
-    setContext({project, type: 'product', layer: null, elm: null});
+    if(type === 'layer' && !layer.layer) {
+      layer.clear();
+    }
+    else {
+      project.clear();
+      setContext({project, type: 'product', layer: null, elm: null});
+    }
     return project;
   }
 
@@ -199,7 +204,7 @@ function testProducts({editor, setContext, handleClose}) {
 
 
 
-export default function TestProducts({editor, setContext}) {
+export default function TestProducts({editor, type, layer, setContext}) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -209,7 +214,7 @@ export default function TestProducts({editor, setContext}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const {imposts, square, cut, grid20, grid100, clear} = testProducts({editor, setContext, handleClose});
+  const {imposts, square, cut, grid20, grid100, clear} = testProducts({editor, type, layer, setContext, handleClose});
 
   return <>
     <HtmlTooltip title="Тестовые изделия">

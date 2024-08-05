@@ -9,11 +9,7 @@ import {useBuilderContext} from '../../Context';
 
 export default function LayerToolbar(props) {
   const {editor, project, layer, elm, setContext} = props;
-  const addRoot = () => {
-    const layer= project.addLayer();
-    project.redraw();
-    setContext({type: 'layer', layer, elm: null});
-  };
+
   const removeFlap = () => {
     const {props} = project;
     const parent = layer.layer;

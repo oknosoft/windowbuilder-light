@@ -47,6 +47,12 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const addRoot = () => {
+    const layer = project.addLayer();
+    project.redraw();
+    setContext({type: 'layer', layer, elm: null});
+    handleClose();
+  };
   const addFlap = () => {
     const {container} = (elm || layer);
     const child = container?.createChild({kind: 'flap'});
@@ -70,7 +76,7 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
       <IconButton onClick={handleClick}><DataSaverOnIcon /></IconButton>
     </HtmlTooltip>
     <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-      <MenuItem disabled onClick={handleClose} disableRipple>
+      <MenuItem onClick={addRoot} disableRipple>
         <AddPhotoAlternateOutlinedIcon />
         Слой рамы
       </MenuItem>

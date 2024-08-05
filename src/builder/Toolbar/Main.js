@@ -16,7 +16,7 @@ import TestProducts from './TestProducts';
 
 export default function MainToolbar({context}) {
   const navigate = useNavigate();
-  const {editor, setContext} = context;
+  const {editor, type, layer, setContext} = context;
 
   const {close, recalc, save, saveClose} = React.useMemo(() => {
     const close = () => navigate(`/`);
@@ -40,7 +40,7 @@ export default function MainToolbar({context}) {
       <IconButton disabled onClick={recalc}><CalculateIcon/></IconButton>
     </HtmlTooltip>
     <Divider orientation="vertical" sx={{mx: 1}} flexItem />
-    <TestProducts editor={editor} setContext={setContext} />
+    <TestProducts editor={editor} type={type} layer={layer} setContext={setContext} />
     <HtmlTooltip title="Скопировать в буфер обмена">
       <IconButton disabled onClick={recalc}><CopyAllIcon/></IconButton>
     </HtmlTooltip>

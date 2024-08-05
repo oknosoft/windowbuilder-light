@@ -31,9 +31,8 @@ export default function BuilderFrame({useBuilderContext}) {
     setTitle(title);
     if(drawerOpen) {
       handleIfaceState({drawerOpen: false});
-      return () => handleIfaceState({drawerOpen: true});
     }
-  }, [context.editor]);
+  }, [context.editor, context.type, context.layer]);
 
   const handleColor = theme.palette.grey[300];
 
