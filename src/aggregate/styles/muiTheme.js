@@ -46,6 +46,30 @@ const theme = createTheme({
       }
     },
 
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          padding: 0,
+          paddingRight: theme.spacing(),
+          borderBottom: '1px solid #e8e8e8',
+          boxShadow: 'none',
+          minHeight: 30,
+        }),
+        content: ({theme}) => ({
+          margin: 0,
+          color: theme.palette.text.secondary,
+        }),
+      }
+    },
+    MuiAccordionDetails: {
+      styleOverrides: {
+        root: ({theme }) => ({
+          padding: 0,
+          paddingLeft: theme.spacing(),
+        }),
+      }
+    },
+
     MuiTab: {
       styleOverrides: {
         // Name of the slot
