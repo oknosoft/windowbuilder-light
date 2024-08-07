@@ -12,14 +12,21 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
   function prepare(project) {
     const {props} = project;
     props.loading = true;
+    const offset = new editor.Point();
     if(type === 'layer' && !layer.layer) {
       layer.clear();
+      const {bounds} = project;
+      // спросить привязку
+      if(bounds) {
+        offset.x = bounds.bottomRight.x;
+        offset.y = bounds.bottomRight.y;
+      }
     }
     else {
       project.clear();
       setContext({project, type: 'product', layer: null, elm: null});
     }
-    return project;
+    return {project, offset};
   }
 
   function grid100(ev, count) {
@@ -31,7 +38,7 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
     const size = step * count;
 
     const {project} = editor;
-    const {props, activeLayer} = prepare(project);
+    const {project: {props, activeLayer}, offset} = prepare(project);
     const profiles = [];
     // стойки
     for(let x = 0; x < size; x += step) {
@@ -59,18 +66,22 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
 
   function square(profiles) {
     const {project, DimensionLine} = editor;
-    const {props, activeLayer} = prepare(project);
+    const {project: {props, activeLayer}, offset} = prepare(project);
     let i2 = 3;
     if(Array.isArray(profiles)) {
       i2 = 4;
-      profiles = profiles.map((attr) => activeLayer.createProfile(attr));
+      profiles = profiles.map((attr) => {
+        attr.b[0] += offset.x;
+        attr.e[0] += offset.x;
+        return activeLayer.createProfile(attr);
+      });
     }
     else {
       profiles = [
-        activeLayer.createProfile({b: [1800, 1100], e: [800, 1100]}),
-        activeLayer.createProfile({b: [800, 1100], e: [800, 100]}),
-        activeLayer.createProfile({b: [800, 100], e: [1800, 100]}),
-        activeLayer.createProfile({b: [1800, 100], e: [1800, 1100]}),
+        activeLayer.createProfile({b: [1000 + offset.x, 1100], e: [offset.x, 1100]}),
+        activeLayer.createProfile({b: [offset.x, 1100], e: [offset.x, 100]}),
+        activeLayer.createProfile({b: [offset.x, 100], e: [1000 + offset.x, 100]}),
+        activeLayer.createProfile({b: [1000 + offset.x, 100], e: [1000 + offset.x, 1100]}),
       ];
     }
     activeLayer.skeleton.addProfiles(profiles);
@@ -118,14 +129,14 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
     square,
     imposts() {
       const {project, DimensionLine} = editor;
-      const {props, activeLayer} = prepare(project);
+      const {project: {props, activeLayer}, offset} = prepare(project);
       const profiles = [
-        activeLayer.createProfile({b: [1400, 1000], e: [100, 1000]}),
-        activeLayer.createProfile({b: [100, 1000], e: [100, 0]}),
-        activeLayer.createProfile({b: [100, 0], e: [1400, 0]}),
-        activeLayer.createProfile({b: [1400, 0], e: [1400, 1000]}),
-        activeLayer.createProfile({b: [600, 1000], e: [600, 0]}),
-        activeLayer.createProfile({b: [600, 500], e: [1400, 500]}),
+        activeLayer.createProfile({b: [1400 + offset.x, 1000], e: [offset.x, 1000]}),
+        activeLayer.createProfile({b: [offset.x, 1000], e: [offset.x, 0]}),
+        activeLayer.createProfile({b: [offset.x, 0], e: [1400 + offset.x, 0]}),
+        activeLayer.createProfile({b: [1400 + offset.x, 0], e: [1400 + offset.x, 1000]}),
+        activeLayer.createProfile({b: [600 + offset.x, 1000], e: [600 + offset.x, 0]}),
+        activeLayer.createProfile({b: [600 + offset.x, 500], e: [1400 + offset.x, 500]}),
       ];
       activeLayer.skeleton.addProfiles(profiles);
       activeLayer.containers.sync();
