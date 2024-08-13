@@ -97,17 +97,6 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
       pos: 'bottom',
       offset: -220,
     });
-    new DimensionLine({
-      project,
-      owner: activeLayer,
-      parent: project.dimensions,
-      elm1: profiles[i2],
-      elm2: profiles[i2],
-      p1: 'b',
-      p2: 'e',
-      pos: 'right',
-      offset: -240,
-    });
     props.loading = false;
     props.registerChange();
     project.redraw();
