@@ -20,7 +20,6 @@ export default function UseSnap({obj, fld, onChange, fullWidth=true, enterTab, .
       setValue(find(obj[fld]));
     }}
     value={value}
-    label="Система"
     fullWidth={fullWidth}
     disableClearable
     placeholder="Нет"

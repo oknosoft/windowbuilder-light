@@ -41,6 +41,6 @@ export default function SelectTool({view, setView, show3d, toggle3D}) {
       <Tab value={2} accent="true" icon={<HtmlTooltip title="Нарисовать элемент" placement="right"><PenIcon /></HtmlTooltip>} aria-label="draw" />
     </Tabs>
     <Divider flexItem/>
-    <SelectMode view={view} setView={setView} show3d={show3d} toggle3D={toggle3D} editor={editor} />
+    <SelectMode view={view} show3d={show3d} toggle3D={toggle3D} editor={editor} />
   </Vertical> : null;
 }

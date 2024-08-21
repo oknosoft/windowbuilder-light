@@ -4,10 +4,11 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import Autocomplete from '@oknosoft/ui/DataField/Autocomplete';
 import {styled} from '@mui/material/styles';
 import {HtmlTooltip} from '../../aggregate/App/styled';
-import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
 
+import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import Splitscreen from '@mui/icons-material/Splitscreen';
@@ -28,8 +29,19 @@ const map = {
   normal: ["Профили", AutoFixNormalIcon],
   pick: ["Выбор вставок", BalanceOutlinedIcon],
 };
+const options = Object.keys(map).map((key) => ({key, text: map[key][0]}));
 
-export default function SelectMode({view, setView, show3d, toggle3D, editor}) {
+function viewItem({key, ...props}) {
+  const [title, Icon] = map[key];
+  return <MenuItem key={key} {...props}>
+    <ListItemIcon>
+      <Icon />
+    </ListItemIcon>
+    {title}
+  </MenuItem>;
+}
+
+export default function SelectMode({view, show3d, toggle3D, editor}) {
 
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -47,7 +59,6 @@ export default function SelectMode({view, setView, show3d, toggle3D, editor}) {
       project.props.registerChange();
       project.props.carcass = nextView;
       project.root.md.emit_promise('redraw', project);
-      setView(nextView);
       if(nextView === 'pick') {
         project.deselectAll();
       }
@@ -68,19 +79,32 @@ export default function SelectMode({view, setView, show3d, toggle3D, editor}) {
       onClose={handleClose}
       onClick={handleClose}
       >
-      {Object.keys(map).map((key) => {
-        const [title, Icon] = map[key];
-        return <MenuItem key={key} onClick={() => handleChange(key)}>
-          <ListItemIcon>
-            <Icon />
-          </ListItemIcon>
-          {title}
-        </MenuItem>;
-      })}
+      {Object.keys(map).map((key) => viewItem({key, onClick: () => handleChange(key)}))}
 
     </Menu>
     <HtmlTooltip title={show3d ? 'Скрыть вид 3D' : 'Показать вид 3D'} placement="right">
       <IconButton sx={{ml: 1}} onClick={toggle3D}><Show3dIcon show3d={show3d}/></IconButton>
     </HtmlTooltip>
   </>;
+}
+
+function renderOption(props, option, state, ownerState) {
+  return viewItem({...props, ...option});
+}
+
+export function FieldViewMode({obj, value, onChange, fullWidth=true, enterTab, ...other}) {
+
+  return <Autocomplete
+    options={options}
+    onChange={(event, newValue, reason, details) => {
+      obj.carcass = newValue.key;
+      onChange?.(newValue.key);
+    }}
+    value={options.find((v) => v.key === value)}
+    renderOption={renderOption}
+    getOptionLabel={(v) => v.text}
+    fullWidth={fullWidth}
+    disableClearable
+    {...other}
+  />;
 }
