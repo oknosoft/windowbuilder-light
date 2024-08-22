@@ -9,24 +9,43 @@ import load21 from './Load21';
 
 function testProducts({editor, type, layer, setContext, handleClose}) {
 
-  function prepare(project) {
-    const {props} = project;
-    props.loading = true;
+  function prepare(project, width=0) {
+    const {props, root: {enm, ui}} = project;
+    const list = [enm.positions.left, enm.positions.right];
     const offset = new editor.Point();
-    if(type === 'layer' && !layer.layer) {
+    props.loading = true;
+
+    if(type === 'layer') {
       layer.clear();
       const {bounds} = project;
       // спросить привязку
-      if(bounds) {
-        offset.x = bounds.bottomRight.x;
-        offset.y = bounds.bottomRight.y;
+      if(bounds && width) {
+        return ui.dialogs.input_value({
+          title: 'Положение элементов',
+          text: 'С какой стороны расположить новые элементы по отношению к нарисованным ранее?',
+          list,
+          initialValue: enm.positions.right,
+        })
+          .then((v) => {
+            if(v == 'left') {
+              offset.x = bounds.bottomLeft.x - width;
+              offset.y = bounds.bottomLeft.y;
+            }
+            else {
+              offset.x = bounds.bottomRight.x;
+              offset.y = bounds.bottomRight.y;
+            }
+            layer.three.rotation = [0, 0, 0];
+            layer.three.position = [offset.x, 0, 0];
+            return {project, offset};
+          });
       }
     }
     else {
       project.clear();
       setContext({project, type: 'product', layer: null, elm: null});
     }
-    return {project, offset};
+    return Promise.resolve({project, offset});
   }
 
   function grid100(ev, count) {
@@ -38,69 +57,96 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
     const size = step * count;
 
     const {project} = editor;
-    const {project: {props, activeLayer}, offset} = prepare(project);
-    const profiles = [];
-    // стойки
-    for(let x = 0; x < size; x += step) {
-      const attr = x < size - step ? {b: [x, size], e: [x, step / 2]} : {e: [x, size], b: [x, step / 2]};
-      profiles.push(activeLayer.createProfile(attr));
-    }
-    activeLayer.skeleton.addProfiles(profiles);
-    profiles.length = 0;
-    // ригели
-    for(let x = 0; x < size - step; x += step) {
-      // находим примыкающие стойки и сообщаем их узлам
-      for(let y = step / 2; y < size; y += step) {
-        profiles.push(activeLayer.createProfile({b: [x, size - y], e: [x + step, size - y]}));
-      }
-    }
-    activeLayer.skeleton.addProfiles(profiles);
+    prepare(project)
+      .then(({project: {props, activeLayer}, offset}) => {
+        const profiles = [];
+        // стойки
+        for(let x = 0; x < size; x += step) {
+          const attr = x < size - step ? {b: [x, size], e: [x, step / 2]} : {e: [x, size], b: [x, step / 2]};
+          profiles.push(activeLayer.createProfile(attr));
+        }
+        activeLayer.skeleton.addProfiles(profiles);
+        profiles.length = 0;
+        // ригели
+        for(let x = 0; x < size - step; x += step) {
+          // находим примыкающие стойки и сообщаем их узлам
+          for(let y = step / 2; y < size; y += step) {
+            profiles.push(activeLayer.createProfile({b: [x, size - y], e: [x + step, size - y]}));
+          }
+        }
+        activeLayer.skeleton.addProfiles(profiles);
 
-    props.loading = false;
-    props.registerChange();
-    project.redraw();
-    project.zoomFit();
-
+        props.loading = false;
+        props.registerChange();
+        project.redraw();
+        project.zoomFit();
+      })
+      .catch(() => null);
     handleClose();
+  }
+
+  function width(profiles) {
+    if(Array.isArray(profiles)) {
+      let min = Infinity, max = -Infinity;
+      for(const {b, e} of profiles) {
+        if(b[0] < min) {
+          min = b[0];
+        }
+        if(e[0] < min) {
+          min = e[0];
+        }
+        if(b[0] > max) {
+          max = b[0];
+        }
+        if(e[0] > max) {
+          max = e[0];
+        }
+      }
+      return max - min;
+    }
+    return 1000;
   }
 
   function square(profiles) {
     const {project, DimensionLine} = editor;
-    const {project: {props, activeLayer}, offset} = prepare(project);
-    let i2 = 3;
-    if(Array.isArray(profiles)) {
-      i2 = 4;
-      profiles = profiles.map((attr) => {
-        attr.b[0] += offset.x;
-        attr.e[0] += offset.x;
-        return activeLayer.createProfile(attr);
-      });
-    }
-    else {
-      profiles = [
-        activeLayer.createProfile({b: [1000 + offset.x, 1100], e: [offset.x, 1100]}),
-        activeLayer.createProfile({b: [offset.x, 1100], e: [offset.x, 100]}),
-        activeLayer.createProfile({b: [offset.x, 100], e: [1000 + offset.x, 100]}),
-        activeLayer.createProfile({b: [1000 + offset.x, 100], e: [1000 + offset.x, 1100]}),
-      ];
-    }
-    activeLayer.skeleton.addProfiles(profiles);
-    activeLayer.containers.sync();
-    new DimensionLine({
-      project,
-      owner: activeLayer,
-      parent: project.dimensions,
-      elm1: profiles[0],
-      elm2: profiles[0],
-      p1: 'b',
-      p2: 'e',
-      pos: 'bottom',
-      offset: -220,
-    });
-    props.loading = false;
-    props.registerChange();
-    project.redraw();
-    project.zoomFit();
+    prepare(project, width(profiles))
+      .then(({project: {props, activeLayer}, offset}) => {
+        let i2 = 3;
+        if(Array.isArray(profiles)) {
+          i2 = 4;
+          profiles = profiles.map((attr) => {
+            attr.b[0] += offset.x;
+            attr.e[0] += offset.x;
+            return activeLayer.createProfile(attr);
+          });
+        }
+        else {
+          profiles = [
+            activeLayer.createProfile({b: [1000 + offset.x, 1100], e: [offset.x, 1100]}),
+            activeLayer.createProfile({b: [offset.x, 1100], e: [offset.x, 100]}),
+            activeLayer.createProfile({b: [offset.x, 100], e: [1000 + offset.x, 100]}),
+            activeLayer.createProfile({b: [1000 + offset.x, 100], e: [1000 + offset.x, 1100]}),
+          ];
+        }
+        activeLayer.skeleton.addProfiles(profiles);
+        activeLayer.containers.sync();
+        new DimensionLine({
+          project,
+          owner: activeLayer,
+          parent: project.dimensions,
+          elm1: profiles[0],
+          elm2: profiles[0],
+          p1: 'b',
+          p2: 'e',
+          pos: 'bottom',
+          offset: -220,
+        });
+        props.loading = false;
+        props.registerChange();
+        project.redraw();
+        project.zoomFit();
+      })
+      .catch(() => null);
     handleClose();
   }
 
@@ -118,67 +164,69 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
     square,
     imposts() {
       const {project, DimensionLine} = editor;
-      const {project: {props, activeLayer}, offset} = prepare(project);
-      const profiles = [
-        activeLayer.createProfile({b: [1400 + offset.x, 1000], e: [offset.x, 1000]}),
-        activeLayer.createProfile({b: [offset.x, 1000], e: [offset.x, 0]}),
-        activeLayer.createProfile({b: [offset.x, 0], e: [1400 + offset.x, 0]}),
-        activeLayer.createProfile({b: [1400 + offset.x, 0], e: [1400 + offset.x, 1000]}),
-        activeLayer.createProfile({b: [600 + offset.x, 1000], e: [600 + offset.x, 0]}),
-        activeLayer.createProfile({b: [600 + offset.x, 500], e: [1400 + offset.x, 500]}),
-      ];
-      activeLayer.skeleton.addProfiles(profiles);
-      activeLayer.containers.sync();
-      activeLayer.containers.children['5_2_3_6'].createChild({kind: 'flap'});
-      new DimensionLine({
-        project,
-        owner: activeLayer,
-        parent: project.dimensions,
-        elm1: profiles[0],
-        elm2: profiles[0],
-        p1: 'b',
-        p2: 'e',
-        pos: 'bottom',
-        offset: -220,
-      });
-      new DimensionLine({
-        project,
-        owner: activeLayer,
-        parent: project.dimensions,
-        elm1: profiles[0],
-        elm2: profiles[4],
-        p1: 'e',
-        p2: 'b',
-        pos: 'bottom',
-        offset: -120,
-      });
-      new DimensionLine({
-        project,
-        owner: activeLayer,
-        parent: project.dimensions,
-        elm1: profiles[3],
-        elm2: profiles[3],
-        p1: 'b',
-        p2: 'e',
-        pos: 'right',
-        offset: -240,
-      });
-      new DimensionLine({
-        project,
-        owner: activeLayer,
-        parent: project.dimensions,
-        elm1: profiles[5],
-        elm2: profiles[3],
-        p1: 'b',
-        p2: 'e',
-        pos: 'right',
-        offset: -120,
-      });
-      props.loading = false;
-      props.registerChange();
-      project.redraw();
-      project.zoomFit();
-
+      prepare(project)
+        .then(({project: {props, activeLayer}, offset}) => {
+          const profiles = [
+            activeLayer.createProfile({b: [1400 + offset.x, 1000], e: [offset.x, 1000]}),
+            activeLayer.createProfile({b: [offset.x, 1000], e: [offset.x, 0]}),
+            activeLayer.createProfile({b: [offset.x, 0], e: [1400 + offset.x, 0]}),
+            activeLayer.createProfile({b: [1400 + offset.x, 0], e: [1400 + offset.x, 1000]}),
+            activeLayer.createProfile({b: [600 + offset.x, 1000], e: [600 + offset.x, 0]}),
+            activeLayer.createProfile({b: [600 + offset.x, 500], e: [1400 + offset.x, 500]}),
+          ];
+          activeLayer.skeleton.addProfiles(profiles);
+          activeLayer.containers.sync();
+          activeLayer.containers.children['5_2_3_6'].createChild({kind: 'flap'});
+          new DimensionLine({
+            project,
+            owner: activeLayer,
+            parent: project.dimensions,
+            elm1: profiles[0],
+            elm2: profiles[0],
+            p1: 'b',
+            p2: 'e',
+            pos: 'bottom',
+            offset: -220,
+          });
+          new DimensionLine({
+            project,
+            owner: activeLayer,
+            parent: project.dimensions,
+            elm1: profiles[0],
+            elm2: profiles[4],
+            p1: 'e',
+            p2: 'b',
+            pos: 'bottom',
+            offset: -120,
+          });
+          new DimensionLine({
+            project,
+            owner: activeLayer,
+            parent: project.dimensions,
+            elm1: profiles[3],
+            elm2: profiles[3],
+            p1: 'b',
+            p2: 'e',
+            pos: 'right',
+            offset: -240,
+          });
+          new DimensionLine({
+            project,
+            owner: activeLayer,
+            parent: project.dimensions,
+            elm1: profiles[5],
+            elm2: profiles[3],
+            p1: 'b',
+            p2: 'e',
+            pos: 'right',
+            offset: -120,
+          });
+          props.loading = false;
+          props.registerChange();
+          project.redraw();
+          project.zoomFit();
+        })
+        .catch(() => null);
       handleClose();
     },
     cut() {

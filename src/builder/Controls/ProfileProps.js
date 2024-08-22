@@ -1,12 +1,14 @@
 import React from 'react';
+import {NumberField} from '@oknosoft/ui/DataField/Number';
 import FieldInsetProfile from '../DataField/InsetProfile';
 import FieldEndConnection from '../DataField/EndConnection';
 import FieldCnnType from '../DataField/CnnType';
 
 const {fields} =  $p.dp.builderPen.metadata();
+const meta = {};
 
 export default function ProfileProps({project, layer, elm, node}) {
-  const {b, e} = elm;
+  const {b, e, rotate3D} = elm;
   const {carcass} = project.props;
   return <>
     {`Слой ${layer.index}, Профиль ${elm._index+1}, Узлы ${b.vertex.key}-${e.vertex.key}`}
@@ -19,5 +21,6 @@ export default function ProfileProps({project, layer, elm, node}) {
       <FieldEndConnection obj={e} fld="cnn"/>
       <FieldEndConnection obj={e} fld="cnnOuter"/>
     </>}
+    {rotate3D !== undefined && <NumberField obj={elm} fld="rotate3D" meta={meta}  label="Поворот 3D" />}
   </>;
 }
