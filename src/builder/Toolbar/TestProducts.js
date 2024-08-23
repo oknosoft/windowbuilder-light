@@ -27,6 +27,7 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
           initialValue: enm.positions.right,
         })
           .then((v) => {
+            offset.pos = v || 'right';
             if(v == 'left') {
               offset.x = bounds.bottomLeft.x - width;
               offset.y = bounds.bottomLeft.y;
@@ -85,7 +86,7 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
     handleClose();
   }
 
-  function width(profiles) {
+  function profilesWidth(profiles) {
     if(Array.isArray(profiles)) {
       let min = Infinity, max = -Infinity;
       for(const {b, e} of profiles) {
@@ -109,7 +110,8 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
 
   function square(profiles) {
     const {project, DimensionLine} = editor;
-    prepare(project, width(profiles))
+    const width = profilesWidth(profiles);
+    prepare(project, width)
       .then(({project: {props, activeLayer}, offset}) => {
         let i2 = 3;
         if(Array.isArray(profiles)) {
@@ -141,6 +143,23 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
           pos: 'bottom',
           offset: -220,
         });
+        // если это не первый слой, добавим соединитель
+        if(offset.pos) {
+          const {rootLayer, root: {enm}} = project;
+          let profile;
+          try {
+            const x = offset.x + (offset.pos === 'left' ? width : 0);
+            profile = rootLayer.createProfile({b: [x, 1100], e: [x, 100], elmType: enm.elmTypes.linking});
+            rootLayer.skeleton.addProfile(profile);
+            if(profile.findNearests().length) {
+              profile.hustleNearests();
+              profile.applyRotate3D(0);
+            }
+          }
+          catch (e) {
+            profile?.remove();
+          }
+        }
         props.loading = false;
         props.registerChange();
         project.redraw();

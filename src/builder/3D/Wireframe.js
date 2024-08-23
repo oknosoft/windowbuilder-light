@@ -2,12 +2,16 @@ import React from 'react';
 import * as THREE from 'three';
 import {Line} from '@react-three/drei';
 
-export default function Wireframe({layer, bounds, position, rotation, quaternion}) {
+export default function Wireframe({layer}) {
 
+  const {bounds, three} = layer;
+  const rotation= three.rotation.toArray();
+  const {position} = three;
   const pos = [
     bounds.x,
     bounds.y + bounds.height,
   ];
+
   const res = [];
   for(const {b, e, inset} of layer.profiles) {
     let pb = b.point;
@@ -23,7 +27,11 @@ export default function Wireframe({layer, bounds, position, rotation, quaternion
   for(const contour of layer.contours) {
     res.push(<Wireframe key={`c-${contour.id}`} layer={contour} bounds={bounds} position={new THREE.Vector3()}/>);
   }
-  return <group position={[position.x, position.y, position.z + (layer.layer ? 14 : 0)]} rotation={rotation}>{res}</group>;
+  return position.x >= 0 ?
+    <group position={[position.x, position.y, position.z + (layer.layer ? 14 : 0)]} rotation={rotation}>{res}</group> :
+    <group rotation={rotation}>
+      <group position={[position.x, position.y, position.z + (layer.layer ? 14 : 0)]}>{res}</group>
+    </group>;
 
 
 }

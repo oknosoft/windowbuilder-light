@@ -7,6 +7,8 @@ import RootLayer from './RootLayer';
 export default function Planes() {
   const csg = React.useRef();
   const {editor, project} = useBuilderContext();
-  return project ? project.contours.map((layer, ind) => <RootLayer key={`l-${ind}`} editor={editor} project={project} layer={layer}/>) : null;
+  return project ? project.contours
+    .filter((layer) => !layer.three.parent && layer.visible)
+    .map((layer, ind) => <RootLayer key={`l-${ind}`} editor={editor} project={project} layer={layer}/>) : null;
 
 }
