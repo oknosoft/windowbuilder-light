@@ -12,7 +12,7 @@ import {useBuilderContext} from '../Context';
 
 export default function Controls() {
   const {editor, tool, type, project, layer, elm, node, stamp, setContext} = useBuilderContext();
-  const props = {editor, tool, type, project, layer, elm, node, stamp};
+  const props = {editor, tool, type, project, layer, elm, node, stamp, setContext};
   let ToolWnd = tool?.constructor?.ToolWnd;
   if(!ToolWnd) {
     if(type === 'layer' && layer) {

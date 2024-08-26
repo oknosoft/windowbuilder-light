@@ -145,3 +145,4 @@
 .cursor-text-select     { cursor: url(imgs/cursor-text-select.png) 2 2, default; }
 .cursor-stulp-flap     { cursor: url(imgs/cursor-stulp-flap.png) 1 1, default; }
 .cursor-group     { cursor: url(imgs/group.png) 10 10, default; }
+.cursor-disabled {cursor: not-allowed;}

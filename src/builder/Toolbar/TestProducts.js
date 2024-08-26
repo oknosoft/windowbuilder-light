@@ -9,38 +9,14 @@ import load21 from './Load21';
 
 function testProducts({editor, type, layer, setContext, handleClose}) {
 
-  function prepare(project, width=0) {
+  function prepare(project, profiles) {
     const {props, root: {enm, ui}} = project;
     const list = [enm.positions.left, enm.positions.right];
     const offset = new editor.Point();
     props.loading = true;
 
-    if(type === 'layer') {
-      layer.clear();
-      const {bounds} = project;
-      // спросить привязку
-      if(bounds && width) {
-        return ui.dialogs.input_value({
-          title: 'Положение элементов',
-          text: 'С какой стороны расположить новые элементы по отношению к нарисованным ранее?',
-          list,
-          initialValue: enm.positions.right,
-        })
-          .then((v) => {
-            offset.pos = v || 'right';
-            if(v == 'left') {
-              offset.x = bounds.bottomLeft.x - width;
-              offset.y = bounds.bottomLeft.y;
-            }
-            else {
-              offset.x = bounds.bottomRight.x;
-              offset.y = bounds.bottomRight.y;
-            }
-            layer.three.rotation = [0, 0, 0];
-            layer.three.position = [offset.x, 0, 0];
-            return {project, offset};
-          });
-      }
+    if(type === 'layer' && profiles) {
+      return project.standardForms.prepare({layer, profiles})
     }
     else {
       project.clear();
@@ -86,50 +62,25 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
     handleClose();
   }
 
-  function profilesWidth(profiles) {
-    if(Array.isArray(profiles)) {
-      let min = Infinity, max = -Infinity;
-      for(const {b, e} of profiles) {
-        if(b[0] < min) {
-          min = b[0];
-        }
-        if(e[0] < min) {
-          min = e[0];
-        }
-        if(b[0] > max) {
-          max = b[0];
-        }
-        if(e[0] > max) {
-          max = e[0];
-        }
-      }
-      return max - min;
-    }
-    return 1000;
-  }
-
   function square(profiles) {
     const {project, DimensionLine} = editor;
-    const width = profilesWidth(profiles);
-    prepare(project, width)
-      .then(({project: {props, activeLayer}, offset}) => {
-        let i2 = 3;
-        if(Array.isArray(profiles)) {
-          i2 = 4;
-          profiles = profiles.map((attr) => {
-            attr.b[0] += offset.x;
-            attr.e[0] += offset.x;
-            return activeLayer.createProfile(attr);
-          });
-        }
-        else {
-          profiles = [
-            activeLayer.createProfile({b: [1000 + offset.x, 1100], e: [offset.x, 1100]}),
-            activeLayer.createProfile({b: [offset.x, 1100], e: [offset.x, 100]}),
-            activeLayer.createProfile({b: [offset.x, 100], e: [1000 + offset.x, 100]}),
-            activeLayer.createProfile({b: [1000 + offset.x, 100], e: [1000 + offset.x, 1100]}),
-          ];
-        }
+    if(!Array.isArray(profiles) || !profiles.length) {
+      profiles = [
+        {b: [1000, 1000], e: [0, 1000]},
+        {b: [0, 1000], e: [0, 0]},
+        {b: [0, 0], e: [1000, 0]},
+        {b: [1000, 0], e: [1000, 1000]},
+      ]
+    }
+    prepare(project, profiles)
+      .then(({project: {props, activeLayer}, offset, profilesBounds}) => {
+        profiles = profiles.map((attr) => {
+          attr.b[0] += offset.x;
+          attr.e[0] += offset.x;
+          attr.b[1] += offset.y;
+          attr.e[1] += offset.y;
+          return activeLayer.createProfile(attr);
+        });
         activeLayer.skeleton.addProfiles(profiles);
         activeLayer.containers.sync();
         new DimensionLine({
@@ -143,23 +94,6 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
           pos: 'bottom',
           offset: -220,
         });
-        // если это не первый слой, добавим соединитель
-        if(offset.pos) {
-          const {rootLayer, root: {enm}} = project;
-          let profile;
-          try {
-            const x = offset.x + (offset.pos === 'left' ? width : 0);
-            profile = rootLayer.createProfile({b: [x, 1100], e: [x, 100], elmType: enm.elmTypes.linking});
-            rootLayer.skeleton.addProfile(profile);
-            if(profile.findNearests().length) {
-              profile.hustleNearests();
-              profile.applyRotate3D(0);
-            }
-          }
-          catch (e) {
-            profile?.remove();
-          }
-        }
         props.loading = false;
         props.registerChange();
         project.redraw();
@@ -167,6 +101,106 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
       })
       .catch(() => null);
     handleClose();
+  }
+
+  function rotunda() {
+    const {project} = editor;
+    const wall = [
+      {b: [1000, 2000], e: [0, 2000]},
+      {b: [0, 2000], e: [0, 0]},
+      {b: [0, 0], e: [1000, 0]},
+      {b: [1000, 0], e: [1000, 2000]},
+    ];
+    const roof = [
+      {b: [1000, -300], e: [0, -300]},
+      {b: [0, -300], e: [300, -1300]},
+      {b: [300, -1300], e: [700, -1300]},
+      {b: [700, -1300], e: [1000, -300]},
+    ];
+    prepare(project)
+      .then(({project: {props, activeLayer: layer}, offset}) => {
+        let prev = layer;
+        let profiles = wall.map((attr) => layer.createProfile(attr));
+        layer.skeleton.addProfiles(profiles);
+        layer.containers.sync();
+        // крыша
+        layer = project.addLayer();
+        profiles = roof.map((attr) => layer.createProfile(attr));
+        layer.skeleton.addProfiles(profiles);
+        layer.containers.sync();
+        layer.three.parent = prev;
+        layer.three.bind = 'top';
+        layer.three.degree.x = -45;
+        // створка
+        prev.fillings[0].container.createChild({kind: 'flap'})
+        prev.contours[0].three.degree.y = -75;
+
+        // одна слева
+        const leftLayer = project.addLayer();
+        profiles = wall.map((attr) => {
+          attr.b[0] -= 1300;
+          attr.e[0] -= 1300;
+          const profile = leftLayer.createProfile(attr);
+          attr.b[0] += 1300;
+          attr.e[0] += 1300;
+          return profile;
+        });
+        leftLayer.skeleton.addProfiles(profiles);
+        leftLayer.containers.sync();
+        leftLayer.three.parent = prev;
+        leftLayer.three.bind = 'left';
+        leftLayer.three.degree.y = -45;
+        // крыша слева
+        layer = project.addLayer();
+        profiles = roof.map((attr) => {
+          attr.b[0] -= 1300;
+          attr.e[0] -= 1300;
+          const profile = layer.createProfile(attr);
+          attr.b[0] += 1300;
+          attr.e[0] += 1300;
+          return profile;
+        });
+        layer.skeleton.addProfiles(profiles);
+        layer.containers.sync();
+        layer.three.parent = leftLayer;
+        layer.three.bind = 'top';
+        layer.three.degree.x = -45;
+
+        for(let i = 0; i < 6; i++) {
+          layer = project.addLayer();
+          profiles = wall.map((attr) => {
+            attr.b[0] += 1300;
+            attr.e[0] += 1300;
+            return layer.createProfile(attr);
+          });
+          layer.skeleton.addProfiles(profiles);
+          layer.containers.sync();
+          layer.three.parent = prev;
+          layer.three.bind = 'right';
+          layer.three.degree.y = 45;
+
+          // крыша
+          const roofLayer = project.addLayer();
+          profiles = roof.map((attr) => {
+            attr.b[0] += 1300;
+            attr.e[0] += 1300;
+            return roofLayer.createProfile(attr);
+          });
+          roofLayer.skeleton.addProfiles(profiles);
+          roofLayer.containers.sync();
+          roofLayer.three.parent = layer;
+          roofLayer.three.bind = 'top';
+          roofLayer.three.degree.x = -45;
+
+          prev = layer;
+        }
+
+        props.showGrid = false;
+        props.loading = false;
+        props.registerChange();
+        project.redraw();
+        project.zoomFit();
+      });
   }
 
   function clear() {
@@ -266,6 +300,7 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
 
     grid100,
     clear,
+    rotunda,
   };
 }
 
@@ -281,7 +316,7 @@ export default function TestProducts({editor, type, layer, setContext}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const {imposts, square, cut, grid20, grid100, clear} = testProducts({editor, type, layer, setContext, handleClose});
+  const {imposts, square, cut, rotunda, grid20, grid100, clear} = testProducts({editor, type, layer, setContext, handleClose});
 
   return <>
     <HtmlTooltip title="Тестовые изделия">
@@ -307,6 +342,7 @@ export default function TestProducts({editor, type, layer, setContext}) {
       <MenuItem onClick={cut}>Разрыв</MenuItem>
       <MenuItem onClick={grid20}>Сетка 6</MenuItem>
       <MenuItem onClick={grid100}>Сетка 40</MenuItem>
+      <MenuItem onClick={rotunda}>Ротонда</MenuItem>
       <MenuItem onClick={() => load21({editor, setContext, handleClose})}>Из старой базы</MenuItem>
       <MenuItem onClick={clear}>Очистить</MenuItem>
     </Menu>

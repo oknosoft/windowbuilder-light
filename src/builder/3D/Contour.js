@@ -10,7 +10,7 @@ export default function Contour({layer, bounds, position}) {
     bounds = layer.bounds;
   }
   if(!position) {
-    position = three.position;
+    position = three.calculatedPosition;
   }
   const rotation= three.rotation.toArray();
   const pos = [
@@ -44,7 +44,7 @@ export default function Contour({layer, bounds, position}) {
   for(const contour of three.children) {
     res.push(<Contour key={`c-${contour.id}`} layer={contour} />);
   }
-  return three.pos === 'right' ?
+  return (!three.bindable || three.bind.is('right') || three.bind.is('top')) ?
     <group position={[position.x, position.y, position.z + (layer.layer ? 14 : 0)]} rotation={rotation}>{res}</group> :
     <group rotation={rotation}>
       <group position={[position.x, position.y, position.z + (layer.layer ? 14 : 0)]}>{res}</group>
