@@ -117,6 +117,16 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
       {b: [300, -1300], e: [700, -1300]},
       {b: [700, -1300], e: [1000, -300]},
     ];
+    const top = [
+      {b: [700, -1400], e: [300, -1400]},
+      {b: [300, -1400], e: [0, -1700]},
+      {b: [0, -1700], e: [0, -2100]},
+      {b: [0, -2100], e: [300, -2400]},
+      {b: [300, -2400], e: [700, -2400]},
+      {b: [700, -2400], e: [1000, -2100]},
+      {b: [1000, -2100], e: [1000, -1700]},
+      {b: [1000, -1700], e: [700, -1400]},
+    ];
     prepare(project)
       .then(({project: {props, activeLayer: layer}, offset}) => {
         let prev = layer;
@@ -134,6 +144,31 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
         // створка
         prev.fillings[0].container.createChild({kind: 'flap'})
         prev.contours[0].three.degree.y = -75;
+        // верх
+        const topLayer = project.addLayer();
+        profiles = top.map((attr) => topLayer.createProfile(attr));
+        topLayer.skeleton.addProfiles(profiles);
+        topLayer.containers.sync();
+        for(const profile of profiles) {
+          profile.inset = profiles[1].inset;
+        }
+        for(const v of topLayer.skeleton.getAllVertices()) {
+          v.cnnType = 'ad';
+          let cnn;
+          for(const cnnPoint of v.cnnPoints) {
+            if(!cnnPoint.cnn || !cnnPoint.cnn.cnn_type.is('ad')) {
+              if(!cnn) {
+                cnn = cnnPoint.cnns.find(v => v.cnn_type.is('ad'));
+              }
+              cnnPoint.cnn = cnn;
+            }
+          }
+        }
+        topLayer.three.parent = layer;
+        topLayer.three.bind = 'top';
+        topLayer.three.degree.x = -45;
+        topLayer.three.position.y = 20;
+        topLayer.three.position.z = 20;
 
         // одна слева
         const leftLayer = project.addLayer();
@@ -201,6 +236,7 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
         project.redraw();
         project.zoomFit();
       });
+    handleClose();
   }
 
   function clear() {

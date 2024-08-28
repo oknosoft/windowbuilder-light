@@ -3,8 +3,6 @@ import * as THREE from 'three';
 import {Edges} from '@react-three/drei';
 //import { Geometry, Base, Subtraction, Intersection, Difference, ReverseSubtraction } from '@react-three/csg';
 
-import {rama, impost, flap} from './shapes';
-
 function profilePath(profile, pos) {
   const {b, e, generatrix} = profile;
   let pb = b.point;
@@ -37,20 +35,13 @@ export function profilesGeometry(profiles, pos) {
       bevelEnabled: false,
       extrudePath: profilePath(profile, pos),
     };
-    let shape = rama;
-    if(profile.b.isT || profile.e.isT) {
-      shape = impost;
-    }
-    else if(pos[2]) {
-      shape = flap;
-    }
-    res.set(profile, new THREE.ExtrudeGeometry(shape, extrudeSettings));
+    res.set(profile, new THREE.ExtrudeGeometry(profile.shape, extrudeSettings));
   }
   return res;
 }
 
 
-export function profileExtrude(profile, profiles) {
+export function profileExtrude(profile, profiles, hidden) {
 
   //const [hovered, setHover] = useState(false);
   //onPointerOver={(event) => setHover(true)}
@@ -60,8 +51,13 @@ export function profileExtrude(profile, profiles) {
   return <mesh
     key={`p-${profile.elm}`}
     geometry={geometry}
-    material={new THREE.MeshLambertMaterial({color: 0xeeffee, wireframe: false})}
+    material={new THREE.MeshLambertMaterial({
+      color: 0xeeffee,
+      wireframe: false,
+      transparent: hidden,
+      opacity: hidden ? 0.2 : 1,
+    })}
   >
-    <Edges color="grey" />
+    {!hidden && <Edges color="grey" />}
   </mesh>;
 }
