@@ -4,14 +4,12 @@ import {BBAnchor, Html} from '@react-three/drei'
 import {profilesGeometry, profileExtrude} from './profileExtrude';
 import {containersGeometry, containerExtrude} from './containerExtrude';
 
-export default function Contour({layer, bounds, position}) {
+export default function Contour({layer, bounds}) {
   const {three, hidden} = layer;
   if(!bounds) {
     bounds = layer.bounds;
   }
-  if(!position) {
-    position = three.calculatedPosition;
-  }
+  const position = three.calculatedPosition.toArray();
   const rotation= three.rotation.toArray();
   const pos = [
     bounds.x,
@@ -37,14 +35,14 @@ export default function Contour({layer, bounds, position}) {
     res.push(containerExtrude(container, containers));
   }
   for(const contour of layer.contours) {
-    res.push(<Contour key={`c-${contour.id}`} layer={contour} bounds={bounds} position={new THREE.Vector3()}/>);
+    res.push(<Contour key={`c-${contour.id}`} layer={contour} bounds={bounds}/>);
   }
   for(const contour of three.children) {
     res.push(<Contour key={`c-${contour.id}`} layer={contour} />);
   }
   return (!three.bindable || three.bind.is('right') || three.bind.is('top')) ?
-    <group position={[position.x, position.y, position.z + (layer.layer ? 14 : 0)]} rotation={rotation}>{res}</group> :
+    <group position={position} rotation={rotation}>{res}</group> :
     <group rotation={rotation}>
-      <group position={[position.x, position.y, position.z + (layer.layer ? 14 : 0)]}>{res}</group>
+      <group position={position}>{res}</group>
     </group>;
 }
