@@ -7,7 +7,7 @@ import {GlassesDetail} from '../../../aggregate/styled';
 
 
 export default function GlassDetails({row, selected, glob}) {
-  const {characteristic, inset, glassRow} = row.row;
+  const {characteristic, inset, glassRow, editor} = row.row;
   const gprops = [];
   const rprops = [<TextField key="note" obj={row.row} fld="note" onChange={(v) => characteristic.note = v}/>];
 
@@ -50,7 +50,7 @@ export default function GlassDetails({row, selected, glob}) {
           });
         }
 
-        const {project} = row.row.editor;
+        const {project} = editor;
         project.register_change();
         project.redraw();
         project.save_coordinates({})
@@ -84,11 +84,12 @@ export default function GlassDetails({row, selected, glob}) {
     rrows.push(rrow);
   });
   characteristic.params.find_rows({cnstr: {in: rrows.map((v) => -v.elm)}, region: 0}, (prow) => {
+    const profile = editor.elm(-prow.cnstr);
     rprops.push(<ParamField
       key={`pr-${prow.row}-${index}`}
       obj={prow}
       inset={rrows.find((rrow) => rrow.elm === -prow.cnstr).inset}
-      label={`${prow.param.caption || prow.param.name} ${-prow.cnstr}`}
+      label={`${prow.param.caption || prow.param.name} ${profile.pos.name} ${profile.angle_hor.round(2)}°`}
     />);
   });
 
