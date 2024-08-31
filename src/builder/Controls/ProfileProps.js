@@ -3,6 +3,7 @@ import {NumberField} from '@oknosoft/ui/DataField/Number';
 import FieldInsetProfile from '../DataField/InsetProfile';
 import FieldEndConnection from '../DataField/EndConnection';
 import FieldCnnType from '../DataField/CnnType';
+import FieldCnnII from '../DataField/CnnII';
 
 const {fields} =  $p.dp.builderPen.metadata();
 const meta = {};
@@ -20,6 +21,7 @@ export default function ProfileProps({project, layer, elm, node}) {
       <FieldEndConnection obj={b} fld="cnnOuter"/>
       <FieldEndConnection obj={e} fld="cnn"/>
       <FieldEndConnection obj={e} fld="cnnOuter"/>
+      <FieldCnnII obj={elm} />
     </>}
     {rotate3D !== undefined && <NumberField obj={elm} fld="rotate3D" meta={meta}  label="Поворот 3D" />}
   </>;
