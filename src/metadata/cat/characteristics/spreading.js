@@ -12,10 +12,36 @@ export default function ({cat, doc, utils, job_prm, CatCharacteristics}) {
       }
     }
   });
-  Object.defineProperty(CatCharacteristics.prototype, 'imaterial', {
-    get () {
-      const row = this.params.find({cnstr: 0, region: 0, param: job_prm.properties.imaterial});
-      return row?.value;
+  Object.defineProperties(CatCharacteristics.prototype, {
+    imaterial: {
+      get () {
+        const row = this.params.find({cnstr: 0, region: 0, param: job_prm.properties.imaterial});
+        return row?.value;
+      }
+    },
+    iedge: {
+      get () {
+        const values = [];
+        this.params.find_rows({param: job_prm.properties.iedge}, ({value}) => {
+          if(!value.empty() && value.name !== 'Нет' && !values.includes(value)) {
+            values.push(value);
+          }
+        });
+        return values.length > 0;
+      }
+    },
+    ihole: {
+      get () {
+        const row = this.params.find_rows({cnstr: 0, region: 0, param: job_prm.properties.ihole});
+        const values = [];
+        this.params.find_rows({param: {in: job_prm.properties.ihole}}, ({param, value}) => {
+          if(value && !values.includes(param)) {
+            values.push(param);
+          }
+        });
+        return values.length > 0;
+      }
     }
   });
+
 }

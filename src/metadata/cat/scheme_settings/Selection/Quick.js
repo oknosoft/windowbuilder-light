@@ -1,6 +1,7 @@
 import React from 'react';
 import RefField from 'metadata-ui/DataField/RefField';
 import Text from 'metadata-ui/DataField/Text';
+import BooleanThreeState from 'metadata-ui/DataField/BooleanThreeState';
 import {NumberField} from 'metadata-ui/DataField/Number';
 import Checkbox from '@mui/material/Checkbox';
 
@@ -12,7 +13,7 @@ function selectionObj(row, checked, setChecked) {
     const typeMeta = mgr?.metadata();
     const label = row.caption || (typeMeta?.obj_presentation || typeMeta?.synonym || row.left_value);
     const list = row.list ? JSON.parse(row.list).map(v => mgr.get(v)) : [];
-    if(!list.length) {
+    if(!list.length && mgr) {
       for(const o of mgr) {
         if(!o.is_folder) {
           list.push(o);
@@ -33,16 +34,20 @@ function selectionObj(row, checked, setChecked) {
       get(target, prop, receiver) {
         switch (prop) {
           case 'value':
-            return mgr ? mgr.get(target.right_value) : target.right_value;
+            return mgr ? mgr.get(target.right_value) :
+              (target.right_value_type === 'boolean' ? target._obj.right_value : target.right_value);
           case '_metadata':
             return () => meta;
           case '_manager':
-            return mgr;
+            return target._manager;
           case 'label':
             return label;
           case 'Component':
             if(mgr) {
               return RefField;
+            }
+            if(target.right_value_type === 'boolean') {
+              return BooleanThreeState;
             }
             return target.right_value_type.includes('number') ? NumberField : Text;
         }
@@ -50,12 +55,12 @@ function selectionObj(row, checked, setChecked) {
       set(target, prop, val, receiver) {
         switch (prop) {
           case 'value':
-            target.right_value = val?.valueOf() || '';
-            if(checked && (!val || val?.empty())) {
+            target.right_value = target.right_value_type === 'boolean' ? val : (val?.valueOf() || '');
+            if((checked || target.use) && (typeof val !== 'boolean' && (!val || val?.empty?.()))) {
               target.use = false;
               setChecked(false);
             }
-            if(!checked && (val?.empty && !val.empty())) {
+            if((!checked || !target.use) && (typeof val === 'boolean' || (val?.empty && !val.empty()))) {
               target.use = true;
               setChecked(true);
             }
