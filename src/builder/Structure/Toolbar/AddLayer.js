@@ -62,6 +62,16 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
     }
     handleClose();
   };
+  const addVirtual = () => {
+    const {container} = (elm || layer);
+    const child = container?.createChild({kind: 'virtual'});
+    if(child) {
+      setContext({type: 'layer', layer: child, elm: null});
+      project.redraw();
+    }
+    handleClose();
+  };
+
   const addGlass = () => {
     const {container} = (elm || layer);
     const child = container?.createChild({kind: 'glass'});
@@ -92,7 +102,7 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
         <AddRoadIcon />
         Штульповые створки
       </MenuItem>
-      <MenuItem disabled onClick={handleClose} disableRipple>
+      <MenuItem onClick={addVirtual} disableRipple>
         <AddchartOutlinedIcon />
         Виртуальный слой
       </MenuItem>

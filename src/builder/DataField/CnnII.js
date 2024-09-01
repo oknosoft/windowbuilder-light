@@ -45,7 +45,6 @@ export default function FieldCnnII({obj, onChange, fullWidth=true, enterTab, ...
   }, [obj]);
 
 
-
   return nearest ? <Autocomplete
     options={cnns}
     onChange={(event, newValue, reason, details) => {
