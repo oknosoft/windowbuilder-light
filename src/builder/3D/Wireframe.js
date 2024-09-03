@@ -2,11 +2,14 @@ import React from 'react';
 import * as THREE from 'three';
 import {Line} from '@react-three/drei';
 
-export default function Wireframe({layer}) {
+export default function Wireframe({layer, bounds}) {
 
-  const {bounds, three} = layer;
+  const {three, hidden} = layer;
+  if(!bounds) {
+    bounds = layer.bounds;
+  }
+  const position = three.calculatedPosition.toArray();
   const rotation= three.rotation.toArray();
-  const {position} = three;
   const pos = [
     bounds.x,
     bounds.y + bounds.height,
@@ -25,12 +28,15 @@ export default function Wireframe({layer}) {
     />);
   }
   for(const contour of layer.contours) {
-    res.push(<Wireframe key={`c-${contour.id}`} layer={contour} bounds={bounds} position={new THREE.Vector3()}/>);
+    res.push(<Wireframe key={`c-${contour.id}`} layer={contour} bounds={bounds}/>);
   }
-  return position.x >= 0 ?
-    <group position={[position.x, position.y, position.z + (layer.layer ? 14 : 0)]} rotation={rotation}>{res}</group> :
+  for(const contour of three.children) {
+    res.push(<Wireframe key={`c-${contour.id}`} layer={contour} />);
+  }
+  return (!three.bindable || three.bind.is('right') || three.bind.is('top')) ?
+    <group position={position} rotation={rotation}>{res}</group> :
     <group rotation={rotation}>
-      <group position={[position.x, position.y, position.z + (layer.layer ? 14 : 0)]}>{res}</group>
+      <group position={position}>{res}</group>
     </group>;
 
 
