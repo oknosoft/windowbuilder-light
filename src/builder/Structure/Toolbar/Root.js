@@ -1,9 +1,9 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import {HtmlTooltip} from '../../../aggregate/App/styled';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
-
+import {HtmlTooltip} from '../../../aggregate/App/styled';
+import {testProducts} from '../../Toolbar/TestProducts';
 
 // style={{fontFamily: 'GOST type B'}}
 
@@ -13,6 +13,16 @@ export default function RootToolbar({editor, project, setContext}) {
     const layer = project.addLayer();
     project.redraw();
     setContext({type: 'layer', layer, elm: null});
+    const {square} = testProducts({
+      editor,
+      type: 'layer',
+      layer,
+      setContext,
+      handleClose() {
+
+      },
+    });
+    square();
   };
 
   return <>

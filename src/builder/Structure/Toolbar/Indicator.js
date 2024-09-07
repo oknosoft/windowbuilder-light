@@ -2,9 +2,12 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
 
-export default function Indicator({type, editor, elm}) {
+export default function Indicator({type, tab, editor, elm}) {
   let icon, title;
-  switch (type) {
+  if(type === 'settings' || !editor) {
+    tab = 'settings';
+  }
+  switch (tab) {
     case 'elm':
       if(elm instanceof editor.Filling || elm instanceof editor.ContainerBlank) {
         icon = 'icon_glass';
@@ -26,6 +29,10 @@ export default function Indicator({type, editor, elm}) {
     case 'settings':
       icon = 'icon_gear';
       title = 'настроек';
+      break;
+    case 'tool':
+      icon = 'icon_gear';
+      title = 'инструмента';
       break;
     default:
       icon = 'icon_root';

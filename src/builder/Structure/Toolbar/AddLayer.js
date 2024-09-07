@@ -11,6 +11,7 @@ import AddHomeWorkOutlinedIcon from '@mui/icons-material/AddHomeWorkOutlined';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import AddRoadIcon from '@mui/icons-material/AddRoad';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
+import {testProducts} from '../../Toolbar/TestProducts';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -51,7 +52,14 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
     const layer = project.addLayer();
     project.redraw();
     setContext({type: 'layer', layer, elm: null});
-    handleClose();
+    const {square} = testProducts({
+      editor,
+      type: 'layer',
+      layer,
+      setContext,
+      handleClose,
+    });
+    square();
   };
   const addFlap = () => {
     const {container} = (elm || layer);

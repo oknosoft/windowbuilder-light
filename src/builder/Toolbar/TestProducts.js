@@ -7,7 +7,7 @@ import ArchitectureIcon from '@mui/icons-material/Architecture';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 import load21 from './Load21';
 
-function testProducts({editor, type, layer, setContext, handleClose}) {
+export function testProducts({editor, type, layer, setContext, handleClose}) {
 
   function prepare(project, profiles) {
     const {props, root: {enm, ui}} = project;
@@ -83,17 +83,19 @@ function testProducts({editor, type, layer, setContext, handleClose}) {
         });
         activeLayer.skeleton.addProfiles(profiles);
         activeLayer.containers.sync();
-        new DimensionLine({
-          project,
-          owner: activeLayer,
-          parent: project.dimensions,
-          elm1: profiles[0],
-          elm2: profiles[0],
-          p1: 'b',
-          p2: 'e',
-          pos: 'bottom',
-          offset: -220,
-        });
+        if(offset?.bind !== 'top') {
+          new DimensionLine({
+            project,
+            owner: activeLayer,
+            parent: project.dimensions,
+            elm1: profiles[0],
+            elm2: profiles[0],
+            p1: 'b',
+            p2: 'e',
+            pos: 'bottom',
+            offset: -220,
+          });
+        }
         props.loading = false;
         props.registerChange();
         project.redraw();
