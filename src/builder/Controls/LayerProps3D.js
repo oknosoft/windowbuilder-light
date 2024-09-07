@@ -59,7 +59,7 @@ function SelectLayerField({editor, three, layer}) {
   </FormControl>;
 }
 
-export default function Props3D({editor, tool, project, layer, setContext}) {
+export default function LayerProps3D({editor, tool, project, layer, setContext}) {
   const [index, setIndex] = React.useState(0);
   const {three} = layer;
   const {position, degree, bind, bindable, parent} = three;
@@ -73,7 +73,7 @@ export default function Props3D({editor, tool, project, layer, setContext}) {
       setContext({tool: editor.tool});
     }
   };
-  return <FieldSet title="Свойства 3D" defaultExpanded>
+  return <FieldSet title="Свойства 3D" defaultExpanded={!layer.layer}>
     <SelectLayerField editor={editor} three={three} layer={layer}/>
     <RefField obj={three} fld="bind" meta={bindMeta} label="Привязка" placeholder="Без привязки" />
     {(bind.empty() || !bindable) ? <>
