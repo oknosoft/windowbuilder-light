@@ -5,6 +5,7 @@ import {PaddingLeft, HtmlTooltip} from '../../aggregate/App/styled';
 import controlsToolbar from './Toolbar';
 import ProfileProps from './ProfileProps';
 import PairProps from './PairProps';
+import ManyProps from './ManyProps';
 import LayerProps from './LayerProps';
 import ProductProps from './ProductProps';
 import FillingProps from './FillingProps';
@@ -38,7 +39,12 @@ export function specifyComponent({elm, layer, editor, project, tool, type, tab, 
     ToolWnd = LayerProps;
   }
   else if((tab === 'elm') && elm) {
-    ToolWnd = (elm instanceof editor.Filling || elm instanceof editor.ContainerBlank) ? FillingProps : ProfileProps;
+    if(Array.isArray(elm)) {
+      ToolWnd = elm.length === 2 ? PairProps : ManyProps;
+    }
+    else {
+      ToolWnd = (elm instanceof editor.Filling || elm instanceof editor.ContainerBlank) ? FillingProps : ProfileProps;
+    }
   }
   else if((tab === 'product') && project) {
     ToolWnd = ProductProps;

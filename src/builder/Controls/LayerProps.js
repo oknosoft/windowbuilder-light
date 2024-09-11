@@ -7,7 +7,7 @@ export default function LayerProps({editor, tool, project, layer, setContext}) {
   return <>
     {layer.presentation}
     <FieldSys obj={layer} fld="sys" />
-    <LayerProps3D editor={editor} tool={tool} project={project} layer={layer} setContext={setContext}/>
+    <LayerProps3D key={layer.index} editor={editor} tool={tool} project={project} layer={layer} setContext={setContext}/>
     <LayerPropsFurn layer={layer}/>
   </>;
 }
