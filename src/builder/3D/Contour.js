@@ -7,7 +7,7 @@ import {containersGeometry, containerExtrude} from './containerExtrude';
 export default function Contour({layer, bounds}) {
   const {three, hidden} = layer;
   if(!bounds) {
-    bounds = layer.bounds;
+    bounds = layer.bounds3D;
   }
   const position = three.calculatedPosition.toArray();
   const rotation= three.rotation.toArray();
@@ -25,7 +25,7 @@ export default function Contour({layer, bounds}) {
     </BBAnchor>);
   }
 
-  const profiles = profilesGeometry(layer.profiles, pos);
+  const profiles = profilesGeometry(layer.profilesFor3D, pos);
   const containers = containersGeometry(layer.containers, pos);
 
   for(const [profile] of profiles) {

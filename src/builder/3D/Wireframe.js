@@ -6,7 +6,7 @@ export default function Wireframe({layer, bounds}) {
 
   const {three, hidden} = layer;
   if(!bounds) {
-    bounds = layer.bounds;
+    bounds = layer.bounds3D;
   }
   const position = three.calculatedPosition.toArray();
   const rotation= three.rotation.toArray();

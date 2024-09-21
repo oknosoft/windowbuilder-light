@@ -2,6 +2,9 @@ import React from 'react';
 import TextField from '@mui/material/TextField';
 import {onKeyUp} from '@oknosoft/ui/DataField/enterTab';
 
+// 2da44840-767f-11ef-8e87-23375cc449cf - две рамы
+// dda1fbf0-77f8-11ef-afb0-ff5b0ddd3ab4 - разворотный импост
+
 export default function load21({editor, setContext, handleClose}) {
   handleClose();
   setContext({type: 'product', project: editor.project, layer: null, elm: null});
