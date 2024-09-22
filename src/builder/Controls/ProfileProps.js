@@ -6,13 +6,14 @@ import FieldEndConnection from '../DataField/EndConnection';
 import FieldCnnType from '../DataField/CnnType';
 import FieldCnnII from '../DataField/CnnII';
 
-const {fields} =  $p.dp.builderPen.metadata();
+const {dp, utils} = $p;
+const {fields} =  dp.builderPen.metadata();
 const meta = {};
 
 export default function ProfileProps({editor, project, layer, elm, node}) {
   const {b, e, imitationOf} = elm;
   const {carcass} = project.props;
-  const selectB = () => {
+  const selectB = utils.debounce(() => {
     const {selected} = b;
     editor.cmd('deselect', [{item: elm, node: 'e'}]);
     if(selected) {
@@ -22,8 +23,8 @@ export default function ProfileProps({editor, project, layer, elm, node}) {
     else {
       editor.cmd('select', [{item: elm, node: 'b'}]);
     }
-  };
-  const selectE = () => {
+  });
+  const selectE = utils.debounce(() => {
     const {selected} = e;
     editor.cmd('deselect', [{item: elm, node: 'b'}]);
     if(selected) {
@@ -33,7 +34,7 @@ export default function ProfileProps({editor, project, layer, elm, node}) {
     else{
       editor.cmd('select', [{item: elm, node: 'e'}]);
     }
-  };
+  });
   return <>
     {`Слой ${layer.index}, Профиль ${elm._index+1}, Узлы ${b.vertex.key}-${e.vertex.key}`}
     <FieldInsetProfile obj={elm} fld="inset" meta={fields.inset}/>
