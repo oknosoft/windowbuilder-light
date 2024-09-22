@@ -19,7 +19,7 @@ function RotationField({three, onChange}) {
   return <NumberField obj={degree} fld={fld} meta={meta} onChange={onChange} label="Поворот" />;
 }
 
-function SelectLayerField({editor, three, layer}) {
+function SelectLayerField({editor, three, layer, onChange}) {
   const {bindable, parent, owner} = three;
   const handleMouseDown = (event) => {
     event.preventDefault();
@@ -32,11 +32,15 @@ function SelectLayerField({editor, three, layer}) {
     }
     if(candidates.length === 1) {
       layer.three.parent = candidates[0];
-      props.registerChange();
-      owner.project.redraw();
+      onChange();
     }
     const tool = editor.tools.find((v) => v.name === 'selectLayer');
     tool.currentLayer = layer;
+    tool.onSelect = ({pos}) => {
+      layer.three.parent = pos.layer;
+      layer.three.bind = pos.bind;
+      onChange();
+    };
     tool.activate();
   };
   return <FormControl fullWidth>
@@ -74,7 +78,7 @@ export default function LayerProps3D({editor, tool, project, layer, setContext})
     }
   };
   return <FieldSet title="Свойства 3D" defaultExpanded={!layer.layer}>
-    <SelectLayerField editor={editor} three={three} layer={layer}/>
+    <SelectLayerField editor={editor} three={three} layer={layer} onChange={onChange}/>
     <RefField obj={three} fld="bind" meta={bindMeta} label="Привязка" placeholder="Без привязки" />
     {(bind.empty() || !bindable) ? <>
       <NumberField obj={degree} fld="x" meta={meta} onChange={onChange} label="Поворот X" />
