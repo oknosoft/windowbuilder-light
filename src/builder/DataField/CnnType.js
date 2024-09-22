@@ -12,7 +12,7 @@ function getStyles(curr, value, theme) {
   };
 }
 
-export default function FieldCnnType({CnnPoint}) {
+export default function FieldCnnType({CnnPoint, onClick}) {
   const theme = useTheme();
   const {vertex} = CnnPoint;
   const {cnnType, cnnTypes} = vertex;
@@ -23,8 +23,12 @@ export default function FieldCnnType({CnnPoint}) {
     setIndex(index + 1);
   };
 
-  return <FormControl fullWidth>
-    <InputLabel>{`Тип соедин (${vertex.value})`}</InputLabel>
+  let label= `Тип соедин (${vertex.value})`;
+  if(CnnPoint.selected) {
+    label = <u>{label}</u>;
+  }
+  return <FormControl fullWidth onClick={onClick}>
+    <InputLabel>{label}</InputLabel>
     <Select
       displayEmpty
       value={cnnType}

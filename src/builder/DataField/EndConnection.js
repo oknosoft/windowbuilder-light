@@ -47,7 +47,10 @@ export default function FieldEndConnection({obj, fld, onChange, fullWidth=true, 
     }
   }, [obj]);
 
-
+  let label=`Соедин ${name} -> ${profile ? profile._index + 1 : ''}${profile ? (profilePoint?.name || 't') : 'i'} (${obj.vertex.key})`;
+  if(obj.selected) {
+    label = <u>{label}</u>;
+  }
 
   return fld === 'cnnOuter' && (!hasOuter || !profile) ? null : <Autocomplete
     options={cnns}
@@ -57,7 +60,7 @@ export default function FieldEndConnection({obj, fld, onChange, fullWidth=true, 
       setCnn(obj[fld]);
     }}
     value={cnn}
-    label={`Соедин ${name} -> ${profile ? profile._index + 1 : ''}${profile ? (profilePoint?.name || 't') : 'i'} (${obj.vertex.key})`}
+    label={label}
     fullWidth={fullWidth}
     disableClearable
     placeholder="Нет"
