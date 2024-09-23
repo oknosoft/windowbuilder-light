@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import DataSaverOnIcon from '@mui/icons-material/DataSaverOn';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import LibraryAddOutlinedIcon from '@mui/icons-material/LibraryAddOutlined';
+import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import AddchartOutlinedIcon from '@mui/icons-material/AddchartOutlined';
 import AddHomeWorkOutlinedIcon from '@mui/icons-material/AddHomeWorkOutlined';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
@@ -93,7 +94,7 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
     <HtmlTooltip title="Добавить/заменить элемент">
       <IconButton onClick={handleClick}><DataSaverOnIcon /></IconButton>
     </HtmlTooltip>
-    <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
+    {editor && <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
       <MenuItem onClick={addRoot} disableRipple>
         <AddPhotoAlternateOutlinedIcon />
         Слой рамы
@@ -101,6 +102,14 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
       <MenuItem disabled={!elm} onClick={addFlap} disableRipple>
         <LibraryAddOutlinedIcon />
         Слой створки
+      </MenuItem>
+      <MenuItem disabled onClick={addFlap} disableRipple>
+        <AspectRatioIcon />
+        Слой проёма
+      </MenuItem>
+      <MenuItem onClick={addVirtual} disableRipple>
+        <AddchartOutlinedIcon />
+        Виртуальный слой
       </MenuItem>
       <MenuItem disabled={(elm instanceof editor.Filling)} onClick={addGlass} disableRipple>
         <AddBoxOutlinedIcon />
@@ -110,15 +119,11 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
         <AddRoadIcon />
         Штульповые створки
       </MenuItem>
-      <MenuItem onClick={addVirtual} disableRipple>
-        <AddchartOutlinedIcon />
-        Виртуальный слой
-      </MenuItem>
       <MenuItem disabled onClick={handleClose} disableRipple>
         <AddHomeWorkOutlinedIcon />
         Вложенное изделие
       </MenuItem>
-    </StyledMenu>
+    </StyledMenu>}
   </>;
 
 }
