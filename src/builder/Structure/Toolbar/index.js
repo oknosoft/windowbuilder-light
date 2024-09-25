@@ -16,7 +16,7 @@ export default function StructureToolbar () {
   else if(type === 'elm' && elm) {
     Buttons = (elm instanceof editor.Filling || elm instanceof editor.ContainerBlank) ? FillingToolbar : ProfileToolbar;
   }
-  const props = {editor, project, layer, elm, type, setContext};
+  const props = {editor, project, layer, elm, type, tab: type, setContext};
   return <Toolbar disableGutters>
     {Indicator(props)}
     {Buttons(props)}

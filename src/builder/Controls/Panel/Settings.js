@@ -1,8 +1,8 @@
 import React from 'react';
 import {NumberField} from '@oknosoft/ui/DataField/Number';
 import Checkbox from '@oknosoft/ui/DataField/Checkbox';
-import UseSnap from '../DataField/UseSnap';
-import {FieldViewMode} from '../Toolbar/SelectMode';
+import UseSnap from '../../DataField/UseSnap';
+import {FieldViewMode} from '../../Toolbar/SelectMode';
 
 const meta = {};
 export default function Settings({editor, project}) {

@@ -11,7 +11,6 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
 
   function prepare(project, profiles) {
     const {props, root: {enm, ui}} = project;
-    const list = [enm.positions.left, enm.positions.right];
     const offset = new editor.Point();
     props.loading = true;
 
@@ -35,7 +34,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
 
     const {project} = editor;
     prepare(project)
-      .then(({project: {props, activeLayer}, offset}) => {
+      .then(({project: {props, workLayer: activeLayer}, offset}) => {
         const profiles = [];
         // стойки
         for(let x = 0; x < size; x += step) {
@@ -73,7 +72,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
       ]
     }
     prepare(project, profiles)
-      .then(({project: {props, activeLayer}, offset, profilesBounds}) => {
+      .then(({project: {props, workLayer: activeLayer}, offset, profilesBounds}) => {
         profiles = profiles.map((attr) => {
           attr.b[0] += offset.x;
           attr.e[0] += offset.x;
@@ -130,7 +129,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
       {b: [1000, -1700], e: [700, -1400]},
     ];
     prepare(project)
-      .then(({project: {props, activeLayer: layer}, offset}) => {
+      .then(({project: {props, workLayer: layer}, offset}) => {
         let prev = layer;
         let profiles = wall.map((attr) => layer.createProfile(attr));
         layer.skeleton.addProfiles(profiles);
@@ -256,7 +255,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
     imposts() {
       const {project, DimensionLine} = editor;
       prepare(project)
-        .then(({project: {props, activeLayer}, offset}) => {
+        .then(({project: {props, workLayer: activeLayer}, offset}) => {
           const profiles = [
             activeLayer.createProfile({b: [1400 + offset.x, 1000], e: [offset.x, 1000]}),
             activeLayer.createProfile({b: [offset.x, 1000], e: [offset.x, 0]}),

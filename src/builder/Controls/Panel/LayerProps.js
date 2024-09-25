@@ -1,5 +1,5 @@
 import React from 'react';
-import FieldSys from '../DataField/Sys';
+import FieldSys from '../../DataField/Sys';
 import LayerProps3D from './LayerProps3D';
 import LayerPropsFurn from './LayerPropsFurn';
 

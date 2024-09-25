@@ -1,10 +1,10 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import {NumberField} from '@oknosoft/ui/DataField/Number';
-import FieldInsetProfile from '../DataField/InsetProfile';
-import FieldEndConnection from '../DataField/EndConnection';
-import FieldCnnType from '../DataField/CnnType';
-import FieldCnnII from '../DataField/CnnII';
+import FieldInsetProfile from '../../DataField/InsetProfile';
+import FieldEndConnection from '../../DataField/EndConnection';
+import FieldCnnType from '../../DataField/CnnType';
+import FieldCnnII from '../../DataField/CnnII';
 
 const {dp, utils} = $p;
 const {fields} =  dp.builderPen.metadata();

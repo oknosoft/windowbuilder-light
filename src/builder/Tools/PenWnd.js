@@ -5,7 +5,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Checkbox from '@oknosoft/ui/DataField/Checkbox';
 import {NumberField} from '@oknosoft/ui/DataField/Number';
 import RefField from '@oknosoft/ui/DataField/RefField';
-import Settings from '../Controls/Settings';
+import Settings from '../Controls/Panel/Settings';
 
 const meta = {};
 function PenWnd({editor, layer}) {
