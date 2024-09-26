@@ -7,8 +7,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
+import {useBackdropContext} from '../../components/App';
 import {HtmlTooltip} from '../../components/App/styled';
-
 
 function IconMenu({anchorEl, open, handleClose, post, unpost, posted}) {
   const onClick = posted ?
@@ -34,18 +34,73 @@ function IconMenu({anchorEl, open, handleClose, post, unpost, posted}) {
   </Menu>;
 }
 
+const {wsql, utils, adapters: {pouch}} = $p;
+
+async function waitProcessing(doc) {
+  const {id} = doc._metadata();
+  if(!id) {
+    return Promise.resolve();
+  }
+  const actionKey = 'posted';
+  const register = 'areg_dates';
+  const _id = `${id}|${doc.ref}|p`;
+  let {attempts} = waitProcessing;
+  while (attempts > 0) {
+    await utils.sleep(1200);
+    const res = await waitProcessing.request({_id, _rev: doc._rev, actionKey, register});
+    if(res?.error) {
+      throw res.error;
+    }
+    if(res) {
+      return res;
+    }
+    attempts--;
+  }
+  throw new Error(`Таймаут при ${posted ? 'проведении' : 'отмене проведения'} документа '${doc.presentation}'`);
+}
+waitProcessing.attempts = 20;
+waitProcessing.request = function ({_id, _rev, actionKey, register}) {
+  return pouch.remote.log.get(_id)
+    .catch((err) => {
+      if(err.status !== 404) throw err;
+      return {_id, events: []};
+    })
+    .then((logDoc) => {
+      return logDoc.events.find(v => v._rev === _rev && v.hasOwnProperty(actionKey) && v.register === register);
+    });
+};
+
 export default function PostBtn({obj}) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [tooltipOpen, setTooltipOpen] = React.useState(false);
+  const backdrop = useBackdropContext();
   const open = Boolean(anchorEl);
   const tooltipClose = () => setTooltipOpen(false);
 
 
   const [postable, post, unpost, handleOpen, handleClose] = React.useMemo(() => {
     const postable = obj._metadata('posted') !== undefined;
-    const post = () => obj.save(true);
-    const unpost = () => obj.save(false);
+    const onError = (err) => {
+      backdrop.setBackdrop(false);
+    };
+    const onProcessed = (res) => {
+      backdrop.setBackdrop(false);
+    };
+    const post = () => {
+      backdrop.setBackdrop(true);
+      obj.save(true)
+        .then(waitProcessing)
+        .then(onProcessed)
+        .catch(onError);
+    };
+    const unpost = () => {
+      backdrop.setBackdrop(true);
+      obj.save(false)
+        .then(waitProcessing)
+        .then(onProcessed)
+        .catch(onError);
+    };
     const handleOpen = (event) => {
       tooltipClose();
       setAnchorEl(event.currentTarget);
@@ -53,6 +108,7 @@ export default function PostBtn({obj}) {
     const handleClose = () => setAnchorEl(null);
     return [postable, post, unpost, handleOpen, handleClose];
   }, [obj]);
+
 
   if(!postable) {
     return null;
