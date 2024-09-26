@@ -32,10 +32,11 @@
   "proxy4": "https://brusnika.oknosoft.ru:2210/",
   "proxy5": "https://phototech.oknosoft.ru/",
   "proxy6": "https://phototech.oknosoft.ru:2300/",
-  "proxy7": "http://localhost:3016/",
+  "proxy": "http://localhost:3016/",
   "proxy8": "http://192.168.9.27:3016/",
   "proxy9": "https://steklotorg.oknosoft.ru:2310/",
-  "proxy": "https://steklotorg.oknosoft.ru",
+  "proxy10": "https://steklotorg.oknosoft.ru",
+  "proxy11": "http://localhost:3031/",
   "dependencies": {
     "@aldabil/react-scheduler": "^2.9",
     "@emotion/react": "^11.13",
@@ -51,8 +52,8 @@
     "marked": "^14.1",
     "marked-base-url": "^1.1",
     "md5-file": "^5.0",
-    "metadata-core": "2.0.35-beta.1",
-    "metadata-pouchdb": "2.0.35-beta.1",
+    "metadata-core": "2.0.35-beta.2",
+    "metadata-pouchdb": "2.0.35-beta.2",
     "metadata-ui": "file:../metadata-ui/dist",
     "paper-jsdom-canvas": "0.12.18",
     "react-data-grid": "7.0.0-beta.46",
@@ -68,7 +69,7 @@
     "url-join": "^5.0",
     "url-parse": "^1.5",
     "velocity-react": "^1.4.3",
-    "wb-core": "github:oknosoft/windowbuilder-core#c00308476b2899dd77158f94e180f904c82d73ea",
+    "wb-core": "github:oknosoft/windowbuilder-core#c158189bd2bdd1721951bfca6b600ed72727a702",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {

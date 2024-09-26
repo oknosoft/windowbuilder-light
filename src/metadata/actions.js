@@ -5,6 +5,7 @@
  */
 
 import {load_ram} from 'wb-core/dist/superlogin-proxy';
+import {event_src} from './events';
 
 export const init_state = {
   meta_loaded: false,
@@ -91,6 +92,8 @@ export function actions(handleIfaceState) {
             });
         }
       });
+
+      event_src($p);
 
       md.once('predefined_elmnts_inited', () => {
         let res = Promise.resolve();
