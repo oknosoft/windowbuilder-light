@@ -36,7 +36,23 @@ export default function ButtonImitation({elm, layer}) {
     }
     else {
       for(const child of children) {
-
+        if(child.three.parent === layer && bySide[child.three.bind.valueOf()] === elm) {
+          const profile = child.profilesBySide()[child.three.bind.invert().valueOf()];
+          if(profile.imitationOf) {
+            title += 'самостоятельным';
+            action = () => {
+              profile.raw('imitationOf', null);
+              fin();
+            };
+          }
+          else {
+            title += 'общим';
+            action = () => {
+              profile.raw('imitationOf', elm);
+              fin();
+            };
+          }
+        }
       }
     }
     if(action) {
