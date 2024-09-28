@@ -1,6 +1,8 @@
 import React from 'react';
-import {HtmlTooltip} from '../../../aggregate/App/styled';
+import InsetSelection from './InsetSelection';
 
-export default function RootToolbar({type}) {
-  return <>{type}</>;
+export default function RootToolbar(props) {
+  return <>
+    <InsetSelection {...props} />
+  </>;
 }

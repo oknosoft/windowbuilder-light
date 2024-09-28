@@ -14,7 +14,7 @@ import AddRoadIcon from '@mui/icons-material/AddRoad';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
 import {testProducts} from '../../Toolbar/TestProducts';
 
-const StyledMenu = styled((props) => (
+export const StyledMenu = styled((props) => (
   <Menu
     elevation={0}
     anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}

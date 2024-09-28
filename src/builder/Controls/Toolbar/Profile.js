@@ -1,9 +1,11 @@
 import React from 'react';
 import ButtonImitation from './ProfileImitation';
+import InsetSelection from './InsetSelection';
 
 
-export default function ProfileToolbar({type, elm, layer}) {
+export default function ProfileToolbar(props) {
   return <>
-    <ButtonImitation elm={elm} layer={layer} />
+    <ButtonImitation {...props} />
+    <InsetSelection {...props} />
   </>;
 }
