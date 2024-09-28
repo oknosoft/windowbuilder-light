@@ -7,7 +7,7 @@ import FieldCnnType from '../../DataField/CnnType';
 import FieldCnnII from '../../DataField/CnnII';
 
 const {dp, utils} = $p;
-const {fields} =  dp.builderPen.metadata();
+export const {fields} =  dp.builderPen.metadata();
 const meta = {};
 
 export default function ProfileProps({editor, project, layer, elm, node}) {

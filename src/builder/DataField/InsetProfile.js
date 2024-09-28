@@ -1,8 +1,6 @@
 import React from 'react';
 import Autocomplete from '@oknosoft/ui/DataField/Autocomplete';
 
-const mgr = $p.cat.inserts;
-
 export default function FieldInsetProfile({obj, fld, onChange, fullWidth=true, enterTab, ...other}) {
 
   const [value, setValue] = React.useState(obj[fld]);

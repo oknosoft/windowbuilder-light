@@ -1,6 +1,9 @@
 import React from 'react';
-import {HtmlTooltip} from '../../../aggregate/App/styled';
+import ButtonImitation from './ProfileImitation';
+
 
 export default function ProfileToolbar({type, elm, layer}) {
-  return <>Профиль</>;
+  return <>
+    <ButtonImitation elm={elm} layer={layer} />
+  </>;
 }

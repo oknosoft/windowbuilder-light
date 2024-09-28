@@ -5,12 +5,15 @@ import RootToolbar from './Root';
 import ProfileToolbar from './Profile';
 
 export default function controlsToolbar (props) {
-  let {type, tab, editor} = props;
+  let {type, tab, editor, elm, layer} = props;
   if(type === 'settings' || !editor) {
     tab = 'settings';
   }
   else if(tab === 'elm' && type === 'node') {
     tab = 'node';
+  }
+  else if((tab === 'elm' && !elm) || (tab === 'layer' && !layer)) {
+    tab = 'root';
   }
   let Buttons = RootToolbar;
   switch (tab) {
