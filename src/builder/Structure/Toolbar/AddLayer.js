@@ -80,6 +80,19 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
     }
     handleClose();
   };
+  const addPortal = () => {
+    const layer = project.addLayer({portal: true});
+    project.redraw();
+    setContext({type: 'layer', layer, elm: null});
+    const {square} = testProducts({
+      editor,
+      type: 'layer',
+      layer,
+      setContext,
+      handleClose,
+    });
+    square();
+  };
 
   const addGlass = () => {
     const {container} = (elm || layer);
@@ -103,7 +116,7 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
         <LibraryAddOutlinedIcon />
         Слой створки
       </MenuItem>
-      <MenuItem disabled onClick={addFlap} disableRipple>
+      <MenuItem disabled={Boolean(elm)} onClick={addPortal} disableRipple>
         <AspectRatioIcon />
         Слой проёма
       </MenuItem>
