@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import * as THREE from 'three';
 import {Edges} from '@react-three/drei';
-//import { Geometry, Base, Subtraction, Intersection, Difference, ReverseSubtraction } from '@react-three/csg';
+import { Geometry, Base, Subtraction, Addition } from '@react-three/csg';
 
 function profilePath(profile, pos) {
   const {b, e, generatrix} = profile;
@@ -31,7 +31,7 @@ export function profilesGeometry(profiles, pos) {
   const res = new Map();
   for(const profile of profiles) {
     const extrudeSettings = {
-      steps: 10,
+      steps: 20,
       bevelEnabled: false,
       extrudePath: profilePath(profile, pos),
     };
@@ -41,23 +41,28 @@ export function profilesGeometry(profiles, pos) {
 }
 
 
-export function profileExtrude(profile, profiles, hidden) {
+export function profileExtrude(profile, profiles, hidden, cut) {
 
   //const [hovered, setHover] = useState(false);
   //onPointerOver={(event) => setHover(true)}
   //onPointerOut={(event) => setHover(false)}
   const geometry = profiles.get(profile);
+  const material = new THREE.MeshLambertMaterial({
+    color: 0xeeffee,
+    wireframe: false,
+    transparent: hidden,
+    opacity: hidden ? 0.2 : 1,
+  });
 
-  return <mesh
-    key={`p-${profile.elm}`}
-    geometry={geometry}
-    material={new THREE.MeshLambertMaterial({
-      color: 0xeeffee,
-      wireframe: false,
-      transparent: hidden,
-      opacity: hidden ? 0.2 : 1,
-    })}
-  >
+  return cut ?
+    <mesh key={`pc-${profile.elm}`} material={material}>
+      <Geometry>
+        <Base geometry={geometry}/>
+        <Subtraction geometry={cut}/>
+      </Geometry>
+      {!hidden && <Edges color="grey" />}
+    </mesh> :
+    <mesh key={`p-${profile.elm}`} geometry={geometry} material={material}>
     {!hidden && <Edges color="grey" />}
   </mesh>;
 }

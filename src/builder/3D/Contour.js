@@ -4,7 +4,7 @@ import {BBAnchor, Html} from '@react-three/drei'
 import {profilesGeometry, profileExtrude} from './profileExtrude';
 import {containersGeometry, containerExtrude} from './containerExtrude';
 
-export default function Contour({layer, bounds}) {
+export default function Contour({layer, bounds, cut}) {
   const {three, hidden} = layer;
   if(!bounds) {
     bounds = layer.bounds3D;
@@ -29,16 +29,16 @@ export default function Contour({layer, bounds}) {
   const containers = containersGeometry(layer.containers, pos);
 
   for(const [profile] of profiles) {
-    res.push(profileExtrude(profile, profiles, hidden));
+    res.push(profileExtrude(profile, profiles, hidden, cut));
   }
   for(const [container] of containers) {
-    res.push(containerExtrude(container, containers));
+    res.push(containerExtrude(container, containers, cut));
   }
   for(const contour of layer.contours) {
-    res.push(<Contour key={`c-${contour.id}`} layer={contour} bounds={bounds}/>);
+    res.push(<Contour key={`c-${contour.id}`} layer={contour} bounds={bounds} cut={cut}/>);
   }
   for(const contour of three.children) {
-    res.push(<Contour key={`c-${contour.id}`} layer={contour} />);
+    res.push(<Contour key={`c-${contour.id}`} layer={contour} cut={cut}/>);
   }
   return (!three.bindable || three.bind.is('right') || three.bind.is('top')) ?
     <group position={position} rotation={rotation}>{res}</group> :
