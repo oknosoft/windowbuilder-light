@@ -37,7 +37,7 @@
     "react-draggable": "^4.4",
     "react-helmet": "^6.1",
     "react-number-format": "^5.4",
-    "react-router-dom": "6.26",
+    "react-router-dom": "6.27",
     "shallowequal": "^1.1.0",
     "url-join": "^5.0",
     "url-parse": "^1.5"
