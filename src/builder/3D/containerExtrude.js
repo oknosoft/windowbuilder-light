@@ -76,7 +76,7 @@ export function containerExtrude(container, containers, cut) {
         <Base geometry={geometry}/>
         <Subtraction geometry={cut}/>
       </Geometry>
-      <Edges color="grey" />
+      <Edges key={`e-${container.layer.project.props.stamp}`} color="grey" />
     </mesh> : <mesh
     key={`c-${container.key}`}
     geometry={geometry}

@@ -46,6 +46,7 @@ export function profileExtrude(profile, profiles, hidden, cut) {
   //const [hovered, setHover] = useState(false);
   //onPointerOver={(event) => setHover(true)}
   //onPointerOut={(event) => setHover(false)}
+  const {stamp} = profile.project.props;
   const geometry = profiles.get(profile);
   const material = new THREE.MeshLambertMaterial({
     color: 0xeeffee,
@@ -60,7 +61,7 @@ export function profileExtrude(profile, profiles, hidden, cut) {
         <Base geometry={geometry}/>
         <Subtraction geometry={cut}/>
       </Geometry>
-      {!hidden && <Edges color="grey" />}
+      {!hidden && <Edges key={`e-${stamp}`} color="grey" />}
     </mesh> :
     <mesh key={`p-${profile.elm}`} geometry={geometry} material={material}>
     {!hidden && <Edges color="grey" />}
