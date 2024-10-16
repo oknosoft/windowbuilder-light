@@ -11,7 +11,7 @@ export default function cutGeometry({activeCut}) {
     const {point, normal} = generatrix.getLocationAt(l2);
     point.y = dy - point.y;
     normal.y *= -1;
-    const p2 = point.add(normal.multiply(1000));
+    const p2 = point.add(normal.multiply(6000));
     const v1 = new THREE.Vector3(point.x, point.y,  0);
     const v2 = new THREE.Vector3(p2.x, p2.y,  0);
     const extrudePath = new THREE.CurvePath();
