@@ -10,7 +10,7 @@
 }
 
 @layer rdg.TextEditor {
-  .tlmcuo07-0-0-beta-46 {
+  .tlmcuo07-0-0-beta-47 {
     appearance: auto;
   }
   select, input {
@@ -22,7 +22,7 @@
 }
 
 @layer rdg.HeaderRow {
-  .cj343x07-0-0-beta-46 {
+  .cj343x07-0-0-beta-47 {
     font-weight: 400
   }
 }

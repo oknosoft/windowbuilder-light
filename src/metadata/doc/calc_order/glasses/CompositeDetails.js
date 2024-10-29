@@ -1,6 +1,6 @@
 import React from 'react';
 import FormGroup from '@mui/material/FormGroup';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import ParamField from 'metadata-ui/DataField/ParamField';
 import RefField from 'metadata-ui/DataField/RefField';
 import TextField from 'metadata-ui/DataField/Text';

@@ -9,11 +9,11 @@
   };
 
   const zone = location.host.includes('2210') ? 10 : (
-    location.host.includes('2222') ? 22 : 29
+    location.host.includes('2222') ? 22 : (location.host.includes('2031') ? 31 : 29)
   );
 
   const host = zone === 29 ? 'steklotorg.oknosoft.ru' : (
-    zone === 22 ? 'localhost:2222' : 'steklotorg.oknosoft.ru:2210'
+    zone === 22 ? 'localhost:2222' : (zone === 31 ? 'localhost:2031' : 'steklotorg.oknosoft.ru:2210')
   );
 
   window._dynamic_patch_ = {
