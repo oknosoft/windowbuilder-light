@@ -22,6 +22,7 @@ import ui from 'metadata-ui';
 import drawer from '../drawer/editor';
 import './aggregate/rubles';
 import scale_svg from './aggregate/scale_svg';
+import wss from './aggregate/wss';
 
 
 export default function ($p) {
@@ -30,4 +31,5 @@ export default function ($p) {
   documents($p);
   drawer($p);
   Object.assign($p.utils, {scale_svg});
+  wss($p);
 }
