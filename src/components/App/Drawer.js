@@ -17,6 +17,7 @@ import menuItems from '../App/menu';
 const DrawerLeft = ({menu_open, sxColor, handleDrawerClose}) => {
 
   const navigate = useNavigate();
+  $p.ui.dialogs.handleNavigate = navigate;
 
   return <Drawer
     sx={{

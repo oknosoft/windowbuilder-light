@@ -40,8 +40,8 @@ export default function CalcOrderObj() {
     params, usePrompt, setTitle, setBackdrop,
   } = frmObj({initSetting});
 
+  const {ref} = params;
   React.useEffect(() => {
-    const {ref} = params;
     let res = Promise.resolve();
     if(job_prm.builder.glasses_template?.is_new?.()) {
       for(const doc of mgr) {
@@ -55,7 +55,8 @@ export default function CalcOrderObj() {
       .then(setObj)
       .catch(setError)
       .then(() => setBackdrop(false));
-  }, []);
+  }, [ref]);
+
   React.useEffect(() => {
     const title = obj ? obj.presentation : 'Расчёт-заказ';
     setTitle({title, appTitle: <Typography variant="h6" noWrap>{title}</Typography>});
