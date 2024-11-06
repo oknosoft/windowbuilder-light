@@ -113,7 +113,7 @@ export default function CalcOrderList() {
       .catch(setError);
   }, [refresh]);
 
-  const [create, clone, open] = mgrCreate({mgr: calc_order, navigate, selectedRows, backdrop});
+  const [create, clone, open, open1C] = mgrCreate({mgr: calc_order, navigate, selectedRows, backdrop});
 
   const onCellClick = cellClick({selectedRows, setSelectedRows});
 
@@ -127,7 +127,7 @@ export default function CalcOrderList() {
   });
 
   return <Content>
-    <Toolbar create={create} clone={clone} open={open} disabled={Boolean(error)} scheme={scheme} setRefresh={setRefresh}/>
+    <Toolbar create={create} clone={clone} open={open} open1C={open1C} disabled={Boolean(error)} scheme={scheme} setRefresh={setRefresh}/>
     {error ? error.message :
       <Grid container spacing={0}>
     <Grid xs={12} md={10} style={{height: `calc(100vh - 101px)`}}>

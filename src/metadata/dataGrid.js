@@ -57,7 +57,28 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
     }
   };
 
-  return [create, clone, open];
+  const open1C = () => {
+    if(selectedRows.size) {
+      backdrop
+        .setBackdrop(true)
+        .then(() => {
+          const {utils} = $p;
+          utils.wss.send({
+            method: 'ОткрытьФорму',
+            name: 'Документ.ЗаказПокупателя.ФормаОбъекта',
+            ref: Array.from(selectedRows)[0],
+            type: mgr.class_name
+          });
+          return utils.sleep(1000);
+        })
+        .then(() => backdrop.setBackdrop(false));
+    }
+    else {
+      //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
+    }
+  };
+
+  return [create, clone, open, open1C];
 }
 
 export function tabularCreate({tabular, selection, find_rows, setRows, selectedRows, setSelectedRows}) {

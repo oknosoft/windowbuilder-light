@@ -4,7 +4,7 @@ export default function ({utils}) {
     stack: [],
     request() {
       for(const {resolve, reject} of this.stack) {
-        reject();
+        resolve(null);
       }
       this.stack.length = 0;
       return new Promise((resolve, reject) => {
