@@ -20,7 +20,7 @@
     "@oknosoft/ui": "file:../metadata-ui/dist",
     "@oknosoft/wb/core": "file:../wb-core-v3",
     "@react-three/csg": "^3.2.0",
-    "@react-three/drei": "^9.114",
+    "@react-three/drei": "^9.115",
     "@react-three/fiber": "^8.17",
     "deep-equal": "^2.2",
     "font-awesome": "4.7.0",
@@ -37,14 +37,14 @@
     "react-draggable": "^4.4",
     "react-helmet": "^6.1",
     "react-number-format": "^5.4",
-    "react-router-dom": "6.27",
+    "react-router-dom": "6.28",
     "shallowequal": "^1.1.0",
     "url-join": "^5.0",
     "url-parse": "^1.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.25",
-    "@babel/preset-env": "^7.25",
+    "@babel/core": "^7.26",
+    "@babel/preset-env": "^7.26",
     "@babel/preset-react": "^7.25",
     "babel-loader": "^9.2",
     "css-loader": "^7.1",
@@ -56,10 +56,10 @@
     "react-dom": "^18.3",
     "style-loader": "^4.0",
     "typescript": "^5.6",
-    "webpack": "^5.95",
+    "webpack": "^5.96",
     "webpack-cli": "^5.1",
     "webpack-dev-server": "^5.1",
-    "workbox-webpack-plugin": "^7.1"
+    "workbox-webpack-plugin": "^7.3"
   },
   "peerDependecies": {},
   "scripts": {
