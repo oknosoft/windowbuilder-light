@@ -3,39 +3,37 @@ import * as THREE from 'three';
 import {Edges} from '@react-three/drei';
 import { Geometry, Base, Subtraction, Addition } from '@react-three/csg';
 
-function profilePath(profile, pos) {
-  const {b, e, generatrix} = profile;
-  let pb = b.point;
-  let pe = e.point;
-  if(b.isT) {
-    pb = generatrix.getPointAt(30);
-  }
-  else if(Math.abs(pb.y - pe.y) < 100) {
-    pb = generatrix.getPointAt(38);
-  }
-  if(e.isT) {
-    pe = generatrix.getPointAt(generatrix.length - 30);
-  }
-  else if(Math.abs(pb.y - pe.y) < 100) {
-    pe = generatrix.getPointAt(generatrix.length - 38);
-  }
-
-  const v1 = new THREE.Vector3(pb.x - pos[0], pos[1] - pb.y, 0);
-  const v2 = new THREE.Vector3(pe.x - pos[0], pos[1] - pe.y, 0);
+function profilePath(profile, b, e, pos) {
+  const v1 = new THREE.Vector3(b.outer.x - pos[0], pos[1] - b.outer.y, 0);
+  const v2 = new THREE.Vector3(e.outer.x - pos[0], pos[1] - e.outer.y, 0);
   const path = new THREE.CurvePath();
   path.add( new THREE.LineCurve3( v1, v2 ) );
   return path;
 }
 
+function cutIrrelevant(geometry, b, e, extrudePath) {
+  if(b.cnnType.is('ad')) {
+
+  }
+  if(e.cnnType.is('ad')) {
+
+  }
+  return geometry;
+}
+
 export function profilesGeometry(profiles, pos) {
   const res = new Map();
   for(const profile of profiles) {
+    const {b, e} = profile.points(true);
     const extrudeSettings = {
-      steps: 20,
+      steps: 3,
       bevelEnabled: false,
-      extrudePath: profilePath(profile, pos),
+      extrudePath: profilePath(profile, b, e, pos),
     };
-    res.set(profile, new THREE.ExtrudeGeometry(profile.shape, extrudeSettings));
+    const geometry = cutIrrelevant(
+      new THREE.ExtrudeGeometry(profile.shape, extrudeSettings), b, e, extrudeSettings.extrudePath);
+    res.set(profile, geometry);
+
   }
   return res;
 }
