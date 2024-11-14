@@ -23,14 +23,15 @@
 
 @layer rdg.HeaderRow {
   .cj343x07-0-0-beta-47 {
-    font-weight: 400
+    font-weight: 400;
   }
 }
 
 .glass-padding {
   padding: 8px;
   line-height: initial;
-  outline: none
+  outline: none;
+  align-content: baseline;
 }
 
 .cell-input {

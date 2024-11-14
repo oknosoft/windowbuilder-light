@@ -31,12 +31,13 @@ export default function CompositeToolbar({elm, glRow, elmRow, setSelectedRows}) 
   const {setBackdrop} = useBackdropContext();
   const glob = useSelectedContext();
   const {glass_specification} = elm.ox;
+  const {utils} = $p;
   const add = () => {
     const row = glass_specification.add({elm: elm.elm});
     setSelectedRows(new Set([row.row]));
   };
   const clone = () => {
-    const row = glass_specification.add({elm: elm.elm, inset: glRow.inset, dop: Object.assign({}, glRow.dop)});
+    const row = glass_specification.add({elm: elm.elm, inset: glRow.inset, dop: utils._clone(glRow.dop)});
     setSelectedRows(new Set([row.row]));
   };
   const del = () => {
@@ -78,24 +79,25 @@ export default function CompositeToolbar({elm, glRow, elmRow, setSelectedRows}) 
   };
   const handleDistribute = async () => {
     const {characteristic} = elmRow.row;
-    const patrs = characteristic.note.split('\xA0');
-    const last = patrs.length && patrs[patrs.length - 1];
-    if(last && last.startsWith('!') && last.endsWith('!')) {
+    const {formula} = characteristic.extra;
+    if(formula) {
       const rows = [];
       for(const row of glob.rows) {
-        if(row.row !== elmRow.row && row.row.note.includes(last)) {
+        if(row.row !== elmRow.row && row.row.characteristic.extra.formula === formula) {
           rows.push(row);
         }
       }
       if(rows.length) {
-        const drows = characteristic.glass_specification.find_rows({elm: elm.elm}).map(({row, _row, ...other}) => other);
+        const drows = characteristic.glass_specification.find_rows({elm: elm.elm})
+          .map(({row, _row, ...other}) => utils._clone(other));
         for(const elmRow of rows) {
           // замещаем формулу
           let {characteristic: cx, glassRow, editor} = elmRow.row;
           cx.glass_specification.clear({elm: glassRow.elm});
-          for(const row of drows){
+          for(const {dop, ...row} of drows){
             row.elm = glassRow.elm;
-            cx.glass_specification.add(row, true);
+            const nrow = cx.glass_specification.add(row, true);
+            nrow.dop = dop;
           }
           if(!editor) {
             await elmRow.row.createEditor();

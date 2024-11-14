@@ -94,10 +94,10 @@ export default function GlassDetails({row, selected, glob}) {
   });
 
   return <GlassesDetail container spacing={2} selected={selected}>
-    <Grid sm={12} md={5}>
+    <Grid size={{sm: 12, md: 5}}>
       <FormGroup>{gprops}</FormGroup>
     </Grid>
-    <Grid sm={12} md={5}>
+    <Grid size={{sm: 12, md: 5}}>
       <FormGroup>{rprops}</FormGroup>
     </Grid>
   </GlassesDetail>;

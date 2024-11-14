@@ -373,7 +373,8 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
             await utils.sleep(20);
           }
           row.quantity = project._dp.quantity = quantity;
-          row.note = project._dp.note = project.ox.note = clarification ? `${note}\xA0!${formula}!` : note;
+          row.note = project._dp.note = project.ox.note = note;
+          project.ox.extra = {clarification, formula};
           project.redraw();
           await project.save_coordinates({});
           row.characteristic._modified = true;

@@ -130,7 +130,7 @@ export default function CalcOrderList() {
     <Toolbar create={create} clone={clone} open={open} open1C={open1C} disabled={Boolean(error)} scheme={scheme} setRefresh={setRefresh}/>
     {error ? error.message :
       <Grid container spacing={0}>
-    <Grid xs={12} md={10} style={{height: `calc(100vh - 101px)`}}>
+    <Grid size={{xs: 12, md: 10}} style={{height: `calc(100vh - 101px)`}}>
       <DataGrid
         columns={columns}
         rows={rows}
@@ -145,7 +145,7 @@ export default function CalcOrderList() {
         rowHeight={33}
       />
     </Grid>
-    <Grid xs={0} md={2}>
+    <Grid size={{xs: 0, md: 2}}>
       <Selection scheme={scheme} setRefresh={setRefresh}/>
     </Grid>
   </Grid>

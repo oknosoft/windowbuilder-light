@@ -69,7 +69,7 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
             ref: Array.from(selectedRows)[0],
             type: mgr.class_name
           });
-          return utils.sleep(1000);
+          return utils.sleep(100);
         })
         .then(() => backdrop.setBackdrop(false));
     }

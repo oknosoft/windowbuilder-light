@@ -41,8 +41,9 @@ export default function CompositeDetails({row, selected}) {
   });
 
   // параметры заполнения
-  for(const {ref} of elm.elm_props()) {
-    gprops.push(<ParamField key={ref} obj={elm} fld={ref} meta={fields[ref]}/>);
+  for(const param of elm.elm_props()) {
+    const {ref} = param;
+    gprops.push(<ParamField key={ref} param={param} obj={elm} fld={ref} meta={fields[ref]}/>);
   }
 
   // параметры рёбер - пока пропускаем
@@ -58,7 +59,7 @@ export default function CompositeDetails({row, selected}) {
   //const glInset = glRow ? glRow.inset : null;
 
   return <GlassesDetail container spacing={2} selected={selected}>
-    <Grid sm={12} md={5}>
+    <Grid size={{sm: 12, md: 5}}>
       <FormGroup>
         <RefField
           obj={elm}
@@ -73,10 +74,10 @@ export default function CompositeDetails({row, selected}) {
         />
       </FormGroup>
     </Grid>
-    <Grid sm={12} md={5} style={{borderBottom: '1px gray dashed'}}>
+    <Grid size={{sm: 12, md: 5}} style={{borderBottom: '1px gray dashed'}}>
       <FormGroup>{gprops}</FormGroup>
     </Grid>
-    <Grid sm={12} md={5}>
+    <Grid size={{sm: 12, md: 5}}>
       <CompositeGrid
         elm={elm}
         glRow={glRow}
@@ -86,7 +87,7 @@ export default function CompositeDetails({row, selected}) {
         setSelectedRows={setSelectedRows}
       />
     </Grid>
-    <Grid sm={12} md={5}>
+    <Grid size={{sm: 12, md: 5}}>
       <CompositeRegionProps
         elm={elm}
         glRow={glRow}
