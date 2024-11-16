@@ -19,7 +19,7 @@ export default function Contour({layer, bounds, cut}) {
   const res = [];
   if(!layer.layer && !hidden) {
     //position={[60, 90, 40]}
-    res.push(<BBAnchor anchor={[0.8, 0.8, 0]}>
+    res.push(<BBAnchor anchor={[0.7, 0.7, 0]}>
       <Html center>
         <span>{`L${layer._index}`}</span>
       </Html>

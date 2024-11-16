@@ -8,15 +8,24 @@ import { Geometry, Base, Subtraction } from '@react-three/csg';
 //const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg');
 
 function glassPath(container, pos) {
-  const {perimeter, pathInner} = container;
+  const {perimeter, pathInner, child} = container;
   const points = pathInner.map(v => {
     //const {point} = v.endVertex;
     return {x: v.x - pos[0], y: pos[1] - v.y};
   })
   const start = points[0];
 
-  const v1 = new THREE.Vector3(start.x, start.y,  -18);
-  const v2 = new THREE.Vector3(start.x, start.y,  -58);
+  const thickness = child.thickness || 32;
+  const profileThickness = perimeter.reduce((sum, curr) => {
+    const {thickness} = curr.profile.nom;
+    return thickness > sum ? thickness : sum;
+  }, 0) || 50;
+  // TODO: учесть размер соединение заполнения
+  const cnnThickness = 10;
+  profileThickness - cnnThickness - thickness;
+
+  const v1 = new THREE.Vector3(start.x, start.y,  cnnThickness -profileThickness + thickness);
+  const v2 = new THREE.Vector3(start.x, start.y,  cnnThickness -profileThickness);
   const extrudePath = new THREE.CurvePath();
   extrudePath.add( new THREE.LineCurve3( v1, v2 ) );
   const shape = new THREE.Shape();
