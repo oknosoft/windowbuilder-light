@@ -22,7 +22,6 @@ function glassPath(container, pos) {
   }, 0) || 50;
   // TODO: учесть размер соединение заполнения
   const cnnThickness = 10;
-  profileThickness - cnnThickness - thickness;
 
   const v1 = new THREE.Vector3(start.x, start.y,  cnnThickness -profileThickness + thickness);
   const v2 = new THREE.Vector3(start.x, start.y,  cnnThickness -profileThickness);
