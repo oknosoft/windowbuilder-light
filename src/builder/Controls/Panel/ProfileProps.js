@@ -1,6 +1,7 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import {NumberField} from '@oknosoft/ui/DataField/Number';
+import Checkbox from '@oknosoft/ui/DataField/Checkbox';
 import FieldInsetProfile from '../../DataField/InsetProfile';
 import FieldEndConnection from '../../DataField/EndConnection';
 import FieldCnnType from '../../DataField/CnnType';
@@ -47,6 +48,7 @@ export default function ProfileProps({editor, project, layer, elm, node}) {
       <FieldEndConnection obj={e} fld="cnnOuter" onClick={selectE}/>
       <FieldCnnII obj={elm} />
     </>}
+    <Checkbox obj={elm} fld="shown" meta={meta} label="Видимый"/>
     {imitationOf && <Typography>{`Это колн профиля ${imitationOf.presentation}`}</Typography>}
   </>;
 }

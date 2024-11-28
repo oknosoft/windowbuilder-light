@@ -30,7 +30,7 @@ export default function Contour({layer, bounds, cut}) {
   const containers = containersGeometry(layer.containers, pos);
 
   for(const [profile] of profiles) {
-    res.push(profileExtrude(profile, profiles, hidden, cut));
+    res.push(profileExtrude(profile, profiles, cut));
   }
   for(const [container] of containers) {
     res.push(containerExtrude(container, containers, cut));

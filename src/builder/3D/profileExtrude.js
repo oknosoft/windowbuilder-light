@@ -39,12 +39,13 @@ export function profilesGeometry(profiles, pos) {
 }
 
 
-export function profileExtrude(profile, profiles, hidden, cut) {
+export function profileExtrude(profile, profiles, cut) {
 
   //const [hovered, setHover] = useState(false);
   //onPointerOver={(event) => setHover(true)}
   //onPointerOut={(event) => setHover(false)}
-  const {stamp} = profile.project.props;
+  const {hidden, project} = profile;
+  const {stamp} = project.props;
   const geometry = profiles.get(profile);
   const material = new THREE.MeshLambertMaterial({
     color: 0xeeffee,
