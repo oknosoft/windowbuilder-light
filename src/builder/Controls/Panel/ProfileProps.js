@@ -36,6 +36,9 @@ export default function ProfileProps({editor, project, layer, elm, node}) {
       editor.cmd('select', [{item: elm, node: 'e'}]);
     }
   });
+  const shownChange = () => {
+    project.root.md.emit_promise('redraw', project);
+  };
   return <>
     {`Слой ${layer.index}, Профиль ${elm._index+1}, Узлы ${b.vertex.key}-${e.vertex.key}`}
     <FieldInsetProfile obj={elm} fld="inset" meta={fields.inset}/>
@@ -48,7 +51,7 @@ export default function ProfileProps({editor, project, layer, elm, node}) {
       <FieldEndConnection obj={e} fld="cnnOuter" onClick={selectE}/>
       <FieldCnnII obj={elm} />
     </>}
-    <Checkbox obj={elm} fld="shown" meta={meta} label="Видимый"/>
+    <Checkbox obj={elm} fld="shown" meta={meta} label="Видимый" onChange={shownChange}/>
     {imitationOf && <Typography>{`Это колн профиля ${imitationOf.presentation}`}</Typography>}
   </>;
 }
