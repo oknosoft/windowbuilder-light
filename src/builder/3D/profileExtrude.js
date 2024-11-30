@@ -6,12 +6,12 @@ import { SUBTRACTION, ADDITION, Brush, Evaluator } from 'three-bvh-csg';
 
 const evaluator = new Evaluator();
 
-const adtShape = new THREE.Shape();
-adtShape.moveTo( -50, -250 );
-adtShape.lineTo( 100, -250 );
-adtShape.lineTo( 100, 0 );
-adtShape.lineTo( -50, 0 );
-adtShape.lineTo( -50, -250 );
+const adShape = new THREE.Shape();
+adShape.moveTo( -50, -250 );
+adShape.lineTo( 100, -250 );
+adShape.lineTo( 100, 0 );
+adShape.lineTo( -50, 0 );
+adShape.lineTo( -50, -250 );
 
 function profilePath(profile, b, e, pos) {
   const v1 = new THREE.Vector3(b.outer.x - pos[0], pos[1] - b.outer.y, 0);
@@ -41,26 +41,54 @@ function irrelevantAD(paper, {name, inner, outer}, pos) {
     extrudePath,
   };
 
-  const geometry = new THREE.ExtrudeGeometry( adtShape, extrudeSettings );
+  const geometry = new THREE.ExtrudeGeometry( adShape, extrudeSettings );
 
+  return new Brush(geometry);
+}
+
+function irrelevantT(paper, pts, pos, profile) {
+  const {name, inner, outer, cnn} = pts;
+  const path = new paper.Path({
+    insert: false,
+    segments: [[inner.x - pos[0], pos[1] - inner.y], [outer.x - pos[0], pos[1] - outer.y]],
+  });
+  const center = path.interiorPoint;
+  const loc = path.getLocationAt(0.5);
+  const geometry = new THREE.BoxGeometry( 200, 100, 16 );
+  const sign = name === 'e' ? -1 : 1;
+  geometry.translate(0, sign * 50, 0);
+  geometry.rotateZ(loc.tangent.angleInRadians);
+  const normal = loc.normal.multiply(sign * cnn.size(profile));
+  geometry.translate(center.x + normal.x, center.y + normal.y, -profile.thickness);
   return new Brush(geometry);
 }
 
 function cutIrrelevant(geometry, b, e, profile, pos) {
   let brush;
+  const {_scope} = profile.project;
   if(b.cnn.node1.empty()) {
     if(b.cnnType.is('ad')) {
-      const sub = irrelevantAD(profile.project._scope, b, pos);
+      const sub = irrelevantAD(_scope, b, pos);
       brush = evaluator.evaluate( new Brush(geometry), sub, SUBTRACTION );
       geometry = brush.geometry;
     }
-    if(b.cnnType.is('short') || b.cnnType.is('t')) {
-
+    else if(b.cnnType.is('t') || b.cnnType.is('short')) {
+      const sub = irrelevantT(_scope, b, pos, profile);
+      brush = evaluator.evaluate( new Brush(geometry), sub, SUBTRACTION );
+      geometry = brush.geometry;
     }
   }
   if(e.cnn.node1.empty()) {
     if(e.cnnType.is('ad')) {
-      const sub = irrelevantAD(profile.project._scope, e, pos);
+      const sub = irrelevantAD(_scope, e, pos);
+      if(!brush) {
+        brush = new Brush(geometry);
+      }
+      const res = evaluator.evaluate( brush, sub, SUBTRACTION );
+      geometry = res.geometry;
+    }
+    else if(e.cnnType.is('t') || e.cnnType.is('short')) {
+      const sub = irrelevantT(_scope, e, pos, profile);
       if(!brush) {
         brush = new Brush(geometry);
       }

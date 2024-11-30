@@ -6,6 +6,7 @@ import { Geometry, Base, Subtraction } from '@react-three/csg';
 //const loader = new THREE.TextureLoader();
 //const texture = loader.load('./glass.png');
 //const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg');
+// See https://sbedit.net/2844154f2c71878913271257d6639f4016b2d804
 
 function glassPath(container, pos) {
   const {perimeter, pathInner, child} = container;
