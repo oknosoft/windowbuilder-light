@@ -6,6 +6,7 @@ import Divider from '@mui/material/Divider';
 import {styled} from '@mui/material/styles';
 import CursorIcon from '../../aggregate/styles/icons/Cursor';
 import PenIcon from '../../aggregate/styles/icons/Pen';
+import GridIcon from '../../aggregate/styles/icons/Grid';
 import ZoomFitIcon from '../../aggregate/styles/icons/ZoomFit';
 import WavingHandOutlinedIcon from '@mui/icons-material/WavingHandOutlined';
 import {HtmlTooltip} from '../../aggregate/App/styled';
@@ -39,6 +40,7 @@ export default function SelectTool({view, setView, show3d, toggle3D}) {
       <Tab value={0} accent="true" icon={<HtmlTooltip title="Выделить и сдвинуть" placement="right"><CursorIcon /></HtmlTooltip>} aria-label="select" />
       <Tab value={1} accent="true" icon={<HtmlTooltip title="Панорама и сдвиг" placement="right"><WavingHandOutlinedIcon /></HtmlTooltip>} aria-label="move" />
       <Tab value={2} accent="true" icon={<HtmlTooltip title="Нарисовать элемент" placement="right"><PenIcon /></HtmlTooltip>} aria-label="draw" />
+      <Tab value={4} accent="true" icon={<HtmlTooltip title="Сетка витража" placement="right"><GridIcon /></HtmlTooltip>} aria-label="grid" />
     </Tabs>
     <Divider flexItem/>
     <SelectMode view={view} show3d={show3d} toggle3D={toggle3D} editor={editor} />
