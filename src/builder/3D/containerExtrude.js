@@ -10,9 +10,9 @@ import { Geometry, Base, Subtraction } from '@react-three/csg';
 
 function glassPath(container, pos) {
   const {perimeter, pathInner, child} = container;
-  const points = pathInner.map(v => {
+  const points = child.path.segments.map(({point}) => {
     //const {point} = v.endVertex;
-    return {x: v.x - pos[0], y: pos[1] - v.y};
+    return {x: point.x - pos[0], y: pos[1] - point.y};
   })
   const start = points[0];
 
