@@ -26,11 +26,12 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
 
   function grid100(ev, count) {
     if(typeof count !== 'number') {
-      count = 39;
+      count = 29;
     }
 
     const step = count > 20 ? 400 : 600;
     const size = step * count;
+    const sizeY = count > 20 ? step * (count - 10) : size;
 
     const {project} = editor;
     prepare(project)
@@ -38,7 +39,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
         const profiles = [];
         // стойки
         for(let x = 0; x < size; x += step) {
-          const attr = x < size - step ? {b: [x, size], e: [x, step / 2]} : {e: [x, size], b: [x, step / 2]};
+          const attr = x < size - step ? {b: [x, sizeY], e: [x, step / 2]} : {e: [x, sizeY], b: [x, step / 2]};
           profiles.push(activeLayer.createProfile(attr));
         }
         activeLayer.skeleton.addProfiles(profiles);
@@ -46,8 +47,8 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
         // ригели
         for(let x = 0; x < size - step; x += step) {
           // находим примыкающие стойки и сообщаем их узлам
-          for(let y = step / 2; y < size; y += step) {
-            profiles.push(activeLayer.createProfile({b: [x, size - y], e: [x + step, size - y]}));
+          for(let y = step / 2; y < sizeY; y += step) {
+            profiles.push(activeLayer.createProfile({b: [x, sizeY - y], e: [x + step, sizeY - y]}));
           }
         }
         activeLayer.skeleton.addProfiles(profiles);
@@ -378,7 +379,7 @@ export default function TestProducts({editor, type, layer, setContext}) {
       <MenuItem onClick={square}>Квадрат</MenuItem>
       <MenuItem onClick={cut}>Разрыв</MenuItem>
       <MenuItem onClick={grid20}>Сетка 6</MenuItem>
-      <MenuItem onClick={grid100}>Сетка 40</MenuItem>
+      <MenuItem onClick={grid100}>Сетка 30</MenuItem>
       <MenuItem onClick={rotunda}>Ротонда</MenuItem>
       <MenuItem onClick={() => load21({editor, setContext, handleClose})}>Из старой базы</MenuItem>
       <MenuItem onClick={clear}>Очистить</MenuItem>
