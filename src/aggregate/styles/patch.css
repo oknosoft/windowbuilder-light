@@ -17,15 +17,49 @@
 }
 
 @layer rdg.TextEditor {
-  .tlmcuo07-0-0-beta-39 {
+  .tlmcuo07-0-0-beta-47 {
     appearance: auto;
+  }
+  select, input {
+    border: none;
+    width: 100%;
+    height: 100%;
+    padding-inline: 8px;
   }
 }
 
 @layer rdg.HeaderRow {
-  .h197vzie7-0-0-beta-39 {
-    font-weight: 400
+  .cj343x07-0-0-beta-47 {
+    font-weight: 400;
   }
+}
+
+.glass-padding {
+  padding: 8px;
+  line-height: initial;
+  outline: none;
+  align-content: baseline;
+}
+
+.cell-input {
+  margin-left: 0;
+  padding-left: 8px;
+  width: 100%;
+}
+.cell-input::before {
+  display: none;
+}
+.cell-input::after {
+  display: none;
+}
+
+.cell-select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cell-select input {
+  margin: 2px;
 }
 
 .sz_div {

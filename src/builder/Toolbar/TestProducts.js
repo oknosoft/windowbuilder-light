@@ -333,7 +333,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
     },
 
     grid20() {
-      grid100(null, 6);
+      grid100(null, 3);
     },
 
     grid100,

@@ -4,7 +4,8 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import {PaddingLeft, HtmlTooltip} from '../../aggregate/App/styled';
+import Box from '@mui/material/Box';
+import TabularSection from '../../aggregate/TabularSection';
 
 const meta = {};
 function GridWnd({editor, layer}) {
@@ -15,6 +16,7 @@ function GridWnd({editor, layer}) {
 
   const [tab, setTab] = React.useState('vert');
   const handleChange = (event, newValue) => setTab(newValue);
+  const tabRef = React.useRef(null);
 
   return <>
     <FormControl fullWidth readOnly>
@@ -25,6 +27,9 @@ function GridWnd({editor, layer}) {
       <Tab value="vert" label="Стойки" />
       <Tab value="hor" label="Ригели" />
     </Tabs>
+    <Box ref={tabRef} sx={{ width: '100%' }}>
+      {tab === 'vert' && <TabularSection tabRef={tabRef} obj={tool.dp} ts="sizes" />}
+    </Box>
 
   </>;
 }

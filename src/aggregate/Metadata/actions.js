@@ -44,7 +44,7 @@ export function actions(handleIfaceState) {
       import('font-awesome/css/font-awesome.min.css')
         .then(() => import('@fontsource/roboto/500.css'))
         .then(() => import('@fontsource/roboto/700.css'))
-        //.then(() => import('react-data-grid/lib/styles.css'))
+        .then(() => import('react-data-grid/lib/styles.css'))
         .then(() => import('../styles/patch.css'));
     })
     .then(() => load_common($p))
