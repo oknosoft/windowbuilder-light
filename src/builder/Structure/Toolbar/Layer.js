@@ -10,8 +10,7 @@ import {useBuilderContext} from '../../Context';
 export default function LayerToolbar(props) {
   const {editor, project, layer, elm, setContext} = props;
 
-  const removeFlap = () => {
-    const {props} = project;
+  const remove = () => {
     const parent = layer.layer;
     parent?.activate();
     setContext({
@@ -22,11 +21,19 @@ export default function LayerToolbar(props) {
     project.redraw();
     project.zoomFit();
   };
+  const clear = () => {
+    layer.clear(true);
+    project.redraw();
+    project.zoomFit();
+  };
   return <>
     <AddLayer {...props} />
     <Box sx={{flex: 1}} />
+    <HtmlTooltip title="Очистить текуший слой">
+      <IconButton onClick={clear}><i className="fa fa-eraser" /></IconButton>
+    </HtmlTooltip>
     <HtmlTooltip title="Удалить текуший слой">
-      <IconButton onClick={removeFlap}><i className="fa fa-trash-o" /></IconButton>
+      <IconButton onClick={remove}><i className="fa fa-trash-o" /></IconButton>
     </HtmlTooltip>
   </>
 }

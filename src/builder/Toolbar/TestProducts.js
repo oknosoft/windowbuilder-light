@@ -38,17 +38,24 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
       .then(({project: {props, workLayer: activeLayer}, offset}) => {
         const profiles = [];
         // стойки
+        const xMap = new Map();
         for(let x = 0; x < size; x += step) {
           const attr = x < size - step ? {b: [x, sizeY], e: [x, step / 2]} : {e: [x, sizeY], b: [x, step / 2]};
-          profiles.push(activeLayer.createProfile(attr));
+          const profile = activeLayer.createProfile(attr);
+          profiles.push(profile);
+          xMap.set(x, profile);
         }
         activeLayer.skeleton.addProfiles(profiles);
         profiles.length = 0;
         // ригели
         for(let x = 0; x < size - step; x += step) {
           // находим примыкающие стойки и сообщаем их узлам
+          const cnns = {
+            b: {profile: xMap.get(x)},
+            e: {profile: xMap.get(x + step)},
+          }
           for(let y = step / 2; y < sizeY; y += step) {
-            profiles.push(activeLayer.createProfile({b: [x, sizeY - y], e: [x + step, sizeY - y]}));
+            profiles.push(activeLayer.createProfile({b: [x, sizeY - y], e: [x + step, sizeY - y], cnns}));
           }
         }
         activeLayer.skeleton.addProfiles(profiles);
