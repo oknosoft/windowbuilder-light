@@ -106,7 +106,7 @@ export default function CalcOrderObj() {
 
   return <Root>
     <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} />
-    <ObjHead obj={obj} setting={setting}/>
+    <ObjHead obj={obj} setting={setting} setBackdrop={setBackdrop}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
     {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj}/>}
     {curr.name === 'nom' && <ObjNom tabRef={tabRef} obj={obj} setModified={setModified}/>}
