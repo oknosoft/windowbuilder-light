@@ -15,10 +15,10 @@ import MenuPrint from './MenuPrint';
 
 const {utils} = $p;
 
-export default function ObjToolbar({obj, mgr, setSettingOpen, modified, setModified}) {
+export default function ObjToolbar({obj, mgr, setSettingOpen, onClose, modified, setModified, setBackdrop}) {
   const navigate = useNavigate();
   const {close, recalc, save, saveClose} = React.useMemo(() => {
-    const close = () => {
+    const close = (typeof onClose === 'function') ? onClose : () => {
       const searchParams = utils.prm();
       const url = searchParams.return || `/${mgr.class_name.replace('.', '/')}${obj?.ref ? `?ref=${obj.ref}` : ''}`;
       if(searchParams.modified === 'false' && (modified || obj._modified)) {
@@ -26,7 +26,15 @@ export default function ObjToolbar({obj, mgr, setSettingOpen, modified, setModif
       }
       setTimeout(() => navigate(url == '-1' ? -1 : url));
     };
-    const recalc = () => obj.recalc();
+    const recalc = () => {
+      setBackdrop(true);
+      obj.recalc()
+        .then(() => setBackdrop(false))
+        .catch((err) => {
+          console.error(err);
+          setBackdrop(false);
+        });
+    };
     const save = () => obj.save();
     const saveClose = () => obj.save().then(close);
     return {close, recalc, save, saveClose};
@@ -43,7 +51,7 @@ export default function ObjToolbar({obj, mgr, setSettingOpen, modified, setModif
       <PostBtn obj={obj} />
       <Divider orientation="vertical" flexItem sx={{m: 1}} />
       <HtmlTooltip title="Пересчитать">
-        <IconButton disabled onClick={recalc}><CalculateIcon/></IconButton>
+        <IconButton onClick={recalc}><CalculateIcon/></IconButton>
       </HtmlTooltip>
       <Typography sx={{flex: 1}}></Typography>
       <HtmlTooltip title="печать">

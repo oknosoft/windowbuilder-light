@@ -105,7 +105,7 @@ export default function CalcOrderObj() {
   const curr = setting.tabs.filter(({visible}) => visible)[tab];
 
   return <Root>
-    <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} />
+    <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} setBackdrop={setBackdrop}/>
     <ObjHead obj={obj} setting={setting} setBackdrop={setBackdrop}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
     {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj}/>}
