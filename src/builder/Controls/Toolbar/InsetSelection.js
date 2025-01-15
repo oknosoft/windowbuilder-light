@@ -5,6 +5,11 @@ import DefauitInsetIcon from '../../../aggregate/styles/icons/DefauitInset';
 import {StyledMenu} from '../../Structure/Toolbar/AddLayer';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
 
+const onClick = (obj, handleClose) => () => {
+  handleClose();
+  obj?.defaults?.();
+};
+
 export default function InsetSelection({type, project, layer, elm, setContext}) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -20,13 +25,13 @@ export default function InsetSelection({type, project, layer, elm, setContext}) 
       <IconButton onClick={handleClick}><DefauitInsetIcon /></IconButton>
     </HtmlTooltip>
     <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-      <MenuItem onClick={null} disableRipple>
+      <MenuItem onClick={onClick(project, handleClose)} disableRipple>
         Во всём изделии
       </MenuItem>
-      <MenuItem onClick={null} disableRipple>
+      <MenuItem onClick={onClick(layer, handleClose)} disableRipple>
         В текущем слое
       </MenuItem>
-      <MenuItem onClick={null} disableRipple>
+      <MenuItem disabled onClick={null} disableRipple>
         С учётом статики
       </MenuItem>
     </StyledMenu>
