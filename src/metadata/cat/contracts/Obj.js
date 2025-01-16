@@ -23,8 +23,6 @@ export default function ContractsObj({obj, open, onClose, ...props}) {
     params, usePrompt, setTitle, setBackdrop,
   } = frmObj({initSetting});
 
-  const title = `Договор: ${obj?.presentation || 'Без названия'}`;
-//vat_consider
 
   return <Dialog
     open={open}
