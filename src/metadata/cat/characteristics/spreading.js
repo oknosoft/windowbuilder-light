@@ -7,6 +7,7 @@ export default function ({cat, doc, utils, job_prm, CatCharacteristics}) {
         if(calc_order_row) {
           const calc_order = calc_order_row._owner._owner;
           calc_order._modified = true;
+          calc_order._data.chrows?.add?.(calc_order_row);
           doc.calc_order.emit('update', calc_order, {});
         }
       }

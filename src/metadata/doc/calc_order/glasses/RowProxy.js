@@ -40,7 +40,9 @@ export class RowProxy {
   }
 
   get editor() {
-    return this.#editor;
+    const editor = this.#editor;
+    editor?.activate?.();
+    return editor;
   }
 
   async createEditor() {

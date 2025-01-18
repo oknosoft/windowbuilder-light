@@ -29,7 +29,10 @@ export default function ObjToolbar({obj, mgr, setSettingOpen, onClose, modified,
     const recalc = () => {
       setBackdrop(true);
       obj.recalc()
-        .then(() => setBackdrop(false))
+        .then(() => {
+          obj._data.chrows?.clear?.();
+          setBackdrop(false);
+        })
         .catch((err) => {
           console.error(err);
           setBackdrop(false);

@@ -17,8 +17,8 @@ import {useSelectedContext} from '../selectedContext';
 import {recalcRow} from './data';
 
 const recalcCurrent = ({elmRow, setBackdrop}) => {
-  return recalcRow({row: elmRow, setBackdrop, noSave: true})
-    .catch(() => null)
+  return recalcRow({row: elmRow, setBackdrop})
+    .catch(console.error)
     .then(() => {
       const {characteristic} = elmRow.row;
       characteristic._manager.emit('update', characteristic);
@@ -103,20 +103,17 @@ export default function CompositeToolbar({elm, glRow, elmRow, setSelectedRows}) 
             await elmRow.row.createEditor();
             editor = elmRow.row.editor;
           }
-          await new Promise((resolve) => {
+          await new Promise((resolve, reject) => {
             const {project} = editor;
             project.register_change(true, () => {
-              resolve();
+              project.save_coordinates({})
+                .then(resolve)
+                .catch(reject);
             });
             project.redraw();
           });
-          // пересчитываем строку
-          await recalcCurrent({elmRow, setBackdrop});
           cx._modified;
         }
-        recalcCurrent({elmRow, setBackdrop})
-          .then(() => setBackdrop(false))
-          .then(() => characteristic.calc_order.save());
       }
       else {
         $p.ui.dialogs.alert({

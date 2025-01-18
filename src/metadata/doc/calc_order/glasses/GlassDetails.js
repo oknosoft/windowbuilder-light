@@ -13,7 +13,7 @@ export default function GlassDetails({row, selected, glob}) {
 
   const [index, setIndex] = React.useState(0);
   React.useEffect(() => {
-    const {utils, CatCharacteristicsParamsRow, cat: {characteristics}} = $p;
+    const {CatCharacteristicsParamsRow, cat: {characteristics}} = $p;
     let kb = {shift: false, rows: new Set()};
 
     function keydown({altKey, shiftKey}) {
@@ -28,36 +28,28 @@ export default function GlassDetails({row, selected, glob}) {
       }
     }
 
-    const update = utils.debounce(function update (curr, flds){
-      if(curr instanceof CatCharacteristicsParamsRow && curr._owner._owner === characteristic) {
+    function update (curr, flds){
+      if(curr instanceof CatCharacteristicsParamsRow &&
+          curr._owner._owner === characteristic && kb.shift && curr.cnstr < 0 && !kb.rows.has(curr)) {
 
-        const fin = () => {
+        kb.shift = false;
+        kb.rows.add(curr);
+        const value = curr.value?.valueOf();
+        curr._owner.find_rows({
+          inset: curr.inset,
+          param: curr.param,
+          region: curr.region,
+        }, (row) => {
+          kb.rows.add(row);
+          row._obj.value = value;
+        });
+        setTimeout(() => {
           kb.rows.clear();
           setIndex((i) => i + 1);
-        };
-
-        if(kb.shift && curr.cnstr < 0 && !kb.rows.has(curr)) {
-          kb.shift = false;
-          kb.rows.add(curr);
-          const value = curr.value?.valueOf();
-          curr._owner.find_rows({
-            inset: curr.inset,
-            param: curr.param,
-            region: curr.region,
-          }, (row) => {
-            kb.rows.add(row);
-            row._obj.value = value;
-          });
-        }
-
-        const {project} = editor;
-        project.register_change();
-        project.redraw();
-        project.save_coordinates({})
-          .then(fin)
-          .catch(fin);
+        }, 100);
       }
-    });
+    }
+
     characteristics.on({update});
     window.addEventListener("keydown", keydown);
     window.addEventListener("keyup", keyup);

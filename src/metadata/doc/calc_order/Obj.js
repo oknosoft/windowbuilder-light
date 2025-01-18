@@ -92,6 +92,11 @@ export default function CalcOrderObj() {
     };
   }, [obj]);
 
+  // в chrows будем хранить изменённые строки
+  if(obj && !obj._data.chrows) {
+    obj._data.chrows = new Set();
+  }
+
   if(error) {
     return error.message;
   }
@@ -105,7 +110,12 @@ export default function CalcOrderObj() {
   const curr = setting.tabs.filter(({visible}) => visible)[tab];
 
   return <Root>
-    <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} setBackdrop={setBackdrop}/>
+    <ObjToolbar
+      obj={obj}
+      mgr={mgr}
+      setSettingOpen={setSettingOpen}
+      setBackdrop={setBackdrop}
+    />
     <ObjHead obj={obj} setting={setting} setBackdrop={setBackdrop}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
     {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj}/>}

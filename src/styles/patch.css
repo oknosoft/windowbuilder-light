@@ -34,6 +34,16 @@
   align-content: baseline;
 }
 
+.attention {
+  .rdg-cell {
+    color: #c00;
+  }
+
+  &:hover .rdg-cell {
+     color: #a00;
+   }
+}
+
 .cell-input {
   margin-left: 0;
   padding-left: 8px;

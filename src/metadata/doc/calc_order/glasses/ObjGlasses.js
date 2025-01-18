@@ -7,7 +7,7 @@ import {preventDefault} from '../../../dataGrid';
 import Toolbar from './ObjGlassesToolbar';
 import {SelectedContext} from '../selectedContext';
 
-import {rowHeight, createGlasses, rowKeyGetter, handlers, recalcRow} from './data';
+import {rowHeight, createGlasses, rowKeyGetter, handlers} from './data';
 let selectedContext = {};
 
 export default function ObjGlasses({tabRef, obj, setModified}) {
@@ -43,29 +43,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
   };
 
   React.useEffect(() => {
-
-    const {calc_order} = $p.doc;
-
-    async function before_save(curr) {
-      if(curr === obj) {
-        if(glob.skey) {
-          const row = glob.rows.find(({key}) => key === glob.skey);
-          if(row) {
-            const {characteristic} = row.row;
-            if(characteristic._modified) {
-              const {project} = row.row.editor;
-              project.redraw();
-              await project.save_coordinates({});
-            }
-          }
-        }
-      }
-      return curr;
-    }
-
-    calc_order.on({before_save});
     return () => {
-      calc_order.off({before_save});
       for(const {row} of glob.rows) {
         row.unloadEditor();
       }
@@ -117,7 +95,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       // ищем старую строку
       const row = glob.rows.find(({key}) => key === oldKey);
       // пересчитываем изделие
-      await recalcRow({row, setBackdrop, setModified, noSave});
+      //await recalcRow({row, setBackdrop, setModified, noSave});
       // TODO
       // выгружаем редактор
       //row.row.unloadEditor();
@@ -217,6 +195,8 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
   };
 
+  const {chrows} = obj._data;
+
   return <div style={style}>
     <Toolbar
       obj={obj}
@@ -241,6 +221,9 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
         onCellClick={onCellClick}
         selectedRows={selectedRows}
         onSelectedRowsChange={selectedRowsChange}
+        rowClass={(row, index) =>
+          chrows.has(row.row.calc_order_row) ? 'attention' : undefined
+        }
       />
     </SelectedContext.Provider>
   </div>;
