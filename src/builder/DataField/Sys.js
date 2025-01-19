@@ -1,5 +1,6 @@
 import React from 'react';
 import Autocomplete from '@oknosoft/ui/DataField/Autocomplete';
+import {Contour} from '@oknosoft/wb/core/src/geometry/Contour';
 
 const options = (({cat, utils}) =>  [...cat.productionParams]
   .filter(v => v.elmnts.length)
@@ -30,9 +31,20 @@ export default function FieldSys({obj, fld, onChange, fullWidth=true, enterTab, 
   return <Autocomplete
     options={options}
     onChange={(event, newValue, reason, details) => {
-      obj[fld] = newValue;
-      onChange?.(newValue);
-      setValue(obj[fld]);
+      let query = Promise.resolve();
+      if(obj instanceof Contour) {
+        query = $p.ui.dialogs.confirm({
+          title: 'Система слоя',
+          text: `Подтвердите смену системы в слое ${obj.presentation}
+          на ${newValue}`,
+        });
+      }
+      query.then(() => {
+        obj[fld] = newValue;
+        onChange?.(newValue);
+        setValue(obj[fld]);
+      })
+        .catch(() => null);
     }}
     value={value}
     label="Система"

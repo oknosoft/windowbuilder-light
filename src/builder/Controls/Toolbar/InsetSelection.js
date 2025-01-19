@@ -1,6 +1,7 @@
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import DefauitInsetIcon from '../../../aggregate/styles/icons/DefauitInset';
 import {StyledMenu} from '../../Structure/Toolbar/AddLayer';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
@@ -8,6 +9,11 @@ import {HtmlTooltip} from '../../../aggregate/App/styled';
 const onClick = (obj, handleClose) => () => {
   handleClose();
   obj?.defaults?.();
+};
+
+const reset = (obj, handleClose) => () => {
+  handleClose();
+  obj?.resetDefaults?.();
 };
 
 export default function InsetSelection({type, project, layer, elm, setContext}) {
@@ -33,6 +39,13 @@ export default function InsetSelection({type, project, layer, elm, setContext}) 
       </MenuItem>
       <MenuItem disabled onClick={null} disableRipple>
         С учётом статики
+      </MenuItem>
+      <Divider />
+      <MenuItem onClick={reset(project, handleClose)} disableRipple>
+        Сброс во всём изделии
+      </MenuItem>
+      <MenuItem onClick={reset(layer, handleClose)} disableRipple>
+        Сброс в текущем слое
       </MenuItem>
     </StyledMenu>
   </>;
