@@ -6,18 +6,21 @@ import SaveIcon from '@mui/icons-material/Save';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import SettingsIcon from '@mui/icons-material/DisplaySettings';
 import CloseIcon from '@mui/icons-material/Close';
-import CalculateIcon from '@mui/icons-material/Calculate';
 import {useNavigate} from 'react-router-dom';
 import {ListSubheader} from './styled';
 import {Toolbar, HtmlTooltip} from '../../components/App/styled';
 import PostBtn from './PostBtn';
 import MenuPrint from './MenuPrint';
 
-const {utils} = $p;
+const {utils, ui: {dialogs}} = $p;
+const alert = (err) => dialogs.alert({
+  title: 'Ошибка записи',
+  text: err?.message || err,
+});
 
-export default function ObjToolbar({obj, mgr, setSettingOpen, onClose, modified, setModified, setBackdrop}) {
+export default function ObjToolbar({obj, mgr, btns=null, setSettingOpen, onClose, modified, setModified, setBackdrop}) {
   const navigate = useNavigate();
-  const {close, recalc, save, saveClose} = React.useMemo(() => {
+  const {close, save, saveClose} = React.useMemo(() => {
     const close = (typeof onClose === 'function') ? onClose : () => {
       const searchParams = utils.prm();
       const url = searchParams.return || `/${mgr.class_name.replace('.', '/')}${obj?.ref ? `?ref=${obj.ref}` : ''}`;
@@ -26,21 +29,9 @@ export default function ObjToolbar({obj, mgr, setSettingOpen, onClose, modified,
       }
       setTimeout(() => navigate(url == '-1' ? -1 : url));
     };
-    const recalc = () => {
-      setBackdrop(true);
-      obj.recalc()
-        .then(() => {
-          obj._data.chrows?.clear?.();
-          setBackdrop(false);
-        })
-        .catch((err) => {
-          console.error(err);
-          setBackdrop(false);
-        });
-    };
-    const save = () => obj.save();
-    const saveClose = () => obj.save().then(close);
-    return {close, recalc, save, saveClose};
+    const save = () => obj.save().catch(alert);
+    const saveClose = () => obj.save().then(close).catch(alert);
+    return {close, save, saveClose};
   }, [obj]);
 
   return <ListSubheader>
@@ -52,10 +43,8 @@ export default function ObjToolbar({obj, mgr, setSettingOpen, onClose, modified,
         <IconButton onClick={save}><SaveAsIcon/></IconButton>
       </HtmlTooltip>
       <PostBtn obj={obj} />
-      <Divider orientation="vertical" flexItem sx={{m: 1}} />
-      <HtmlTooltip title="Пересчитать">
-        <IconButton onClick={recalc}><CalculateIcon/></IconButton>
-      </HtmlTooltip>
+      {btns && <Divider orientation="vertical" flexItem sx={{m: 1}} />}
+      {btns}
       <Typography sx={{flex: 1}}></Typography>
       <HtmlTooltip title="печать">
         <MenuPrint

@@ -108,14 +108,18 @@ export class RowProxy {
   }
 
   recalcFin() {
-    const {project, eve} = this.editor;
+    const {calc_order_row: row, editor: {project, eve}} = this;
     return $p.utils.sleep(20)
       .then(() => {
         if(eve?._async?.move_points?.timer) {
           return this.recalcFin();
         }
         project.redraw();
-        return project.save_coordinates({});
+        return project.save_coordinates({})
+          .then(() => {
+            row._owner._owner._data.chrows.delete(row);
+
+          });
       });
   }
 

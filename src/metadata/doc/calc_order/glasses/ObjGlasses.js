@@ -82,7 +82,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
   }
 
-  async function selectedRowsChange(newRows, noSave) {
+  async function selectedRowsChange(newRows) {
     let oldKey = selectedRows.size && Array.from(selectedRows)[0];
     if(oldKey > 1000) {
       oldKey -= 1000;
@@ -109,7 +109,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
 
     setSelectedRows(newRows);
-    !noSave && setBackdrop(false);
+    setBackdrop(false);
   }
 
   const onCellClick = ({row, column, selectCell}) => {
@@ -206,6 +206,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       setBackdrop={setBackdrop}
       setModified={setModified}
       selectedRowsChange={selectedRowsChange}
+      rawSetSelectedRows={rawSetSelectedRows}
     />
     <SelectedContext.Provider value={selectedContext}>
       <DataGrid

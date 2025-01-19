@@ -1,8 +1,8 @@
 import React from 'react';
+import {useNavigate} from 'react-router-dom';
+import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
 import ObjGlassesDetail from './ObjGlassesDetail';
 import ProductFormatter from './ProductFormatter';
-
-import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
 // доступные типы вставок
 import {itypes, ioptions, ilist, sublist, RowProxy} from './RowProxy';
 
@@ -102,7 +102,9 @@ export async function recalcRow({row, setBackdrop}) {
   }
 }
 
-export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, setSnack, selectedRowsChange}) {
+export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, setSnack, selectedRowsChange, rawSetSelectedRows}) {
+
+  const navigate = useNavigate();
 
   const {job_prm, utils, doc: {calc_order}} = $p;
 
@@ -123,7 +125,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     };
     setRows([...rows, newRow]);
 
-    await selectedRowsChange(new Set([newRow.key]), true);
+    await selectedRowsChange(new Set([newRow.key]));
     return newRow;
   };
 
@@ -137,7 +139,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
   const del = async () => {
     const row = getRow();
     if(row) {
-      await selectedRowsChange(new Set(), true);
+      await selectedRowsChange(new Set());
       row.row.unloadEditor();
       obj.production.del(row.row.calc_order_row);
       rows.splice(rows.indexOf(row), 1);
@@ -160,15 +162,31 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   const clear = async () => {
     obj.production.clear();
-    await selectedRowsChange(new Set(), true);
+    await selectedRowsChange(new Set());
     setRows([]);
     setBackdrop(false);
   };
 
   const open = () => {
-
+    const row = getRow();
+    if(row) {
+      navigate(`/cat/characteristics/${row.row.characteristic.ref}?return=-1`);
+    }
+    else {
+      setSnack('Укажите строку табчасти для открытия деталей продукции');
+    }
   };
 
+  const recalc = () => {
+    const row = getRow();
+    if(row) {
+      row.row.recalcFin()
+        .then(() => rawSetSelectedRows?.(new Set([row.key])));
+    }
+    else {
+      setSnack('Укажите строку табчасти для пересчёта');
+    }
+  };
 
   const normalize = {
     symbol: 'ₓ',
@@ -264,7 +282,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       }
     }
     if(irows.length) {
-      await selectedRowsChange(new Set(), true);
+      await selectedRowsChange(new Set());
       setBackdrop(true);
       const newRows = [];
       const problems = new Set();
@@ -395,7 +413,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     }
   };
 
-  return {create, clone, open, del, clear, add, load};
+  return {create, clone, open, del, clear, recalc, add, load};
 
 }
 

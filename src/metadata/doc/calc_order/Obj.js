@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import frmObj from '../../aggregate/frmObj';
 import {Root} from '../../aggregate/styled';
 import ObjToolbar from '../../aggregate/ObjToolbar';
+import RecalcBtn from './RecalcBtn';
 import Loading from '../../../components/App/Loading';
 import ObjHead from './ObjHead';
 import ObjTabs from '../../aggregate/ObjTabs';
@@ -78,16 +79,24 @@ export default function CalcOrderObj() {
         setModified(obj._modified);
       }
     }
+
     function beforeUnload (e) {
       if(modified || obj._modified) {
         e.preventDefault();
         return (e.returnValue = "");
       }
     }
-    mgr.on({update, after_save: update, rows: update});
+
+    function before_save(o) {
+      if(obj === o && obj._data.chrows.size) {
+        return Promise.reject('Есть изменённые строки,\nвыполните пересчёт перед записью');
+      }
+    }
+
+    mgr.on({update, after_save: update, rows: update, before_save});
     addEventListener('beforeunload', beforeUnload);
     return () => {
-      mgr.off({update, after_save: update, rows: update});
+      mgr.off({update, after_save: update, rows: update, before_save});
       removeEventListener('beforeunload', beforeUnload);
     };
   }, [obj]);
@@ -115,6 +124,7 @@ export default function CalcOrderObj() {
       mgr={mgr}
       setSettingOpen={setSettingOpen}
       setBackdrop={setBackdrop}
+      btns={<RecalcBtn obj={obj} setBackdrop={setBackdrop}/>}
     />
     <ObjHead obj={obj} setting={setting} setBackdrop={setBackdrop}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
