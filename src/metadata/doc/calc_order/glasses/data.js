@@ -116,6 +116,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     const tmp = utils._clone(proto.toJSON());
     utils._mixin(row.characteristic, tmp, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name'.split(','), true);
     row.calc_order_row.note = tmp.note;
+    row.calc_order_row.nom = row.characteristic.owner;
     obj._data.chrows.add(row.calc_order_row);
     const newRow = {
       type: 'MASTER',
@@ -142,6 +143,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       await selectedRowsChange(new Set());
       row.row.unloadEditor();
       obj.production.del(row.row.calc_order_row);
+      obj._data.chrows.delete(row.calc_order_row);
       rows.splice(rows.indexOf(row), 1);
       rows.some((srow, index) => {
         if(srow.row === row.row) {
