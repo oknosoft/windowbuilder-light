@@ -4,6 +4,7 @@ import Period from './Period';
 
 const placeholders = {
   obj_delivery_state: 'Статусы',
+  organization: 'Организации',
   department: 'Подразделения',
   partner: 'Контрагенты',
   manager: 'Менеджеры',

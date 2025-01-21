@@ -55,6 +55,10 @@ export class RowProxy {
 
   unloadEditor() {
     if(this.#editor) {
+      if(this.#editor.project) {
+        this.#editor.project.ox = null;
+        this.#editor.project.clear();
+      }
       this.#editor.unload();
       this.#editor = null;
     }

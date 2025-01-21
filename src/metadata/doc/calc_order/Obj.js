@@ -73,9 +73,9 @@ export default function CalcOrderObj() {
   React.useEffect(function onMount() {
     function update (curr, flds){
       if(!modified && (curr === obj || curr?._owner?._owner === obj)) {
-        if(flds?.production) {
-          obj.before_save({db: stubDb});
-        }
+        // if(flds?.production) {
+        //   obj.before_save({db: stubDb});
+        // }
         setModified(obj._modified);
       }
     }
@@ -87,8 +87,8 @@ export default function CalcOrderObj() {
       }
     }
 
-    function before_save(o) {
-      if(obj === o && obj._data.chrows.size) {
+    function before_save(curr) {
+      if(curr === obj && obj._data.chrows.size) {
         return Promise.reject('Есть изменённые строки,\nвыполните пересчёт перед записью');
       }
     }
