@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import frmObj from '../../aggregate/frmObj';
+import frmObj, {jsVersion} from '../../aggregate/frmObj';
 import {Root} from '../../aggregate/styled';
 import ObjToolbar from '../../aggregate/ObjToolbar';
 import RecalcBtn from './RecalcBtn';
@@ -56,6 +56,8 @@ export default function CalcOrderObj() {
       .then(setObj)
       .catch(setError)
       .then(() => setBackdrop(false));
+
+    jsVersion(setError);
   }, [ref]);
 
   React.useEffect(() => {

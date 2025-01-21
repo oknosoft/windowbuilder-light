@@ -1,4 +1,6 @@
 import React from 'react';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import {useTitleContext, useBackdropContext} from '../../components/App';
 import {useParams, unstable_usePrompt as usePrompt} from 'react-router-dom'; // https://www.npmjs.com/package/react-router-prompt
 
@@ -31,4 +33,15 @@ export default function frmObj({initSetting}) {
     setting, saveSetting,
     params, usePrompt, setTitle, setBackdrop,
   };
+}
+
+export function jsVersion(setError) {
+  job_prm.version.check().then((ok) => {
+    if(!ok) {
+      setError({message: <Box sx={{p: 1}}>
+          <Typography variant={"h5"}>Код программы обновлен на сервере</Typography>
+          <Typography>Для продолжения работы, <a href="#" onClick={() => location.reload()}>перезагрузите страницу</a></Typography>
+        </Box>});
+    }
+  });
 }

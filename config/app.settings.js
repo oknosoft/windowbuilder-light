@@ -9,6 +9,28 @@
 const is_node = typeof process !== 'undefined' && process.versions && process.versions.node;
 const local_storage_prefix = 'wb_';
 
+class JSVersion {
+
+  constructor() {
+    this.fetch()
+      .then((version) => this.stamp = version.stamp);
+  }
+
+  fetch() {
+    return fetch('/build.json')
+      .then(res => res.json())
+      .catch(err => null);
+  }
+
+  check() {
+    return this.fetch()
+      .then((version) => {
+        return !this.stamp || this.stamp === version.stamp;
+      });
+  }
+
+}
+
 function settings(prm = {}) {
 
   Object.defineProperties(prm, {
@@ -105,4 +127,6 @@ settings.cnn = ({job_prm, wsql}) => {
     wsql.set_user_param('use_ram', false);
     job_prm.use_ram = false;
   }
+  // текущая версия js
+  job_prm.version = new JSVersion();
 };
