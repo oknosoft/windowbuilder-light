@@ -11,14 +11,13 @@ import CalculateIcon from '@mui/icons-material/Calculate';
 import {useBackdropContext} from '../../../../components/App';
 import {ListSubheader} from '../../../aggregate/styled';
 import {Toolbar, HtmlTooltip} from '../../../../components/App/styled';
-import {handlers} from './data';
 import ClipBoard from '../../../aggregate/ClipBoard';
 
-export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBackdrop, setModified, selectedRowsChange, rawSetSelectedRows}) {
+export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBackdrop, setModified, selectedRowsChange, rawSetSelectedRows, methods}) {
 
   const {setSnack} = useBackdropContext();
 
-  const {create, clone, open, del, clear, recalc, load} = handlers({obj, rows, setRows, getRow, setBackdrop, setModified, setSnack, selectedRowsChange, rawSetSelectedRows});
+  const {create, clone, open, del, clear, recalc, load} = methods;
 
   return <ListSubheader>
     <Toolbar disableGutters>

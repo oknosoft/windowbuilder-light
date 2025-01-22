@@ -19,7 +19,6 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
   }
   const {setBackdrop, setSnack} = useBackdropContext();
 
-
   const [columns, glasses, glob] = React.useMemo(() => createGlasses({obj}), [obj]);
   const [rows, rawSetRows] = React.useState(glasses);
   const [selectedRows, rawSetSelectedRows] = React.useState(new Set());
@@ -128,19 +127,11 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     const { key, shiftKey } = event;
     if (key === 'Insert' || key === 'F9') {
       const row = key === 'F9' && getRow();
-      const {add} = handlers({
-        obj,
-        rows,
-        setRows,
-        getRow,
-        setBackdrop,
-        setModified,
-        selectedRowsChange});
       preventDefault(event);
-      return add(row?.row?.characteristic);
+      return methods.add(row?.row?.characteristic);
     }
 
-    if (mode === 'EDIT' || !rows.length || row?.type === "DETAIL"){
+    if (mode === 'EDIT' || !rows.length || row?.type === 'DETAIL'){
       return;
     }
 
@@ -175,15 +166,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
     else if (key === 'Delete') {
       preventDefault(event);
-      const {del} = handlers({
-        obj,
-        rows,
-        setRows,
-        getRow,
-        setBackdrop,
-        setModified,
-        selectedRowsChange});
-      return del();
+      return methods.del();
     }
 
   };
@@ -194,6 +177,15 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       return rows.find(({key}) => key === selectedKey);
     }
   };
+
+  const methods = handlers({
+    obj,
+    rows,
+    setRows,
+    getRow,
+    setBackdrop,
+    setModified,
+    selectedRowsChange});
 
   const {chrows} = obj._data;
 
@@ -207,6 +199,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       setModified={setModified}
       selectedRowsChange={selectedRowsChange}
       rawSetSelectedRows={rawSetSelectedRows}
+      methods={methods}
     />
     <SelectedContext.Provider value={selectedContext}>
       <DataGrid
