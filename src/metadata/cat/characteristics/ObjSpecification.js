@@ -13,7 +13,8 @@ const columns = [
   {key: "totqty", width: 100, name: "Колич", renderCell: NumberFormatter},
   {key: "totqty1", width: 100, name: "Колич+%", renderCell: NumberFormatter},
   {key: "price", width: 100, name: "Цена себест", renderCell: NumberFormatter},
-  {key: "amount", width: 100, name: "Сумма себест", renderCell: NumberFormatter},
+  {key: "amount", width: 100, name: "∑ себест", renderCell: NumberFormatter},
+  {key: "amount_marged", width: 100, name: "∑ с наценкой", renderCell: NumberFormatter},
 ];
 
 export default function ObjSpecification({tabRef, obj}) {
