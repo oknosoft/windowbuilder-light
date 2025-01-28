@@ -109,6 +109,9 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
   const {job_prm, utils, doc: {calc_order}} = $p;
 
   const add = async (proto) => {
+    if(obj.is_new()) {
+      await obj.save();
+    }
     const row = new RowProxy(await obj.create_product_row({create: true}));
     if(!proto) {
       proto = job_prm.builder.glasses_template;

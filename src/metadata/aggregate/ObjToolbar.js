@@ -50,6 +50,12 @@ export default function ObjToolbar({obj, mgr, btns=null, setSettingOpen, onClose
         <MenuPrint
           mgr={mgr}
           handlePrint={(model) => {
+            if(obj._modified || obj.is_new()) {
+              return dialogs.alert({
+                title: 'Документ изменён',
+                text: 'Перед печатью, запишите заказ',
+              });
+            }
             model.execute(obj);
           }}
           variant="button"

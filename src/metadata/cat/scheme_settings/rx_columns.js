@@ -16,7 +16,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
       return value;
     }
     let indicator = 'cell_ref_elm';
-    if(row.deleted) {
+    if(row.deleted || row._deleted) {
       indicator = is_doc ? 'cell_doc_deleted' : 'cell_ref_elm_deleted';
     }
     else if(row._open) {
