@@ -4,16 +4,8 @@ import {useLoadingContext} from '../Metadata';
 import {useBackdropContext} from '../App/backdropContext';
 import {SelectedContext, useSelectedContext} from './selectedContext';
 
-import {NumberCell, NumberFormatter} from '@oknosoft/ui/DataField/Number';
-import {PresentationFormatter} from '@oknosoft/ui/DataField/RefField';
 
-const columns = [
-  {key: "sz", name: "Размер", width: '*', renderEditCell: NumberCell, renderCell: NumberFormatter},
-  {key: "inset", name: "Вставка", width: 120, renderCell: PresentationFormatter},
-];
-
-
-export default function TabularSection({tabRef, obj, ts, selection}) {
+export default function TabularSection({tabRef, obj, ts, selection, columns}) {
 
   const {ifaceState: {menu_open}} = useLoadingContext();
   const style = {minHeight: 320, width: '100%'};

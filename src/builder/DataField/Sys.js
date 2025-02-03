@@ -51,6 +51,7 @@ export default function FieldSys({obj, fld, onChange, fullWidth=true, enterTab, 
     fullWidth={fullWidth}
     disableClearable
     placeholder="Нет"
+    openList
     {...other}
   />;
 }

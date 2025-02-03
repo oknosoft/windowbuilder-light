@@ -7,6 +7,13 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import TabularSection from '../../aggregate/TabularSection';
 
+import {NumberCell, NumberFormatter} from '@oknosoft/ui/DataField/Number';
+import {PresentationFormatter} from '@oknosoft/ui/DataField/RefField';
+const columns = [
+  {key: "sz", name: "Размер", width: '*', renderEditCell: NumberCell, renderCell: NumberFormatter},
+  {key: "inset", name: "Вставка", width: 120, renderCell: PresentationFormatter},
+];
+
 const meta = {};
 function GridWnd({editor, layer}) {
   const {tool, project} = editor;
@@ -28,7 +35,7 @@ function GridWnd({editor, layer}) {
       <Tab value="hor" label="Ригели" />
     </Tabs>
     <Box ref={tabRef} sx={{ width: '100%' }}>
-      {tab === 'vert' && <TabularSection tabRef={tabRef} obj={tool.dp} ts="sizes" />}
+      {tab === 'vert' && <TabularSection tabRef={tabRef} obj={tool.dp} ts="sizes" columns={columns}/>}
     </Box>
 
   </>;

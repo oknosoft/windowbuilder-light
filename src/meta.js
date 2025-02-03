@@ -4,6 +4,7 @@ import {meta as coreMeta, classes as coreClasses, exclude as coreExclude} from '
 export const meta = {
   enm: {...coreMeta.enm},
   cat: {...coreMeta.cat},
+  cch: {...coreMeta.cch},
   dp: {...coreMeta.dp},
 };
 
