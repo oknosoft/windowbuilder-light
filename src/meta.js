@@ -1,13 +1,6 @@
 
-import {meta as coreMeta, classes as coreClasses, exclude as coreExclude} from '@oknosoft/wb/core/src';
+import {meta, classes, exclude} from '@oknosoft/wb/core/src';
 
-export const meta = {
-  enm: {...coreMeta.enm},
-  cat: {...coreMeta.cat},
-  cch: {...coreMeta.cch},
-  dp: {...coreMeta.dp},
-};
-
-export const classes = [...coreClasses];
-
-export const exclude = [...coreExclude];
+// здесь возможны корректировки метаданных и классов на уровне клиентского приложения
+// пока, все типы берём из core
+export {meta, classes, exclude};

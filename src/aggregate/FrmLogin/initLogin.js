@@ -36,7 +36,7 @@ export function abonentInit({setAbonent, setProvider, pfilter}) {
   if(!abonent) {
     abonent = parseInt(jobPrm.zone, 10);
   }
-  setAbonent([abonents.byId(abonent) || abonents.get(), abonents.find_rows({})]);
+  setAbonent([abonents.byId(abonent) || abonents.get(), abonents.findRows({})]);
 
   let provider = jobPrm.get('auth_provider');
   const providers = Object.keys(providersDesc)
@@ -47,7 +47,7 @@ export function abonentInit({setAbonent, setProvider, pfilter}) {
 
 export function abonentDeps({setBranch, setYear, yearState, abonent}) {
   const {branches} = $p.cat;
-  setBranch([branches.get(), branches.find_rows({owner: abonent})]);
+  setBranch([branches.get(), branches.findRows({owner: abonent})]);
   setYear(yearByAbonent(abonent, yearState));
 }
 

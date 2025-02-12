@@ -37,10 +37,10 @@ export function init(handleIfaceState) {
 
     // выполняем модификаторы
     //modifiers($p);
-    ui.dialogs.init({handleIfaceState});
-
-    // информируем хранилище о готовности MetaEngine
-    handleIfaceState({meta_loaded: true});
+    ui.dialogs
+      .init({handleIfaceState})
+      // информируем хранилище о готовности MetaEngine
+      .then(() => handleIfaceState({meta_loaded: true}));
 
     // читаем общие данные в ОЗУ
     //return load_common($p);
