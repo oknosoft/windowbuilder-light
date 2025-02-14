@@ -11,15 +11,12 @@ const lsPrefix = 'wb_';
 
 function settings(prm = {}) {
 
-  return Object.assign(prm, {
+  Object.assign(prm, {
 
     isNode,
 
     // разделитель для localStorage
     lsPrefix,
-
-    // гостевые пользователи для демо-режима
-    guests: [],
 
     // расположение couchdb для nodejs
     couch_local: (isNode && process.env.COUCHLOCAL) || `http://cou221:5984/${lsPrefix}`,
@@ -28,12 +25,6 @@ function settings(prm = {}) {
     get couch_path() {
       return isNode ? this.couch_local : `/couchdb/${lsPrefix}`;
     },
-
-    // по умолчанию, обращаемся к зоне 1
-    zone: 0,
-
-    // объявляем номер демо-зоны
-    zone_demo: -1,
 
     // размер вложений 5Mb
     attachment_max_size: 5000000,
@@ -56,6 +47,11 @@ function settings(prm = {}) {
       secret: process.env.COUCHSECRET,
     },
   });
+
+  // по умолчанию, обращаемся к зоне 1
+  if(!prm.get('zone')) {
+    prm.set('zone', 92);
+  }
 
 }
 module.exports = settings;
