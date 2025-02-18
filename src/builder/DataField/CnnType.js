@@ -15,7 +15,7 @@ function getStyles(curr, value, theme) {
 export default function FieldCnnType({CnnPoint, onClick}) {
   const theme = useTheme();
   const {vertex} = CnnPoint;
-  const {cnnType, cnnTypes} = vertex;
+  const {cnnType, avalableTypes} = vertex;
   const [index, setIndex] = React.useState(0);
 
   const handleChange = ({target}) => {
@@ -41,7 +41,7 @@ export default function FieldCnnType({CnnPoint, onClick}) {
       <MenuItem disabled value={null}>
         <em>Доступные типы</em>
       </MenuItem>
-      {cnnTypes.map((curr) => (
+      {avalableTypes.map((curr) => (
         <MenuItem
           key={curr.valueOf()}
           value={curr}
