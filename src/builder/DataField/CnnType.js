@@ -20,6 +20,15 @@ export default function FieldCnnType({CnnPoint, onClick}) {
 
   const handleChange = ({target}) => {
     vertex.cnnType = target.value;
+    const {project} = CnnPoint.owner;
+    if(!project.props.loading) {
+      project.props.loading = true;
+      for(const pt of vertex.cnnPoints) {
+        pt.defaults?.();
+      }
+      project.props.loading = false;
+      project.redraw();
+    }
     setIndex(index + 1);
   };
 

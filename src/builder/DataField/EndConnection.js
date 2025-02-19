@@ -32,10 +32,11 @@ export default function FieldEndConnection({obj, fld, onChange, fullWidth=true, 
       const {md, utils} = project.root;
       const redraw = utils.debounce(function onRedraw (curr, flds){
         if(curr === project) {
-          setCnn(obj[fld]);
+          const ncnn = obj[fld];
+          setCnn(ncnn);
           const cnns = obj[fld === 'cnn' ? 'cnns' : 'cnnsOuter'];
-          if(!cnns.includes(cnn)) {
-            cnns.unshift(cnn);
+          if(!cnns.includes(ncnn)) {
+            cnns.unshift(ncnn);
           }
           setCnns(cnns);
         }

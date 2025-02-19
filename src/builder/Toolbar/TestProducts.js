@@ -88,7 +88,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
           attr.e[1] += offset.y;
           return activeLayer.createProfile(attr);
         });
-        activeLayer.skeleton.addProfiles(profiles);
+        activeLayer.skeleton.addProfiles(profiles, {'1': 'ad', '2': 'ad', '3': 'ad', '4': 'ad',});
         activeLayer.containers.sync();
         if(offset?.bind !== 'top') {
           new DimensionLine({
@@ -272,7 +272,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
             activeLayer.createProfile({b: [600 + offset.x, 1000], e: [600 + offset.x, 0]}),
             activeLayer.createProfile({b: [600 + offset.x, 500], e: [1400 + offset.x, 500]}),
           ];
-          activeLayer.skeleton.addProfiles(profiles);
+          activeLayer.skeleton.addProfiles(profiles, {'1': 'ad', '2': 'ad', '3': 'ad', '4': 'ad',});
           activeLayer.containers.sync();
           activeLayer.containers.children['5_2_3_6'].createChild({kind: 'flap'});
           new DimensionLine({
