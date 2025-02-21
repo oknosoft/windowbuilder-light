@@ -7,6 +7,6 @@ export default function RootToolbar(props) {
   return <>
     <InsetSelection {...props} />
     <Box sx={{flex: 1}} />
-    <SpecificationsButton project={props.project}/>
+    <SpecificationsButton project={props.project} selm={props.layer?.index}/>
   </>;
 }

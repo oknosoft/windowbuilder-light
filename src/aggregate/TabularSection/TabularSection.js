@@ -5,13 +5,16 @@ import {useBackdropContext} from '../App/backdropContext';
 import {SelectedContext, useSelectedContext} from './selectedContext';
 
 
-export default function TabularSection({tabRef, obj, ts, selection, columns}) {
+export default function TabularSection({tabRef, obj, ts, scheme, selection, columns}) {
 
   const {ifaceState: {menu_open}} = useLoadingContext();
   const style = {minHeight: 320, width: '100%'};
   if(tabRef?.current) {
     const top = tabRef.current.offsetTop + tabRef.current.offsetHeight + 51;
     style.height = `calc(100vh - ${top}px)`;
+  }
+  if(!columns) {
+    columns = scheme ? React.useMemo(() => scheme.columns, [scheme]) : null;
   }
   const {setBackdrop, setSnack} = useBackdropContext();
   const glob = useSelectedContext();
@@ -34,8 +37,9 @@ export default function TabularSection({tabRef, obj, ts, selection, columns}) {
   };
 
   React.useEffect(() => {
-    setRows($p.utils.find.rows(obj[ts], selection));
-  }, []);
+    const rows = scheme ? scheme.filter(obj[ts], selection) : $p.utils.find.rows(obj[ts], selection);
+    setRows(rows);
+  }, [selection]);
 
   return <div style={style}>
     {/*
