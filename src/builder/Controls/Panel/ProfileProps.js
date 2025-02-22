@@ -40,7 +40,7 @@ export default function ProfileProps({editor, project, layer, elm, node}) {
     project.root.md.emit_promise('redraw', project);
   };
   return <>
-    {`Слой ${layer.index}, Профиль ${elm._index+1}, Узлы ${b.vertex.key}-${e.vertex.key}`}
+    {`Профиль ${elm.index}, Узлы ${b.vertex.key}-${e.vertex.key}`}
     <FieldInsetProfile obj={elm} fld="inset" meta={fields.inset}/>
     <FieldCnnType CnnPoint={b} onClick={selectB}/>
     <FieldCnnType CnnPoint={e} onClick={selectE}/>

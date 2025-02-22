@@ -124,7 +124,7 @@ class SelectableGroup extends BaseItem {
 
 class Product extends SelectableGroup {
   constructor(project, index, parent) {
-    super(`Изделие №${index+1}`, `root-${index+1}`, 'icon_root', project, parent);
+    super(`Изделие`, `root-${index+1}`, 'icon_root', project, parent);
     this.type = 'product';
     for(const layer of project.contours) {
       this.children.push(new Layer(layer, this));
