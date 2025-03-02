@@ -3,23 +3,37 @@ import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import {NestedMenuItem} from '@oknosoft/ui/NestedMenu/NestedMenuItem';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
+import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
+import WindowIcon from '../../aggregate/styles/icons/Window';
+import GridIcon from '../../aggregate/styles/icons/Grid';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 import load21 from './Load21';
 
 export function testProducts({editor, type, layer, setContext, handleClose}) {
 
-  function prepare(project, profiles) {
-    const {props, root: {enm, ui}} = project;
+  function prepare(project, profiles, sys='window') {
+    const {props, root: {enm, ui, cch}} = project;
     const offset = new editor.Point();
     props.loading = true;
+
+    const base_sys = cch.predefinedElmnts.find({synonym: 'base_sys'});
+    if(base_sys) {
+      props.sys = base_sys.elmnts.find({elm: sys}).value;
+    }
+    if(editor.tool.name !== 'select_node' && sys !== 'stained_glass') {
+      editor.tools[0].activate();
+    }
 
     if(type === 'layer' && profiles) {
       return project.standardForms.prepare({layer, profiles})
     }
     else {
       project.clear();
-      setContext({project, type: 'product', layer: null, elm: null});
+      setContext({project, type: 'product', layer: null, elm: null, tool: editor.tools[0]});
     }
     return Promise.resolve({project, offset});
   }
@@ -36,6 +50,9 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
     const {project} = editor;
     prepare(project)
       .then(({project: {props, workLayer: activeLayer}, offset}) => {
+        if(count > 20) {
+          project.props.showGrid = false;
+        }
         const profiles = [];
         // стойки
         const xMap = new Map();
@@ -69,7 +86,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
     handleClose();
   }
 
-  function square(profiles) {
+  function square(profiles, nodes, sys) {
     const {project, DimensionLine} = editor;
     if(!Array.isArray(profiles) || !profiles.length) {
       profiles = [
@@ -79,7 +96,8 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
         {b: [1000, 0], e: [1000, 1000]},
       ]
     }
-    prepare(project, profiles)
+    handleClose();
+    return prepare(project, profiles, sys)
       .then(({project: {props, workLayer: activeLayer}, offset, profilesBounds}) => {
         profiles = profiles.map((attr) => {
           attr.b[0] += offset.x;
@@ -88,7 +106,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
           attr.e[1] += offset.y;
           return activeLayer.createProfile(attr);
         });
-        activeLayer.skeleton.addProfiles(profiles, {'1': 'ad', '2': 'ad', '3': 'ad', '4': 'ad',});
+        activeLayer.skeleton.addProfiles(profiles, nodes || {'1': 'ad', '2': 'ad', '3': 'ad', '4': 'ad'});
         activeLayer.containers.sync();
         if(offset?.bind !== 'top') {
           new DimensionLine({
@@ -109,7 +127,52 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
         project.zoomFit();
       })
       .catch(() => null);
+  }
+
+  function door() {
+    return square([
+      {b: [900, 2050], e: [0, 2050]},
+      {b: [0, 2050], e: [0, 0]},
+      {b: [0, 0], e: [900, 0]},
+      {b: [900, 0], e: [900, 2050]},
+    ], {'1': 'av', '2': 'av', '3': 'ad', '4': 'ad'}, 'door')
+      .then(() => {
+        const {project, DimensionLine, Path, Point} = editor;
+        const {activeLayer, dimensions} = project;
+        const profile = activeLayer.profiles[3];
+        new DimensionLine({
+          project,
+          owner: activeLayer,
+          parent: dimensions,
+          elm1: profile,
+          elm2: profile,
+          p1: 'b',
+          p2: 'e',
+          pos: 'right',
+          offset: -240,
+        });
+        const {container} = activeLayer.fillings[0];
+        const flap = container?.createChild({kind: 'flap'});
+        const hor = new Path({insert: false, segments: [[1000, 1330], [-100, 1330]]});
+        flap.createProfile({
+          b: flap.profiles[1].generatrix.intersectPoint(hor),
+          e: flap.profiles[3].generatrix.intersectPoint(hor),
+          elmType: project.root.enm.elmTypes.impost,
+        });
+        flap.defaults();
+      });
+  }
+
+  function stained_glass() {
     handleClose();
+    return prepare(editor.project, 'stained_glass')
+      .then(({project}) => {
+        project.props.showGrid = false;
+        const tool = editor.tools[4];
+        tool?.activate?.();
+        project.redraw();
+        setContext({tool});
+      });
   }
 
   function rotunda() {
@@ -260,6 +323,8 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
 
   return {
     square,
+    door,
+    stained_glass,
     imposts() {
       const {project, DimensionLine} = editor;
       prepare(project)
@@ -361,7 +426,7 @@ export default function TestProducts({editor, type, layer, setContext}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const {imposts, square, cut, rotunda, grid20, grid100, clear} = testProducts({editor, type, layer, setContext, handleClose});
+  const {imposts, square, door, stained_glass, cut, rotunda, grid20, grid100, clear} = testProducts({editor, type, layer, setContext, handleClose});
 
   return <>
     <HtmlTooltip title="Тестовые изделия">
@@ -378,18 +443,37 @@ export default function TestProducts({editor, type, layer, setContext}) {
       anchorEl={anchorEl}
       open={open}
       onClose={handleClose}
-      MenuListProps={{
-        'aria-labelledby': 'basic-button',
+      slotProps={{
+        list: {
+          'aria-labelledby': 'basic-button',
+        },
+        paper: {sx: {minWidth: 200}}
       }}
     >
-      <MenuItem onClick={imposts}>Импосты</MenuItem>
-      <MenuItem onClick={square}>Квадрат</MenuItem>
-      <MenuItem onClick={cut}>Разрыв</MenuItem>
-      <MenuItem onClick={grid20}>Сетка 6</MenuItem>
-      <MenuItem onClick={grid100}>Сетка 30</MenuItem>
-      <MenuItem onClick={rotunda}>Ротонда</MenuItem>
-      <MenuItem onClick={() => load21({editor, setContext, handleClose})}>Из старой базы</MenuItem>
-      <MenuItem onClick={clear}>Очистить</MenuItem>
+      <MenuItem onClick={square}>
+        <ListItemIcon><WindowIcon/></ListItemIcon>
+        <ListItemText>Окно</ListItemText>
+      </MenuItem>
+      <MenuItem onClick={door}>
+        <ListItemIcon><MeetingRoomOutlinedIcon/></ListItemIcon>
+        <ListItemText>Дверь</ListItemText>
+      </MenuItem>
+      <MenuItem onClick={stained_glass}>
+        <ListItemIcon><GridIcon/></ListItemIcon>
+        <ListItemText>Витраж</ListItemText>
+      </MenuItem>
+      <NestedMenuItem
+        label="Отладка"
+        parentMenuOpen={open}
+        delay={300}>
+        <MenuItem onClick={imposts}>Импосты</MenuItem>
+        <MenuItem onClick={cut}>Разрыв</MenuItem>
+        <MenuItem onClick={grid20}>Сетка 6</MenuItem>
+        <MenuItem onClick={grid100}>Сетка 30</MenuItem>
+        <MenuItem onClick={rotunda}>Ротонда</MenuItem>
+        <MenuItem onClick={() => load21({editor, setContext, handleClose})}>Из старой базы</MenuItem>
+        <MenuItem onClick={clear}>Очистить</MenuItem>
+      </NestedMenuItem>
     </Menu>
   </>;
 }
