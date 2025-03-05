@@ -71,6 +71,9 @@ class Layer extends BaseItem {
         layer.hidden = !v;
       }
     });
+    if(this.active) {
+      this.expand();
+    }
     /*
   this.children.push(new Profiles(layer, this));
       if(layer.cnstr && layer.cnstr !== 1000000) {
@@ -200,7 +203,7 @@ class Struct extends BaseItem {
   }
 }
 
-export default function getStruct(project) {
-  const tree = new Struct(project);
+export default function getStruct(editor) {
+  const tree = new Struct(editor);
   return tree;
 }

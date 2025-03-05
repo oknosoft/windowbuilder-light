@@ -66,6 +66,7 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
     const {container} = (elm || layer);
     const child = container?.createChild({kind: 'flap'});
     if(child) {
+      child.activate();
       setContext({type: 'layer', layer: child, elm: null});
       project.redraw();
     }
