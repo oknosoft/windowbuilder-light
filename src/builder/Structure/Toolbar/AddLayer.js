@@ -40,15 +40,18 @@ export const StyledMenu = styled((props) => (
   },
 }));
 
-export default function AddLayer({editor, project, layer, elm, setContext}) {
+export default function AddLayer({editor, project, layer, elm, type, setContext}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const addRoot = () => {
     const layer = project.addLayer();
     project.redraw();
@@ -62,6 +65,7 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
     });
     square();
   };
+
   const addFlap = () => {
     const {container} = (elm || layer);
     const child = container?.createChild({kind: 'flap'});
@@ -72,15 +76,18 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
     }
     handleClose();
   };
+
   const addVirtual = () => {
     const {container} = (elm || layer);
     const child = container?.createChild({kind: 'virtual'});
     if(child) {
+      child.activate();
       setContext({type: 'layer', layer: child, elm: null});
       project.redraw();
     }
     handleClose();
   };
+
   const addPortal = () => {
     const layer = project.addLayer({portal: true});
     project.redraw();
@@ -104,39 +111,48 @@ export default function AddLayer({editor, project, layer, elm, setContext}) {
     }
     handleClose();
   };
+
+  const isProduct = type === 'product' || type === 'root';
+  const isRootLayer = !isProduct && !elm && layer?.level === 0 && !layer.layer;
+  const isFilling = Boolean(elm?.is('ContainerBlank'));
+  const isFlap = Boolean(!isProduct && !elm && layer?.level);
   return <>
     <HtmlTooltip title="Добавить/заменить элемент">
       <IconButton onClick={handleClick}><DataSaverOnIcon /></IconButton>
     </HtmlTooltip>
     {editor && <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-      <MenuItem onClick={addRoot} disableRipple>
+      {isProduct && <MenuItem onClick={addRoot} disableRipple>
         <AddPhotoAlternateOutlinedIcon />
         Слой рамы
-      </MenuItem>
-      <MenuItem disabled={!elm} onClick={addFlap} disableRipple>
+      </MenuItem>}
+      {isFilling && <MenuItem onClick={addFlap} disableRipple>
         <LibraryAddOutlinedIcon />
         Слой створки
-      </MenuItem>
-      <MenuItem disabled={Boolean(elm)} onClick={addPortal} disableRipple>
+      </MenuItem>}
+      {isProduct && <MenuItem onClick={addPortal} disableRipple>
         <AspectRatioIcon />
         Слой проёма
-      </MenuItem>
-      <MenuItem onClick={addVirtual} disableRipple>
+      </MenuItem>}
+      {isRootLayer && <MenuItem onClick={addPortal} disableRipple>
+        <AspectRatioIcon />
+        Разместить в проёме
+      </MenuItem>}
+      {(isFilling || isFlap) && <MenuItem onClick={addVirtual} disableRipple>
         <AddchartOutlinedIcon />
         Виртуальный слой
-      </MenuItem>
-      <MenuItem disabled={(elm instanceof editor.Filling)} onClick={addGlass} disableRipple>
+      </MenuItem>}
+      {isFlap && <MenuItem onClick={addGlass} disableRipple>
         <AddBoxOutlinedIcon />
         Заполнение
-      </MenuItem>
-      <MenuItem disabled onClick={handleClose} disableRipple>
+      </MenuItem>}
+      {isFilling && <MenuItem onClick={handleClose} disableRipple>
         <AddRoadIcon />
         Штульповые створки
-      </MenuItem>
-      <MenuItem disabled onClick={handleClose} disableRipple>
+      </MenuItem>}
+      {(isFilling || isFlap) && <MenuItem disabled onClick={handleClose} disableRipple>
         <AddHomeWorkOutlinedIcon />
         Вложенное изделие
-      </MenuItem>
+      </MenuItem>}
     </StyledMenu>}
   </>;
 

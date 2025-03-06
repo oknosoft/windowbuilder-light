@@ -18,6 +18,7 @@ export default function LayerToolbar(props) {
       layer: parent || null,
     });
     layer.remove();
+    editor.tools[0].activate();
     project.redraw();
     project.zoomFit();
   };
