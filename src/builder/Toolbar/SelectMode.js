@@ -1,6 +1,8 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -31,29 +33,9 @@ const map = {
 };
 const options = Object.keys(map).map((key) => ({key, text: map[key][0]}));
 
-function viewItem({key, ...props}) {
-  const [title, Icon] = map[key];
-  return <MenuItem key={key} {...props}>
-    <ListItemIcon>
-      <Icon />
-    </ListItemIcon>
-    {title}
-  </MenuItem>;
-}
-
 export default function SelectMode({view, show3d, toggle3D, editor}) {
 
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleChange = (nextView) => {
+  const handleChange = (ev, nextView) => {
     const {project} = editor || {};
     if(project) {
       project.props.registerChange();
@@ -63,29 +45,30 @@ export default function SelectMode({view, show3d, toggle3D, editor}) {
         project.deselectAll();
       }
     }
-    handleClose();
   };
-
-  const [title, Icon] = map[view];
 
   return <>
     <Box sx={{flex: 1}} />
-    <HtmlTooltip title={`Текущий режим: ${title}`} placement="right">
-      <IconButton sx={{ml: 1}} onClick={handleClick}><Icon/></IconButton>
-    </HtmlTooltip>
-    <Menu
-      anchorEl={anchorEl}
-      open={Boolean(anchorEl)}
-      onClose={handleClose}
-      onClick={handleClose}
-      >
-      {Object.keys(map).map((key) => viewItem({key, onClick: () => handleChange(key)}))}
 
-    </Menu>
+    <Tabs value={view} orientation="vertical" onChange={handleChange} >
+      <Tab value="carcass" accent="true" icon={<HtmlTooltip title="Проволочная модель" placement="right"><PolylineIcon /></HtmlTooltip>} />
+      <Tab value="normal" accent="true" icon={<HtmlTooltip title="Профили" placement="right"><AutoFixNormalIcon /></HtmlTooltip>} />
+    </Tabs>
+
     <HtmlTooltip title={show3d ? 'Скрыть вид 3D' : 'Показать вид 3D'} placement="right">
       <IconButton sx={{ml: 1}} onClick={toggle3D}><Show3dIcon show3d={show3d}/></IconButton>
     </HtmlTooltip>
   </>;
+}
+
+function viewItem({key, ...props}) {
+  const [title, Icon] = map[key];
+  return <MenuItem key={key} {...props}>
+    <ListItemIcon>
+      <Icon />
+    </ListItemIcon>
+    {title}
+  </MenuItem>;
 }
 
 function renderOption(props, option, state, ownerState) {

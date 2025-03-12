@@ -89,17 +89,12 @@ export default function AddLayer({editor, project, layer, elm, type, setContext}
   };
 
   const addPortal = () => {
-    const layer = project.addLayer({portal: true});
+    const {contours} = project;
+    const portal = project.addLayer({portal: true});
+    portal.addProfiles(contours);
     project.redraw();
-    setContext({type: 'layer', layer, elm: null});
-    const {square} = testProducts({
-      editor,
-      type: 'layer',
-      layer,
-      setContext,
-      handleClose,
-    });
-    square();
+    setContext({type: 'layer', layer: portal, elm: null});
+    handleClose();
   };
 
   const addGlass = () => {

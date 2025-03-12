@@ -17,9 +17,15 @@ export default function controlsToolbar (props) {
   }
   let Buttons = RootToolbar;
   switch (tab) {
-    case 'elm':
-      Buttons = ProfileToolbar;
+    case 'elm': {
+      if(Array.isArray(elm)) {
+
+      }
+      else if(elm?.is('GeneratrixElement')) {
+        Buttons = ProfileToolbar;
+      }
       break;
+    }
   }
   return <Toolbar disableGutters>
     {Indicator(props)}

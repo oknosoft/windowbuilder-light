@@ -7,11 +7,11 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import TabularSection from '../../aggregate/TabularSection';
 
-import {NumberCell, NumberFormatter} from '@oknosoft/ui/DataField/Number';
-import {PresentationFormatter} from '@oknosoft/ui/DataField/RefField';
+import {NumberField, NumberCell, NumberFormatter} from '@oknosoft/ui/DataField/Number';
+import RefField from '@oknosoft/ui/DataField/RefField';
 const columns = [
-  {key: "sz", name: "Размер", width: '*', renderEditCell: NumberCell, renderCell: NumberFormatter},
-  {key: "inset", name: "Вставка", width: 120, renderCell: PresentationFormatter},
+  {key: "sz", name: "Размер", renderEditCell: NumberCell, renderCell: NumberFormatter},
+  //{key: "inset", name: "Вставка", width: 120, renderCell: PresentationFormatter},
 ];
 
 const meta = {};
@@ -24,6 +24,9 @@ function GridWnd({editor, layer}) {
   const [tab, setTab] = React.useState('vert');
   const handleChange = (event, newValue) => setTab(newValue);
   const tabRef = React.useRef(null);
+  const selection = React.useMemo(() => (tab === 'vert' ? {elm: 1} : (
+    tab === 'hor' ? {elm: 0} : {elm: 3}
+  )), [tab]);
 
   return <>
     <FormControl fullWidth readOnly>
@@ -33,9 +36,15 @@ function GridWnd({editor, layer}) {
     <Tabs value={tab} onChange={handleChange}>
       <Tab value="vert" label="Стойки" />
       <Tab value="hor" label="Ригели" />
+      <Tab value="overlaps" label="Перекрытия" />
     </Tabs>
+    <NumberField obj={tool.dp} fld="h"/>
+    {tab === 'overlaps' ? <FormControl fullWidth readOnly>
+      <InputLabel>Опора</InputLabel>
+      <Input readOnly value="Низ"/>
+    </FormControl> : <RefField obj={tool.dp} fld={tab === 'vert' ? 'align_by_x' : 'align_by_y'} />}
     <Box ref={tabRef} sx={{ width: '100%' }}>
-      {tab === 'vert' && <TabularSection tabRef={tabRef} obj={tool.dp} ts="sizes" columns={columns}/>}
+      <TabularSection tabRef={tabRef} obj={tool.dp} ts="sizes" columns={columns} selection={selection}/>
     </Box>
 
   </>;

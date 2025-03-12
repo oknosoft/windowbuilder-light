@@ -13,6 +13,7 @@ import Settings from './Panel/Settings';
 
 const previous = {};
 const elmTypes = ['elm', 'node'];
+const Stub = ({elm}) => `Неизвестный тип элемента '${elm?.elmType}'`;
 
 export function specifyComponent({elm, layer, editor, project, tool, type, tab, setTab}) {
   let ToolWnd = tool?.constructor?.ToolWnd;
@@ -42,8 +43,14 @@ export function specifyComponent({elm, layer, editor, project, tool, type, tab, 
     if(Array.isArray(elm)) {
       ToolWnd = elm.length === 2 ? PairProps : ManyProps;
     }
+    else if (elm.is('Filling') || elm.is('ContainerBlank')) {
+      ToolWnd = FillingProps;
+    }
+    else if (elm.is('GeneratrixElement')) {
+      ToolWnd = ProfileProps;
+    }
     else {
-      ToolWnd = (elm instanceof editor.Filling || elm instanceof editor.ContainerBlank) ? FillingProps : ProfileProps;
+      ToolWnd = Stub;
     }
   }
   else if((tab === 'product') && project) {
