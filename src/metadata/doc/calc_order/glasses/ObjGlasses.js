@@ -27,7 +27,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
   const setRows = (rows) => {
     if(glob.rows !== rows) {
       glob.rows = rows;
-      selectedContext = {...glob};
+      selectedContext = {...glob, setModified};
       rawSetRows(rows);
     }
   };
@@ -36,7 +36,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     const skey = rows.size && Array.from(rows)[0];
     if(glob.skey !== skey) {
       glob.skey = skey;
-      selectedContext = {...glob};
+      selectedContext = {...glob, setModified};
       rawSetSelectedRows(rows);
     }
   };

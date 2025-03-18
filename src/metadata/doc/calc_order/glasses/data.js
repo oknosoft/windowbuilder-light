@@ -397,7 +397,9 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
           project.ox.extra = {clarification, formula};
           project.redraw();
           await project.save_coordinates({});
+          row.characteristic.before_save({});
           row.characteristic._modified = true;
+          row.unloadEditor();
         }
         // по прямому совпадению не получилось - пробуем по вставкам
         else {
@@ -405,8 +407,11 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
         }
       }
       setRows([...rows, ...newRows]);
-      await obj.save();
+      //await obj.save();
+      await utils.sleep(200);
+      obj._data.chrows.clear();
       setBackdrop(false);
+
       if(problems.size) {
         const formulas = Array.from(problems).join('\n');
         $p.record_log({class: 'formulas', obj: formulas});

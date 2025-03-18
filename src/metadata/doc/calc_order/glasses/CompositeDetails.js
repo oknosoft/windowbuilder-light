@@ -11,21 +11,25 @@ import CompositeRegionProps from './CompositeRegionProps';
 const {blank} = $p.utils;
 // http://localhost:2222/doc/calc_order/82f1a0b0-fac8-11ed-bbc3-e1c5499d8d7a
 
-export default function CompositeDetails({row, selected}) {
+export default function CompositeDetails({row, selected, glob}) {
   const {characteristic, inset, glassRow, editor} = row.row;
   const elm = editor.elm(glassRow.elm);
   const {fields} = elm.__metadata(false);
 
   const [index, setIndex] = React.useState(0);
-  React.useEffect(function prompt() {
+  React.useEffect(function refresh() {
     function update (curr, flds){
       if(flds?.inset && curr?._owner?._owner === characteristic) {
         setIndex((index) => index+1);
       }
+      else if(curr === characteristic) {
+        characteristic.calc_order._modified = true;
+        glob?.setModified(true);
+      }
     }
-    characteristic._manager.on({update});
+    characteristic._manager.on({update, rows: update});
     return () => {
-      characteristic._manager.off({update});
+      characteristic._manager.off({update, rows: update});
     };
   }, [characteristic]);
 
