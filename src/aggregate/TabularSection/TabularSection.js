@@ -1,5 +1,5 @@
 import React from 'react';
-import DataGrid from 'react-data-grid';
+import {DataGrid} from 'react-data-grid';
 import {useLoadingContext} from '../Metadata';
 import {useBackdropContext} from '../App/backdropContext';
 import {SelectedContext, useSelectedContext} from './selectedContext';

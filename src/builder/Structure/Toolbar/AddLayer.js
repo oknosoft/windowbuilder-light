@@ -124,10 +124,6 @@ export default function AddLayer({editor, project, layer, elm, type, setContext}
         <LibraryAddOutlinedIcon />
         Слой створки
       </MenuItem>}
-      {isProduct && <MenuItem onClick={addPortal} disableRipple>
-        <AspectRatioIcon />
-        Слой проёма
-      </MenuItem>}
       {isRootLayer && <MenuItem onClick={addPortal} disableRipple>
         <AspectRatioIcon />
         Разместить в проёме
