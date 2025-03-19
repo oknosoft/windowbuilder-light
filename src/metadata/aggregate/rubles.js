@@ -71,24 +71,24 @@
     let second;
     let numeral = '';
     let localizedWords;
-    let locReplace = [{from:"один", to:"одна"},{from:"два", to:"дві"}];
-    let loc1000 = ['тисяча ', 'тисячі ', 'тисяч '];
-    let loc1000000 = ['мільйон ', 'мільйона ', 'мільйонів '];
-    let loc1000000000 = ['мільярд ', 'мільярда ', 'мільярдів '];
+    let locReplace = [{from:"один", to:"одна"}, {from:"два", to:"две"}];
+    let loc1000 = ['тысяча ', 'тысячи ', 'тысяч '];
+    let loc1000000 = ['миллион ', 'миллиона ', 'миллионов '];
+    let loc1000000000 = ['миллиард ', 'миллиарда ', 'миллиардов '];
 
     localizedWords = currCode==="UAH" ? wordsUk : words;
 
     if (number.length === 3) {
-      first = number.substr(0, 1);
-      number = number.substr(1, 3);
+      first = number.substring(0, 1);
+      number = number.substring(1, 4);
       numeral = '' + localizedWords[2][first] + ' ';
     }
 
     if (number < 20) {
       numeral = numeral + localizedWords[0][toFloat(number)] + ' ';
     } else {
-      first = number.substr(0, 1);
-      second = number.substr(1, 2);
+      first = number.substring(0, 1);
+      second = number.substring(1, 3);
       numeral = numeral + localizedWords[1][first] + ' ' + localizedWords[0][second] + ' ';
     }
 
@@ -96,6 +96,10 @@
       switch (currCode) {
         case 'BYN': {
           numeral = numeral + plural(number, belRubles);
+          locReplace = [{from:"один", to:"одна"},{from:"два", to:"дві"}];
+          loc1000 = ['тисяча ', 'тисячі ', 'тисяч '];
+          loc1000000 = ['мільйон ', 'мільйона ', 'мільйонів '];
+          loc1000000000 = ['мільярд ', 'мільярда ', 'мільярдів '];
           break;
         }
         case 'UAH': {
@@ -106,16 +110,8 @@
           loc1000000000 = ['мільярд ', 'мільярда ', 'мільярдів '];
           break;
         }
-        case 'RU':  {
-          numeral = numeral + plural(number, rusRubles);
-          locReplace = [{from:"один", to:"одна"}, {from:"два", to:"дві"}];
-          loc1000 = ['тысяча ', 'тысячи ', 'тысяч '];
-          loc1000000 = ['миллион ', 'миллиона ', 'миллионов '];
-          loc1000000000 = ['миллиард ', 'миллиарда ', 'миллиардов '];
-          break;
-        }
         default: {
-          numeral = numeral + plural(number, ukRubles);
+          numeral = numeral + plural(number, rusRubles);
         }
       }
     } else if (count === 1) {
@@ -194,7 +190,7 @@
     var digit;
 
     while (length >= 0) {
-      digit = number.substr(length, 1);
+      digit = number.substring(length, length + 1);
       parts = digit + parts;
 
       if ((parts.length === 3 || length === 0) && !isNaN(toFloat(parts))) {
