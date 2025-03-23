@@ -53,7 +53,10 @@ export default function CalcOrderObj() {
     }
     res = res.then(() => mgr.get(ref, 'promise'))
       .then((doc) => doc.load_linked_refs())
-      .then(setObj)
+      .then((doc) => {
+        setObj(doc);
+        setModified(doc._modified);
+      })
       .catch(setError)
       .then(() => setBackdrop(false));
 
