@@ -13,7 +13,10 @@ class JSVersion {
 
   constructor() {
     this.fetch()
-      .then((version) => this.stamp = version.stamp);
+      .then((version) => {
+        this.raw = version;
+        this.stamp = version.stamp
+      });
   }
 
   fetch() {

@@ -3,6 +3,7 @@ import React from 'react';
 import MarkdownDocs from 'metadata-ui/Markdown/MarkdownDocs';
 import {useMatches } from 'react-router-dom';
 import {useTitleContext} from '../App';
+import {postprocessing} from './postprocessing';
 
 export default function Page(props) {
   const {description, title, setTitle} = useTitleContext();
@@ -12,9 +13,8 @@ export default function Page(props) {
 
   React.useEffect(() => {
     import(`.${pathname}.md`)
-      .then((module) => {
-        setMarkdown(module.default);
-      });
+      .then((module) => postprocessing(pathname, module.default))
+      .then(setMarkdown);
   }, [pathname]);
 
   return <MarkdownDocs
