@@ -3,6 +3,11 @@ import {DataGrid} from 'react-data-grid';
 import {useLoadingContext} from '../Metadata';
 import {useBackdropContext} from '../App/backdropContext';
 import {SelectedContext, useSelectedContext} from './selectedContext';
+import Toolbar from './Toolbar';
+
+function rowKeyGetter(row) {
+  return row.row;
+}
 
 
 export default function TabularSection({tabRef, obj, ts, scheme, selection, columns}) {
@@ -36,37 +41,41 @@ export default function TabularSection({tabRef, obj, ts, scheme, selection, colu
     }
   };
 
+  const getRow = () => {
+    const key = Array.from(selectedRows)[0];
+    return rows.find((row) => row.row === key);
+  }
+
   React.useEffect(() => {
     const rows = scheme ? scheme.filter(obj[ts], selection) : $p.utils.find.rows(obj[ts], selection);
     setRows(rows);
   }, [selection]);
 
   return <div style={style}>
-    {/*
     <Toolbar
-      obj={obj}
+      tabular={obj[ts]}
+      selection={selection}
       rows={rows}
       getRow={getRow}
       setRows={setRows}
       setBackdrop={setBackdrop}
-      setModified={setModified}
-      selectedRowsChange={selectedRowsChange}
+      //setModified={setModified}
+      setSelectedRows={setSelectedRows}
     />
-    */}
     <SelectedContext.Provider value={glob}>
       <DataGrid
-        //rowKeyGetter={rowKeyGetter}
+        rowKeyGetter={rowKeyGetter}
         columns={columns}
         rows={rows}
         //onRowsChange={onRowsChange}
         //headerRowHeight={33}
         //rowHeight={rowHeight}
         className="fill-grid"
-        //enableVirtualization={false}
+        enableVirtualization={false}
         //onCellKeyDown={onCellKeyDown}
         //onCellClick={onCellClick}
-        //selectedRows={selectedRows}
-        //onSelectedRowsChange={selectedRowsChange}
+        selectedRows={selectedRows}
+        onSelectedRowsChange={setSelectedRows}
       />
     </SelectedContext.Provider>
   </div>;

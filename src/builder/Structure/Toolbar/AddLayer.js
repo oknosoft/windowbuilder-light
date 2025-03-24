@@ -11,6 +11,7 @@ import AddchartOutlinedIcon from '@mui/icons-material/AddchartOutlined';
 import AddHomeWorkOutlinedIcon from '@mui/icons-material/AddHomeWorkOutlined';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import AddRoadIcon from '@mui/icons-material/AddRoad';
+import RemoveRoadIcon from '@mui/icons-material/RemoveRoad';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
 import {testProducts} from '../../Toolbar/TestProducts';
 
@@ -97,6 +98,46 @@ export default function AddLayer({editor, project, layer, elm, type, setContext}
     handleClose();
   };
 
+  const addAdjoining = () => {
+    const {rootLayer, props, root: {enm}} = project;
+    props.loading = true;
+    const profiles = [];
+    for(const edge of layer.outerEdges) {
+      profiles.push(rootLayer.createProfile({
+        b: edge.startVertex.point,
+        e: edge.endVertex.point,
+        elmType: enm.elmTypes.adjoining,
+      }));
+    }
+    rootLayer.skeleton.addProfiles(profiles);
+    props.loading = false;
+    project.redraw();
+    handleClose();
+  };
+
+  const removeAdjoining = () => {
+    const {props} = project;
+    const rm = [];
+    const current = layer;
+    props.loading = true;
+    for(const profile of project.rootLayer.profiles) {
+      if(profile.is('GeneratrixElement.Adjoining')) {
+        rm.push(profile);
+      }
+    }
+    for(const profile of rm) {
+      profile.remove();
+    }
+    if(current) {
+      current.activate();
+    }
+    props.loading = false;
+    project.redraw();
+    handleClose();
+  };
+
+
+
   const addGlass = () => {
     const {container} = (elm || layer);
     const child = container?.createChild({kind: 'glass'});
@@ -111,6 +152,7 @@ export default function AddLayer({editor, project, layer, elm, type, setContext}
   const isRootLayer = !isProduct && !elm && layer?.level === 0 && !layer.layer;
   const isFilling = Boolean(elm?.is('ContainerBlank'));
   const isFlap = Boolean(!isProduct && !elm && layer?.level);
+  const showRA = (isProduct || isRootLayer) && project?.rootLayer?.profiles?.some(profile => profile.is('GeneratrixElement.Adjoining'));
   return <>
     <HtmlTooltip title="Добавить/заменить элемент">
       <IconButton onClick={handleClick}><DataSaverOnIcon /></IconButton>
@@ -127,6 +169,14 @@ export default function AddLayer({editor, project, layer, elm, type, setContext}
       {isRootLayer && <MenuItem onClick={addPortal} disableRipple>
         <AspectRatioIcon />
         Разместить в проёме
+      </MenuItem>}
+      {isRootLayer && <MenuItem onClick={addAdjoining} disableRipple>
+        <AddRoadIcon />
+        Окружить примыканиями
+      </MenuItem>}
+      {showRA && <MenuItem onClick={removeAdjoining} disableRipple>
+        <RemoveRoadIcon />
+        Удалить примыкания
       </MenuItem>}
       {(isFilling || isFlap) && <MenuItem onClick={addVirtual} disableRipple>
         <AddchartOutlinedIcon />

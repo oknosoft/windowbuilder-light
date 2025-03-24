@@ -12,13 +12,14 @@ export default function PairProps(props) {
   if(elm1 instanceof editor.Filling && elm2 instanceof editor.Filling) {
     return <ManyProps {...props}/>;
   }
-  if(elm1 instanceof editor.GeneratrixElement && elm2 instanceof editor.GeneratrixElement) {
+  if(elm1.is('GeneratrixElement') && elm2.is('GeneratrixElement')) {
     // это пара профилей
     if(elm2.nearest === elm1) {
       [elm1, elm2] = [elm2, elm1];
     }
-    if(elm1.nearest === elm2) {
-      children.push(<Typography key="title">{`Примыкающие профили`}</Typography>);
+    if((elm1.nearest === elm2) || (elm2.is('GeneratrixElement.Adjoining') && elm2.isNearest(elm1))) {
+      children.push(<Typography key="title">{`Примыкание ${elm1.index} к ${elm2.index}`}</Typography>);
+      const params = elm1.params.cnnII(elm2);
     }
     let node1, node2;
     for(const node of 'be') {

@@ -6,6 +6,7 @@ import FieldInsetProfile from '../../DataField/InsetProfile';
 import FieldEndConnection from '../../DataField/EndConnection';
 import FieldCnnType from '../../DataField/CnnType';
 import FieldCnnII from '../../DataField/CnnII';
+import CurrentParams from './CurrentParams';
 
 const {dp, utils} = $p;
 export const {fields} =  dp.builderPen.metadata();
@@ -53,5 +54,6 @@ export default function ProfileProps({editor, project, layer, elm, node}) {
     </>}
     <Checkbox obj={elm} fld="shown" meta={meta} label="Видимый" onChange={shownChange}/>
     {imitationOf && <Typography>{`Это колн профиля ${imitationOf.presentation}`}</Typography>}
+    <CurrentParams params={elm.params} />
   </>;
 }
