@@ -31,11 +31,16 @@ export default function SelectTool({view, setView, show3d, toggle3D}) {
     setContext({tool});
   };
 
+  let currentTab = tool ? editor.tools.indexOf(tool) : 0;
+  if(currentTab > 2) {
+    currentTab = 0;
+  }
+
   return editor ? <Vertical>
     <HtmlTooltip title="Вписать в окно (масштаб)" placement="right">
       <IconButton sx={{ml: 1}} onClick={() => editor.project.zoomFit()}><ZoomFitIcon/></IconButton>
     </HtmlTooltip>
-    <Tabs value={tool ? editor.tools.indexOf(tool) : 0} orientation="vertical" onChange={handleChange} >
+    <Tabs value={currentTab} orientation="vertical" onChange={handleChange} >
       <Tab value={0} accent="true" icon={<HtmlTooltip title="Выделить и сдвинуть" placement="right"><CursorIcon /></HtmlTooltip>} aria-label="select" />
       <Tab value={1} accent="true" icon={<HtmlTooltip title="Панорама и сдвиг" placement="right"><WavingHandOutlinedIcon /></HtmlTooltip>} aria-label="move" />
       <Tab value={2} accent="true" icon={<HtmlTooltip title="Нарисовать элемент" placement="right"><PenIcon /></HtmlTooltip>} aria-label="draw" />

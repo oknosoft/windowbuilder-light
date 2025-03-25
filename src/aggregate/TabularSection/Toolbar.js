@@ -9,41 +9,19 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Divider from '@mui/material/Divider';
 import {Toolbar, HtmlTooltip} from '../App/styled';
+import {handlers} from './handlers';
 
-export default function TabularToolbar({tabular, selection, rows, getRow, setRows, setBackdrop, setModified, setSelectedRows}) {
+export default function TabularToolbar({tabular, selection, gridRef, rows, getRow, setRows, setBackdrop, setModified, setSelectedRows}) {
 
   const row = getRow();
 
-  const add = (ev, proto) => {
-    if(!proto) {
-      proto = {};
-    }
-    for(const name in tabular._metadata().fields) {
-      if(selection.hasOwnProperty(name)) {
-        proto[name] = selection[name];
-      }
-    }
-    const newRow = tabular.add(proto);
-    setRows([...rows, newRow]);
-    setSelectedRows(new Set([newRow.row]));
-  };
+  const {add, delRow, clear} = handlers({tabular, selection, rows, setRows, setSelectedRows, gridRef});
 
   const clone = (ev) => {
     add(ev, row.toJSON());
   };
 
-  const del = () => {
-    const index = rows.indexOf(row);
-    tabular.del(row);
-    rows.splice(index, 1);
-    setRows([...rows]);
-    setSelectedRows(new Set());
-  };
-
-  const clear = () => {
-    tabular.clear(selection);
-    setSelectedRows(new Set());
-  };
+  const del = () => delRow(row);
 
   const handleUp = () => {
 
