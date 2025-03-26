@@ -5,7 +5,7 @@ function select(gridRef, pos) {
     current?.element?.focus();
     current?.scrollToCell?.(pos);
     current?.selectCell?.(pos);
-  }, 100);
+  }, 66);
 }
 
 export function handlers({tabular, selection, rows, setRows, setSelectedRows, gridRef}) {
@@ -33,9 +33,16 @@ export function handlers({tabular, selection, rows, setRows, setSelectedRows, gr
       tabular.del(row);
       rows.splice(index, 1);
       const newRows = [...rows];
-      const newRow = newRows[index] ? newRows[index] : newRows[newRows.length - 1];
-      setRows(newRows);
+      let newRow;
+      if(newRows[index]) {
+        newRow = newRows[index];
+        gridRef.current?.selectCell?.({idx: 0, rowIdx: -1});
+      }
+      else {
+        newRow = newRows[newRows.length - 1];
+      }
       setSelectedRows(new Set(newRow ? [newRow.uid] : undefined));
+      setRows(newRows);
       if(newRow) {
         const pos = {idx: 0, rowIdx: newRows.indexOf(newRow)};
         select(gridRef, pos);

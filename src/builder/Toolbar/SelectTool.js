@@ -33,7 +33,7 @@ export default function SelectTool({view, setView, show3d, toggle3D}) {
 
   let currentTab = tool ? editor.tools.indexOf(tool) : 0;
   if(currentTab > 2) {
-    currentTab = 0;
+    currentTab = 1;
   }
 
   return editor ? <Vertical>

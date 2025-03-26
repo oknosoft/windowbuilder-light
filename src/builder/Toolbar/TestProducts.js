@@ -32,7 +32,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
       return project.standardForms.prepare({layer, profiles})
     }
     else {
-      project.clear();
+      sys !== 'stained_glass' && project.clear();
       setContext({project, type: 'product', layer: null, elm: null, tool: editor.tools[0]});
     }
     return Promise.resolve({project, offset});
@@ -165,7 +165,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
 
   function stained_glass() {
     handleClose();
-    return prepare(editor.project, 'stained_glass')
+    return prepare(editor.project, null, 'stained_glass')
       .then(({project}) => {
         project.props.showGrid = false;
         const tool = editor.tools[4];

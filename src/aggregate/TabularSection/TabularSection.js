@@ -69,9 +69,9 @@ export default function TabularSection({tabRef, obj, ts, scheme, selection, colu
     const { key, shiftKey } = event;
     if (key === 'Insert' || key === 'F9') {
       preventDefault(event);
-      const proto = key === 'F9' && getRow();
+      const proto = (key === 'F9' && getRow())?.toJSON?.();
       const {add} = handlers({tabular: obj[ts], selection, rows, setRows, setSelectedRows, gridRef: ref});
-      return add(event, proto?.toJSON());
+      return add(event, proto);
     }
 
     if (mode === 'EDIT' || !rows.length || row?.type === "DETAIL"){

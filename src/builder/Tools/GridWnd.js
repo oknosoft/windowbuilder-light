@@ -28,6 +28,14 @@ function GridWnd({editor, layer}) {
     tab === 'hor' ? {elm: 0} : {elm: 3}
   )), [tab]);
 
+  React.useEffect(() => {
+    function update(o, flds) {
+      Promise.resolve().then(tool.createProfiles.bind(tool));
+    }
+    tool.dp._manager.on({update, rows: update});
+    return () => tool.dp._manager.off({update, rows: update});
+  }, [tool]);
+
   return <>
     <FormControl fullWidth readOnly>
       <InputLabel>Текущий слой</InputLabel>
