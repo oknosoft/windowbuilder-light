@@ -9,6 +9,7 @@ import ManyProps from './Panel/ManyProps';
 import LayerProps from './Panel/LayerProps';
 import ProductProps from './Panel/ProductProps';
 import FillingProps from './Panel/FillingProps';
+import DimensionProps from './Panel/DimensionProps';
 import Settings from './Panel/Settings';
 
 const previous = {};
@@ -48,6 +49,9 @@ export function specifyComponent({elm, layer, editor, project, tool, type, tab, 
     }
     else if (elm.is('GeneratrixElement')) {
       ToolWnd = ProfileProps;
+    }
+    else if (elm.is('DimensionLine')) {
+      ToolWnd = DimensionProps;
     }
     else {
       ToolWnd = Stub;
