@@ -5,6 +5,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Checkbox from '@oknosoft/ui/DataField/Checkbox';
 import {NumberField} from '@oknosoft/ui/DataField/Number';
 import RefField from '@oknosoft/ui/DataField/RefField';
+import {PenSelectMode} from './PenSelectMode';
 import Settings from '../Controls/Panel/Settings';
 
 const meta = {};
@@ -26,10 +27,9 @@ function PenWnd({editor, layer}) {
       <InputLabel>Текущий слой</InputLabel>
       <Input readOnly value={layer?.presentation}/>
     </FormControl>
-    <Settings editor={editor} project={project}/>
     <RefField obj={dp} fld="elm_type" onChange={elm_type_change}/>
+    <PenSelectMode obj={dp}/>
     <Checkbox obj={dp} fld="bind_sys" />
-
   </>;
 }
 

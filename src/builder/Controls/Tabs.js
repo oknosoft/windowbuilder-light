@@ -57,11 +57,13 @@ export function specifyComponent({elm, layer, editor, project, tool, type, tab, 
       ToolWnd = Stub;
     }
   }
-  else if((tab === 'product') && project) {
-    ToolWnd = ProductProps;
-  }
-  else if(type === 'root') {
-    ToolWnd = Settings;
+  else if((tab !== 'tool')) {
+    if(type === 'root') {
+      ToolWnd = Settings;
+    }
+    else if((type === 'product') && project) {
+      ToolWnd = ProductProps;
+    }
   }
   return ToolWnd;
 }

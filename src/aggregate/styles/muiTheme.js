@@ -1,5 +1,5 @@
-import {createTheme} from '@mui/material';
-import primary from '@mui/material/colors/blueGrey';
+import {createTheme} from '@mui/material/styles';
+import {blueGrey as primary} from '@mui/material/colors';
 
 export const toolbarHeight = 50;
 export const disablePermanent = window.innerWidth < 640;

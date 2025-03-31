@@ -39,7 +39,8 @@ module.exports = {
       assert: false,
       stream: false,
       "pouchdb-adapter-memory": false,
-    }
+    },
+    conditionNames: ['mui-modern', '...'],
   },
   module:{
     rules:[                                   //загрузчик для jsx
