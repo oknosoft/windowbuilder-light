@@ -31,9 +31,12 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
     if(type === 'layer' && profiles) {
       return project.standardForms.prepare({layer, profiles})
     }
-    else {
-      sys !== 'stained_glass' && project.clear();
+    else if(sys !== 'stained_glass') {
+      project.clear();
       setContext({project, type: 'product', layer: null, elm: null, tool: editor.tools[0]});
+    }
+    else {
+      setContext({project, type: 'product', layer: null, elm: null});
     }
     return Promise.resolve({project, offset});
   }
