@@ -1,7 +1,7 @@
 import React from 'react';
 import Autocomplete from '@oknosoft/ui/DataField/Autocomplete';
 
-const glob = {
+export const glob = {
   init(curr) {
     if(!this.meta) {
       this.meta = $p.dp.builderPen.metadata();
@@ -12,27 +12,12 @@ const glob = {
 };
 
 
-
-export function PenSelectMode({obj, onChange, enterTab, ...other}) {
+export function PenSelectMode({obj, ref, onChange, enterTab, ...other}) {
 
   const [value, setValue] = React.useState(glob.init(obj.mode));
-  const [index, setIndex] = React.useState(0);
-  React.useEffect(() => {
-    function update(curr, flds) {
-      if('elm_type' in flds) {
-        if(!glob.meta.fields.mode.exTypes.includes(obj.elm_type.name) && obj.mode) {
-          obj.mode = 0;
-          setValue(glob.init(0));
-          onChange?.(0);
-        }
-        else {
-          setIndex(index + 1);
-        }
-      }
-    }
-    obj._manager.on({update});
-    return () => obj._manager.off({update});
-  }, []);
+  if(!ref.current) {
+    ref.current = {setValue};
+  }
 
   return <Autocomplete
     options={glob.options}
