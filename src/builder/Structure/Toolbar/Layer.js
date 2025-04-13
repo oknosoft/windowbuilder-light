@@ -28,13 +28,13 @@ export default function LayerToolbar(props) {
     project.zoomFit();
   };
   return <>
-    <AddLayer {...props} />
+    {layer===project.rootLayer ? null : <AddLayer {...props} />}
     <Box sx={{flex: 1}} />
-    <HtmlTooltip title="Очистить текуший слой">
+    <HtmlTooltip title={`Очистить слой '${layer.presentation}'`}>
       <IconButton onClick={clear}><i className="fa fa-eraser" /></IconButton>
     </HtmlTooltip>
-    <HtmlTooltip title="Удалить текуший слой">
-      <IconButton onClick={remove}><i className="fa fa-trash-o" /></IconButton>
+    <HtmlTooltip title={`Удалить слой '${layer.presentation}'`}>
+      <IconButton disabled={layer===project.rootLayer} onClick={remove}><i className="fa fa-trash-o" /></IconButton>
     </HtmlTooltip>
   </>
 }

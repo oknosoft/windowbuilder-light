@@ -77,7 +77,7 @@ export default function LayerProps3D({editor, tool, project, layer, setContext})
       setContext({tool: editor.tool});
     }
   };
-  return <FieldSet title="Свойства 3D" defaultExpanded={!layer.layer}>
+  return layer===project.rootLayer ? null : <FieldSet title="Свойства 3D" defaultExpanded={!layer.layer}>
     <SelectLayerField editor={editor} three={three} layer={layer} onChange={onChange}/>
     <RefField obj={three} fld="bind" meta={bindMeta} label="Привязка" placeholder="Без привязки" />
     {(bind.empty() || !bindable) ? <>
