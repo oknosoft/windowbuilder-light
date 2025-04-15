@@ -10,14 +10,21 @@ if(grp_names) {
   }
 }
 
-export default function CurrentParams({params}) {
+export default function CurrentParams({params, flat}) {
   const res = [];
   for(const [grouping, prms] of params.list) {
-    res.push(<FieldSet key={grouping} title={names.get(grouping) || 'Параметры'} defaultExpanded>
-      {prms.map(param => {
-        return <ParamField key={param.ref} obj={params.proxy} param={param}/>;
-      })}
-    </FieldSet>);
+    if(flat && !names.get(grouping)) {
+      prms.forEach((param, index) => {
+        res.push(<ParamField key={index} obj={params.proxy} param={param}/>);
+      })
+    }
+    else {
+      res.push(<FieldSet key={grouping} title={names.get(grouping) || 'Параметры'} defaultExpanded>
+        {prms.map((param, index) => {
+          return <ParamField key={index} obj={params.proxy} param={param}/>;
+        })}
+      </FieldSet>);
+    }
   }
   return res;
 }

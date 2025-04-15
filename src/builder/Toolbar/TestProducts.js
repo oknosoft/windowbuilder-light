@@ -29,11 +29,18 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
     }
 
     if(type === 'layer' && profiles) {
-      return project.standardForms.prepare({layer, profiles})
+      return project.standardForms.prepare({layer, profiles});
+    }
+    else if(type === 'product' && profiles) {
+      project.clear();
+      props.loading = true;
+      setContext({tool: editor.tool});
+      const profilesBounds = Array.isArray(profiles) ? project.standardForms.bounds(profiles) : null;
+      return Promise.resolve({project, offset: {x: 0, y: 0}, profilesBounds});
     }
     else if(sys !== 'stained_glass') {
       project.clear();
-      setContext({project, type: 'product', layer: null, elm: null, tool: editor.tools[0]});
+      setContext({project, type: 'product', layer: null, elm: null, tool: editor.tool});
     }
     else {
       setContext({project, type: 'product', layer: null, elm: null});
@@ -154,7 +161,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
           pos: 'right',
           offset: -240,
         });
-        const {container} = activeLayer.fillings[0];
+        const container = activeLayer.fillings[0]?.container;
         const flap = container?.createChild({kind: 'flap'});
         const hor = new Path({insert: false, segments: [[1000, 1330], [-100, 1330]]});
         flap.createProfile({

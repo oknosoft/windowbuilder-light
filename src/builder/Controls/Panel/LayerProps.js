@@ -5,12 +5,14 @@ import LayerPropsFurn from './LayerPropsFurn';
 import CurrentParams from './CurrentParams';
 
 export default function LayerProps({editor, tool, project, layer, setContext}) {
+  const isRoot = layer===project.rootLayer;
+  const justified3D = project.contours.length > 1;
   return <>
     {layer.presentation}
-    <FieldSys disabled={layer===project.rootLayer} obj={layer} fld="sys" />
-    {layer===project.rootLayer ? null :
+    {layer.level <= 0 && <FieldSys disabled={isRoot} obj={layer} fld="sys" />}
+    {!isRoot && justified3D &&
       <LayerProps3D key={layer.index} editor={editor} tool={tool} project={project} layer={layer} setContext={setContext}/>}
-      <LayerPropsFurn layer={layer}/>
-      <CurrentParams params={layer.params} />
+    <LayerPropsFurn layer={layer}/>
+    {!isRoot && layer.level <= 0 && <CurrentParams params={layer.params} />}
   </>;
 }
