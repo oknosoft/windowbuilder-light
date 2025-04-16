@@ -49,7 +49,7 @@ export default function FieldSys({obj, fld, onChange, fullWidth=true, enterTab, 
     value={value}
     label="Система"
     fullWidth={fullWidth}
-    disableClearable
+    //disableClearable={false}
     placeholder="Нет"
     openList
     {...other}
