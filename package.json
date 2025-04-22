@@ -53,8 +53,8 @@
     "marked": "^15.0",
     "marked-base-url": "^1.1",
     "md5-file": "^5.0",
-    "metadata-core": "2.0.36-beta.1",
-    "metadata-pouchdb": "2.0.36-beta.1",
+    "metadata-core": "2.0.36-beta.2",
+    "metadata-pouchdb": "2.0.36-beta.2",
     "metadata-ui": "file:../metadata-ui/dist",
     "paper-jsdom-canvas": "0.12.18",
     "react-data-grid": "7.0.0-beta.47",
@@ -70,7 +70,7 @@
     "url-join": "^5.0",
     "url-parse": "^1.5",
     "velocity-react": "^1.4.3",
-    "wb-core": "github:oknosoft/windowbuilder-core#e009866e2c5344f0453a7210e2d8ab8255a1d5ad",
+    "wb-core": "github:oknosoft/windowbuilder-core#9dc802e9837cccebc7170ac94b4fad92d429e486",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {

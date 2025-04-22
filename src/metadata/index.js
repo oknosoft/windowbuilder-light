@@ -44,7 +44,7 @@ export function init(handleIfaceState) {
 
     // сообщяем адаптерам пути, суффиксы и префиксы
     const {wsql, job_prm, classes, adapters: {pouch}} = $p;
-    if(wsql.get_user_param('couch_path') !== job_prm.couch_path && process.env.NODE_ENV !== 'development') {
+    if(wsql.get_user_param('couch_path') !== job_prm.couch_path) {
       wsql.set_user_param('couch_path', job_prm.couch_path);
     }
     if(!wsql.get_user_param('auth_provider')) {

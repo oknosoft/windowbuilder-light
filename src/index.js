@@ -16,6 +16,13 @@ root.render(<Metadata App={App} initialText={initialText} />);
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
+window.channel4Broadcast = new BroadcastChannel('channel4');
+channel4Broadcast.addEventListener('message', (event) => {
+  if(event.data.type === 'zone') {
+    const zone = sessionStorage.getItem('zone') || localStorage.getItem('zone');
+    channel4Broadcast.postMessage({type: 'zone', zone});
+  }
+});
 
 swRegistration.unregister({
   // onUpdate() {
