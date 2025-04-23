@@ -21,7 +21,7 @@
   // заглушка
   try {
     sessionStorage.setItem('zone', window._dynamic_patch_.predefined.zone);
-    sessionStorage.setItem('year', 2024);
+    sessionStorage.setItem('year', 2025);
   }
   catch (e) {}
   // при желании-необходимости, здесь можно разместить...

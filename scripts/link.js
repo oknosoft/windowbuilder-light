@@ -19,7 +19,7 @@ const repos = [
   },
   {
     local: '@oknosoft/ui',
-    remote: '..\\metadata-ui\\dist\\',
+    remote: '..\\metadata-ui-v3\\dist\\',
     dir: '',
   },
   {
