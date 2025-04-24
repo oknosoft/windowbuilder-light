@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import ManyProps from './ManyProps';
 import FieldInsetProfileGrp from '../../DataField/InsetProfileGrp';
 import {fields} from './ProfileProps';
+import CurrentParams from './CurrentParams';
 
 export default function PairProps(props) {
   const {elm, layer, editor, project} = props;
@@ -47,7 +48,9 @@ export default function PairProps(props) {
   }
   else if(elm2 instanceof editor.Filling) {
     [elm1, elm2] = [elm2, elm1];
+    const rib = elm1.rib(elm2);
     children.push(<Typography key="title">{`Ребро заполнения`}</Typography>);
+    children.push(<CurrentParams params={rib.params} />);
   }
   return children;
 }
