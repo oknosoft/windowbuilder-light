@@ -59,6 +59,7 @@ export default function WorkCentersTaskList() {
   const navigate = useNavigate();
   const backdrop = useBackdropContext();
   const {setTitle} = useTitleContext();
+  const prms = React.useMemo(() => utils.prm(), []);
 
   // для обновления динсписка
   const setRefresh = () => {
@@ -69,14 +70,13 @@ export default function WorkCentersTaskList() {
 
   React.useEffect(() => {
     setTitle(title);
-    const {ref} = utils.prm();
-    loadMoreRows(300, 0, ref, backdrop)
+    loadMoreRows(300, 0, prms.ref, backdrop)
       .then((data) => {
         setRows((rows) => {
           const nrows = [...rows, ...data];
-          if(ref) {
-            if(nrows.find((raw) => raw.ref === ref)) {
-              setTimeout(() => setSelectedRows(new Set([ref])));
+          if(prms.ref) {
+            if(nrows.find((raw) => raw.ref === prms.ref)) {
+              setTimeout(() => setSelectedRows(new Set([prms.ref])));
             }
           }
           return nrows;
@@ -85,7 +85,7 @@ export default function WorkCentersTaskList() {
       .catch(setError);
   }, [refresh]);
 
-  const [create, clone, open] = mgrCreate({mgr: work_centers_task, navigate, selectedRows, backdrop});
+  const [create, clone, open] = mgrCreate({mgr: work_centers_task, navigate, selectedRows, backdrop, prms});
 
   const onCellClick = cellClick({selectedRows, setSelectedRows});
 
@@ -99,7 +99,7 @@ export default function WorkCentersTaskList() {
   });
 
   return <Content>
-    <ListToolbar create={create} clone={null} open={open} disabled={Boolean(error)} scheme={scheme} setRefresh={setRefresh}/>
+    <ListToolbar create={create} clone={null} open={open} disabled={Boolean(error)} scheme={scheme} setRefresh={setRefresh} prms={prms}/>
     {error ? error.message : <DataGrid
       columns={columns}
       rows={rows}

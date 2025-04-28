@@ -13,7 +13,7 @@ import CachedIcon from '@mui/icons-material/Cached';
 import {HtmlTooltip} from '../../components/App/styled';
 
 
-function IconMenu({anchorEl, open, handleClose, post, unpost, toCorrent, posted, isNew, changeTask}) {
+function IconMenu({anchorEl, open, handleClose, post, unpost, toCorrent, posted, navigate, changeTask}) {
   const onClick = posted ?
     () => {
       handleClose();
@@ -25,6 +25,11 @@ function IconMenu({anchorEl, open, handleClose, post, unpost, toCorrent, posted,
         .then(changeTask)
         .catch(() => null);
     };
+
+  const queryChangeTask = () => {
+    handleClose();
+    navigate(`/doc/work_centers_task?return=/rmd&select=true`)
+  };
 
   return <Menu
     anchorEl={anchorEl}
@@ -41,7 +46,7 @@ function IconMenu({anchorEl, open, handleClose, post, unpost, toCorrent, posted,
       <ListItemIcon><FactoryIcon /></ListItemIcon>
       <ListItemText>Перейти в задание</ListItemText>
     </MenuItem>
-    <MenuItem onClick={changeTask} disabled={isNew}>
+    <MenuItem onClick={queryChangeTask} >
       <ListItemIcon><CachedIcon /></ListItemIcon>
       <ListItemText>Сменить задание</ListItemText>
     </MenuItem>
@@ -74,16 +79,11 @@ export default function PostBtn({obj, changeTask}) {
     return [post, unpost, handleOpen, handleClose, toCorrent];
   }, [obj]);
 
-  const changeAndClose = () => {
-    handleClose();
-    changeTask();
-  };
-
   const {posted} = obj;
   return <HtmlTooltip open={tooltipOpen} title= {obj.presentation} disableInteractive leaveDelay={200}>
     <IconButton onClick={handleOpen} onMouseEnter={() => setTooltipOpen(true)} onMouseLeave={tooltipClose}>
       {posted ? <BookmarkAddedIcon/> : <BookmarkBorderIcon/>}
     </IconButton>
-    {IconMenu({anchorEl, open, handleClose, post, unpost, toCorrent, posted, isNew: obj.is_new(), changeTask: changeAndClose})}
+    {IconMenu({anchorEl, open, handleClose, post, unpost, toCorrent, posted, navigate, changeTask})}
   </HtmlTooltip>;
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import {Resize, ResizeHorizon} from 'metadata-ui/Resize';
 import Loading from '../App/Loading';
-import {useTitleContext} from '../App';
+import {useTitleContext, useBackdropContext} from '../App';
 import {useLoadingContext} from '../Metadata';
 import {contentWidth} from '../../styles/muiTheme';
 import {RmdHead} from './Head';
@@ -14,13 +14,14 @@ import {checkTgt} from './data';
 export default function RMD (props) {
 
   const {setTitle} = useTitleContext();
+  const {setBackdrop} = useBackdropContext();
   const {handleIfaceState, ifaceState: {menu_open, rmd}} = useLoadingContext();
   const theme = useTheme();
   const width = contentWidth(menu_open);
 
   // при создании компонента, подготовим общие данные
   React.useEffect(() => {
-    checkTgt(handleIfaceState, rmd || {});
+    checkTgt(handleIfaceState, rmd || {}, setBackdrop);
     if(menu_open) {
       handleIfaceState({menu_open: false});
       return () => handleIfaceState({menu_open: true});

@@ -68,13 +68,27 @@ export const setScheme = (handleIfaceState, rmd, ref) => {
 };
 
 
-export const setTgt = (handleIfaceState, rmd, tgt) => {
+export const setTgt = (handleIfaceState, rmd, tgt, setBackdrop) => {
   handleIfaceState({rmd: Object.assign({}, rmd, {tgt})});
+  setBackdrop?.(false);
 };
 
-export const checkTgt = (handleIfaceState, rmd) => {
-  if(!rmd?.tgt) {
-    setTgt(handleIfaceState, rmd, work_centers_task.create({date: new Date()}, false, true));
+export const checkTgt = (handleIfaceState, rmd, setBackdrop) => {
+  const prms = utils.prm();
+  if(prms.ref) {
+    const task = work_centers_task.get(prms.ref);
+    if(task.is_new()) {
+      task.load()
+        .then(() => task.load_keys())
+        .then(() => task.load_linked_refs())
+        .then(() => setTgt(handleIfaceState, rmd, task, setBackdrop));
+    }
+    else {
+      setTgt(handleIfaceState, rmd, task, setBackdrop);
+    }
+  }
+  else if(!rmd?.tgt) {
+    setTgt(handleIfaceState, rmd, work_centers_task.create({date: new Date()}, false, true), setBackdrop);
   }
 };
 

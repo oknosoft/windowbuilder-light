@@ -18,7 +18,9 @@ export function cellClick({selectedRows, setSelectedRows}) {
   };
 }
 
-export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
+const {dialogs} = $p.ui;
+
+export function mgrCreate({mgr, navigate, selectedRows, backdrop, prms}) {
 
   const create = () => {
     backdrop
@@ -50,10 +52,18 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
     if(selectedRows.size) {
       backdrop
         .setBackdrop(true)
-        .then(() => navigate(Array.from(selectedRows)[0], {relative: 'path'}));
+        .then(() => {
+          const ref = Array.from(selectedRows)[0];
+          if(prms?.select && prms?.return) {
+            navigate(`${prms?.return}?ref=${ref}`, {relative: 'path'});
+          }
+          else {
+            navigate(ref, {relative: 'path'});
+          }
+        });
     }
     else {
-      //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
+      dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
     }
   };
 
@@ -65,7 +75,7 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
           const {utils} = $p;
           utils.wss.send({
             method: 'ОткрытьФорму',
-            name: 'Документ.ЗаказПокупателя.ФормаОбъекта',
+            name: mgr.class_name === 'doc.work_centers_task' ? 'Документ.НарядРЦ.ФормаОбъекта' : 'Документ.ЗаказПокупателя.ФормаОбъекта',
             ref: Array.from(selectedRows)[0],
             type: mgr.class_name
           });
@@ -74,7 +84,7 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop}) {
         .then(() => backdrop.setBackdrop(false));
     }
     else {
-      //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
+      dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});
     }
   };
 

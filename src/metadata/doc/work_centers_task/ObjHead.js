@@ -11,7 +11,7 @@ export default function ObjHead({obj}) {
       <TextField label="Дата" value={moment(obj.date).format(moment._masks.date)}/>
     </Grid>
     <Grid size={{xs: 12, lg: 4}}>
-      <RefField obj={obj} fld="key"/>
+      <RefField obj={obj} fld="work_center"/>
       <RefField obj={obj} fld="recipient"/>
     </Grid>
     <Grid size={{xs: 12, lg: 4}}>

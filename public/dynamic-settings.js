@@ -9,7 +9,7 @@
   };
 
   const zone = location.host.includes('2210') ? 10 : (
-    location.host.includes('2222') ? 22 : (location.host.includes('2031') ? 31 : 29)
+    location.host.includes('2222') ? 22 : (location.host.includes('2031') ? 32 : 29)
   );
 
   const host = zone === 29 ? 'steklotorg.oknosoft.ru' : (

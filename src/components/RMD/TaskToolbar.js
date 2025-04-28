@@ -55,8 +55,7 @@ export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows,
     }
   };
 
-  const changeTask = () => {
-    const ntgt = tgt._manager.create({date: new Date()}, false, true);
+  const changeTask = (ntgt) => {
     setSelectedRows(new Set());
     setTgt(handleIfaceState, rmd, ntgt);
     rmd.tgt = ntgt;
@@ -78,6 +77,6 @@ export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows,
       <IconButton onClick={report}><AssessmentOutlinedIcon/></IconButton>
     </HtmlTooltip>
     <Typography sx={{flex: 1}}></Typography>
-    <PostBtn obj={tgt} changeTask={changeTask}/>
+    <PostBtn obj={tgt} changeTask={changeTask} />
   </Toolbar>;
 }

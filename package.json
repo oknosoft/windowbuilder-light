@@ -32,12 +32,13 @@
   "proxy4": "https://brusnika.oknosoft.ru:2210/",
   "proxy5": "https://phototech.oknosoft.ru/",
   "proxy6": "https://phototech.oknosoft.ru:2300/",
-  "proxy": "http://localhost:3016/",
+  "proxy7": "http://localhost:3016/",
   "proxy8": "http://192.168.9.27:3016/",
   "proxy9": "https://steklotorg.oknosoft.ru:2310/",
   "proxy10": "https://steklotorg.oknosoft.ru/",
   "proxy11": "http://localhost:3031/",
   "proxy12": "http://192.168.9.31:3016/",
+  "proxy": "https://stdev.oknosoft.ru/",
   "dependencies": {
     "@aldabil/react-scheduler": "^2.9",
     "@emotion/react": "^11.14",
@@ -70,7 +71,7 @@
     "url-join": "^5.0",
     "url-parse": "^1.5",
     "velocity-react": "^1.4.3",
-    "wb-core": "github:oknosoft/windowbuilder-core#9dc802e9837cccebc7170ac94b4fad92d429e486",
+    "wb-core": "github:oknosoft/windowbuilder-core#c176e31ab9212a401ba6e8b55e7b2589505a6dd9",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {
