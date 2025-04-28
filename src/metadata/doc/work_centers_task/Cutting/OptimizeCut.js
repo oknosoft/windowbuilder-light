@@ -143,9 +143,9 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
     else {
       if(selected.rows?.size) {
         const Component = mode === 'cuts' ? Manual2DCuts : Manual2DCutting;
-        const tabular = mode === 'cuts' ? obj.cuts : obj.cutting;
+        const row = (mode === 'cuts' ? obj.cuts : obj.cutting).find({row: Array.from(selected.rows)[0]});
         setExt(<React.Suspense fallback={<Loading/>}>
-          <Component obj={obj} row={tabular.find({row: Array.from(selected.rows)[0]})} />
+          <Component obj={obj} row={row} setExt={setExt}/>
         </React.Suspense>);
       }
       else {

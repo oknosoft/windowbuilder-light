@@ -1,8 +1,9 @@
 import React from 'react';
 import Canvas from './Canvas';
+import ManualToolbar from './ManualToolbar';
 
-export default function Manual2DCutting({obj, row}) {
-  const {nom, cuts, initial} = React.useMemo(() => {
+export default function Manual2DCutting({obj, row, setExt}) {
+  const {nom, len, width, cuts, initial, handleClose} = React.useMemo(() => {
     const {nom, len, width, stick} = row;
     const cuts = new Map();
     let initial = null;
@@ -18,12 +19,19 @@ export default function Manual2DCutting({obj, row}) {
         }
       }
     }
-    return {nom, cuts, initial};
+    const handleClose = () => setExt(null);
+    return {nom, len, width, cuts, initial, handleClose};
   }, [row]);
   const [currentProduct, setProduct] = React.useState(row);
   const [currentCut, setCut] = React.useState(initial);
   return <>
-    `Manual2D ${nom.name}`
+    <ManualToolbar
+      title={nom.name}
+      setExt={setExt}
+      cuts={cuts}
+      currentCut={currentCut}
+      setCut={setCut}
+    />
     <Canvas
       cuts={cuts}
       currentProduct={currentProduct}

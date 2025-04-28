@@ -70,9 +70,9 @@ export default function ObjCutting({tabRef, obj, setBackdrop}) {
     <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode="cutting"/>
   </>;
 
+  // <ToolbarTabular clear={stub} create={stub} clone={stub} remove={stub} buttons={buttons}/>
   return ext ?
     <div style={rootStyle}>
-      <ToolbarTabular clear={stub} create={stub} clone={stub} remove={stub} buttons={buttons}/>
       {ext}
     </div> :
     <ObjTabular

@@ -49,12 +49,12 @@ export default function ObjCutsIn({tabRef, obj, setBackdrop}) {
   const [ext, setExt] = React.useState(null);
   const buttons = <CutsInBtns obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode="cuts"/>;
 
+  //<ToolbarTabular clear={stub} create={stub} clone={stub} remove={stub} buttons={buttons}/>
   return <div style={style}>
     <Resize handleWidth="6px" onResizeStop={resize}  onResizeWindow={resize}>
       <ResizeHorizon width={`${(style.width * 8/12).toFixed()}px`} minWidth="300px">
         {ext ?
           <div style={{height: style.height - 50}}>
-            <ToolbarTabular clear={stub} create={stub} clone={stub} remove={stub} buttons={buttons}/>
             {ext}
           </div> :
           <ObjTabular
