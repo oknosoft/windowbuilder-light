@@ -19,8 +19,10 @@ export default function Manual2DCutting({obj, row, setExt}) {
         }
       }
     }
-    const handleClose = () => setExt(null);
-    return {nom, len, width, cuts, initial, handleClose};
+    if(!initial && cuts.size === 1) {
+      initial = Array.from(cuts.keys())[0];
+    }
+    return {nom, len, width, cuts, initial};
   }, [row]);
   const [currentProduct, setProduct] = React.useState(row);
   const [currentCut, setCut] = React.useState(initial);
