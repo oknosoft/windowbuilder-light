@@ -8,7 +8,7 @@ import {useLoadingContext} from '../../../components/Metadata';
 import ToolbarTabular from '../../aggregate/ToolbarTabular';
 import ObjTabular from '../../aggregate/ObjTabular';
 import ObjCuttingSvg from './ObjCuttingSvg';
-import {CutsInBtns} from './OptimizeCut';
+import {CutsInBtns} from './Cutting/OptimizeCut';
 
 export const columns = [
   {key: "stick", width: 80, name: "№ загот", tooltip: "№ листа (хлыста, заготовки)", renderCell: NumberFormatter, renderEditCell: NumberCell},
@@ -41,18 +41,13 @@ export default function ObjCutsIn({tabRef, obj, setBackdrop}) {
     }
   };
 
-  const [row, setRow] = React.useState(null);
+  const [selected, setRow] = React.useState({row: null});
   const selectedRowsChange = (rows) => {
-    if(rows.size) {
-      setRow(obj.cuts.get(Array.from(rows)[0] - 1));
-    }
-    else {
-      setRow(null);
-    }
+    setRow({row: rows.size ? obj.cuts.find({row: Array.from(rows)[0]}) : null, rows});
   };
 
   const [ext, setExt] = React.useState(null);
-  const buttons = <CutsInBtns obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt}/>;
+  const buttons = <CutsInBtns obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode="cuts"/>;
 
   return <div style={style}>
     <Resize handleWidth="6px" onResizeStop={resize}  onResizeWindow={resize}>
@@ -74,7 +69,7 @@ export default function ObjCutsIn({tabRef, obj, setBackdrop}) {
         }
       </ResizeHorizon>
       <ResizeHorizon overflow="hidden auto" width={`${(style.width * 4/12).toFixed()}px`} minWidth="200px">
-        <ObjCuttingSvg row={row} height={style.height}/>
+        <ObjCuttingSvg row={selected.row} height={style.height}/>
       </ResizeHorizon>
     </Resize>
   </div>;

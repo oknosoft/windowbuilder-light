@@ -6,10 +6,14 @@ import SegmentIcon from '@mui/icons-material/Segment';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
+import SwipeLeftOutlinedIcon from '@mui/icons-material/SwipeLeftOutlined';
 import LayersIcon from '@mui/icons-material/Layers';
-import {HtmlTooltip} from '../../../components/App/styled';
-import CuttingReport from './CuttingReport';
-import CuttingProgress1D from './CuttingProgress1D';
+import {HtmlTooltip} from '../../../../components/App/styled';
+import Loading from '../../../../components/App/Loading';
+import CuttingReport from './Report';
+import CuttingProgress1D from './Progress1D';
+const Manual2DCutting = React.lazy(() => import('./Manual2DCutting'));
+const Manual2DCuts = React.lazy(() => import('./Manual2DCuts'));
 
 const {adapters: {pouch}, ui: {dialogs}, utils, classes} = $p;
 
@@ -119,7 +123,7 @@ export function run2D(obj, setBackdrop) {
     });
 }
 
-export default function OptimizeCut({obj, setBackdrop, ext, setExt}) {
+export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mode}) {
 
   const state = React.useMemo(() => ({statuses: []}), [obj]);
 
@@ -129,6 +133,27 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt}) {
     }
     else {
       setExt(<CuttingReport obj={obj} />);
+    }
+  };
+
+  const malual = () => {
+    if(ext) {
+      setExt(null);
+    }
+    else {
+      if(selected.rows?.size) {
+        const Component = mode === 'cuts' ? Manual2DCuts : Manual2DCutting;
+        const tabular = mode === 'cuts' ? obj.cuts : obj.cutting;
+        setExt(<React.Suspense fallback={<Loading/>}>
+          <Component obj={obj} row={tabular.find({row: Array.from(selected.rows)[0]})} />
+        </React.Suspense>);
+      }
+      else {
+        dialogs.alert({
+          title: 'Ручной раскрой 2D',
+          text: 'Не выбрана текущая строка',
+        });
+      }
     }
   };
 
@@ -146,6 +171,9 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt}) {
     <HtmlTooltip title="Оптимизировать раскрой 2D">
       <IconButton onClick={run2D(obj, setBackdrop, setExt)}><ViewQuiltIcon/></IconButton>
     </HtmlTooltip>
+    <HtmlTooltip title="Разместить вручную">
+      <IconButton onClick={malual}><SwipeLeftOutlinedIcon/></IconButton>
+    </HtmlTooltip>
     <HtmlTooltip title="Удалить данные оптимизации раскроя">
       <IconButton onClick={reset_sticks}><PlaylistRemoveIcon/></IconButton>
     </HtmlTooltip>
@@ -156,7 +184,7 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt}) {
   </>;
 }
 
-export function CutsInBtns({obj, setBackdrop, ext, setExt}) {
+export function CutsInBtns({obj, setBackdrop, ext, setExt, selected, mode}) {
   const fill_cuts = () => {
     setBackdrop(true);
     obj.fill_cuts();
@@ -167,6 +195,6 @@ export function CutsInBtns({obj, setBackdrop, ext, setExt}) {
     <HtmlTooltip title="Добавить типовые заготовки">
       <IconButton onClick={fill_cuts}><LayersIcon/></IconButton>
     </HtmlTooltip>
-    <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt}/>
+    <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode={mode}/>
   </>;
 }

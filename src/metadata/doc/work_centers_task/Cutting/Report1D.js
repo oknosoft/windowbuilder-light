@@ -1,7 +1,7 @@
 import React from 'react';
 import {styled} from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import {stat} from './CuttingProgress1D';
+import {stat} from './Progress1D';
 
 const FragmentNom = styled('div')(({ theme }) => ({marginTop: theme.spacing(2)}));
 

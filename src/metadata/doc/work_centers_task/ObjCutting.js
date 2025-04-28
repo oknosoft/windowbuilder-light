@@ -7,7 +7,7 @@ import {useLoadingContext} from '../../../components/Metadata';
 import {tabularStyle} from '../../dataGrid';
 import ToolbarTabular from '../../aggregate/ToolbarTabular';
 import ClipBoard from '../../aggregate/ClipBoard';
-import OptimizeCut from './OptimizeCut';
+import OptimizeCut from './Cutting/OptimizeCut';
 
 export const columns = [
   {key: "production", name: "Объект", width: 200, renderCell: PresentationFormatter},
@@ -57,11 +57,17 @@ const stub = () => null;
 export default function ObjCutting({tabRef, obj, setBackdrop}) {
 
   const rootStyle = tabularStyle(tabRef, useLoadingContext());
-  const execute = React.useMemo(() => load(obj), [obj]);
+  const [execute, selected, selectedRowsChange] = React.useMemo(() => {
+    const selected = {};
+    const selectedRowsChange = (rows) => {
+      selected.rows = rows;
+    };
+    return [load(obj), selected, selectedRowsChange];
+  }, [obj]);
   const [ext, setExt] = React.useState(null);
   const buttons = <>
     <ClipBoard execute={execute}/>
-    <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt}/>
+    <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode="cutting"/>
   </>;
 
   return ext ?
@@ -74,5 +80,6 @@ export default function ObjCutting({tabRef, obj, setBackdrop}) {
       tabular={obj.cutting}
       columns={columns}
       buttons={buttons}
+      selectedRowsChange={selectedRowsChange}
     />;
 }

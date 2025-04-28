@@ -10,8 +10,8 @@ import UTurnLeftIcon from '@mui/icons-material/UTurnLeft';
 import {useBackdropContext} from '../App';
 import {Toolbar, HtmlTooltip} from '../App/styled';
 import {filter, query, setTgt} from './data';
-import {run1D, run2D} from '../../metadata/doc/work_centers_task/OptimizeCut';
-import CuttingReport from '../../metadata/doc/work_centers_task/CuttingReport';
+import {run1D, run2D} from '../../metadata/doc/work_centers_task/Cutting/OptimizeCut';
+import CuttingReport from '../../metadata/doc/work_centers_task/Cutting/Report';
 import PostBtn from './TaskPost';
 
 const stub = () => null;
