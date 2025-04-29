@@ -3,17 +3,17 @@ import Canvas from './Canvas';
 import ManualToolbar from './ManualToolbar';
 
 export default function Manual2DCutting({obj, row, setExt}) {
-  const {nom, len, width, cuts, initial, handleClose} = React.useMemo(() => {
+  const {nom, len, width, cuts, initial, products} = React.useMemo(() => {
     const {nom, len, width, stick} = row;
     const cuts = new Map();
     let initial = null;
     for(const crow of obj.cuts) {
       if(crow.nom === nom && crow.record_kind.is('Приход') && (crow.len >= len && crow.width >= width || crow.len >= width && crow.width >= len)) {
-        const products = [];
+        const currentProducts = [];
         obj.cutting.find_rows({stick: crow.stick}, (prow) => {
-          products.push(prow);
-        })
-        cuts.set(crow, products);
+          currentProducts.push(prow);
+        });
+        cuts.set(crow, currentProducts);
         if(crow.stick === stick) {
           initial = crow;
         }
@@ -22,10 +22,13 @@ export default function Manual2DCutting({obj, row, setExt}) {
     if(!initial && cuts.size === 1) {
       initial = Array.from(cuts.keys())[0];
     }
-    return {nom, len, width, cuts, initial};
+    const products = [row];
+    return {nom, len, width, cuts, initial, products};
   }, [row]);
   const [currentProduct, setProduct] = React.useState(row);
   const [currentCut, setCut] = React.useState(initial);
+  const [refresh, rawSetRefresh] = React.useState(0);
+  const setRefresh = () => rawSetRefresh(refresh + 1);
   return <>
     <ManualToolbar
       title={nom.name}
@@ -33,6 +36,10 @@ export default function Manual2DCutting({obj, row, setExt}) {
       cuts={cuts}
       currentCut={currentCut}
       setCut={setCut}
+      products={products}
+      currentProduct={currentProduct}
+      setProduct={setProduct}
+      setRefresh={setRefresh}
     />
     <Canvas
       cuts={cuts}
@@ -40,6 +47,7 @@ export default function Manual2DCutting({obj, row, setExt}) {
       setProduct={setProduct}
       currentCut={currentCut}
       setCut={setCut}
+      rotated={Boolean(currentProduct?.rotated)}
     />
   </>;
 }

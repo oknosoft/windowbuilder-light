@@ -14,11 +14,14 @@ function createEditor() {
 
 }
 
-export default function Canvas({cuts, currentProduct, setProduct, currentCut, setCut}) {
+export default function Canvas({cuts, currentProduct, setProduct, currentCut, setCut, rotated}) {
   const ref = React.useRef(null);
   React.useEffect(() => {
     const editor = new ManualCutter({ref, cuts, currentProduct, currentCut});
     return editor.unload();
-  }, [currentProduct, currentCut]);
+  }, []);
+  React.useEffect(() => {
+    ref.project.activeLayer.children.sheet.setup({cuts, currentProduct, currentCut});
+  }, [currentProduct, currentCut, rotated]);
   return <StyledCanvas ref={ref} />;
 }

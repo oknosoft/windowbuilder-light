@@ -3,17 +3,25 @@ import Canvas from './Canvas';
 import ManualToolbar from './ManualToolbar';
 
 export default function Manual2DCuts({obj, row, setExt}) {
-  const {nom, cuts} = React.useMemo(() => {
+  const {nom, cuts, products} = React.useMemo(() => {
     const {nom, len, width, stick} = row;
-    const products = [];
+    const currentProducts = [];
     obj.cutting.find_rows({stick}, (prow) => {
-      products.push(prow);
+      currentProducts.push(prow);
     });
-    const cuts = new Map([[row, products]]);
-    return {nom, cuts};
+    const cuts = new Map([[row, currentProducts]]);
+    const products = [];
+    for(const prow of obj.cutting) {
+      if(prow.nom === nom && (prow.len <= len && prow.width <= width || prow.len <= width && prow.width <= len)) {
+        products.push(prow);
+      }
+    }
+    return {nom, cuts, products};
   }, [row]);
   const [currentProduct, setProduct] = React.useState(null);
   const [currentCut, setCut] = React.useState(row);
+  const [refresh, rawSetRefresh] = React.useState(0);
+  const setRefresh = () => rawSetRefresh(refresh + 1);
   return <>
     <ManualToolbar
       title={nom.name}
@@ -21,6 +29,10 @@ export default function Manual2DCuts({obj, row, setExt}) {
       cuts={cuts}
       currentCut={currentCut}
       setCut={setCut}
+      products={products}
+      currentProduct={currentProduct}
+      setProduct={setProduct}
+      setRefresh={setRefresh}
     />
     <Canvas
       cuts={cuts}
@@ -28,6 +40,7 @@ export default function Manual2DCuts({obj, row, setExt}) {
       setProduct={setProduct}
       currentCut={currentCut}
       setCut={setCut}
+      rotated={Boolean(currentProduct?.rotated)}
     />
   </>;
 }
