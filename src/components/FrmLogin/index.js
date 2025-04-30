@@ -19,5 +19,5 @@ export default function LoginRoute(props) {
     return <Profile {...props}/>;
   }
 
-  return <Login pfilter={pfilter} common_loaded={common_loaded} {...props}/>;
+  return <Login pfilter={pfilter} {...props}/>;
 }

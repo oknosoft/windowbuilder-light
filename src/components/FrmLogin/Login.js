@@ -13,7 +13,8 @@ import {useTitleContext} from '../App';
 import {useLoadingContext} from '../Metadata';
 
 const title = {title: 'Авторизация', appTitle: <Typography variant="h6" noWrap>Авторизация</Typography>};
-export default function Login({pfilter, common_loaded}) {
+
+export default function Login({pfilter}) {
   const [[abonent, abonentOptions], setAbonent] = React.useState([null, []]);
   const [[branch, branchesOptions], setBranch] = React.useState([null, []]);
   const [[provider, providers], setProvider] = React.useState(['', []]);
@@ -21,7 +22,7 @@ export default function Login({pfilter, common_loaded}) {
   const [year, years] = yearState;
   const [[login, password], loginChange] = React.useState(['', '']);
   const {setTitle} = useTitleContext();
-  const {ifaceState: {user, page}} = useLoadingContext();
+  const {handleIfaceState, ifaceState: {user, page, common_loaded, server_error}} = useLoadingContext();
 
   React.useEffect(() => {
     common_loaded && abonentInit({setAbonent, setProvider, pfilter});
@@ -38,6 +39,9 @@ export default function Login({pfilter, common_loaded}) {
 
   const handleLogin = () => {
     if(!user.logged_in && !user.try_log_in) {
+      if(server_error) {
+        handleIfaceState({server_error: ''});
+      }
       const {adapters, wsql} = $p;
       adapters.pouch.props._auth_provider = provider;
       wsql.set_user_param('auth_provider', provider);
@@ -61,10 +65,13 @@ export default function Login({pfilter, common_loaded}) {
       />
       <Provider options={providers} value={provider} providerChange={providerChange}/>
       <Creditales provider={provider} login={login} password={password} loginChange={loginChange} handleLogin={handleLogin}/>
+      {server_error ? <Typography color="error">{server_error}</Typography> : null}
       <Stack direction="row" justifyContent="flex-end" spacing={1} mt={2} mb={1}>
         <Button disabled={user.try_log_in || user.logged_in} onClick={handleLogin}>Войти</Button>
       </Stack>
       <Progress user={user} page={page}/>
-    </> : <CircularProgress />}
+    </> : (
+      server_error ? <Typography color="error">{server_error}</Typography> : <CircularProgress />
+    )}
   </LoginRoot>;
 }

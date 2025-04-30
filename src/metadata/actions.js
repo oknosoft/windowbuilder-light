@@ -16,6 +16,7 @@ export const init_state = {
   idle: false,
   page: {},
   offline: false,
+  server_error: '',
   title: 'Окнософт',
   menu_open: window.innerWidth > 960,
   error: null,
@@ -38,16 +39,6 @@ export function actions(handleIfaceState) {
     .then(() => import('./index'))
     .then((module) => module.init(handleIfaceState))
     .then(() => {
-      // font-awesome, roboto и стили metadata подгрузим асинхронно
-      import('@fontsource/roboto/300.css');
-      import('@fontsource/roboto/400.css');
-      import('@fontsource/roboto/500.css');
-      import('@fontsource/roboto/700.css')
-        .then(() => import('react-data-grid/lib/styles.css'))
-        .then(() => import('../styles/patch.css'))
-        .then(() => import('metadata-ui/styles/indicator/index.css'));
-    })
-    .then(() => {
       const {classes: {PouchDB}, adapters: {pouch}, job_prm, md, ui, cat: {users}} = $p;
       handleIfaceState({common_loaded: true});
 
@@ -58,6 +49,10 @@ export function actions(handleIfaceState) {
 
         pouch_data_page(page) {
           handleIfaceState({page: {...page}});
+        },
+
+        user_log_fault(err) {
+          handleIfaceState({server_error: err.message});
         },
 
         on_log_in(name) {
@@ -100,5 +95,16 @@ export function actions(handleIfaceState) {
         res.then(() => pouch.emit('pouch_complete_loaded'));
       });
 
+    })
+    .catch((err) => handleIfaceState({server_error: err.message}))
+    .then(() => {
+      // font-awesome, roboto и стили metadata подгрузим асинхронно
+      import('@fontsource/roboto/300.css');
+      import('@fontsource/roboto/400.css');
+      import('@fontsource/roboto/500.css');
+      import('@fontsource/roboto/700.css')
+        .then(() => import('react-data-grid/lib/styles.css'))
+        .then(() => import('../styles/patch.css'))
+        .then(() => import('metadata-ui/styles/indicator/index.css'));
     });
 }
