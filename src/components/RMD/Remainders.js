@@ -1,5 +1,5 @@
 import React from 'react';
-import DataGrid from 'react-data-grid';
+import {DataGrid} from 'react-data-grid';
 import {Content} from '../App/styled';
 import Loading from '../App/Loading';
 import {useLoadingContext} from '../Metadata';

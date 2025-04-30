@@ -1,6 +1,6 @@
 import React from 'react';
 import FormGroup from '@mui/material/FormGroup';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import TextField from 'metadata-ui/DataField/Text';
 import ParamField from 'metadata-ui/DataField/ParamField';
 import {GlassesDetail} from '../../../aggregate/styled';

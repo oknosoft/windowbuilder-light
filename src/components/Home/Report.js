@@ -1,6 +1,6 @@
 import React from 'react';
 import {styled} from '@mui/material/styles';
-import DataGrid from 'react-data-grid';
+import {DataGrid} from 'react-data-grid';
 import {rowKeyGetter, preventDefault} from '../../metadata/dataGrid';
 
 const rows = [

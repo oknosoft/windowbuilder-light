@@ -1,5 +1,5 @@
 import React from 'react';
-import DataGrid from 'react-data-grid';
+import {DataGrid} from 'react-data-grid';
 import {useLoadingContext} from '../../../../components/Metadata';
 import {useBackdropContext} from '../../../../components/App';
 import {disablePermanent, drawerWidth} from '../../../../styles/muiTheme';

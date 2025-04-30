@@ -67,7 +67,7 @@ export function createGlasses({obj}){
         const {row, onRowChange} = props;
         return <select
           autoFocus
-          className="rdg-text-editor tlmcuo07-0-0-beta-47"
+          className="rdg-text-editor tlmcuo07-0-0-beta-52"
           value={row.row.inset}
           onChange={({target}) => {
             row.row.inset = target.value;

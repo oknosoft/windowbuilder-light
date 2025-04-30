@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DataGrid from 'react-data-grid';
+import {DataGrid} from 'react-data-grid';
 import {rowKeyGetter, cellClick, cellKeyDown} from '../../../metadata/dataGrid';
 
 

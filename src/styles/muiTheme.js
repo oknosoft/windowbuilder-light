@@ -1,5 +1,5 @@
 import {createTheme} from '@mui/material';
-import primary from '@mui/material/colors/blueGrey';
+import {blueGrey} from '@mui/material/colors';
 
 export const toolbarHeight = 50;
 export const disablePermanent = window.innerWidth < 640;
@@ -10,7 +10,7 @@ const theme = createTheme({
 
   // Purple and green play nicely together.
   palette: {
-    primary,
+    primary: blueGrey,
   },
 
   mixins: {

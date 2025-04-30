@@ -1,5 +1,5 @@
 import React from 'react';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import TextField from 'metadata-ui/DataField/Text';
 import RefField from 'metadata-ui/DataField/RefField';
 import {NumberField} from 'metadata-ui/DataField/Number';
