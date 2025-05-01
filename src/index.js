@@ -18,17 +18,23 @@ root.render(<Metadata App={App} initialText={initialText} />);
 // Learn more about service workers: https://cra.link/PWA
 window.channel4Broadcast = new BroadcastChannel('channel4');
 channel4Broadcast.addEventListener('message', (event) => {
-  if(event.data.type === 'zone') {
-    const zone = sessionStorage.getItem('zone') || localStorage.getItem('zone');
-    channel4Broadcast.postMessage({type: 'zone', zone});
+  switch (event.data?.type) {
+    case 'zone':
+      const zone = sessionStorage.getItem('zone') || localStorage.getItem('zone');
+      channel4Broadcast.postMessage({type: 'zone', zone});
+      break;
+    case 'manifest':
+      $p.md.order.manifest = event.data.value;
+      break;
   }
+
 });
 
-swRegistration.unregister({
-  // onUpdate() {
-  //   alert('Код программы обновлён, необходимо перезагрузить страницу');
-  //   location.reload();
-  // },
+swRegistration.register({
+  onUpdate() {
+    alert('Код программы обновлён, необходимо перезагрузить страницу');
+    location.reload();
+  },
 });
 
 //swRegistration.unregister();

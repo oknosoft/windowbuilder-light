@@ -4,7 +4,7 @@
  * Created by Evgeniy Malyarov on 14.02.2021.
  */
 
-import {load_ram} from 'wb-core/dist/superlogin-proxy';
+import {load_ram, load_ram_splitted} from 'wb-core/dist/superlogin-proxy/no_ram';
 import {event_src} from './events';
 
 export const init_state = {
