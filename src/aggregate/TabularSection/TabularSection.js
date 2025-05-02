@@ -120,7 +120,7 @@ export default function TabularSection({tabRef, obj, ts, scheme, selection, colu
     setRows(rows);
   }, [selection]);
 
-  return <div style={style}>
+  return obj ? <div style={style}>
     <Toolbar
       tabular={obj[ts]}
       selection={selection}
@@ -149,6 +149,6 @@ export default function TabularSection({tabRef, obj, ts, scheme, selection, colu
         onSelectedRowsChange={setSelectedRows}
       />
     </SelectedContext.Provider>
-  </div>;
+  </div> : null;
 
 }

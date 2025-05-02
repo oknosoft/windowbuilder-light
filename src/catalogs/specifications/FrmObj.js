@@ -104,7 +104,7 @@ export function SpecificationsButton({project, selm}) {
   }
 
   return <>
-    <HtmlTooltip title="Спецификация">
+    <HtmlTooltip title="Спецификация" placement="bottom-end">
       <IconButton onClick={calculate}><i className="fa fa-table" /></IconButton>
     </HtmlTooltip>
     <Dialog open={open} onClose={onClose} title={dialogTitle(open, onClose)} actions={[]} raw>
