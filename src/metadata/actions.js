@@ -99,10 +99,10 @@ export function actions(handleIfaceState) {
     .catch((err) => handleIfaceState({server_error: err.message}))
     .then(() => {
       // font-awesome, roboto и стили metadata подгрузим асинхронно
-      import('@fontsource/roboto/300.css');
-      import('@fontsource/roboto/400.css');
-      import('@fontsource/roboto/500.css');
-      import('@fontsource/roboto/700.css')
+      import('metadata-ui/fontsource/roboto/300.css');
+      import('metadata-ui/fontsource/roboto/400.css');
+      import('metadata-ui/fontsource/roboto/500.css');
+      import('metadata-ui/fontsource/roboto/700.css')
         .then(() => import('react-data-grid/lib/styles.css'))
         .then(() => import('../styles/patch.css'))
         .then(() => import('metadata-ui/styles/indicator/index.css'));

@@ -4,7 +4,7 @@ import './styles/global.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Metadata from './components/Metadata';
-import * as swRegistration from './serviceWorkerRegistration';
+import * as swRegistration from './sw/registration';
 
 const App = React.lazy(() => import('./components/App'));
 

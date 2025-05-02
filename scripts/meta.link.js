@@ -73,7 +73,7 @@ for(const {local, remote, dir, dirFilter} of repos) {
   const lpath = path.resolve(localNodeModules, local, dir);
   const rpath = path.resolve(remote, dir);
   let i = 0;
-  fromDir(rpath, /\.(css|js|mjs|md|map|gif|png|ts|json)$/, dirFilter, (rname, isDir) => {
+  fromDir(rpath, /\.(css|js|mjs|md|map|woff2|svg|gif|png|ts|json)$/, dirFilter, (rname, isDir) => {
     const name = rname.replace(rpath, '');
     const lame = path.join(lpath, name);
     if(isDir) {

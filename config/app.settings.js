@@ -14,8 +14,8 @@ class JSVersion {
   constructor() {
     this.fetch()
       .then((version) => {
-        this.raw = version;
-        this.stamp = version.stamp
+        this.raw = version || {build: "network error", stamp: 0};
+        this.stamp = this.raw.stamp
       });
   }
 

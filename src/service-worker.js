@@ -13,7 +13,7 @@ import {precacheAndRoute, createHandlerBoundToURL} from 'workbox-precaching';
 import {registerRoute} from 'workbox-routing';
 import {StaleWhileRevalidate} from 'workbox-strategies';
 
-import swApp from './service-worker-app';
+import swApp from './sw/app';
 
 clientsClaim();
 self.skipWaiting();
@@ -56,7 +56,7 @@ registerRoute(
 // precache, in this case same-origin .png requests like those from in public/
 registerRoute(
   // Add in any other file extensions or routing criteria as needed.
-  ({ url }) => url.origin === self.location.origin && url.pathname.match(/\.(gif|png|ico)$/), // Customize this strategy as needed, e.g., by changing to CacheFirst.
+  ({ url }) => url.origin === self.location.origin && url.pathname.match(/\.(gif|png|svg|ico)$/), // Customize this strategy as needed, e.g., by changing to CacheFirst.
   new StaleWhileRevalidate({
     cacheName: 'images',
     plugins: [
@@ -70,7 +70,7 @@ registerRoute(
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+  if (event?.data?.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });

@@ -1,14 +1,9 @@
-/**
- * уточнения к сервисворкеру
- */
 
-import {precacheAndRoute} from 'workbox-precaching';
-
-
-const mdm = {
+export const mdm = {
   dkey: new Date().toJSON().substring(0, 10), // в отладочном режиме, обновляем cache раз в день
   stamp: Date.now(),
   channel: new BroadcastChannel('channel4'),
+
   parentZone() {
     return new Promise((resolve, reject) => {
       const {channel} = this;
@@ -27,6 +22,7 @@ const mdm = {
       }, 5000);
     });
   },
+
   refresh() {
     const pre = this.cache ?
       Promise.resolve() :
@@ -35,9 +31,20 @@ const mdm = {
       if(this.slice && Date.now() - this.stamp < 20000) {
         return Promise.resolve(this.slice);
       }
+
       return this.parentZone()
         .then(zone => {
-          return fetch(`/couchdb/mdm/${zone}/common`, {method: 'HEAD'});
+          const manifestURL = `/couchdb/mdm/${zone}/manifest`;
+          if(navigator.onLine) {
+            return fetch(`/couchdb/mdm/${zone}/common`, {method: 'HEAD'})
+              .then((res) => {
+                return this.cache.put(manifestURL, res)
+                  .then(() => {
+                    return res;
+                  });
+              });
+          }
+          return this.cache.match(manifestURL);
         })
         .then(res => {
           this.stamp = Date.now();
@@ -183,12 +190,6 @@ const mdm = {
     "pr": "cch.properties"
   },
 
-  listener(event) {
-    if(event.request.url.includes(this.delimiter)) {
-      this.respond(event);
-    }
-  },
-
   respond(event) {
     const {request} = event;
     const url = new URL(request.url);
@@ -229,15 +230,4 @@ const mdm = {
       })
     );
   },
-}
-
-export default function () {
-
-  precacheAndRoute([
-    //{url: '/couchdb/mdm/200/common', revision: dkey },
-    {url: '/manifest.webmanifest', revision: null},
-  ]);
-}
-
-
-self.addEventListener('fetch', mdm.listener.bind(mdm));
+};
