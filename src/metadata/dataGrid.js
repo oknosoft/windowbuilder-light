@@ -184,7 +184,7 @@ export function cellKeyDown({rows, columns, create, clone, open, remove, keyFiel
 }
 
 export function isAtBottom({ currentTarget }) {
-  return currentTarget.scrollTop + 10 >= currentTarget.scrollHeight - currentTarget.clientHeight;
+  return Boolean(currentTarget.scrollTop + 10 >= currentTarget.scrollHeight - currentTarget.clientHeight);
 }
 
 export function tabularStyle(tabRef, {ifaceState: {menu_open}}) {

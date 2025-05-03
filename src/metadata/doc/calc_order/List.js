@@ -69,6 +69,9 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
       if(presentations) {
         Object.assign(presentationsMap, presentations);
       }
+      if(ref) {
+        res.ref = ref;
+      }
       return res;
     })
     .catch((err) => {
@@ -80,12 +83,13 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
 export default function CalcOrderList() {
   const [rows, setRows] = React.useState([]);
   const [selectedRows, setSelectedRows] = React.useState(new Set());
-  const [loading, setLoading] = React.useState(true);
+  const [isLoading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   const [refresh, rawSetRefresh] = React.useState(0);
   const navigate = useNavigate();
   const backdrop = useBackdropContext();
   const {setTitle} = useTitleContext();
+  const gridRef = React.useRef(null);
 
   // для обновления динсписка
   const setRefresh = () => {
@@ -94,38 +98,55 @@ export default function CalcOrderList() {
     rawSetRefresh(refresh + 1);
   };
 
+  const moreRowsFin = (data) => {
+    if(data.error) {
+      const err = new Error(data.message);
+      if(data.status) {
+        err.status = data.status;
+      }
+      throw err;
+    }
+    const {by_ref} = calc_order;
+    for(const row of data.docs) {
+      const tmp = by_ref[row.ref];
+      if(tmp && !tmp.is_new()) {
+        for(const fld in row) {
+          row[fld] = tmp[fld];
+        }
+      }
+    }
+    setRows((rows) => {
+      const nrows = [...rows, ...data.docs];
+      if(data.ref) {
+        const selectedRow = nrows.find(({ref}) => ref === data.ref);
+        if(selectedRow) {
+          setTimeout(() => {
+            setSelectedRows(new Set([data.ref]));
+            const {current} = gridRef;
+            if(current) {
+              const pos = {idx: 0, rowIdx: nrows.indexOf(selectedRow)};
+              current.scrollToCell(pos);
+              current.selectCell(pos);
+            }
+          });
+        }
+      }
+      return nrows;
+    });
+    setLoading(false);
+  };
+  const moreRowsError = (err) => {
+    setLoading(false);
+    setError(err);
+  }
+
   React.useEffect(() => {
     setTitle(title);
     const {ref} = utils.prm();
-    loadMoreRows(1800, 0, ref, backdrop)
-      .then((data) => {
-        if(data.error) {
-          const err = new Error(data.message);
-          if(data.status) {
-            err.status = data.status;
-          }
-          throw err;
-        }
-        const {by_ref} = calc_order;
-        for(const row of data.docs) {
-          const tmp = by_ref[row.ref];
-          if(tmp && !tmp.is_new()) {
-            for(const fld in row) {
-              row[fld] = tmp[fld];
-            }
-          }
-        }
-        setRows((rows) => {
-          const nrows = [...rows, ...data.docs];
-          if(ref) {
-            if(nrows.find((raw) => raw.ref === ref)) {
-              setTimeout(() => setSelectedRows(new Set([ref])));
-            }
-          }
-          return nrows;
-        });
-      })
-      .catch(setError);
+    rows.length = 0;
+    loadMoreRows(600, 0, ref, backdrop)
+      .then(moreRowsFin)
+      .catch(moreRowsError);
   }, [refresh]);
 
   const [create, clone, open, open1C] = mgrCreate({mgr: calc_order, navigate, selectedRows, backdrop});
@@ -141,12 +162,24 @@ export default function CalcOrderList() {
     setSelectedRows
   });
 
+  const handleScroll = (event) => {
+    if (isLoading || !isAtBottom(event)) return;
+
+    setLoading(true);
+
+    loadMoreRows(300, rows.length, null, backdrop)
+      .then(moreRowsFin)
+      .catch(moreRowsError);
+
+  };
+
   return <Content>
     <Toolbar create={create} clone={clone} open={open} open1C={open1C} disabled={Boolean(error)} scheme={scheme} setRefresh={setRefresh}/>
     {error ? error.message :
       <Grid container spacing={0}>
     <Grid size={{xs: 12, md: 10}} style={{height: `calc(100vh - 101px)`}}>
       <DataGrid
+        ref={gridRef}
         columns={columns}
         rows={rows}
         rowKeyGetter={rowKeyGetter}
@@ -156,6 +189,7 @@ export default function CalcOrderList() {
         onCellClick={onCellClick}
         onCellDoubleClick={open}
         onCellKeyDown={onCellKeyDown}
+        onScroll={handleScroll}
         className="fill-grid"
         rowHeight={33}
       />

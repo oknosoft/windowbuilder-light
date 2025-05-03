@@ -11,14 +11,12 @@ const Textarea = styled('textarea')(() => ({
   height: 400,
 }));
 
-const Text = React.forwardRef((props, ref) => <Textarea  ref={ref} {...props} />);
-
 export default function ClipBoard({execute}) {
 
   const [open, rawSetOpen] = React.useState(false);
   const setOpen = () => rawSetOpen(true);
   const setClose = () => rawSetOpen(false);
-  const ref = React.createRef();
+  const textRef = React.createRef();
   const onKeyDown = (event) => {
     const {key} = event;
     if(key === 'Backspace' || key === 'Delete') {
@@ -28,12 +26,12 @@ export default function ClipBoard({execute}) {
     if(key === 'Tab') {
       if (!event.shiftKey) {
         event.preventDefault();
-        const value = ref.current.value;
-        const selectionStart = ref.current.selectionStart;
-        const selectionEnd = ref.current.selectionEnd;
-        ref.current.value = value.substring(0, selectionStart) + '⟶' + value.substring(selectionEnd);
-        ref.current.selectionStart = selectionEnd + 1 - (selectionEnd - selectionStart);
-        ref.current.selectionEnd = selectionEnd + 1 - (selectionEnd - selectionStart);
+        const value = textRef.current.value;
+        const selectionStart = textRef.current.selectionStart;
+        const selectionEnd = textRef.current.selectionEnd;
+        textRef.current.value = value.substring(0, selectionStart) + '⟶' + value.substring(selectionEnd);
+        textRef.current.selectionStart = selectionEnd + 1 - (selectionEnd - selectionStart);
+        textRef.current.selectionEnd = selectionEnd + 1 - (selectionEnd - selectionStart);
       }
     }
   };
@@ -41,19 +39,19 @@ export default function ClipBoard({execute}) {
     const {clipboardData} = event;
     event.preventDefault();
     try {
-      ref.current.value = clipboardData.getData('text/plain').replace(/\t/g, '⟶');
+      textRef.current.value = clipboardData.getData('text/plain').replace(/\t/g, '⟶');
     }
     catch (e) {}
   };
   const onOk = () => {
-    execute(ref.current.value.replace(/⟶/g, '\t'));
+    execute(textRef.current.value.replace(/⟶/g, '\t'));
     setClose();
   }
 
   return <>
     <Dialog open={open} onClose={setClose} onOk={onOk} maxWidth="lg" title="Загрузить из буфера обмена">
-      <Text
-        ref={ref}
+      <Textarea
+        ref={textRef}
         placeholder="Вставьте содержимое буфера обмена или введите текст..."
         onPaste={onPaste}
         onKeyDown={onKeyDown}
