@@ -202,7 +202,7 @@ export const mdm = {
             const slice = JSON.parse(raw);
 
             if(key.includes('common')) {
-              if(this.slice.common[0] === slice.common[0]) {
+              if(this.slice.common[0] === slice.common?.[0]) {
                 return {resp, cached: true};
               }
             }

@@ -3,8 +3,6 @@ import React from 'react';
 const stub = {presentation: ''};
 export default function proto_columns({utils: {moment}, enm, md}) {
 
-  const typed_formatters = {};
-
   const indicator_formatter = (is_doc, is_date) => function IndicatorFormatter({column, row, value, isCellEditable, tabIndex, onRowChange, raw}) {
     if(value === undefined) {
       value = row[column.key];
@@ -65,28 +63,24 @@ export default function proto_columns({utils: {moment}, enm, md}) {
     if(!value) {
       value = row[column.key];
     }
-    let text = typeof value === 'string' ? value : (value && value.presentation) || '';
+    let text = (typeof value === 'string' && !this) ? value : (value?.presentation || this?.[value?.valueOf()]) || '';
     if(text === '_') {
       text = '';
     }
     return raw ? text : <div title={text}>{text}</div>;
   }
 
-  const typed_formatter = (type) => {
-    if(typed_formatters[type]) {
-      return typed_formatters[type];
-    }
+  const typed_formatter = (type, presentations) => {
     const _mgr = md.mgr_by_class_name(type);
-    if(_mgr) {
-      typed_formatters[type] = (row) => {
-        const value = row.value || row.row[row.column.key];
-        return PresentationFormatter({
-          ...row,
-          value: _mgr.get(value, true) || stub,
-        });
+    return _mgr ? (row) => {
+      const value = row.value || row.row[row.column.key];
+      const typedValue = _mgr.get(value, true);
+      const props = {
+        ...row,
+        value: typedValue || (presentations && value) || stub,
       };
-      return typed_formatters[type];
-    }
+      return presentations ? PresentationFormatter.call(presentations, props) : PresentationFormatter(props);
+    } : null;
   };
 
   const number_formatter = (fraction = 0) => {
@@ -146,7 +140,7 @@ export default function proto_columns({utils: {moment}, enm, md}) {
     };
   };
 
-  return function rx_columns({mode, fields, _obj, _mgr, read_only}) {
+  return function rx_columns({mode, fields, _obj, _mgr, read_only, presentations}) {
 
     const res = this.columns(mode);
     const {input, text, label, link, cascader, toggle, image, type, path, props, typed_field} = enm.data_field_kinds;
@@ -186,7 +180,13 @@ export default function proto_columns({utils: {moment}, enm, md}) {
         if(!column.renderCell && _fld && _fld.type) {
 
           if(column.key === 'ref' || _fld.type.is_ref) {
-            column.renderCell = !_obj && _fld.type?.types[0]?.includes?.('.') ? typed_formatter(_fld.type.types[0]) : PresentationFormatter;
+            const types = _fld.type?.types;
+            if(!_obj && types[0].includes?.('.')) {
+              column.renderCell = typed_formatter(types[0], presentations);
+            }
+            else {
+              column.renderCell = presentations ? PresentationFormatter.bind(presentations) : PresentationFormatter;
+            }
           }
           else if(_fld.type.date_part) {
             column.renderCell = date_formatter(_fld.type.date_part, !index && !editable, is_doc);

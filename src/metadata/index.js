@@ -5,16 +5,9 @@ import plugin_pouchdb from 'metadata-pouchdb';
 import plugin_mime from 'metadata-core/lib/mime.min';
 import plugin_scheme_settings from './cat/scheme_settings/plugin';
 import plugin_log_manager from './ireg/log_manager';
-//import proxy_login, {load_common} from 'wb-core/dist/superlogin-proxy';
 
 // функция установки параметров сеанса
 import settings from '../../config/app.settings';
-
-// читаем скрипт инициализации метаданных, полученный в результате выполнения meta:prebuild
-// import init_meta from 'wb-core/dist/init_meta';
-// import init_sql from 'wb-core/dist/init_sql';
-// import init_classes from 'wb-core/dist/init';
-// import modifiers from './modifiers';
 import spreadsheet from '../packages/ui/spreadsheet';
 
 // подключаем плагины к MetaEngine

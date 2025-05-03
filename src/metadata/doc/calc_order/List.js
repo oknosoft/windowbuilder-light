@@ -11,12 +11,18 @@ import Selection from '../../cat/scheme_settings/Selection';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../dataGrid';
 
 
-const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}, utils} = $p;
+const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}, utils, wsql} = $p;
 const scheme = scheme_settings
   .find_schemas('doc.calc_order', true)
   .find(({name}) => name.endsWith('.main'));
 const {fields} = calc_order.metadata();
-const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: calc_order});
+const presentationsMap = {};
+const represents = wsql.get_user_param('defferd_partners', 'boolean');
+const columns = scheme.rx_columns({
+  mode: 'ts',
+  fields,
+  _mgr: calc_order,
+  presentations: represents ? presentationsMap : null});
 
 const listName = 'Расчёты-заказы (список)';
 const title =  {
@@ -45,6 +51,9 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
   if(ref) {
     selector.ref = ref;
   }
+  if(represents) {
+    selector.represents = true;
+  }
   const opts = {
     method: 'post',
     headers: new Headers({suffix: pouch.props._suffix || '0'}),
@@ -55,6 +64,12 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
     .then((res) => {
       backdrop.setBackdrop(false);
       return res.json();
+    })
+    .then(({presentations, ...res}) => {
+      if(presentations) {
+        Object.assign(presentationsMap, presentations);
+      }
+      return res;
     })
     .catch((err) => {
       backdrop.setBackdrop(false);
