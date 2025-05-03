@@ -1,61 +1,9 @@
 
 export const mdm = {
-  dkey: new Date().toJSON().substring(0, 10), // в отладочном режиме, обновляем cache раз в день
+  dkey: new Date().toJSON().substring(0, 10),
   stamp: Date.now(),
   channel: new BroadcastChannel('channel4'),
-
-  parentZone() {
-    return new Promise((resolve, reject) => {
-      const {channel} = this;
-      const receiver = (event) => {
-        if(event.data.type === 'zone') {
-          clearTimeout(timer);
-          channel.removeEventListener('message', receiver);
-          resolve(event.data.zone);
-        }
-      };
-      channel.addEventListener('message', receiver);
-      channel.postMessage({type: 'zone'});
-      const timer = setTimeout(() => {
-        channel.removeEventListener('message', receiver);
-        reject('timeout');
-      }, 5000);
-    });
-  },
-
-  refresh() {
-    const pre = this.cache ?
-      Promise.resolve() :
-      caches.open('mdm.v1').then((cache) => this.cache = cache);
-    return pre.then(() => {
-      if(this.slice && Date.now() - this.stamp < 20000) {
-        return Promise.resolve(this.slice);
-      }
-
-      return this.parentZone()
-        .then(zone => {
-          const manifestURL = `/couchdb/mdm/${zone}/manifest`;
-          if(navigator.onLine) {
-            return fetch(`/couchdb/mdm/${zone}/common`, {method: 'HEAD'})
-              .then((res) => {
-                return this.cache.put(manifestURL, res)
-                  .then(() => {
-                    return res;
-                  });
-              });
-          }
-          return this.cache.match(manifestURL);
-        })
-        .then(res => {
-          this.stamp = Date.now();
-          this.slice = JSON.parse(res.headers.get('manifest'));
-          this.channel.postMessage({type: 'manifest', value: this.slice});
-          return this.slice;
-        });
-    });
-  },
   delimiter: '/couchdb/mdm/',
-
   ids: {
     "cat.params_links": "prl",
     "prl": "cat.params_links",
@@ -188,6 +136,57 @@ export const mdm = {
     "pe": "cch.predefined_elmnts",
     "cch.properties": "pr",
     "pr": "cch.properties"
+  },
+
+  parentZone() {
+    return new Promise((resolve, reject) => {
+      const {channel} = this;
+      const receiver = (event) => {
+        if(event.data.type === 'zone') {
+          clearTimeout(timer);
+          channel.removeEventListener('message', receiver);
+          resolve(event.data.zone);
+        }
+      };
+      channel.addEventListener('message', receiver);
+      channel.postMessage({type: 'zone'});
+      const timer = setTimeout(() => {
+        channel.removeEventListener('message', receiver);
+        reject('timeout');
+      }, 5000);
+    });
+  },
+
+  refresh() {
+    const pre = this.cache ?
+      Promise.resolve() :
+      caches.open('mdm.v1').then((cache) => this.cache = cache);
+    return pre.then(() => {
+      if(this.slice && Date.now() - this.stamp < 20000) {
+        return Promise.resolve(this.slice);
+      }
+
+      return this.parentZone()
+        .then(zone => {
+          const manifestURL = `/couchdb/mdm/${zone}/manifest`;
+          if(navigator.onLine) {
+            return fetch(`/couchdb/mdm/${zone}/common`, {method: 'HEAD'})
+              .then((res) => {
+                return this.cache.put(manifestURL, res)
+                  .then(() => {
+                    return res;
+                  });
+              });
+          }
+          return this.cache.match(manifestURL);
+        })
+        .then(res => {
+          this.stamp = Date.now();
+          this.slice = JSON.parse(res.headers.get('manifest'));
+          this.channel.postMessage({type: 'manifest', value: this.slice});
+          return this.slice;
+        });
+    });
   },
 
   respond(event) {

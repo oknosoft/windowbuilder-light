@@ -68,7 +68,7 @@
     "react-window-infinite-loader": "^1.0.10",
     "url-join": "^5.0",
     "url-parse": "^1.5",
-    "wb-core": "github:oknosoft/windowbuilder-core#ae06c622f11cb2c14d971cb5cbeeaadfc8831f61",
+    "wb-core": "github:oknosoft/windowbuilder-core#517e42408d6d5b0cc114e4d93e9bbaabde768315",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {

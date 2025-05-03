@@ -4,7 +4,11 @@
 
 import {precacheAndRoute} from 'workbox-precaching';
 import {mdm} from './mdm';
+import {getAuth} from './auth';
+import {getDoc} from './doc';
 
+const auth = getAuth(mdm);
+const doc = getDoc(mdm);
 const dkey = '20250502';
 
 export default function () {
@@ -50,7 +54,14 @@ export default function () {
 
 
 self.addEventListener('fetch', (event) => {
-  if(event.request.url.includes(mdm.delimiter)) {
+  const {url} = event.request;
+  if(url.includes(mdm.delimiter)) {
     mdm.respond(event);
+  }
+  else if(url.includes(auth.delimiter)) {
+    auth.respond(event);
+  }
+  else if(doc.match(event.request)) {
+    doc.respond(event);
   }
 });
