@@ -19,6 +19,7 @@ export default function RMDRemainders() {
 
   const setTunes = (tunes) => {
     if(!tunes) {
+      scheme.quickFilter = {};
       filter({rmd, scheme, handleIfaceState});
     }
     rawSetTunes(tunes);
@@ -42,6 +43,38 @@ export default function RMDRemainders() {
       return () => scheme._manager.off({update});
     }
   }, [scheme]);
+
+  const onCellKeyDown = ({ mode, row, column, rowIdx, selectCell }, event) => {
+
+    if (event.isDefaultPrevented()) {
+      // skip parent grid keyboard navigation
+      event.preventGridDefault();
+    }
+
+    const {code, altKey, ctrlKey} = event;
+    if (code === 'KeyF') {
+      if(altKey || ctrlKey) {
+        event.preventGridDefault();
+        event.preventDefault();
+      }
+      if(ctrlKey) {
+        setTunes(!tunes);
+      }
+      else if(altKey) {
+        if(!scheme.quickFilter) {
+          scheme.quickFilter = {};
+        }
+        if(scheme.quickFilter[column.key]) {
+          delete scheme.quickFilter[column.key];
+        }
+        else {
+          scheme.quickFilter[column.key] = row[column.key];
+        }
+        filter({rmd, scheme, handleIfaceState});
+      }
+
+    }
+  };
 
   if(!columns.length) {
     return <Loading />;
@@ -76,7 +109,7 @@ export default function RMDRemainders() {
           onSelectedRowsChange={setSelectedRows}
           //onCellClick={onCellClick}
           //onCellDoubleClick={open}
-          //onCellKeyDown={onCellKeyDown}
+          onCellKeyDown={onCellKeyDown}
           className="fill-grid"
           rowHeight={33}
           renderers={{ renderCheckbox }}

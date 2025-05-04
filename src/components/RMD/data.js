@@ -49,6 +49,7 @@ export const title = 'РМД';
 export const dp = rep.planning.create({phase: 'run'});
 export const schemas = scheme_settings
   .find_schemas('rep.planning.data', true)
+  .filter(v => !v.user)
   .sort(utils.sort('order'))
   .map((scheme) => {
     if(scheme.date_till < moment().add(1, 'day').toDate()) {
@@ -61,7 +62,8 @@ export const schemas = scheme_settings
     return scheme;
   });
 
-export const initScheme = wsql.get_user_param('rmd.scheme') || schemas[0]?.ref;
+const userScheme = wsql.get_user_param('rmd.scheme');
+export const initScheme = (userScheme && schemas.find(v => v.ref === userScheme)) ? userScheme : schemas[0]?.ref;
 export const setScheme = (handleIfaceState, rmd, ref) => {
   wsql.set_user_param('rmd.scheme', ref);
   handleIfaceState({rmd: Object.assign({}, rmd, {scheme: scheme_settings.get(ref)})});
@@ -139,7 +141,12 @@ export const query = async ({rmd, scheme, handleIfaceState}) => {
 export const filter = ({rmd, scheme, handleIfaceState}) => {
   const {tgt} = rmd;
   const rows = [], tgtrows = [];
+  const {quickFilter} = scheme;
+  const quickKeys = quickFilter ? Object.keys(quickFilter) : [];
   for(const row of scheme.filter(dp.data)) {
+    if(quickKeys.some(fld => row[fld]?.valueOf() !== quickFilter[fld]?.valueOf())) {
+      continue;
+    }
     const {obj, work_center, work_shift, date} = row;
     const tgtrow = tgt.set.find({
       record_kind: -1,

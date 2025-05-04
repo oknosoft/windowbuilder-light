@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 
 export function OrderFormatter(props) {
   const {calc_order} = props.row;
-  return `${calc_order.number_doc} ${calc_order.partner.name}`;
+  return `${parseInt(calc_order.number_doc.substring(4)).pad(4)} ${calc_order.partner.name}`;
 }
 
 export function PKFormatter(props) {
