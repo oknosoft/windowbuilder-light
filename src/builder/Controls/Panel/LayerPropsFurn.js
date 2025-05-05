@@ -2,6 +2,7 @@ import React from 'react';
 import FieldSet from '@oknosoft/ui/DataField/FieldSet';
 import RefField from '@oknosoft/ui/DataField/RefField';
 import CurrentParams from './CurrentParams';
+import FieldFurn from '../../DataField/Furn';
 
 const {furns} = $p.cat;
 const openTypeMeta = furns.metadata('open_type');
@@ -10,6 +11,7 @@ const directionMeta = {};
 export default function LayerPropsFurn({layer}) {
   return layer?.level > 0 ? <FieldSet title="Свойства фурнитуры" defaultExpanded>
     <RefField obj={layer} fld="openType" meta={openTypeMeta} />
+    <FieldFurn layer={layer} />
     <RefField obj={layer} fld="direction" meta={directionMeta} label="Напр. открывания" />
     <CurrentParams params={layer.params} flat />
   </FieldSet> : null;
