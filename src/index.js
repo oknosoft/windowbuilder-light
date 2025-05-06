@@ -20,8 +20,10 @@ window.channel4Broadcast = new BroadcastChannel('channel4');
 channel4Broadcast.addEventListener('message', (event) => {
   switch (event.data?.type) {
     case 'zone':
-      const zone = sessionStorage.getItem('zone') || localStorage.getItem('zone');
-      channel4Broadcast.postMessage({type: 'zone', zone});
+      const {pouch} = $p.adapters;
+      const zone = sessionStorage.getItem('zone') || pouch.props.zone;
+      const branch = sessionStorage.getItem('branch') || pouch.props.branch;
+      channel4Broadcast.postMessage({type: 'zone', zone, branch});
       break;
     case 'manifest':
       $p.md.order.manifest = event.data.value;

@@ -145,7 +145,9 @@ export const mdm = {
         if(event.data.type === 'zone') {
           clearTimeout(timer);
           channel.removeEventListener('message', receiver);
-          resolve(event.data.zone);
+          this.zone = event.data.zone;
+          this.branch = event.data.branch;
+          resolve(this.zone);
         }
       };
       channel.addEventListener('message', receiver);
@@ -157,14 +159,17 @@ export const mdm = {
     });
   },
 
+  openCache() {
+    return (this.zone ? Promise.resolve() : this.parentZone())
+      .then(() => this.cache || caches.open('mdm.v1').then((cache) => this.cache = cache));
+  },
+
   refresh() {
-    const pre = this.cache ?
-      Promise.resolve() :
-      caches.open('mdm.v1').then((cache) => this.cache = cache);
-    return pre.then(() => {
-      if(this.slice && Date.now() - this.stamp < 20000) {
-        return Promise.resolve(this.slice);
-      }
+    return this.openCache()
+      .then(() => {
+        if(this.slice && Date.now() - this.stamp < 20000) {
+          return Promise.resolve(this.slice);
+        }
 
       return this.parentZone()
         .then(zone => {
@@ -228,5 +233,9 @@ export const mdm = {
         throw err;
       })
     );
+  },
+
+  match(url) {
+    return url.includes(this.delimiter);
   },
 };
