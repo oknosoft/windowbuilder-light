@@ -9,7 +9,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconHome from '@mui/icons-material/Home';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 
 import {drawerWidth, disablePermanent, DrawerHeader} from './styled';
 import menuItems from '../App/menu';

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import {useParams, unstable_usePrompt as usePrompt} from 'react-router-dom'; // https://www.npmjs.com/package/react-router-prompt
+import {useParams, unstable_usePrompt as usePrompt} from 'react-router'; // https://www.npmjs.com/package/react-router-prompt
 import {useTitleContext, useBackdropContext} from '../../../components/App';
 import Loading from '../../../components/App/Loading';
 import {Root} from '../../aggregate/styled';
@@ -14,7 +14,7 @@ import ObjCutsOut from './ObjCutsOut';
 import ObjCutting from './ObjCutting';
 import {ObjSetting, key, setting as initSetting} from './ObjSetting';
 
-const {doc: {work_centers_task: mgr}, wsql} = $p;
+const {doc: {work_centers_task: mgr}, wsql, utils} = $p;
 
 export default function WorkCentersTaskObj() {
 
@@ -36,18 +36,25 @@ export default function WorkCentersTaskObj() {
 
   React.useEffect(() => {
     const {ref} = params;
-    mgr.get(ref, 'promise')
-      .then((doc) => {
-        return doc.load_keys()
-          .then(() => doc.load_linked_refs())
-          .catch((err) => {
-            console.error(err);
-            return doc;
-          });
-      })
-      .then(setObj)
-      .catch(setError)
-      .then(() => setBackdrop(false));
+    const searchParams = utils.prm();
+    if(searchParams.modified === 'false') {
+      setObj(mgr.get(ref));
+      setBackdrop(false);
+    }
+    else {
+      mgr.get(ref, 'promise')
+        .then((doc) => {
+          return doc.load_keys()
+            .then(() => doc.load_linked_refs())
+            .catch((err) => {
+              console.error(err);
+              return doc;
+            });
+        })
+        .then(setObj)
+        .catch(setError)
+        .then(() => setBackdrop(false));
+    }
   }, []);
   React.useEffect(() => {
     const title = obj ? obj.presentation : 'Задание';

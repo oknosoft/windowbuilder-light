@@ -184,6 +184,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     setRows,
     getRow,
     setBackdrop,
+    setSnack,
     setModified,
     selectedRowsChange});
 

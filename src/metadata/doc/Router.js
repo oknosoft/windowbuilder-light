@@ -1,5 +1,5 @@
 import React from 'react';
-import {Routes, Route} from 'react-router-dom';
+import {Routes, Route} from 'react-router';
 import Loading from '../../components/App/Loading';
 import CalcOrderList from './calc_order/List';
 import CalcOrderObj from './calc_order/Obj';

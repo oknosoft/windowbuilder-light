@@ -7,7 +7,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {createBrowserRouter} from 'react-router-dom';
+import {createBrowserRouter} from 'react-router';
 import {Wraper} from './Wraper';
 import RootWithDrawer from './RootWithDrawer';
 

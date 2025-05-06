@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import {DataGrid} from 'react-data-grid';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import {Content} from '../../../components/App/styled';
 import GoTo from '../../../components/App/GoTo';
 import {useTitleContext, useBackdropContext} from '../../../components/App';

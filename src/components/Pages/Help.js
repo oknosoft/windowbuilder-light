@@ -1,6 +1,6 @@
 import React from 'react';
 import MarkdownDocs from 'metadata-ui/Markdown/MarkdownDocs';
-import {useMatches } from 'react-router-dom';
+import {useMatches } from 'react-router';
 import {useTitleContext} from '../App';
 
 const opt = {baseUrl: '/help/'};

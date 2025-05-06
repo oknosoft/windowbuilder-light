@@ -3,7 +3,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import CallMissedOutgoingIcon from '@mui/icons-material/CallMissedOutgoing';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import {HtmlTooltip} from './styled';
 
 export default function GoTo({items}) {

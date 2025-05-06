@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import {useLoadingContext} from '../Metadata';
 import {useTitleContext} from '../App';
 import {Wraper} from '../App/Wraper';

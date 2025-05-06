@@ -11,6 +11,7 @@ import {ThemeProvider} from '@mui/material';  // провайдер тема mat
 import theme from '../../styles/muiTheme';      // тема material=ui
 import Loading from '../App/Loading';
 import Alert from 'metadata-ui/App/Alert';
+import WindowPortal from 'metadata-ui/App/WindowPortal';     // контент в новом окне (например, для печати)
 
 const LoadingContext = React.createContext(null);
 export const useLoadingContext = () => React.useContext(LoadingContext);
@@ -38,13 +39,14 @@ function Metadata({App, initialText}) {
   }, [first]);
 
   const loading = <Loading {...ifaceState} html={initialText} />;
-  const {meta_loaded, alert} = ifaceState || {};
+  const {meta_loaded, alert, wnd_portal} = ifaceState || {};
 
   return <ThemeProvider theme={theme}>
     <LoadingContext.Provider value={{ ifaceState, handleIfaceState }}>
       <React.Suspense fallback={loading}>
         {meta_loaded ? <App {...ifaceState}/> : loading }
         {alert?.open && <Alert {...alert}/>}
+        {wnd_portal?.open && <WindowPortal {...wnd_portal}/>}
       </React.Suspense>
     </LoadingContext.Provider>
   </ThemeProvider>;

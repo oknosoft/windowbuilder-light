@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {RouterProvider} from 'react-router-dom';
+import {RouterProvider} from 'react-router';
 import Backdrop from '@mui/material/Backdrop';
 import Snackbar from '@mui/material/Snackbar';
 import CircularProgress from '@mui/material/CircularProgress';

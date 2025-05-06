@@ -7,7 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import GridOnIcon from '@mui/icons-material/GridOn';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import {useBackdropContext} from '../../../components/App';
 import {ListSubheader} from '../../aggregate/styled';
 import {Toolbar, HtmlTooltip} from '../../../components/App/styled';

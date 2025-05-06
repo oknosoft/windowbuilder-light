@@ -62,7 +62,7 @@
     "react-helmet": "^6.1",
     "react-highlight-words": "^0.21",
     "react-number-format": "^5.4",
-    "react-router-dom": "7.5",
+    "react-router": "7.5",
     "react-virtualized-auto-sizer": "^1.0.26",
     "react-window": "^1.8",
     "react-window-infinite-loader": "^1.0.10",

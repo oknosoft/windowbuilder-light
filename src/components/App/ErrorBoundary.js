@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Outlet, useRouteError} from 'react-router-dom';
+import {Outlet, useRouteError} from 'react-router';
 
 export default function ErrorBoundary() {
   const error = useRouteError();

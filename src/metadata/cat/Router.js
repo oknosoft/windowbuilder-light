@@ -1,5 +1,5 @@
 import React from 'react';
-import {Routes, Route} from 'react-router-dom';
+import {Routes, Route} from 'react-router';
 import DataList from '../../packages/ui/DataList';
 import CharacteristicObj from './characteristics/Obj';
 

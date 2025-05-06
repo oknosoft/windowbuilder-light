@@ -1,5 +1,5 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
 import ObjGlassesDetail from './ObjGlassesDetail';
 import ProductFormatter from './ProductFormatter';

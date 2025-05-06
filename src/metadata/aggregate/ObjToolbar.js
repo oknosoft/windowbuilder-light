@@ -6,7 +6,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import SettingsIcon from '@mui/icons-material/DisplaySettings';
 import CloseIcon from '@mui/icons-material/Close';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import {ListSubheader} from './styled';
 import {Toolbar, HtmlTooltip} from '../../components/App/styled';
 import PostBtn from './PostBtn';
@@ -56,7 +56,12 @@ export default function ObjToolbar({obj, mgr, btns=null, setSettingOpen, onClose
                 text: 'Перед печатью, запишите заказ',
               });
             }
-            model.execute(obj);
+            if(model.jsx && 0) {
+              obj._manager.print(obj, model);
+            }
+            else {
+              model.execute(obj);
+            }
           }}
           variant="button"
         />
