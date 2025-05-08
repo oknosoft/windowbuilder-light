@@ -72,7 +72,7 @@ export function SpecificationsObj({obj, selm}) {
       <Box sx={{flex: 1}}/>
       {scheme && <SearchField scheme={scheme} applySearch={applySearch} ref={searchRef}/>}
     </Tabs>
-    <Box ref={tabRef} sx={{ width: 'calc(80vw)', p: 1 }} onKeyDown={(ev) => listenCtrlF(ev, searchRef)}>
+    <Box ref={tabRef} sx={{ width: 'calc(80vw)', height: 'calc(70vh)', p: 1 }} onKeyDown={(ev) => listenCtrlF(ev, searchRef)}>
       <Content obj={obj} tabRef={tabRef} scheme={scheme} selection={selection} updater={updater}/>
     </Box>
   </>;

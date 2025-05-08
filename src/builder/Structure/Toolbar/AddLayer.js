@@ -73,7 +73,9 @@ export default function AddLayer({editor, project, layer, elm, type, setContext}
     if(child) {
       child.activate();
       setContext({type: 'layer', layer: child, elm: null});
-      project.redraw();
+      Promise.resolve()
+        .then(() => project.redraw())
+        .then(() => project.redraw());
     }
     handleClose();
   };

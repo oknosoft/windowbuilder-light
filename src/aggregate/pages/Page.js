@@ -1,7 +1,7 @@
 
 import React from 'react';
 import MarkdownDocs from '@oknosoft/ui/Markdown/MarkdownDocs';
-import {useMatches } from 'react-router-dom';
+import {useMatches } from 'react-router';
 import {useTitleContext} from '../App';
 
 export default function Page(props) {

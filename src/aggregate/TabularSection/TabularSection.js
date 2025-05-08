@@ -22,7 +22,7 @@ export default function TabularSection({tabRef, obj, ts, scheme, selection, colu
   const style = {minHeight: 320, width: '100%'};
   if(tabRef?.current) {
     const top = tabRef.current.offsetTop + tabRef.current.offsetHeight + 51;
-    style.height = `calc(100vh - ${top}px)`;
+    style.height = tabRef.current.offsetHeight - 63;
   }
   if(!columns) {
     columns = scheme ? React.useMemo(() => scheme.columns, [scheme]) : null;

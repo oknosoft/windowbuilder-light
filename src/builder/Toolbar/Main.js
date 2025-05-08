@@ -9,7 +9,7 @@ import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import CloseIcon from '@mui/icons-material/Close';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 import {useLoadingContext} from '../../aggregate/Metadata';
 import TestProducts from './TestProducts';

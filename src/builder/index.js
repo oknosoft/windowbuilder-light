@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import {Navigate} from 'react-router-dom';
+import {Navigate} from 'react-router';
 import {useLoadingContext} from '../aggregate/Metadata';
 import Loading from '../aggregate/App/Loading';
 import {Padding} from '../aggregate/App/styled';
