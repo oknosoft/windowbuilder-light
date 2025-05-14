@@ -24,7 +24,7 @@ export default function FieldFurn({layer, onChange, fullWidth=true, enterTab, ..
     options={options}
     onChange={(event, newValue, reason, details) => {
       layer.furn = newValue;
-      refresh();
+      layer.project.redraw();
     }}
     value={furn}
     label="Фурнитура"

@@ -7,6 +7,7 @@ import Canvas3D from './3D'
 import {Wraper} from '../aggregate/App/Wraper';
 
 const {EditorInvisible} = geometry;
+$p.EditorInvisible = $p.classes.EditorInvisible = EditorInvisible;
 
 export const Row = styled('div')(() => ({height: '100%'}));
 

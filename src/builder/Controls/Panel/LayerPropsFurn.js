@@ -9,10 +9,11 @@ const openTypeMeta = furns.metadata('open_type');
 const directionMeta = {};
 
 export default function LayerPropsFurn({layer}) {
+  const onChange = () => layer.project.redraw();
   return layer?.level > 0 ? <FieldSet title="Свойства фурнитуры" defaultExpanded>
-    <RefField obj={layer} fld="openType" meta={openTypeMeta} />
+    <RefField obj={layer} fld="openType" meta={openTypeMeta} onChange={onChange} />
     <FieldFurn layer={layer} />
-    <RefField obj={layer} fld="direction" meta={directionMeta} label="Напр. открывания" />
+    <RefField obj={layer} fld="direction" meta={directionMeta} label="Напр. открывания" onChange={onChange}/>
     <CurrentParams params={layer.params} flat />
   </FieldSet> : null;
 }
