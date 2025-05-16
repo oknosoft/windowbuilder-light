@@ -3,6 +3,7 @@ import FieldSet from '@oknosoft/ui/DataField/FieldSet';
 import RefField from '@oknosoft/ui/DataField/RefField';
 import CurrentParams from './CurrentParams';
 import FieldFurn from '../../DataField/Furn';
+import HandleHeight from '../../DataField/HandleHeight';
 
 const {furns} = $p.cat;
 const openTypeMeta = furns.metadata('open_type');
@@ -14,6 +15,7 @@ export default function LayerPropsFurn({layer}) {
     <RefField obj={layer} fld="openType" meta={openTypeMeta} onChange={onChange} />
     <FieldFurn layer={layer} />
     <RefField obj={layer} fld="direction" meta={directionMeta} label="Напр. открывания" onChange={onChange}/>
+    <HandleHeight layer={layer} meta={directionMeta} onChange={onChange}/>
     <CurrentParams params={layer.params} flat />
   </FieldSet> : null;
 }
