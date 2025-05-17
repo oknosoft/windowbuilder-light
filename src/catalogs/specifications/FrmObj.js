@@ -33,8 +33,8 @@ const tabContent = {
   Composition({obj, tabRef, scheme, selection}) {
     return <TabularSection obj={obj} tabRef={tabRef} ts="composition" scheme={scheme} selection={selection}/>;
   },
-  Procedures({obj}) {
-
+  Procedures({obj, tabRef, scheme, selection}) {
+    return <TabularSection obj={obj} tabRef={tabRef} ts="procedures" scheme={scheme} selection={selection}/>;
   }
 }
 
