@@ -47,10 +47,11 @@ function GridWnd({editor, layer}) {
       <Tab value="overlaps" label="Перекрытия" />
     </Tabs>
     <NumberField obj={tool.dp} fld="h"/>
-    {tab === 'overlaps' ? <FormControl fullWidth readOnly>
-      <InputLabel>Опора</InputLabel>
-      <Input readOnly value="Низ"/>
-    </FormControl> : <RefField obj={tool.dp} fld={tab === 'vert' ? 'align_by_x' : 'align_by_y'} />}
+    {tab === 'overlaps' ?
+      <FormControl fullWidth readOnly>
+        <InputLabel>Опора</InputLabel>
+        <Input readOnly value="Низ"/>
+      </FormControl> : <RefField obj={tool.dp} fld={tab === 'vert' ? 'align_by_x' : 'align_by_y'} />}
     <Box ref={tabRef} sx={{ width: '100%' }}>
       <TabularSection tabRef={tabRef} obj={tool.dp} ts="sizes" columns={columns} selection={selection}/>
     </Box>

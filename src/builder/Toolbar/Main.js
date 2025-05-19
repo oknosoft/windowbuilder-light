@@ -20,7 +20,7 @@ export default function MainToolbar({context}) {
 
   const {close, recalc, save, saveClose} = React.useMemo(() => {
     const close = () => navigate(`/`);
-    const recalc = () => null;
+    const recalc = () => editor.project.calculateSpec();
     const save = () => null;
     const saveClose = () => null;
     return {close, recalc, save, saveClose};
@@ -37,7 +37,7 @@ export default function MainToolbar({context}) {
       <IconButton disabled onClick={save}><SaveAsIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Пересчитать">
-      <IconButton disabled onClick={recalc}><CalculateIcon/></IconButton>
+      <IconButton disabled={!editor?.project} onClick={recalc}><CalculateIcon/></IconButton>
     </HtmlTooltip>
     <Divider orientation="vertical" sx={{mx: 1}} flexItem />
     <TestProducts editor={editor} type={type} layer={layer} setContext={setContext} />

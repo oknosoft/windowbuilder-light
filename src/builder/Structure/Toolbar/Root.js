@@ -8,11 +8,17 @@ import AddLayer from './AddLayer';
 
 export default function RootToolbar(props) {
 
+  const {project} = props;
+  const clear = () => {
+    project.clear();
+    project.redraw();
+  };
+
   return <>
     <AddLayer {...props} />
     <Box sx={{flex: 1}} />
-    <HtmlTooltip title="Удалить изделие">
-      <IconButton disabled><i className="fa fa-trash-o" /></IconButton>
+    <HtmlTooltip title="Очистить изделие">
+      <IconButton disabled={!project} onClick={clear}><i className="fa fa-eraser" /></IconButton>
     </HtmlTooltip>
   </>;
 }

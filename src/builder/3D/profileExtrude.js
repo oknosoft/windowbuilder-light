@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import {Edges} from '@react-three/drei';
 import { Geometry, Base, Subtraction, Addition } from '@react-three/csg';
 import { SUBTRACTION, ADDITION, Brush, Evaluator } from 'three-bvh-csg';
+import ProfileVisualisation from './ProfileVisualisation';
 
 const evaluator = new Evaluator();
 
@@ -122,8 +123,7 @@ export function profileExtrude(profile, profiles, cut) {
   //const [hovered, setHover] = useState(false);
   //onPointerOver={(event) => setHover(true)}
   //onPointerOut={(event) => setHover(false)}
-  const {hidden, project} = profile;
-  const {stamp} = project.props;
+  const {hidden, index} = profile;
   const geometry = profiles.get(profile);
   const material = new THREE.MeshLambertMaterial({
     color: 0xeeffee,
@@ -133,14 +133,14 @@ export function profileExtrude(profile, profiles, cut) {
   });
 
   return cut ?
-    <mesh key={`pc-${profile.elm}`} material={material}>
+    <mesh key={index} material={material}>
       <Geometry>
         <Base geometry={geometry}/>
         <Subtraction geometry={cut}/>
       </Geometry>
-      {!hidden && <Edges key={`e-${stamp}`} color="grey" />}
+      <ProfileVisualisation profile={profile} cut={cut}/>
     </mesh> :
-    <mesh key={`p-${profile.elm}`} geometry={geometry} material={material}>
-    {!hidden && <Edges color="grey" />}
+    <mesh key={index} geometry={geometry} material={material}>
+      <ProfileVisualisation profile={profile} cut={cut}/>
   </mesh>;
 }
