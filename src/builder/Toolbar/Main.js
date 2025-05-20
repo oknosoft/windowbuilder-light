@@ -20,7 +20,10 @@ export default function MainToolbar({context}) {
 
   const {close, recalc, save, saveClose} = React.useMemo(() => {
     const close = () => navigate(`/`);
-    const recalc = () => editor.project.calculateSpec();
+    const recalc = () => {
+      editor.project.calculateSpec();
+      editor.project.redraw();
+    };
     const save = () => null;
     const saveClose = () => null;
     return {close, recalc, save, saveClose};

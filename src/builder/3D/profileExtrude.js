@@ -118,7 +118,7 @@ export function profilesGeometry(profiles, pos) {
 }
 
 
-export function profileExtrude(profile, profiles, cut) {
+export function profileExtrude({profile, profiles, cut, pos}) {
 
   //const [hovered, setHover] = useState(false);
   //onPointerOver={(event) => setHover(true)}
@@ -138,9 +138,9 @@ export function profileExtrude(profile, profiles, cut) {
         <Base geometry={geometry}/>
         <Subtraction geometry={cut}/>
       </Geometry>
-      <ProfileVisualisation profile={profile} cut={cut}/>
+      <ProfileVisualisation profile={profile} cut={cut} />
     </mesh> :
     <mesh key={index} geometry={geometry} material={material}>
-      <ProfileVisualisation profile={profile} cut={cut}/>
+      <ProfileVisualisation profile={profile} cut={cut} pos={pos} />
   </mesh>;
 }

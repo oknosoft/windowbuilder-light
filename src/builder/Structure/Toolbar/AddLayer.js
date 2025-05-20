@@ -71,6 +71,7 @@ export default function AddLayer({editor, project, layer, elm, type, setContext}
     const {container} = (elm || layer);
     const child = container?.createChild({kind: 'flap'});
     if(child) {
+      child.openType = project.root.enm.openTypes.rotary;
       child.activate();
       setContext({type: 'layer', layer: child, elm: null});
       Promise.resolve()

@@ -30,7 +30,7 @@ export default function Contour({layer, bounds, cut}) {
   const containers = containersGeometry(layer.containers, pos);
 
   for(const [profile] of profiles) {
-    res.push(profileExtrude(profile, profiles, cut));
+    res.push(profileExtrude({profile, profiles, cut, pos}));
   }
   for(const [container] of containers) {
     res.push(containerExtrude(container, containers, cut));
@@ -40,6 +40,18 @@ export default function Contour({layer, bounds, cut}) {
   }
   for(const contour of three.children) {
     res.push(<Contour key={`c-${contour.id}`} layer={contour} cut={cut}/>);
+  }
+
+  if(layer.layer && layer.direction.is('right') && !layer.openType.is('folding')) {
+    const {width} = layer.bounds;
+    const outerPos = [...position];
+    const innerPos = [...position];
+    outerPos[0] += width;
+    innerPos[0] -= width;
+    const [rx, ry, rz] = rotation;
+    return <group position={outerPos} rotation={[rx, -ry, rz]}>
+      <group position={innerPos}>{res}</group>
+    </group>;
   }
   return (!three.bindable || three.bind.is('right') || three.bind.is('top')) ?
     <group position={position} rotation={rotation}>{res}</group> :
