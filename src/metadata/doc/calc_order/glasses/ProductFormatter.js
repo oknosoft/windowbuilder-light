@@ -20,7 +20,7 @@ export default function ProductFormatter({row}) {
     return () => characteristic._manager.off({update});
   }, [characteristic]);
 
-  if(inset.insert_type.is('composite') || !builder.glass_prod_name2) {
+  if(inset.insert_type.is('composite')) {
     main.push(characteristic.owner.toString());
     const glrow = characteristic.glasses.find({elm: glassRow.elm});
     if(glrow) {

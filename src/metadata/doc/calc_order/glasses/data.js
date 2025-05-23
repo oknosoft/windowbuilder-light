@@ -43,8 +43,7 @@ export function createGlasses({obj}){
     });
   }
   const prices = [];
-
-  return [[
+  const columns = [
     {
       key: 'expanded',
       name: '',
@@ -67,7 +66,7 @@ export function createGlasses({obj}){
         const {row, onRowChange} = props;
         return <select
           autoFocus
-          className="rdg-text-editor tlmcuo07-0-0-beta-52"
+          className="rdg-text-editor tlmcuo07-0-0-beta-54"
           value={row.row.inset}
           onChange={({target}) => {
             row.row.inset = target.value;
@@ -80,16 +79,19 @@ export function createGlasses({obj}){
         </select>;
       }
     },
-    {key: 'height', name: 'Высота', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
     {key: 'len', name: 'Ширина', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
+    {key: 'height', name: 'Высота', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
     {key: 'quantity', name: 'Колич.', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
     {key: 'price_internal', name: 'Цена', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
     {key: 'discount_percent_internal', name: 'Скидка', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
     {key: 'amount_internal', name: 'Сумма', width: 88, renderCell: NumberFormatter},
-  ],
-    glasses,
-    {skey: 0, rows: []}
   ];
+  if($p.job_prm.builder.flip_yx) {
+    const height = columns.splice(4, 1)[0];
+    columns.splice(3, 0, height);
+  }
+
+  return [columns, glasses, {skey: 0, rows: []}];
 }
 
 export async function recalcRow({row, setBackdrop}) {
