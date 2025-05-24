@@ -22,8 +22,8 @@ function Icon() {
 
 export default function SearchField({scheme, setRefresh}) {
   const inputRef = React.useRef(null);
-  const {handleIfaceState, ifaceState: {menu_open}} = useLoadingContext();
-  const width = contentWidth(menu_open);
+  const {handleIfaceState, ifaceState: {menu_open, innerWidth}} = useLoadingContext();
+  const width = contentWidth(menu_open, innerWidth);
   const sx = {pr: 'unset'};
   if(width < 600) {
     sx.minWidth = 200;

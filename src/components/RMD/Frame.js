@@ -15,9 +15,9 @@ export default function RMD (props) {
 
   const {setTitle} = useTitleContext();
   const {setBackdrop} = useBackdropContext();
-  const {handleIfaceState, ifaceState: {menu_open, rmd}} = useLoadingContext();
+  const {handleIfaceState, ifaceState: {menu_open, innerWidth, rmd}} = useLoadingContext();
   const theme = useTheme();
-  const width = contentWidth(menu_open);
+  const width = contentWidth(menu_open, innerWidth);
 
   // при создании компонента, подготовим общие данные
   React.useEffect(() => {

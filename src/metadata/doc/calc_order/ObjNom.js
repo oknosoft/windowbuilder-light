@@ -47,8 +47,8 @@ const getRows = (obj) => {
 let selectedContext = {};
 
 export default function ObjNom({tabRef, obj, setModified}) {
-  const {ifaceState: {menu_open}} = useLoadingContext();
-  const style = {minHeight: 420, width: window.innerWidth - (!disablePermanent && menu_open ? drawerWidth : 0) - 2};
+  const {ifaceState: {menu_open, innerWidth}} = useLoadingContext();
+  const style = {minHeight: 420, width: innerWidth - (!disablePermanent && menu_open ? drawerWidth : 0) - 2};
   if(tabRef?.current && !disablePermanent) {
     const top = tabRef.current.offsetTop + tabRef.current.offsetHeight + 51;
     style.height = `calc(100vh - ${top}px)`;

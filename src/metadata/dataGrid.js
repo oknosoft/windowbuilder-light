@@ -187,8 +187,8 @@ export function isAtBottom({ currentTarget }) {
   return Boolean(currentTarget.scrollTop + 10 >= currentTarget.scrollHeight - currentTarget.clientHeight);
 }
 
-export function tabularStyle(tabRef, {ifaceState: {menu_open}}) {
-  const style = {minHeight: 420, width: window.innerWidth - (!disablePermanent && menu_open ? drawerWidth : 0) - 2};
+export function tabularStyle(tabRef, {ifaceState: {menu_open, innerWidth}}) {
+  const style = {minHeight: 420, width: innerWidth - (!disablePermanent && menu_open ? drawerWidth : 0) - 2};
   if(tabRef?.current && !disablePermanent) {
     const top = tabRef.current.offsetTop + tabRef.current.offsetHeight + 51;
     style.height = window.innerHeight - top;

@@ -7,6 +7,7 @@
 import {load_ram, load_ram_splitted} from 'wb-core/dist/superlogin-proxy/no_ram';
 import {event_src} from './events';
 
+const {innerWidth} = window;
 export const init_state = {
   meta_loaded: false,
   common_loaded: false,
@@ -18,7 +19,8 @@ export const init_state = {
   offline: false,
   server_error: '',
   title: 'Окнософт',
-  menu_open: window.innerWidth > 960,
+  innerWidth,
+  menu_open: innerWidth > 960,
   error: null,
   user: {
     logged_in: false,
