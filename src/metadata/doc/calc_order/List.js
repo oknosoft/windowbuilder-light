@@ -149,7 +149,7 @@ export default function CalcOrderList() {
       .catch(moreRowsError);
   }, [refresh]);
 
-  const [create, clone, open, open1C] = mgrCreate({mgr: calc_order, navigate, selectedRows, backdrop});
+  const [create, clone, open, open1C] = mgrCreate({mgr: calc_order, navigate, selectedRows, rows, backdrop});
 
   const onCellClick = cellClick({selectedRows, setSelectedRows});
 

@@ -20,7 +20,7 @@ export function cellClick({selectedRows, setSelectedRows}) {
 
 const {dialogs} = $p.ui;
 
-export function mgrCreate({mgr, navigate, selectedRows, backdrop, prms}) {
+export function mgrCreate({mgr, navigate, selectedRows, rows, backdrop, prms}) {
 
   const create = () => {
     backdrop
@@ -50,10 +50,17 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop, prms}) {
 
   const open = () => {
     if(selectedRows.size) {
-      backdrop
-        .setBackdrop(true)
+      backdrop.setBackdrop(true)
         .then(() => {
           const ref = Array.from(selectedRows)[0];
+          const row = rows?.find((row) => row.ref === ref);
+          if(row?._deleted) {
+            return backdrop.setBackdrop(false)
+              .then(() => dialogs.alert({
+                title: 'Пометка удаления',
+                text: 'Помеченный на удаление объект невозможно открыть в браузере'
+              }));
+          }
           if(prms?.select && prms?.return) {
             navigate(`${prms?.return}?ref=${ref}`, {relative: 'path'});
           }
@@ -69,19 +76,24 @@ export function mgrCreate({mgr, navigate, selectedRows, backdrop, prms}) {
 
   const open1C = () => {
     if(selectedRows.size) {
-      backdrop
-        .setBackdrop(true)
-        .then(() => {
-          const {utils} = $p;
-          utils.wss.send({
-            method: 'ОткрытьФорму',
-            name: mgr.class_name === 'doc.work_centers_task' ? 'Документ.НарядРЦ.ФормаОбъекта' : 'Документ.ЗаказПокупателя.ФормаОбъекта',
-            ref: Array.from(selectedRows)[0],
-            type: mgr.class_name
-          });
-          return utils.sleep(100);
-        })
-        .then(() => backdrop.setBackdrop(false));
+      const {utils} = $p;
+      if(utils.wss.stack.length) {
+        backdrop
+          .setBackdrop(true)
+          .then(() => {
+            utils.wss.send({
+              method: 'ОткрытьФорму',
+              name: mgr.class_name === 'doc.work_centers_task' ? 'Документ.НарядРЦ.ФормаОбъекта' : 'Документ.ЗаказПокупателя.ФормаОбъекта',
+              ref: Array.from(selectedRows)[0],
+              type: mgr.class_name
+            });
+            return utils.sleep(100);
+          })
+          .then(() => backdrop.setBackdrop(false));
+      }
+      else {
+        dialogs.alert({title: 'Нет связи с 1С', text: 'Вероятно, браузер открыт не из сеанса 1С'});
+      }
     }
     else {
       dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});

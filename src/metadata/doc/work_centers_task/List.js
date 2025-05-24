@@ -85,7 +85,7 @@ export default function WorkCentersTaskList() {
       .catch(setError);
   }, [refresh]);
 
-  const [create, clone, open] = mgrCreate({mgr: work_centers_task, navigate, selectedRows, backdrop, prms});
+  const [create, clone, open] = mgrCreate({mgr: work_centers_task, navigate, selectedRows, rows, backdrop, prms});
 
   const onCellClick = cellClick({selectedRows, setSelectedRows});
 

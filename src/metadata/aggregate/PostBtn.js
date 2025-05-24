@@ -7,10 +7,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {useBackdropContext} from '../../components/App';
 import {HtmlTooltip} from '../../components/App/styled';
 
-function IconMenu({anchorEl, open, handleClose, post, unpost, posted}) {
+function IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, posted, _deleted}) {
   const onClick = posted ?
     () => {
       handleClose();
@@ -25,16 +26,22 @@ function IconMenu({anchorEl, open, handleClose, post, unpost, posted}) {
     open={open}
     onClose={handleClose}
   >
-    <MenuItem onClick={onClick}>
+    <MenuItem disabled={_deleted} onClick={onClick}>
       <ListItemIcon>
         {posted ? <BookmarkRemoveIcon /> : <BookmarkAddedIcon />}
       </ListItemIcon>
       <ListItemText>{posted ? 'Отменить проведение' : 'Провести'}</ListItemText>
     </MenuItem>
+    <MenuItem disabled={posted || _deleted} onClick={markDeleted}>
+      <ListItemIcon>
+        <DeleteOutlineIcon />
+      </ListItemIcon>
+      <ListItemText>Пометить на удаление</ListItemText>
+    </MenuItem>
   </Menu>;
 }
 
-const {wsql, utils, adapters: {pouch}} = $p;
+const {wsql, utils, ui, adapters: {pouch}} = $p;
 
 async function waitProcessing(doc) {
   const {id} = doc._metadata();
@@ -79,7 +86,7 @@ export default function PostBtn({obj}) {
   const tooltipClose = () => setTooltipOpen(false);
 
 
-  const [postable, post, unpost, handleOpen, handleClose] = React.useMemo(() => {
+  const [postable, post, unpost, markDeleted, handleOpen, handleClose] = React.useMemo(() => {
     const postable = obj._metadata('posted') !== undefined;
     const onError = (err) => {
       backdrop.setBackdrop(false);
@@ -101,12 +108,28 @@ export default function PostBtn({obj}) {
         .then(onProcessed)
         .catch(onError);
     };
+    const markDeleted = () => {
+      handleClose();
+      ui.dialogs.alert({
+        title: 'Пометить на удаление',
+        text: 'Подтвердите удаление документа',
+        timeout: 10000,
+      })
+        .then((e) => {
+          if(!e) {
+            backdrop.setBackdrop(true);
+            return obj.mark_deleted(true);
+          }
+        })
+        .then(onProcessed)
+        .catch(onError);
+    };
     const handleOpen = (event) => {
       tooltipClose();
       setAnchorEl(event.currentTarget);
     };
     const handleClose = () => setAnchorEl(null);
-    return [postable, post, unpost, handleOpen, handleClose];
+    return [postable, post, unpost, markDeleted, handleOpen, handleClose];
   }, [obj]);
 
 
@@ -114,11 +137,13 @@ export default function PostBtn({obj}) {
     return null;
   }
 
-  const {posted} = obj;
-  return <HtmlTooltip open={tooltipOpen} title= {posted ? 'Проведён' : 'Не проведён'} disableInteractive leaveDelay={200}>
+  const {posted, _deleted} = obj;
+  const title= posted ? 'Проведён' : (_deleted ? 'Удалён' : 'Не проведён');
+  const icon = posted ? <BookmarkAddedIcon/> : (_deleted ? <DeleteOutlineIcon/> : <BookmarkBorderIcon/>);
+  return <HtmlTooltip open={tooltipOpen} title={title} disableInteractive leaveDelay={200}>
     <IconButton onClick={handleOpen} onMouseEnter={() => setTooltipOpen(true)} onMouseLeave={tooltipClose}>
-      {posted ? <BookmarkAddedIcon/> : <BookmarkBorderIcon/>}
+      {icon}
     </IconButton>
-    {IconMenu({anchorEl, open, handleClose, post, unpost, posted})}
+    {IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, posted, _deleted})}
   </HtmlTooltip>;
 }
