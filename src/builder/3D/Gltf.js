@@ -1,20 +1,23 @@
 import React from 'react';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-export default function Gltf({position, rotation}) {
+export default function Gltf({position, rotation, scale}) {
 
   return <group ref={group => {
     if(group && !group.children.length && !group._loader) {
       group._loader = new GLTFLoader();
       group._loader.load(
         // resource URL
-        '/raw/3D/handle1.glb',
+        '/imgs/handle1.glb',
         // called when the resource is loaded
         function ({scene} ) {
 
           //scene.scale.set(10,10,10);
           scene.position.set(...position);
           scene.rotation.set(...rotation);
+          if(scale) {
+            scene.scale.set(...scale);
+          }
           group.add( scene );
           delete group._loader;
 
