@@ -8,7 +8,7 @@ module.exports = {
   entry: path.resolve(__dirname, "../src/index.js"),                      // входная точка - исходный файл
   output:{
     path: path.resolve(__dirname, "../build"),  // путь к каталогу выходных файлов - папка build
-    //publicPath: "./",
+    publicPath: "/",
     filename: 'static/js/[name].[contenthash:8].js',
     // There are also additional JS chunk files if you use code splitting.
     chunkFilename: 'static/js/[name].[contenthash:8].chunk.js',
