@@ -138,9 +138,11 @@ export function profileExtrude({profile, profiles, cut, pos}) {
         <Base geometry={geometry}/>
         <Subtraction geometry={cut}/>
       </Geometry>
-      <ProfileVisualisation profile={profile} cut={cut} />
+      {!hidden && <Edges color="grey" />}
+      <ProfileVisualisation profile={profile} pos={pos} />
     </mesh> :
     <mesh key={index} geometry={geometry} material={material}>
-      <ProfileVisualisation profile={profile} cut={cut} pos={pos} />
+      {!hidden && <Edges color="grey" />}
+      <ProfileVisualisation profile={profile} pos={pos} />
   </mesh>;
 }

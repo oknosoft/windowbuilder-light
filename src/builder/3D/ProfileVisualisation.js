@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import {MathUtils} from 'three';
 const {degToRad} = MathUtils;
-import {Edges} from '@react-three/drei';
 import Gltf from './Gltf';
 
 function visualization(profile) {
@@ -41,24 +40,18 @@ function drawVisualization({profile, vrow, box}) {
   return res;
 }
 
-export default function ProfileVisualisation({profile, cut, pos}) {
+export default function ProfileVisualisation({profile, pos}) {
   const {hidden, project} = profile;
   if(hidden) {
     return null;
   }
   const vrows = visualization(profile);
-  const edges = cut ? <Edges key={`e-${project.props.stamp}`} color="grey" /> : <Edges color="grey" />;
   let box;
   if(vrows.length) {
     const {angleHor, generatrix, inner, outer, layer: {layer, bounds}} = profile;
     box = {angleHor, generatrix, inner, outer, layer, bounds, pos};
+    return vrows.map(vrow => drawVisualization({profile, vrow, box}));
   }
-  else {
-    return edges;
-  }
-  return <>
-    {edges}
-    {vrows.map(vrow => drawVisualization({profile, vrow, box}))}
-  </>;
+  return null;
 
 }
