@@ -5,6 +5,7 @@ import {useBackdropContext} from '../../../../components/App';
 import {disablePermanent, drawerWidth} from '../../../../styles/muiTheme';
 import {preventDefault} from '../../../dataGrid';
 import Toolbar from './ObjGlassesToolbar';
+import {shortcuts} from './shortcuts';
 import {SelectedContext} from '../selectedContext';
 
 import {rowHeight, createGlasses, rowKeyGetter, handlers} from './data';
@@ -18,6 +19,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     style.height = `calc(100vh - ${top}px)`;
   }
   const {setBackdrop, setSnack} = useBackdropContext();
+  const gridRef = React.createRef(null);
 
   const [columns, glasses, glob] = React.useMemo(() => createGlasses({obj}), [obj]);
   const [rows, rawSetRows] = React.useState(glasses);
@@ -117,8 +119,9 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     }
   };
 
-  const onCellKeyDown = ({ mode, row, column, rowIdx, selectCell }, event) => {
+  const onCellKeyDown = (attr, event) => {
 
+    const { row, column, rowIdx, selectCell } = attr;
     if (event.isDefaultPrevented() || row?.type === "DETAIL") {
       // skip parent grid keyboard navigation if nested grid handled it
       event.preventGridDefault();
@@ -131,7 +134,8 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
       return methods.add(row?.row?.characteristic);
     }
 
-    if (mode === 'EDIT' || !rows.length || row?.type === 'DETAIL'){
+    if (!rows.length || row?.type === 'DETAIL' ||
+      shortcuts({...attr, rows, event, gridRef, selectedRowsChange, methods})){
       return;
     }
 
@@ -204,6 +208,7 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
     />
     <SelectedContext.Provider value={selectedContext}>
       <DataGrid
+        ref={gridRef}
         rowKeyGetter={rowKeyGetter}
         columns={columns}
         rows={rows}
