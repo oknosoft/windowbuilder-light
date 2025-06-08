@@ -5,23 +5,32 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@oknosoft/ui/App/Dialog';
 import CloseIcon from '@mui/icons-material/Close';
+import {styled} from '@mui/material/styles';
 import {Toolbar} from '../../aggregate/App/styled';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 import TabularSection from '../../aggregate/TabularSection';
 import SearchField, {listenCtrlF} from '../../aggregate/Selection/SearchField';
 
-import {NumberFormatter} from '@oknosoft/ui/DataField/Number';
 import {TextFormatter} from '@oknosoft/ui/DataField/Text';
 import {PresentationFormatter} from '@oknosoft/ui/DataField/RefField';
+
+export const Right = styled('div')(() => ({textAlign: 'right'}));
+
+function NumberFormatter({row, column}) {
+  const value = row[column.key];
+  return value ? <Right>{value.toFixed(4)}</Right> : '';
+}
+
 const defcolumns = [
-  {key: "elm", name: "Элемент", width: 90, renderCell: TextFormatter},
+  {key: "elm", name: "Элемент", width: 88, renderCell: TextFormatter},
   {key: "nom", name: "Номенклатура", renderCell: PresentationFormatter},
   {key: "clr", name: "Цвет", width: 120, renderCell: PresentationFormatter},
-  {key: "len", name: "Длина", width: 90, renderCell: NumberFormatter},
-  {key: "width", name: "Ширина", width: 90, renderCell: NumberFormatter},
-  {key: "s", name: "Площадь", width: 90, renderCell: NumberFormatter},
-  {key: "qty", name: "Штук", width: 90, renderCell: NumberFormatter},
-  {key: "totqty", name: "Количество", width: 90, renderCell: NumberFormatter},
+  {key: "len", name: "Длина", width: 92, renderCell: NumberFormatter},
+  {key: "width", name: "Ширина", width: 92, renderCell: NumberFormatter},
+  {key: "s", name: "Площадь", width: 92, renderCell: NumberFormatter},
+  {key: "qty", name: "Штук", width: 92, renderCell: NumberFormatter},
+  {key: "totqty", name: "Количество", width: 92, renderCell: NumberFormatter},
+  {key: "quantity", name: "Колич+%", width: 92, renderCell: NumberFormatter},
 ];
 
 
@@ -31,7 +40,7 @@ const tabContent = {
 
   },
   Composition({obj, tabRef, scheme, selection}) {
-    return <TabularSection obj={obj} tabRef={tabRef} ts="composition" scheme={scheme} selection={selection}/>;
+    return <TabularSection obj={obj} tabRef={tabRef} ts="composition" columns={defcolumns} scheme={scheme} selection={selection}/>;
   },
   Procedures({obj, tabRef, scheme, selection}) {
     return <TabularSection obj={obj} tabRef={tabRef} ts="procedures" scheme={scheme} selection={selection}/>;

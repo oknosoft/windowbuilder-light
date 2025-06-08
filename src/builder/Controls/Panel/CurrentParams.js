@@ -19,7 +19,7 @@ export default function CurrentParams({params, flat, disabled}) {
       })
     }
     else {
-      res.push(<FieldSet key={grouping} title={names.get(grouping) || 'Параметры'} defaultExpanded>
+      res.push(<FieldSet key={grouping || "emptyGroup"} title={names.get(grouping) || 'Параметры'} defaultExpanded>
         {prms.map((param, index) => {
           return <ParamField key={index} obj={params.proxy} param={param} disabled={disabled}/>;
         })}

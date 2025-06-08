@@ -50,7 +50,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
 
   function grid100(ev, count) {
     if(typeof count !== 'number') {
-      count = 29;
+      count = 27;
     }
 
     const step = count > 20 ? 400 : 600;

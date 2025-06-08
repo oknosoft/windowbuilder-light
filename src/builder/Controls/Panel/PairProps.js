@@ -49,8 +49,14 @@ export default function PairProps(props) {
   else if(elm2 instanceof editor.Filling) {
     [elm1, elm2] = [elm2, elm1];
     const rib = elm1.rib(elm2);
-    children.push(<Typography key="title">{`Ребро заполнения`}</Typography>);
-    children.push(<CurrentParams params={rib.params} />);
+    if(rib) {
+      children.push(<Typography key="title">{`Ребро заполнения`}</Typography>);
+      children.push(<CurrentParams key="rib" params={rib.params} />);
+    }
+    else {
+      children.push(<Typography key="title">{`Профиль и заполнение`}</Typography>);
+      children.push(<Typography key="no" variant="overline">{`Нет соединений между элементами`}</Typography>);
+    }
   }
   return children;
 }
