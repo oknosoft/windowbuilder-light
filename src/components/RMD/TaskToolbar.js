@@ -58,8 +58,6 @@ export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows,
   const changeTask = (ntgt) => {
     setSelectedRows(new Set());
     setTgt(handleIfaceState, rmd, ntgt);
-    rmd.tgt = ntgt;
-    query({rmd, scheme, handleIfaceState});
   };
 
   return <Toolbar disableGutters>

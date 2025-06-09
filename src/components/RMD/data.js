@@ -72,7 +72,27 @@ export const setScheme = (handleIfaceState, rmd, ref) => {
 
 export const setTgt = (handleIfaceState, rmd, tgt, setBackdrop) => {
   handleIfaceState({rmd: Object.assign({}, rmd, {tgt})});
-  setBackdrop?.(false);
+  rmd.tgt = tgt;
+  const scheme = rmd.scheme || schemas[0];
+  if(tgt.is_new()) {
+    return setBackdrop?.(false);
+  }
+
+  let {date} = tgt;
+  for(const row of tgt.set) {
+    if(row.date < date) {
+      date = row.date;
+    }
+  }
+  if(scheme.date_from > date) {
+    scheme.date_from = date;
+  }
+  query({rmd, scheme, handleIfaceState})
+    .then(() => setBackdrop?.(false))
+    .catch(err => {
+      setBackdrop?.(false);
+      console.error(err);
+    });
 };
 
 export const checkTgt = (handleIfaceState, rmd, setBackdrop) => {
@@ -151,10 +171,9 @@ export const filter = ({rmd, scheme, handleIfaceState}) => {
     const tgtrow = tgt.set.find({
       record_kind: -1,
       phase: dp.phase,
-      obj: obj.valueOf(),
-      work_center: work_center.valueOf(),
-      work_shift: work_shift.valueOf(),
-      date: date,
+      obj,
+      work_center,
+      work_shift,
     });
     if(tgtrow) {
       tgtrows.push(tgtrow);
