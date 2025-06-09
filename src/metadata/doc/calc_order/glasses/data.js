@@ -119,6 +119,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       proto = job_prm.builder.glasses_template;
     }
     const tmp = utils._clone(proto.toJSON());
+    tmp.base_block = job_prm.builder.glasses_template?.ref;
     utils._mixin(row.characteristic, tmp, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name'.split(','), true);
     row.calc_order_row.note = tmp.note;
     row.calc_order_row.nom = row.characteristic.owner;

@@ -13,7 +13,7 @@ import PostBtn from './PostBtn';
 import MenuPrint from './MenuPrint';
 
 const {utils, ui: {dialogs}} = $p;
-const alert = (err) => dialogs.alert({
+const alert = (err) => typeof err === ('string' || err instanceof Error) && dialogs.alert({
   title: 'Ошибка записи',
   text: err?.message || err,
 });
