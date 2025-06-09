@@ -13,6 +13,7 @@ import {filter, query, setTgt} from './data';
 import {run1D, run2D} from '../../metadata/doc/work_centers_task/Cutting/OptimizeCut';
 import CuttingReport from '../../metadata/doc/work_centers_task/Cutting/Report';
 import PostBtn from './TaskPost';
+import MenuPrint from '../../metadata/aggregate/MenuPrint';
 
 const stub = () => null;
 
@@ -75,6 +76,9 @@ export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows,
       <IconButton onClick={report}><AssessmentOutlinedIcon/></IconButton>
     </HtmlTooltip>
     <Typography sx={{flex: 1}}></Typography>
+    <HtmlTooltip title="Печать">
+      <MenuPrint obj={tgt} variant="button" allowModified/>
+    </HtmlTooltip>
     <PostBtn obj={tgt} changeTask={changeTask} />
   </Toolbar>;
 }

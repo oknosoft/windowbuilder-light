@@ -49,20 +49,7 @@ export default function ObjToolbar({obj, mgr, btns=null, setSettingOpen, onClose
       <HtmlTooltip title="печать">
         <MenuPrint
           mgr={mgr}
-          handlePrint={(model) => {
-            if(obj._modified || obj.is_new()) {
-              return dialogs.alert({
-                title: 'Документ изменён',
-                text: 'Перед печатью, запишите заказ',
-              });
-            }
-            if(model.jsx && 0) {
-              obj._manager.print(obj, model);
-            }
-            else {
-              model.execute(obj);
-            }
-          }}
+          obj={obj}
           variant="button"
         />
       </HtmlTooltip>

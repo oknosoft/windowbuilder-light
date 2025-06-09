@@ -7,6 +7,21 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import PrintIcon from '@mui/icons-material/Print';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 
+function handlePrint(model, {obj, allowModified}) {
+  if(!allowModified && (obj._modified || obj.is_new())) {
+    return $p.ui.dialogs.alert({
+      title: 'Документ изменён',
+      text: 'Перед печатью, запишите документ',
+    });
+  }
+  if(model.jsx && 0) {
+    obj._manager.print(obj, model);
+  }
+  else {
+    model.execute(obj);
+  }
+}
+
 class SubMenu extends React.Component {
 
   constructor(props, context) {
@@ -16,12 +31,13 @@ class SubMenu extends React.Component {
     this.handleOpen = (event) => this.setState({anchorEl: event.currentTarget});
     this.handlePrint = (v) => {
       this.handleClose();
-      this.props.handlePrint(v);
+      const {props} = this;
+      props.handlePrint ? props.handlePrint(v, props) : handlePrint(v, props);
     };
   }
 
   render() {
-    const {props: {items, Icon, text, handlePrint, prefix, variant}, state: {anchorEl}} = this;
+    const {props: {items, Icon, text, prefix, variant}, handlePrint, state: {anchorEl}} = this;
 
     return [
       variant === 'button' ?
@@ -37,10 +53,7 @@ class SubMenu extends React.Component {
             anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             onClose={this.handleClose}>
-        {anchorEl && items.map((v) => <MenuItem key={v.ref} onClick={() => {
-          handlePrint(v);
-          this.handleClose();
-        }}>{v.name}</MenuItem>)}
+        {anchorEl && items.map((v) => <MenuItem key={v.ref} onClick={() => handlePrint(v)}>{v.name}</MenuItem>)}
       </Menu>
     ];
   }
@@ -54,7 +67,7 @@ class MenuPrint extends SubMenu {
   }
 
   componentDidMount() {
-    const mgr = this.props.mgr || this.props.scheme?.child_meta()?.mgr;
+    const mgr = this.props.mgr || this.props.scheme?.child_meta()?.mgr || this.props.obj?._manager;
     mgr && mgr.printing_plates()
       .then((plates) => {
         const groups = new Map();
@@ -73,16 +86,16 @@ class MenuPrint extends SubMenu {
   }
 
   render() {
-    const {props: {handlePrint, variant}, state: {anchorEl, plates}} = this;
+    const {props: {variant, ...other}, state: {anchorEl, plates}} = this;
 
     if(plates.length === 1) {
       return <SubMenu
         items={plates[0].value}
         Icon={PrintIcon}
         text="Печать"
-        handlePrint={handlePrint}
         prefix="root"
         variant={variant}
+        {...other}
       />;
     }
 
@@ -110,8 +123,8 @@ class MenuPrint extends SubMenu {
           items={plate.value}
           Icon={ChevronLeft}
           text={plate.name}
-          handlePrint={handlePrint}
           prefix={`prn_${index}`}
+          {...other}
         />)}
       </Menu>
     ];
@@ -119,10 +132,12 @@ class MenuPrint extends SubMenu {
 }
 
 MenuPrint.propTypes = {
-  mgr: PropTypes.object,                 // менеджер данных
-  scheme: PropTypes.object,               // значение настроек компоновки
-  handlePrint: PropTypes.func.isRequired, // обработчик открытия диалога печати
-  variant: PropTypes.string,              // использовать IconButton вместо MenuItem
+  mgr: PropTypes.object,          // менеджер данных
+  obj: PropTypes.object,          // объект данных
+  scheme: PropTypes.object,       // значение настроек компоновки
+  handlePrint: PropTypes.func,    // обработчик открытия диалога печати
+  variant: PropTypes.string,      // использовать IconButton вместо MenuItem
+  allowModified: PropTypes.bool,  // использовать IconButton вместо MenuItem
 };
 
 export default MenuPrint;
