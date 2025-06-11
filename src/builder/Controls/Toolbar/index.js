@@ -3,6 +3,7 @@ import {Toolbar} from '../../../aggregate/App/styled';
 import Indicator from '../../Structure/Toolbar/Indicator';
 import RootToolbar from './Root';
 import ProfileToolbar from './Profile';
+import FillingToolbar from './Filling';
 
 export default function controlsToolbar (props) {
   let {type, tab, editor, elm, layer} = props;
@@ -23,6 +24,9 @@ export default function controlsToolbar (props) {
       }
       else if(elm?.is('GeneratrixElement')) {
         Buttons = ProfileToolbar;
+      }
+      else if(elm?.is('Filling')) {
+        Buttons = FillingToolbar;
       }
       break;
     }
