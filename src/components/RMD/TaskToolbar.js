@@ -30,6 +30,7 @@ export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows,
     for(const row of rm) {
       tgt.set.del(row);
     }
+    tgt.fill_by_keys({c2d: true});
     setSelectedRows(new Set());
     filter({rmd, scheme, handleIfaceState});
   };

@@ -40,7 +40,7 @@ export function mgrCreate({mgr, navigate, selectedRows, rows, backdrop, prms}) {
           }
           return proto;
         })
-        .then((proto) => mgr.clone(proto.toJSON()))
+        .then((proto) => mgr.clone(proto))
         .then(({ref}) => navigate(ref));
     }
     else {
