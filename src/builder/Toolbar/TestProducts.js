@@ -87,6 +87,7 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
         }
         activeLayer.skeleton.addProfiles(profiles);
 
+        project.redraw();
         props.loading = false;
         props.registerChange();
         project.redraw();
@@ -426,8 +427,9 @@ export function testProducts({editor, type, layer, setContext, handleClose}) {
 
 
 
-export default function TestProducts({editor, type, layer, setContext}) {
+export default function TestProducts({editor, type, layer, setContext, handleClose}) {
 
+  /*
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -436,9 +438,37 @@ export default function TestProducts({editor, type, layer, setContext}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  */
   const {imposts, square, door, stained_glass, cut, rotunda, grid20, grid100, clear} = testProducts({editor, type, layer, setContext, handleClose});
 
   return <>
+    <MenuItem onClick={square}>
+      <ListItemIcon><WindowIcon/></ListItemIcon>
+      <ListItemText>Окно</ListItemText>
+    </MenuItem>
+    <MenuItem onClick={door}>
+      <ListItemIcon><MeetingRoomOutlinedIcon/></ListItemIcon>
+      <ListItemText>Дверь</ListItemText>
+    </MenuItem>
+    <MenuItem onClick={stained_glass}>
+      <ListItemIcon><GridIcon/></ListItemIcon>
+      <ListItemText>Витраж</ListItemText>
+    </MenuItem>
+    <NestedMenuItem
+      label="Отладка"
+      parentMenuOpen={open}
+      delay={300}>
+      <MenuItem onClick={imposts}>Импосты</MenuItem>
+      <MenuItem onClick={cut}>Разрыв</MenuItem>
+      <MenuItem onClick={grid20}>Сетка 6</MenuItem>
+      <MenuItem onClick={grid100}>Сетка 30</MenuItem>
+      <MenuItem onClick={rotunda}>Ротонда</MenuItem>
+      <MenuItem onClick={() => load21({editor, setContext, handleClose})}>Из старой базы</MenuItem>
+      <MenuItem onClick={clear}>Очистить</MenuItem>
+    </NestedMenuItem>
+  </>;
+  /*
+return <>
     <HtmlTooltip title="Тестовые изделия">
       <IconButton
         aria-controls={open ? 'basic-menu' : undefined}
@@ -460,30 +490,8 @@ export default function TestProducts({editor, type, layer, setContext}) {
         paper: {sx: {minWidth: 200}}
       }}
     >
-      <MenuItem onClick={square}>
-        <ListItemIcon><WindowIcon/></ListItemIcon>
-        <ListItemText>Окно</ListItemText>
-      </MenuItem>
-      <MenuItem onClick={door}>
-        <ListItemIcon><MeetingRoomOutlinedIcon/></ListItemIcon>
-        <ListItemText>Дверь</ListItemText>
-      </MenuItem>
-      <MenuItem onClick={stained_glass}>
-        <ListItemIcon><GridIcon/></ListItemIcon>
-        <ListItemText>Витраж</ListItemText>
-      </MenuItem>
-      <NestedMenuItem
-        label="Отладка"
-        parentMenuOpen={open}
-        delay={300}>
-        <MenuItem onClick={imposts}>Импосты</MenuItem>
-        <MenuItem onClick={cut}>Разрыв</MenuItem>
-        <MenuItem onClick={grid20}>Сетка 6</MenuItem>
-        <MenuItem onClick={grid100}>Сетка 30</MenuItem>
-        <MenuItem onClick={rotunda}>Ротонда</MenuItem>
-        <MenuItem onClick={() => load21({editor, setContext, handleClose})}>Из старой базы</MenuItem>
-        <MenuItem onClick={clear}>Очистить</MenuItem>
-      </NestedMenuItem>
+
     </Menu>
   </>;
+  */
 }

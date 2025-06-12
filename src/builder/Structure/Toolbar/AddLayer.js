@@ -13,7 +13,7 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import AddRoadIcon from '@mui/icons-material/AddRoad';
 import RemoveRoadIcon from '@mui/icons-material/RemoveRoad';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
-import {testProducts} from '../../Toolbar/TestProducts';
+import TestProducts, {testProducts} from '../../Toolbar/TestProducts';
 
 export const StyledMenu = styled((props) => (
   <Menu
@@ -165,6 +165,8 @@ export default function AddLayer({editor, project, layer, elm, type, setContext}
         <AddPhotoAlternateOutlinedIcon />
         Слой рамы
       </MenuItem>}
+      {isProduct &&
+      <TestProducts editor={editor} type={type} layer={layer} setContext={setContext} handleClose={handleClose} />}
       {isFilling && <MenuItem onClick={addFlap} disableRipple>
         <LibraryAddOutlinedIcon />
         Слой створки

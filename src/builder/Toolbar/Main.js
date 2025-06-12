@@ -9,6 +9,7 @@ import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import CloseIcon from '@mui/icons-material/Close';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import CopyAllIcon from '@mui/icons-material/CopyAll';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import {useNavigate} from 'react-router';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 import {useLoadingContext} from '../../aggregate/Metadata';
@@ -18,15 +19,21 @@ export default function MainToolbar({context}) {
   const navigate = useNavigate();
   const {editor, type, layer, setContext} = context;
 
-  const {close, recalc, save, saveClose} = React.useMemo(() => {
+  const {close, recalc, save, saveClose, redraw} = React.useMemo(() => {
     const close = () => navigate(`/`);
     const recalc = () => {
       editor.project.calculateSpec();
       editor.project.redraw();
     };
+    const redraw = ({shiftKey}) => {
+      if(shiftKey) {
+        editor.project.props.registerChange();
+      }
+      editor.project.redraw();
+    };
     const save = () => null;
     const saveClose = () => null;
-    return {close, recalc, save, saveClose};
+    return {close, recalc, save, saveClose, redraw};
   }, [editor]);
 
   const {ifaceState: {drawerOpen}} = useLoadingContext();
@@ -42,8 +49,10 @@ export default function MainToolbar({context}) {
     <HtmlTooltip title="Пересчитать">
       <IconButton disabled={!editor?.project} onClick={recalc}><CalculateIcon/></IconButton>
     </HtmlTooltip>
+    <HtmlTooltip title="Обновить">
+      <IconButton disabled={!editor?.project} onClick={redraw}><RefreshIcon/></IconButton>
+    </HtmlTooltip>
     <Divider orientation="vertical" sx={{mx: 1}} flexItem />
-    <TestProducts editor={editor} type={type} layer={layer} setContext={setContext} />
     <HtmlTooltip title="Скопировать в буфер обмена">
       <IconButton disabled onClick={recalc}><CopyAllIcon/></IconButton>
     </HtmlTooltip>
