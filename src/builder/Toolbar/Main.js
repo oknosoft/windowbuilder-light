@@ -13,7 +13,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import {useNavigate} from 'react-router';
 import {HtmlTooltip} from '../../aggregate/App/styled';
 import {useLoadingContext} from '../../aggregate/Metadata';
-import TestProducts from './TestProducts';
 
 export default function MainToolbar({context}) {
   const navigate = useNavigate();
