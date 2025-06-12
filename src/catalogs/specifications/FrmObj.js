@@ -20,6 +20,10 @@ function NumberFormatter({row, column}) {
   const value = row[column.key];
   return value ? <Right>{value.toFixed(4)}</Right> : '';
 }
+function NumberFormatter2({row, column}) {
+  const value = row[column.key];
+  return value ? <Right>{value.toFixed(2)}</Right> : '';
+}
 
 const defcolumns = [
   {key: "elm", name: "Элемент", width: 88, renderCell: TextFormatter},
@@ -28,7 +32,9 @@ const defcolumns = [
   {key: "len", name: "Длина", width: 92, renderCell: NumberFormatter},
   {key: "width", name: "Ширина", width: 92, renderCell: NumberFormatter},
   {key: "s", name: "Площадь", width: 92, renderCell: NumberFormatter},
-  {key: "qty", name: "Штук", width: 92, renderCell: NumberFormatter},
+  {key: "alp1", name: "Угол1", width: 80, renderCell: NumberFormatter2},
+  {key: "alp2", name: "Угол2", width: 80, renderCell: NumberFormatter2},
+  {key: "qty", name: "Штук", width: 80, renderCell: NumberFormatter2},
   {key: "totqty", name: "Количество", width: 92, renderCell: NumberFormatter},
   {key: "quantity", name: "Колич+%", width: 92, renderCell: NumberFormatter},
 ];
