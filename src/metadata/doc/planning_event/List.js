@@ -9,20 +9,20 @@ import ListToolbar from '../../aggregate/ListToolbar';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../dataGrid';
 
 
-const {adapters: {pouch}, cat: {scheme_settings}, doc: {work_centers_task}, utils} = $p;
+const {adapters: {pouch}, cat: {scheme_settings}, doc: {planning_event}, utils} = $p;
 const scheme = scheme_settings
-  .find_schemas('doc.work_centers_task', true)
+  .find_schemas('doc.planning_event', true)
   .find(({name}) => name.endsWith('.main'));
-const {fields} = work_centers_task.metadata();
-const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: work_centers_task});
+const {fields} = planning_event.metadata();
+const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: planning_event});
 
-const listName = 'Задания на производство (список)';
+const listName = 'Уточнения планов и диспетчеризация';
 const title =  {title: listName, appTitle: <>
     <Typography variant="h6" sx={{flex: 1}} noWrap>{listName}</Typography>
     <GoTo items={[
       {name: 'РМД', path: '/rmd'},
       {name: 'Расчёты-заказы', path: '/doc/calc_order'},
-      {name: 'Уточнения планов', path: '/doc/planning_event'},
+      {name: 'Задания на производство', path: '/doc/work_centers_task'},
     ]}/>
   </>};
 
@@ -40,7 +40,7 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
   const selector = scheme.mango_selector(sprm);
   selector._raw = true;
 
-  return work_centers_task.find_rows_remote(selector)
+  return planning_event.find_rows_remote(selector)
     .then((res) => {
       backdrop.setBackdrop(false);
       return res;
@@ -51,7 +51,7 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
     });
 }
 
-export default function WorkCentersTaskList() {
+export default function PlanningEventList() {
   const [rows, setRows] = React.useState([]);
   const [selectedRows, setSelectedRows] = React.useState(new Set());
   const [loading, setLoading] = React.useState(true);
@@ -86,7 +86,7 @@ export default function WorkCentersTaskList() {
       .catch(setError);
   }, [refresh]);
 
-  const [create, clone, open] = mgrCreate({mgr: work_centers_task, navigate, selectedRows, rows, backdrop, prms});
+  const [create, clone, open] = mgrCreate({mgr: planning_event, navigate, selectedRows, rows, backdrop, prms});
 
   const onCellClick = cellClick({selectedRows, setSelectedRows});
 

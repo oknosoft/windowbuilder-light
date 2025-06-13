@@ -22,11 +22,20 @@ const {dialogs} = $p.ui;
 
 export function mgrCreate({mgr, navigate, selectedRows, rows, backdrop, prms}) {
 
+  const navigateOpen = ({ref}) => {
+    if(prms?.select || prms?.return) {
+      navigate(`${ref}?return=-1`, {relative: 'path'});
+    }
+    else {
+      navigate(ref, {relative: 'path'});
+    }
+  }
+
   const create = () => {
     backdrop
       .setBackdrop(true)
       .then(() => mgr.create())
-      .then(({ref}) => navigate(ref));
+      .then(navigateOpen);
   };
 
   const clone = () => {
@@ -41,7 +50,7 @@ export function mgrCreate({mgr, navigate, selectedRows, rows, backdrop, prms}) {
           return proto;
         })
         .then((proto) => mgr.clone(proto))
-        .then(({ref}) => navigate(ref));
+        .then(navigateOpen);
     }
     else {
       //dialogs.alert({title: 'Форма объекта', text: 'Не указана текущая строка'});

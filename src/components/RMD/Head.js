@@ -21,6 +21,7 @@ export function RmdHead({handleIfaceState, rmd}) {
       {name: 'Расчёты-заказы', path: '/doc/calc_order'},
       {name: 'Текущее задание', path: `/doc/work_centers_task/${rmd?.tgt?.ref}?return=/rmd&modified=false`},
       {name: 'Список заданий', path: '/doc/work_centers_task'},
+      {name: 'Уточнения планов', path: '/doc/planning_event'},
     ]}/>
   </>;
 }

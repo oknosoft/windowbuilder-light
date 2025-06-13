@@ -12,6 +12,7 @@ import {HtmlTooltip} from '../../../../components/App/styled';
 import Loading from '../../../../components/App/Loading';
 import CuttingReport from './Report';
 import CuttingProgress1D from './Progress1D';
+import Repartition from '../Repartition';
 const Manual2DCutting = React.lazy(() => import('./Manual2DCutting'));
 const Manual2DCuts = React.lazy(() => import('./Manual2DCuts'));
 
@@ -48,6 +49,13 @@ function setSticks(obj, data) {
     docRow.x = row.x;
     docRow.y = row.y;
   }
+}
+
+function noRow() {
+  dialogs.alert({
+    title: 'Ручной раскрой 2D',
+    text: 'Не выбрана текущая строка',
+  });
 }
 
 export function run1D(obj, setBackdrop, setExt, state) {
@@ -149,10 +157,7 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
         </React.Suspense>);
       }
       else {
-        dialogs.alert({
-          title: 'Ручной раскрой 2D',
-          text: 'Не выбрана текущая строка',
-        });
+        noRow();
       }
     }
   };
@@ -177,6 +182,7 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
     <HtmlTooltip title="Удалить данные оптимизации раскроя">
       <IconButton onClick={reset_sticks}><PlaylistRemoveIcon/></IconButton>
     </HtmlTooltip>
+    {mode === 'cuts' ? null : <Repartition obj={obj} selected={selected} noRow={noRow} />}
     <Box sx={{flex: 1}}/>
     <HtmlTooltip title="Статистика раскроя">
       <IconButton onClick={report}><AssessmentOutlinedIcon/></IconButton>

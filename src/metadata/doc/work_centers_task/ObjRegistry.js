@@ -15,7 +15,7 @@ const columns = [
   {key: "obj", name: "Объект", renderCell: PresentationFormatter},
   {key: "stage", name: "Этап", renderCell: PresentationFormatter},
   {key: "calc_order", name: "Расчет", renderCell: PresentationFormatter},
-  {key: "power", name: "Мощность", width: 120, renderEditCell: NumberCell, renderCell: NumberFormatter}
+  {key: "power", name: "Мощность", width: 120, renderCell: NumberFormatter, renderEditCell: NumberCell}
 ];
 
 export default function ObjPlan({tabRef, obj}) {
