@@ -1,8 +1,18 @@
+import {PromisifiedChannel} from './PromisifiedChannel';
 
 export const mdm = {
   dkey: new Date().toJSON().substring(0, 10),
   stamp: Date.now(),
-  channel: new BroadcastChannel('channel4'),
+  channel: new PromisifiedChannel((event) => {
+    switch (event.data?.type) {
+      case 'provider':
+        mdm.provider = event.data.provider;
+        break;
+      case 'manifest':
+      case 'zone':
+        return true;
+    }
+  }),
   delimiter: '/couchdb/mdm/',
   ids: {
     "cat.params_links": "prl",
@@ -139,24 +149,12 @@ export const mdm = {
   },
 
   parentZone() {
-    return new Promise((resolve, reject) => {
-      const {channel} = this;
-      const receiver = (event) => {
-        if(event.data.type === 'zone') {
-          clearTimeout(timer);
-          channel.removeEventListener('message', receiver);
-          this.zone = event.data.zone;
-          this.branch = event.data.branch;
-          resolve(this.zone);
-        }
-      };
-      channel.addEventListener('message', receiver);
-      channel.postMessage({type: 'zone'});
-      const timer = setTimeout(() => {
-        channel.removeEventListener('message', receiver);
-        reject('timeout');
-      }, 5000);
-    });
+    return this.channel.exchange({type: 'zone'})
+      .then((data) => {
+        this.zone = data.zone;
+        this.branch = data.branch;
+        return this.zone;
+      });
   },
 
   openCache() {

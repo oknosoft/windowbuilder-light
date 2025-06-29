@@ -45,7 +45,9 @@ export default function Login({pfilter}) {
       const {adapters, wsql} = $p;
       adapters.pouch.props._auth_provider = provider;
       wsql.set_user_param('auth_provider', provider);
-      return adapters.pouch.log_in(login, password);
+      return channel4Broadcast.exchange({type: 'provider', provider})
+        .catch(() => null)
+        .then(() => adapters.pouch.log_in(login, password));
     }
   };
 
