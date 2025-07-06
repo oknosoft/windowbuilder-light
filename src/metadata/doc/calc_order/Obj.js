@@ -45,11 +45,16 @@ export default function CalcOrderObj() {
   React.useEffect(() => {
     let res = Promise.resolve();
     if(job_prm.builder.glasses_template?.is_new?.()) {
-      for(const doc of mgr) {
-        if(doc.obj_delivery_state.is('Шаблон')) {
-          res = res.then(() => doc.load_templates());
-        }
-      }
+      job_prm.builder.glasses_template.obj_delivery_state = 'Шаблон';
+      res = job_prm.builder.glasses_template.load()
+        .then((template) => {
+          return template.calc_order.load_templates();
+        });
+      // for(const doc of mgr) {
+      //   if(doc.obj_delivery_state.is('Шаблон')) {
+      //     res = res.then(() => doc.load_templates());
+      //   }
+      // }
     }
     res = res.then(() => mgr.get(ref, 'promise'))
       .then((doc) => doc.load_linked_refs())
