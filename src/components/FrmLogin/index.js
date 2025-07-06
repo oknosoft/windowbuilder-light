@@ -16,7 +16,7 @@ export default function LoginRoute(props) {
       setTimeout(() => navigate(searchParams.get('return')));
       return null;
     }
-    return <Profile {...props}/>;
+    return <Profile pfilter={pfilter} {...props}/>;
   }
 
   return <Login pfilter={pfilter} {...props}/>;

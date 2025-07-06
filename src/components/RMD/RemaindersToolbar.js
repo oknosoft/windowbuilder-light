@@ -23,6 +23,13 @@ export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelecte
 
   const include = () => {
     const {tgt} = rmd;
+    if(tgt.posted) {
+      return $p.ui.dialogs.alert({
+        title: tgt.presentation,
+        text: 'Нельзя редактировать проведённое задание',
+        timeout: 10000,
+      });
+    }
     for(const index of selectedRows) {
       const src = rmd.rows.find(row => row.row === index);
       const row = tgt.set.add(src);

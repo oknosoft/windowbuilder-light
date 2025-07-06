@@ -23,6 +23,13 @@ export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows,
 
   const {tgt} = rmd;
   const exclude = () => {
+    if(tgt.posted) {
+      return $p.ui.dialogs.alert({
+        title: tgt.presentation,
+        text: 'Нельзя редактировать проведённое задание',
+        timeout: 10000,
+      });
+    }
     const rm = [];
     for(const index of selectedRows) {
       rm.push(rmd.tgtrows.find(row => row.row === index));
@@ -78,7 +85,7 @@ export default function TaskToolbar({rmd, scheme, selectedRows, setSelectedRows,
     </HtmlTooltip>
     <Typography sx={{flex: 1}}></Typography>
     <HtmlTooltip title="Печать">
-      <MenuPrint obj={tgt} variant="button" allowModified/>
+      <MenuPrint obj={tgt} variant="button" />
     </HtmlTooltip>
     <PostBtn obj={tgt} changeTask={changeTask} />
   </Toolbar>;

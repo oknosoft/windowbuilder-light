@@ -1,7 +1,7 @@
 import React from 'react';
 import Autocomplete from 'metadata-ui/DataField/Autocomplete';
 
-export default function Provider({value='couchdb', providerChange, options}) {
+export default function Provider({value='couchdb', providerChange, options, ...other}) {
   value = options.find(({value: v}) => v === value) || null;
   return <Autocomplete
     options={options}
@@ -10,5 +10,6 @@ export default function Provider({value='couchdb', providerChange, options}) {
     label="Провайдер"
     title="Провайдер авторизации"
     fullWidth
+    {...other}
   />;
 }
