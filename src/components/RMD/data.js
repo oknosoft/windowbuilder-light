@@ -183,6 +183,13 @@ export const filter = ({rmd, scheme, handleIfaceState}) => {
       rows.push(row);
     }
   }
+  if(tgt.posted) {
+    for(const row of  tgt.set) {
+      if(row.record_kind === -1 && row.phase === dp.phase) {
+        tgtrows.push(row);
+      }
+    }
+  }
   handleIfaceState({rmd: Object.assign({}, rmd, {rows, tgtrows})});
 };
 
