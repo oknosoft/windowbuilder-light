@@ -67,9 +67,17 @@ export function init(handleIfaceState) {
       // читаем общие данные в ОЗУ
       return load_common($p)
         .then(() => import('../drawer/editor'))
-        .then((module) => module.default($p));
+        .then((module) => {
+          handleIfaceState({common_loaded: true});
+          return module.default($p);
+        });
     })
-    .catch((err) => $p.record_log(err));
+    .catch((err) => {
+      handleIfaceState({server_error: `${err.message}
+      Не удалось загрузить начальные данные
+      Попробуйте перезагрузить страницу, проверьте настройки сети или автономного режима
+      `});
+    });
 
 }
 

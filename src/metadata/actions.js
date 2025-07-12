@@ -42,7 +42,6 @@ export function actions(handleIfaceState) {
     .then((module) => module.init(handleIfaceState))
     .then(() => {
       const {classes: {PouchDB}, adapters: {pouch}, job_prm, md, ui, cat: {users}} = $p;
-      handleIfaceState({common_loaded: true});
 
       pouch.on({
         pouch_complete_loaded() {

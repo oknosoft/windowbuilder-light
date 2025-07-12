@@ -5,7 +5,7 @@ const {
   CatCharacteristics,
   cat: {scheme_settings, planning_keys, characteristics},
   doc: {calc_order, work_centers_task},
-  rep, utils, wsql, adapters} = $p;
+  rep, utils, wsql, adapters, md} = $p;
 
 function rx_columns(attr) {
   const {mode, fields, _mgr, target} = attr;
@@ -133,8 +133,10 @@ export const query = async ({rmd, scheme, handleIfaceState}) => {
     return key;
   }
   const keys = new Set();
-  for(const {ref, obj, specimen, elm, type, barcode, shift, ...raw} of rows) {
+  for(const {ref, obj, specimen, elm, type, barcode, shift, part_type, ...raw} of rows) {
     if(ref) {
+      const mgr = md.mgr_by_class_name(part_type);
+      const part = mgr.get(raw.part);
       create({ref, obj, specimen, elm, type, id: Number(barcode), calc_order: raw.calc_order});
       raw.obj = ref;
       raw.phase = dp.phase;
@@ -167,13 +169,14 @@ export const filter = ({rmd, scheme, handleIfaceState}) => {
     if(quickKeys.some(fld => row[fld]?.valueOf() !== quickFilter[fld]?.valueOf())) {
       continue;
     }
-    const {obj, work_center, work_shift, date} = row;
+    const {obj, work_center, work_shift, part, date} = row;
     const tgtrow = tgt.set.find({
       record_kind: -1,
       phase: dp.phase,
       obj,
       work_center,
       work_shift,
+      part,
     });
     if(tgtrow) {
       tgtrows.push(tgtrow);

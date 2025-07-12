@@ -83,7 +83,7 @@ export default function CalcOrderObj() {
   React.useEffect(function onMount() {
     function update (curr, flds){
       if(!modified && (curr === obj || curr?._owner?._owner === obj)) {
-        if(curr === obj && 'contract' in flds) {
+        if(curr === obj && flds && 'contract' in flds) {
           for(const row of obj.production) {
             if(row.characteristic.calc_order === obj && row.characteristic.base_block === job_prm.builder.glasses_template)
               obj._data.chrows.add(row);

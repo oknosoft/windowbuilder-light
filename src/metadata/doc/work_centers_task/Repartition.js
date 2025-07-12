@@ -20,6 +20,7 @@ export default function Repartition({obj, selected, noRow}) {
             const correct = ev.set.add(row);
             correct.record_kind = 1;
             correct.date = new Date();
+            correct.part = ev;
             return ev.save(true);
           })
           .then(() => navigate(`/doc/planning_event/${ev.ref}?return=-1`))

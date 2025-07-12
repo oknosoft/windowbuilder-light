@@ -11,7 +11,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {useBackdropContext} from '../../components/App';
 import {HtmlTooltip} from '../../components/App/styled';
 
-function IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, posted, _deleted}) {
+function IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, posted, _deleted, menuItems, hideDelete}) {
   const onClick = posted ?
     () => {
       handleClose();
@@ -32,12 +32,13 @@ function IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, poste
       </ListItemIcon>
       <ListItemText>{posted ? 'Отменить проведение' : 'Провести'}</ListItemText>
     </MenuItem>
-    <MenuItem disabled={posted || _deleted} onClick={markDeleted}>
+    {hideDelete ? null : <MenuItem disabled={posted || _deleted} onClick={markDeleted}>
       <ListItemIcon>
         <DeleteOutlineIcon />
       </ListItemIcon>
       <ListItemText>Пометить на удаление</ListItemText>
-    </MenuItem>
+    </MenuItem>}
+    {menuItems}
   </Menu>;
 }
 
@@ -77,7 +78,7 @@ waitProcessing.request = function ({_id, _rev, actionKey, register}) {
     });
 };
 
-export default function PostBtn({obj}) {
+export default function PostBtn({obj, menuItems=null, onProcessed, onError, hideDelete}) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [tooltipOpen, setTooltipOpen] = React.useState(false);
@@ -88,25 +89,27 @@ export default function PostBtn({obj}) {
 
   const [postable, post, unpost, markDeleted, handleOpen, handleClose] = React.useMemo(() => {
     const postable = obj._metadata('posted') !== undefined;
-    const onError = (err) => {
+    const handleError = (err) => {
       backdrop.setBackdrop(false);
+      onError?.(err);
     };
-    const onProcessed = (res) => {
+    const handleOk = (res) => {
       backdrop.setBackdrop(false);
+      onProcessed?.(res);
     };
     const post = () => {
       backdrop.setBackdrop(true);
       obj.save(true)
         .then(waitProcessing)
-        .then(onProcessed)
-        .catch(onError);
+        .then(handleOk)
+        .catch(handleError);
     };
     const unpost = () => {
       backdrop.setBackdrop(true);
       obj.save(false)
         .then(waitProcessing)
-        .then(onProcessed)
-        .catch(onError);
+        .then(handleOk)
+        .catch(handleError);
     };
     const markDeleted = () => {
       handleClose();
@@ -121,8 +124,8 @@ export default function PostBtn({obj}) {
             return obj.mark_deleted(true);
           }
         })
-        .then(onProcessed)
-        .catch(onError);
+        .then(handleOk)
+        .catch(handleError);
     };
     const handleOpen = (event) => {
       tooltipClose();
@@ -144,6 +147,6 @@ export default function PostBtn({obj}) {
     <IconButton onClick={handleOpen} onMouseEnter={() => setTooltipOpen(true)} onMouseLeave={tooltipClose}>
       {icon}
     </IconButton>
-    {IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, posted, _deleted})}
+    {IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, posted, _deleted, menuItems, hideDelete})}
   </HtmlTooltip>;
 }

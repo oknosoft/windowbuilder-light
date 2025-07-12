@@ -14,6 +14,11 @@ import {useLoadingContext} from '../Metadata';
 
 const title = {title: 'Авторизация', appTitle: <Typography variant="h6" noWrap>Авторизация</Typography>};
 
+function renderError(error) {
+  return error.split('\n')
+    .map((part, index) => <Typography key={`err-${index}`} color="error">{part}</Typography>)
+}
+
 export default function Login({pfilter}) {
   const [[abonent, abonentOptions], setAbonent] = React.useState([null, []]);
   const [[branch, branchesOptions], setBranch] = React.useState([null, []]);
@@ -67,13 +72,12 @@ export default function Login({pfilter}) {
       />
       <Provider options={providers} value={provider} providerChange={providerChange}/>
       <Creditales provider={provider} login={login} password={password} loginChange={loginChange} handleLogin={handleLogin}/>
-      {server_error ? <Typography color="error">{server_error}</Typography> : null}
+      {server_error ? renderError(server_error) : null}
       <Stack direction="row" justifyContent="flex-end" spacing={1} mt={2} mb={1}>
         <Button disabled={user.try_log_in || user.logged_in} onClick={handleLogin}>Войти</Button>
       </Stack>
       <Progress user={user} page={page}/>
-    </> : (
-      server_error ? <Typography color="error">{server_error}</Typography> : <CircularProgress />
-    )}
+    </> :
+      (server_error ? renderError(server_error) : <CircularProgress />)}
   </LoginRoot>;
 }

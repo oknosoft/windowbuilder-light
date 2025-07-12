@@ -13,10 +13,14 @@ import PostBtn from './PostBtn';
 import MenuPrint from './MenuPrint';
 
 const {utils, ui: {dialogs}} = $p;
-const alert = (err) => typeof err === ('string' || err instanceof Error) && dialogs.alert({
-  title: 'Ошибка записи',
-  text: err?.message || err,
-});
+const alert = (err) => {
+  if(typeof err === 'string' || err instanceof Error) {
+    dialogs.alert({
+      title: 'Ошибка записи',
+      text: err?.message || err,
+    });
+  }
+};
 
 export default function ObjToolbar({obj, mgr, btns=null, setSettingOpen, onClose, modified, setModified, setBackdrop}) {
   const navigate = useNavigate();

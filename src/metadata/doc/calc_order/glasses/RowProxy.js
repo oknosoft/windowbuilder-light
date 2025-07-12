@@ -200,6 +200,10 @@ export class RowProxy {
     return calc_order;
   }
 
+  get _owner() {
+    return this.#row._owner;
+  }
+
   get calc_order_row() {
     return this.#row;
   }
