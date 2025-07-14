@@ -175,14 +175,16 @@ export const mdm = {
           if(navigator.onLine) {
             return fetch(`/couchdb/mdm/${zone}/common`, {method: 'HEAD'})
               .then((res) => {
-                if(res.status === 200) {
-                  return this.cache.put(manifestURL, res)
-                    .then(() => {
-                      return res;
-                    });
+                const {status, statusText} = res;
+                if(status === 200) {
+                  return this.cache.put(manifestURL, res.clone()).then(() => res);
                 }
-                const err = new Error(res.statusText || 'Network');
-                throw err;
+                return res.text()
+                  .catch((err) => err)
+                  .then(body => {
+                    const err = new Error(res.statusText || body || 'Network');
+                    throw err;
+                  });
               });
           }
           return this.cache.match(manifestURL);

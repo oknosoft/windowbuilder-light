@@ -11,13 +11,14 @@ export default function ProductFormatter({row}) {
 
   React.useEffect(() => {
     const {utils, CatCharacteristicsParamsRow} = $p;
-    const update = utils.debounce(function update (curr, flds){
+    const debounced = utils.debounce(() => setIndex((i) => i + 1));
+    const update = (curr, flds) => {
       if((curr === characteristic) || (curr instanceof CatCharacteristicsParamsRow && curr._owner?._owner === characteristic)) {
-        setIndex((i) => i + 1);
+        debounced();
       }
-    });
-    characteristic._manager.on({update});
-    return () => characteristic._manager.off({update});
+    };
+    characteristic._manager.on({update, specification_adjustment: update});
+    return () => characteristic._manager.off({update, specification_adjustment: update});
   }, [characteristic]);
 
   if(inset.insert_type.is('composite')) {
