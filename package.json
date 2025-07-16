@@ -1,6 +1,6 @@
 {
   "name": "windowbuilder-light",
-  "version": "2.1.268",
+  "version": "2.1.269",
   "description": "Order dealer for windows and stained glass",
   "repository": {
     "type": "git",
@@ -68,7 +68,7 @@
     "react-window-infinite-loader": "^1.0.10",
     "url-join": "^5.0",
     "url-parse": "^1.5",
-    "wb-core": "github:oknosoft/windowbuilder-core#944a45a42d21cbb423a80ed4a54ed9535e460b7f",
+    "wb-core": "github:oknosoft/windowbuilder-core#0b0c3b1cdf212f975ec9801d4a0e1e4b292cf4ee",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {
