@@ -16,7 +16,7 @@ import {ObjSetting, key, setting as initSetting} from './ObjSetting';
 
 const {doc: {work_centers_task: mgr}, wsql, utils} = $p;
 
-export default function WorkCentersTaskObj() {
+export default function WorkCentersTaskObj({ref}) {
 
   const [obj, setObj] = React.useState(null);
   const [error, setError] = React.useState(null);
@@ -33,29 +33,33 @@ export default function WorkCentersTaskObj() {
   const params = useParams();
   const {setTitle} = useTitleContext();
   const {setBackdrop} = useBackdropContext();
+  if(!ref) {
+    ref = params.ref;
+  }
 
   React.useEffect(() => {
-    const {ref} = params;
     const searchParams = utils.prm();
     if(searchParams.modified === 'false') {
-      setObj(mgr.get(ref));
-      setBackdrop(false);
+      const doc = mgr.get(ref);
+      if(!doc.is_new()) {
+        setObj(mgr.get(ref));
+        return setBackdrop(false);
+      }
     }
-    else {
-      mgr.get(ref, 'promise')
-        .then((doc) => {
-          return doc.load_keys()
-            .then(() => doc.load_linked_refs())
-            .catch((err) => {
-              console.error(err);
-              return doc;
-            });
-        })
-        .then(setObj)
-        .catch(setError)
-        .then(() => setBackdrop(false));
-    }
-  }, []);
+    mgr.get(ref, 'promise')
+      .then((doc) => {
+        return doc.load_keys()
+          .then(() => doc.load_linked_refs())
+          .catch((err) => {
+            console.error(err);
+            return doc;
+          });
+      })
+      .then(setObj)
+      .catch(setError)
+      .then(() => setBackdrop(false));
+  }, [ref]);
+
   React.useEffect(() => {
     const title = obj ? obj.presentation : 'Задание';
     setTitle({title, appTitle: <Typography variant="h6" noWrap>{title}</Typography>});

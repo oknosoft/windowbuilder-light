@@ -46,7 +46,7 @@ export default function ObjToolbar({obj, mgr, btns=null, setSettingOpen, onClose
       <HtmlTooltip title="Записать">
         <IconButton onClick={save}><SaveAsIcon/></IconButton>
       </HtmlTooltip>
-      <PostBtn obj={obj} />
+      <PostBtn obj={obj} onError={alert} />
       {btns && <Divider orientation="vertical" flexItem sx={{m: 1}} />}
       {btns}
       <Typography sx={{flex: 1}}></Typography>
