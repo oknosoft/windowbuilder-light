@@ -8,12 +8,16 @@ import RemaindersQuickFilter from './RemaindersQuickFilter';
 import SchemeSettingsTunes from '../../metadata/cat/scheme_settings/Tunes';
 import {renderCheckbox} from './Formatters';
 import {schemas, initScheme, dp, filter, summary, rowKeyGetter} from './data';
+import {SelectColumn} from 'react-data-grid';
+import Checkbox from '@mui/material/Checkbox';
+import RemaindersGroupSelect from './RemaindersGroupSelect';
 
 export default function RMDRemainders() {
 
   const {handleIfaceState, ifaceState: {rmd}} = useLoadingContext();
   const [columns, setColumns] = React.useState([]);
   const [tunes, rawSetTunes] = React.useState(false);
+  const [groupSelectOpen, groupSelectSetOpen] = React.useState(false);
   const [selectedRows, setSelectedRows] = React.useState(new Set());
   const scheme = rmd?.scheme || schemas.find(({ref}) => ref === initScheme);
 
@@ -27,6 +31,12 @@ export default function RMDRemainders() {
   const updateColumns = () => {
     const {fields} = dp._metadata('data');
     const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: dp._manager});
+    const selectColumn = columns.find(({key}) => key === SelectColumn.key);
+    if(selectColumn) {
+      selectColumn.renderHeaderCell = function (arg) {
+        return <Checkbox checked={false} onChange={() => groupSelectSetOpen(true)} />;
+      }
+    }
     setColumns(columns);
   };
 
@@ -115,5 +125,10 @@ export default function RMDRemainders() {
           renderers={{ renderCheckbox }}
         />
     }
+    {groupSelectOpen ? <RemaindersGroupSelect
+      groupSelectSetOpen={groupSelectSetOpen}
+      setSelectedRows={setSelectedRows}
+      rows={rows}
+    /> : null}
   </Content>;
 }
