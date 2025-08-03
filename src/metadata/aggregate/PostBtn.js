@@ -11,7 +11,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {useBackdropContext} from '../../components/App';
 import {HtmlTooltip} from '../../components/App/styled';
 
-function IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, posted, _deleted, menuItems, hideDelete}) {
+function IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, posted, _deleted, menuItems, hideDelete, readOnly}) {
   const onClick = posted ?
     () => {
       handleClose();
@@ -26,19 +26,19 @@ function IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, poste
     open={open}
     onClose={handleClose}
   >
-    <MenuItem disabled={_deleted} onClick={onClick}>
+    <MenuItem disabled={_deleted || readOnly} onClick={onClick}>
       <ListItemIcon>
         {posted ? <BookmarkRemoveIcon /> : <BookmarkAddedIcon />}
       </ListItemIcon>
       <ListItemText>{posted ? 'Отменить проведение' : 'Провести'}</ListItemText>
     </MenuItem>
-    {hideDelete ? null : <MenuItem disabled={posted || _deleted} onClick={markDeleted}>
+    {menuItems}
+    {hideDelete ? null : <MenuItem disabled={posted || _deleted || readOnly} onClick={markDeleted}>
       <ListItemIcon>
         <DeleteOutlineIcon />
       </ListItemIcon>
       <ListItemText>Пометить на удаление</ListItemText>
     </MenuItem>}
-    {menuItems}
   </Menu>;
 }
 
@@ -78,7 +78,7 @@ waitProcessing.request = function ({_id, _rev, actionKey, register}) {
     });
 };
 
-export default function PostBtn({obj, menuItems=null, onProcessed, onError, hideDelete}) {
+export default function PostBtn({obj, menuItems=null, onProcessed, onError, hideDelete, readOnly}) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [tooltipOpen, setTooltipOpen] = React.useState(false);
@@ -147,6 +147,6 @@ export default function PostBtn({obj, menuItems=null, onProcessed, onError, hide
     <IconButton onClick={handleOpen} onMouseEnter={() => setTooltipOpen(true)} onMouseLeave={tooltipClose}>
       {icon}
     </IconButton>
-    {IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, posted, _deleted, menuItems, hideDelete})}
+    {IconMenu({anchorEl, open, handleClose, post, unpost, markDeleted, posted, _deleted, menuItems, hideDelete, readOnly})}
   </HtmlTooltip>;
 }

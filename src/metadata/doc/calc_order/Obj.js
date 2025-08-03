@@ -4,6 +4,7 @@ import frmObj, {jsVersion} from '../../aggregate/frmObj';
 import {Root} from '../../aggregate/styled';
 import ObjToolbar from '../../aggregate/ObjToolbar';
 import RecalcBtn from './RecalcBtn';
+import SendBtn from './SendBtn';
 import Loading from '../../../components/App/Loading';
 import ObjHead from './ObjHead';
 import ObjTabs from '../../aggregate/ObjTabs';
@@ -27,7 +28,7 @@ const stubDb = {
   }
 };
 
-const {doc: {calc_order: mgr}, job_prm} = $p;
+const {doc: {calc_order: mgr}, job_prm, current_user} = $p;
 
 export default function CalcOrderObj() {
 
@@ -69,7 +70,10 @@ export default function CalcOrderObj() {
   }, [ref]);
 
   React.useEffect(() => {
-    const title = obj ? obj.presentation : 'Расчёт-заказ';
+    let title = obj ? obj.presentation : 'Расчёт-заказ';
+    if(obj?.is_read_only) {
+      title += ' /Только просмотр/';
+    }
     setTitle({title, appTitle: <Typography variant="h6" noWrap>{title}</Typography>});
   }, [obj, modified]);
 
@@ -138,6 +142,9 @@ export default function CalcOrderObj() {
       setSettingOpen={setSettingOpen}
       setBackdrop={setBackdrop}
       btns={<RecalcBtn obj={obj} setBackdrop={setBackdrop}/>}
+      postBtns={SendBtn({obj, setBackdrop})}
+      readOnly={obj.is_read_only}
+      disablePost={!current_user.role_available('СогласованиеРасчетовЗаказов')}
     />
     <ObjHead obj={obj} setting={setting} setBackdrop={setBackdrop}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>

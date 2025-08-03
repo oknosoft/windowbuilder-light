@@ -13,7 +13,7 @@ import PostBtn from './PostBtn';
 import MenuPrint from './MenuPrint';
 
 const {utils, ui: {dialogs}} = $p;
-const alert = (err) => {
+export const alert = (err) => {
   if(typeof err === 'string' || err instanceof Error) {
     dialogs.alert({
       title: 'Ошибка записи',
@@ -22,7 +22,7 @@ const alert = (err) => {
   }
 };
 
-export default function ObjToolbar({obj, mgr, btns=null, setSettingOpen, onClose, modified, setModified, setBackdrop}) {
+export default function ObjToolbar({obj, mgr, btns=null, postBtns=null, setSettingOpen, onClose, modified, setModified, readOnly, disablePost}) {
   const navigate = useNavigate();
   const {close, save, saveClose} = React.useMemo(() => {
     const close = (typeof onClose === 'function') ? onClose : () => {
@@ -41,12 +41,12 @@ export default function ObjToolbar({obj, mgr, btns=null, setSettingOpen, onClose
   return <ListSubheader>
     <Toolbar disableGutters>
       <HtmlTooltip title="Записать и закрыть">
-        <IconButton onClick={saveClose}><SaveIcon/></IconButton>
+        <IconButton disabled={readOnly} onClick={saveClose}><SaveIcon/></IconButton>
       </HtmlTooltip>
       <HtmlTooltip title="Записать">
-        <IconButton onClick={save}><SaveAsIcon/></IconButton>
+        <IconButton disabled={readOnly} onClick={save}><SaveAsIcon/></IconButton>
       </HtmlTooltip>
-      <PostBtn obj={obj} onError={alert} />
+      <PostBtn obj={obj} onError={alert} readOnly={readOnly || disablePost} menuItems={postBtns}/>
       {btns && <Divider orientation="vertical" flexItem sx={{m: 1}} />}
       {btns}
       <Typography sx={{flex: 1}}></Typography>
