@@ -136,12 +136,15 @@ export const query = async ({rmd, scheme, handleIfaceState}) => {
   for(const {ref, obj, specimen, elm, type, barcode, shift, part_type, ...raw} of rows) {
     if(ref) {
       const mgr = md.mgr_by_class_name(part_type);
-      const part = mgr.get(raw.part);
+      const part = mgr.by_ref[raw.part] || mgr.create({ref: raw.part}, false, true);
+      if(part.is_new()) {
+        keys.add(`${mgr.class_name}|${raw.part}`);
+      }
       create({ref, obj, specimen, elm, type, id: Number(barcode), calc_order: raw.calc_order});
       raw.obj = ref;
       raw.phase = dp.phase;
       raw.work_shift = shift;
-      if(!calc_order.by_ref[raw.calc_order]) {
+      if(!calc_order.by_ref[raw.calc_order] || calc_order.by_ref[raw.calc_order].is_new()) {
         keys.add(`${calc_order.class_name}|${raw.calc_order}`);
       }
       if(type !== 'order' && !characteristics.by_ref[obj]) {
