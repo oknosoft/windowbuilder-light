@@ -3,11 +3,11 @@ import './styles/global.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Metadata from './components/Metadata';
+import Metadata from './aggregate/Metadata';
 import * as swRegistration from './sw/registration';
 import {PromisifiedChannel} from './sw/PromisifiedChannel';
 
-const App = React.lazy(() => import('./components/App'));
+const App = React.lazy(() => import('./aggregate/App'));
 
 const elm = document.getElementById('root');
 const initialText = elm.innerHTML;

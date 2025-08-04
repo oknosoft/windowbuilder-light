@@ -1,0 +1,60 @@
+import React from 'react';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/AddBoxOutlined';
+import CopyIcon from '@mui/icons-material/PostAdd';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import GridOnIcon from '@mui/icons-material/GridOn';
+import {useNavigate} from 'react-router';
+import {useBackdropContext} from '../../aggregate/App';
+import {ListSubheader} from '../../aggregate/Toolbars/styled';
+import {Toolbar, HtmlTooltip} from '../../aggregate/App/styled';
+import {handlers} from './glasses/data';
+import ClipBoard from '../../aggregate/FrmObj/ClipBoard';
+
+export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBackdrop, setModified, selectedRowsChange}) {
+
+  const navigate = useNavigate();
+  const {setSnack} = useBackdropContext();
+
+  const {create, clone, open, del, clear, load} = handlers({obj, rows, setRows, getRow, setBackdrop, setModified, setSnack, selectedRowsChange});
+
+  return <ListSubheader>
+    <Toolbar disableGutters>
+      <HtmlTooltip title="Добавить строку {Insert}">
+        <IconButton disabled onClick={create}><AddIcon/></IconButton>
+      </HtmlTooltip>
+
+      <HtmlTooltip title="Добавить строку копированием текущей {F9}">
+        <IconButton disabled onClick={clone}><CopyIcon/></IconButton>
+      </HtmlTooltip>
+
+      <HtmlTooltip title="Изменить продукцию">
+        <IconButton disabled onClick={open}><EditIcon/></IconButton>
+      </HtmlTooltip>
+
+      <HtmlTooltip title="Удалить строку {Delete}">
+        <IconButton disabled onClick={del}><DeleteOutlineIcon/></IconButton>
+      </HtmlTooltip>
+
+      <HtmlTooltip title="Очистить (Удалить все строки)">
+        <IconButton disabled onClick={clear}><DeleteForeverIcon/></IconButton>
+      </HtmlTooltip>
+
+      <Typography sx={{flex: 1}}></Typography>
+      <HtmlTooltip title="Детали продукции">
+        <IconButton disabled={!getRow} onClick={() => {
+          const row = getRow();
+          if(row) {
+            navigate(`/cat/characteristics/${row.row.characteristic.ref}?return=-1`);
+          }
+          else {
+            setSnack('Укажите строку табчасти для открытия деталей продукции');
+          }
+        }}><GridOnIcon/></IconButton>
+      </HtmlTooltip>
+    </Toolbar>
+  </ListSubheader>;
+}

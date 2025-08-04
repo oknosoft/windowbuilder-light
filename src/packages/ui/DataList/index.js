@@ -1,7 +1,7 @@
 import React from 'react';
 import {useMatches} from 'react-router';
 import Typography from '@mui/material/Typography';
-import {useTitleContext} from '../../../components/App';
+import {useTitleContext} from '../../../aggregate/App';
 import TreeList from './TreeList';
 import FlatList from './FlatList';
 

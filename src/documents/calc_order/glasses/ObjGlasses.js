@@ -1,0 +1,230 @@
+import React from 'react';
+import {DataGrid} from 'react-data-grid';
+import {useLoadingContext} from '../../../aggregate/Metadata';
+import {useBackdropContext} from '../../../aggregate/App';
+import {disablePermanent, drawerWidth} from '../../../styles/muiTheme';
+import {preventDefault} from '../../../aggregate/AppLoad/dataGrid';
+import Toolbar from './ObjGlassesToolbar';
+import {shortcuts} from './shortcuts';
+import {SelectedContext} from '../selectedContext';
+
+import {rowHeight, createGlasses, rowKeyGetter, handlers} from './data';
+let selectedContext = {};
+
+export default function ObjGlasses({tabRef, obj, setModified}) {
+  const {ifaceState: {menu_open, innerWidth}} = useLoadingContext();
+  const style = {minHeight: 420, width: innerWidth - (!disablePermanent && menu_open ? drawerWidth : 0) - 2};
+  if(tabRef?.current && !disablePermanent) {
+    const top = tabRef.current.offsetTop + tabRef.current.offsetHeight + 51;
+    style.height = `calc(100vh - ${top}px)`;
+  }
+  const {setBackdrop, setSnack} = useBackdropContext();
+  const gridRef = React.createRef(null);
+
+  const [columns, glasses, glob] = React.useMemo(() => createGlasses({obj}), [obj]);
+  const [rows, rawSetRows] = React.useState(glasses);
+  const [selectedRows, rawSetSelectedRows] = React.useState(new Set());
+
+  glob.rows = rows;
+  const setRows = (rows) => {
+    if(glob.rows !== rows) {
+      glob.rows = rows;
+      selectedContext = {...glob, setModified};
+      rawSetRows(rows);
+    }
+  };
+
+  const setSelectedRows = (rows) => {
+    const skey = rows.size && Array.from(rows)[0];
+    if(glob.skey !== skey) {
+      glob.skey = skey;
+      selectedContext = {...glob, setModified};
+      rawSetSelectedRows(rows);
+    }
+  };
+
+  React.useEffect(() => {
+    return () => {
+      for(const {row} of glob.rows) {
+        row.unloadEditor();
+      }
+    };
+  }, [obj]);
+
+  function onRowsChange(rows, {column, indexes }) {
+    if(column.key === 'expanded') {
+      const row = rows[indexes[0]];
+      if (row.type === 'MASTER') {
+        if (!row.expanded) {
+          rows.splice(indexes[0] + 1, 1);
+        }
+        else {
+          rows.splice(indexes[0] + 1, 0, {
+            type: 'DETAIL',
+            key: row.key + 1000,
+            row: row.row,
+          });
+          // сворачиваем другие открытые
+          const rm = [];
+          for(const tmp of rows) {
+            if(tmp.expanded && tmp !== row) {
+              tmp.expanded = false;
+            }
+            else if(tmp.type === 'DETAIL' && tmp.row !== row.row) {
+              rm.push(tmp);
+            }
+          }
+          for(const tmp of rm) {
+            rows.splice(rows.indexOf(tmp), 1);
+          }
+        }
+        setRows(rows);
+      }
+    }
+  }
+
+  async function selectedRowsChange(newRows) {
+    let oldKey = selectedRows.size && Array.from(selectedRows)[0];
+    if(oldKey > 1000) {
+      oldKey -= 1000;
+    }
+    let newKey = Array.from(newRows)[0];
+    if(newKey > 1000) {
+      newKey -= 1000;
+    }
+    if(oldKey && oldKey !== newKey) {
+      // ищем старую строку
+      const row = glob.rows.find(({key}) => key === oldKey);
+      // пересчитываем изделие
+      //await recalcRow({row, setBackdrop, setModified, noSave});
+      // TODO
+      // выгружаем редактор
+      //row.row.unloadEditor();
+    }
+    // создаём редактор для новой строки
+    if(newRows.size) {
+      const row = glob.rows.find(({key}) => key === newKey);
+      if(!row.row.editor) {
+        await row.row.createEditor();
+      }
+    }
+
+    setSelectedRows(newRows);
+    setBackdrop(false);
+  }
+
+  const onCellClick = ({row, column, selectCell}) => {
+    if(!selectedRows.size || Array.from(selectedRows)[0] !== row.key) {
+      selectedRowsChange(new Set([row.key]));
+    }
+  };
+
+  const onCellKeyDown = (attr, event) => {
+
+    const { row, column, rowIdx, selectCell } = attr;
+    if (event.isDefaultPrevented() || row?.type === "DETAIL") {
+      // skip parent grid keyboard navigation if nested grid handled it
+      event.preventGridDefault();
+    }
+
+    const { key, shiftKey } = event;
+    if (key === 'Insert' || key === 'F9') {
+      const row = key === 'F9' && getRow();
+      preventDefault(event);
+      return methods.add(row?.row?.characteristic);
+    }
+
+    if (!rows.length || row?.type === 'DETAIL' ||
+      shortcuts({...attr, rows, event, gridRef, selectedRowsChange, methods})){
+      return;
+    }
+
+    const { idx } = column;
+    if (key === 'ArrowDown') {
+      if (rowIdx < rows.length - 1) {
+        selectCell({rowIdx: rowIdx + 1, idx});
+        selectedRowsChange(new Set([rows[rowIdx + 1].key]));
+      }
+      preventDefault(event);
+    }
+    else if ((key === 'ArrowRight' || (key === 'Tab' && !shiftKey)) && idx === columns.length - 1) {
+      if (rowIdx < rows.length - 1) {
+        selectCell({rowIdx: rowIdx + 1, idx: 0});
+        selectedRowsChange(new Set([rows[rowIdx + 1].key]));
+      }
+      preventDefault(event);
+    }
+    else if (key === 'ArrowUp') {
+      if(rowIdx > 0) {
+        selectCell({rowIdx: rowIdx - 1, idx});
+        selectedRowsChange(new Set([rows[rowIdx - 1].key]));
+      }
+      preventDefault(event);
+    }
+    else if ((key === 'ArrowLeft' || (key === 'Tab' && shiftKey)) && idx === 0) {
+      if(rowIdx > 0) {
+        selectCell({ rowIdx: rowIdx - 1, idx: columns.length - 1 });
+        selectedRowsChange(new Set([rows[rowIdx - 1].key]));
+      }
+      preventDefault(event);
+    }
+    else if (key === 'Delete') {
+      preventDefault(event);
+      return methods.del();
+    }
+
+  };
+
+  const getRow = () => {
+    const selectedKey = selectedRows.size && Array.from(selectedRows)[0];
+    if(selectedKey) {
+      return rows.find(({key}) => key === selectedKey);
+    }
+  };
+
+  const methods = handlers({
+    obj,
+    rows,
+    setRows,
+    getRow,
+    setBackdrop,
+    setSnack,
+    setModified,
+    selectedRowsChange});
+
+  const {chrows} = obj._data;
+
+  return <div style={style}>
+    <Toolbar
+      obj={obj}
+      rows={rows}
+      getRow={getRow}
+      setRows={setRows}
+      setBackdrop={setBackdrop}
+      setModified={setModified}
+      selectedRowsChange={selectedRowsChange}
+      rawSetSelectedRows={rawSetSelectedRows}
+      methods={methods}
+    />
+    <SelectedContext.Provider value={selectedContext}>
+      <DataGrid
+        ref={gridRef}
+        rowKeyGetter={rowKeyGetter}
+        columns={columns}
+        rows={rows}
+        onRowsChange={onRowsChange}
+        headerRowHeight={33}
+        rowHeight={rowHeight}
+        className="fill-grid"
+        enableVirtualization={false}
+        onCellKeyDown={onCellKeyDown}
+        onCellClick={onCellClick}
+        selectedRows={selectedRows}
+        onSelectedRowsChange={selectedRowsChange}
+        rowClass={(row, index) =>
+          chrows.has(row.row.calc_order_row) ? 'attention' : undefined
+        }
+      />
+    </SelectedContext.Provider>
+  </div>;
+}
