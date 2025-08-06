@@ -93,6 +93,7 @@ export default function CalcOrderList() {
 
   // для обновления динсписка
   const setRefresh = () => {
+    setLoading(true);
     setSelectedRows(new Set());
     setRows([]);
     rawSetRefresh(refresh + 1);
