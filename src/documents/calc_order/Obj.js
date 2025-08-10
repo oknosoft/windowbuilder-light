@@ -145,6 +145,8 @@ export default function CalcOrderObj() {
       postBtns={SendBtn({obj, setBackdrop})}
       readOnly={obj.is_read_only}
       disablePost={!current_user.role_available('СогласованиеРасчетовЗаказов')}
+      modified={modified}
+      setModified={setModified}
     />
     <ObjHead obj={obj} setting={setting} setBackdrop={setBackdrop}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>

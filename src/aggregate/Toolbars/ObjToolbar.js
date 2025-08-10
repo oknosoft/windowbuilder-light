@@ -28,12 +28,16 @@ export default function ObjToolbar({obj, mgr, btns=null, postBtns=null, setSetti
     const close = (typeof onClose === 'function') ? onClose : () => {
       const searchParams = utils.prm();
       const url = searchParams.return || `/${mgr.class_name.replace('.', '/')}${obj?.ref ? `?ref=${obj.ref}` : ''}`;
-      if(searchParams.modified === 'false' && (modified || obj._modified)) {
+      if((searchParams.modified === 'false' || !obj._modified) && (modified || obj._modified)) {
         setModified(false);
       }
       setTimeout(() => navigate(url == '-1' ? -1 : url));
     };
-    const save = () => obj.save().catch(alert);
+    const save = () => obj.save()
+      .then(() => {
+        setModified(obj._modified);
+      })
+      .catch(alert);
     const saveClose = () => obj.save().then(close).catch(alert);
     return {close, save, saveClose};
   }, [obj]);
