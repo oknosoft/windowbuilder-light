@@ -48,7 +48,15 @@ export default function WorkCentersTaskObj({ref}) {
     }
     mgr.get(ref, 'promise')
       .then((doc) => {
-        return doc.load_keys()
+        const refs = new Set();
+        for(const {calc_order} of doc.set) {
+          if(calc_order.is_new()) {
+            refs.add(calc_order.ref);
+          }
+        }
+        const {adapters: {pouch}, doc: {calc_order}} = $p;
+        return pouch.load_array(calc_order, Array.from(refs), false, pouch.remote.doc)
+          .then(() => doc.load_keys())
           .then(() => doc.load_linked_refs())
           .catch((err) => {
             console.error(err);
