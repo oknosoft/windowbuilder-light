@@ -5,6 +5,7 @@ import Loading from '../../aggregate/App/Loading';
 import {useTitleContext, useBackdropContext} from '../../aggregate/App';
 import {useLoadingContext} from '../../aggregate/Metadata';
 import {contentWidth} from '../../styles/muiTheme';
+import {Restrictor} from '../../aggregate/App/Restrictor';
 import {RmdHead} from './Head';
 import {title} from './data';
 import Remainders from './Remainders';
@@ -33,14 +34,16 @@ export default function RMD (props) {
 
   const handleColor = theme.palette.grey[300];
 
-  return rmd?.tgt ? <div style={{position: 'relative', height: 'calc(100vh - 50px)'}}>
-    <Resize handleWidth="6px" handleColor={handleColor}>
-      <ResizeHorizon width={`${(width * 3/4).toFixed()}px`} minWidth="600px">
-        <Remainders />
-      </ResizeHorizon>
-      <ResizeHorizon width={`${(width * 1/4).toFixed()}px`} minWidth="200px">
-        <Task />
-      </ResizeHorizon>
-    </Resize>
-  </div> : <Loading />;
+  return <Restrictor>
+    {rmd?.tgt ? <div style={{position: 'relative', height: 'calc(100vh - 50px)'}}>
+      <Resize handleWidth="6px" handleColor={handleColor}>
+        <ResizeHorizon width={`${(width * 3/4).toFixed()}px`} minWidth="600px">
+          <Remainders />
+        </ResizeHorizon>
+        <ResizeHorizon width={`${(width * 1/4).toFixed()}px`} minWidth="200px">
+          <Task />
+        </ResizeHorizon>
+      </Resize>
+    </div> : <Loading />}
+  </Restrictor>;
 }

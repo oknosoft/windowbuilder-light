@@ -9,6 +9,7 @@ import IconHelp from '@mui/icons-material/Help';
 import FactoryIcon from '@mui/icons-material/Factory';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 //import IconDownload from '@mui/icons-material/CloudDownload';
 //import IconAccessibility from '@mui/icons-material/AccessibilityNew';
 //import IconChart from '@mui/icons-material/InsertChart';
@@ -21,36 +22,47 @@ export const description = 'Заказ дилера';
 
 const items = [
   {
-    text: 'РМД',
-    icon: <ManageHistoryIcon/>,
-    path: '/rmd',
-  },
-  {
     text: 'Расчёты-заказы',
     icon: <BusinessCenterIcon/>,
     path: '/doc/calc_order',
+  },
+  {
+    text: 'РМД',
+    icon: <ManageHistoryIcon/>,
+    path: '/rmd',
+    restrict: true,
+  },
+  {
+    text: 'Задания в цех',
+    icon: <AssignmentTurnedInIcon/>,
+    path: '/doc/work_centers_task',
+    restrict: true,
   },
   {
     text: 'Проекты и лиды',
     icon: <SafetyDividerIcon/>,
     path: '/partners',
     aliases: ['/project', '/projects', '/lead', '/leads'],
+    restrict: true,
   },
   {
     text: 'Производство',
     icon: <FactoryIcon/>,
     path: '/production',
     aliases: ['/manufacture', '/manufacturing'],
+    restrict: true,
   },
   {
     text: 'Снабжение и склад',
     icon: <StoreIcon/>,
     path: '/store',
+    restrict: true,
   },
   {
     text: 'Оплаты и отгрузки',
     icon: <PointOfSaleIcon/>,
     path: '/sales',
+    restrict: true,
   },
   {
     divider: true,
@@ -78,7 +90,7 @@ const items = [
 ];
 
 function path_ok(path, item) {
-  const pos = item.navigate && item.navigate.indexOf(path);
+  const pos = item.path?.indexOf(path);
   return pos === 0 || pos === 1;
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Routes, Route} from 'react-router';
 import {useLoadingContext} from '../Metadata';
-import {Wraper} from '../App/Wraper';
+import {Wraper} from './Wraper';
 
 const loginRoute = Wraper(React.lazy(() => import('../FrmLogin')));
 const catRoute = Wraper(React.lazy(() => import('../../catalogs/Router')));

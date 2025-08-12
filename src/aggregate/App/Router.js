@@ -15,7 +15,7 @@ const Home = React.lazy(() => import('../Home'));
 const FrmLogin = React.lazy(() => import('../FrmLogin'));
 const Page = React.lazy(() => import('../Pages/Page'));
 const Help = React.lazy(() => import('../Pages/Help'));
-const DataRoute = React.lazy(() => import('../AppLoad/Router'));
+const DataRoute = React.lazy(() => import('./DataRouter'));
 
 const loginRoute = Wraper(FrmLogin);
 const pageRoute = Wraper(Page);

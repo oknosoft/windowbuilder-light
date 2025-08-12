@@ -17,7 +17,9 @@ import menuItems from './menu';
 const DrawerLeft = ({menu_open, sxColor, handleDrawerClose}) => {
 
   const navigate = useNavigate();
-  $p.ui.dialogs.handleNavigate = navigate;
+  const {current_user, ui: {dialogs}} = $p;
+  dialogs.handleNavigate = navigate;
+  const restricted = !current_user?.role_available('СогласованиеРасчетовЗаказов');
 
   return <Drawer
     sx={{
@@ -52,11 +54,11 @@ const DrawerLeft = ({menu_open, sxColor, handleDrawerClose}) => {
     </DrawerHeader>
     <Divider />
     <List>
-      {menuItems.map(({text, icon, path, divider}, index) => {
+      {menuItems.map(({text, icon, path, divider, restrict}, index) => {
         return divider ?
           <Divider key={`divider-${index}`} /> :
           <ListItem key={`menu-${index}`} disablePadding>
-            <ListItemButton onClick={() => {
+            <ListItemButton disabled={restricted && restrict} onClick={() => {
               navigate(path);
               if (disablePermanent) {
                 handleDrawerClose();

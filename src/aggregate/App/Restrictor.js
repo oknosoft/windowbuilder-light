@@ -1,13 +1,11 @@
 import React from 'react';
-import Loading from './Loading';
+import {Navigate} from 'react-router';
 import {item_props} from './menu';
 
-export const Wraper = (Component) => {
+export const Restrictor = ({children}) => {
   const iprops = item_props();
   const restricted = iprops?.restrict &&
     (typeof $p === 'object') &&
     !$p.current_user?.role_available('СогласованиеРасчетовЗаказов');
-  return <React.Suspense fallback={<Loading/>}>
-    <Component/>
-  </React.Suspense>;
+  return restricted ? <Navigate to="/doc/calc_order" /> : children;
 };

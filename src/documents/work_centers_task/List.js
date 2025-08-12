@@ -15,6 +15,7 @@ const scheme = scheme_settings
   .find(({name}) => name.endsWith('.main'));
 const {fields} = work_centers_task.metadata();
 const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: work_centers_task});
+const sort = utils.sort('date', true);
 
 const listName = 'Задания на производство (список)';
 const title =  {title: listName, appTitle: <>
@@ -43,7 +44,7 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
   return work_centers_task.find_rows_remote(selector)
     .then((res) => {
       backdrop.setBackdrop(false);
-      return res;
+      return res.sort(sort);
     })
     .catch((err) => {
       backdrop.setBackdrop(false);
@@ -71,7 +72,7 @@ export default function WorkCentersTaskList() {
 
   React.useEffect(() => {
     setTitle(title);
-    loadMoreRows(300, 0, prms.ref, backdrop)
+    loadMoreRows(900, 0, prms.ref, backdrop)
       .then((data) => {
         setRows((rows) => {
           const nrows = [...rows, ...data];
