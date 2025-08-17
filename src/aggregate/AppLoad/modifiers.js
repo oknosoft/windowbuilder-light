@@ -22,7 +22,7 @@ import ui from 'metadata-ui';
 import './rubles';
 import scale_svg from './scale_svg';
 import wss from './wss';
-
+import loadQR from './loadQR';
 
 export default function ($p) {
   ui($p);
@@ -30,4 +30,5 @@ export default function ($p) {
   documents($p);
   Object.assign($p.utils, {scale_svg});
   wss($p);
+  loadQR($p);
 }

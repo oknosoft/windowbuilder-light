@@ -60,7 +60,7 @@ export default `<!DOCTYPE html>
         }
 
         .container {
-            width: 100%;
+            width: calc(100% - 4px);
             position: relative;
         }
 
