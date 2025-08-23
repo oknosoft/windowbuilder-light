@@ -27,6 +27,7 @@ function rx_columns(attr) {
     }
     if(column.key === 'calc_order') {
       column.renderCell = OrderFormatter;
+      delete column.width;
     }
     else if(column.key === 'obj') {
       column.renderCell = PKFormatter;

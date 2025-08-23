@@ -2,8 +2,8 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 
 export function OrderFormatter(props) {
-  const {calc_order} = props.row;
-  return `${parseInt(calc_order.number_doc.substring(4)).pad(4)} ${calc_order.partner.name}`;
+  const {number_doc, partner, note} = props.row.calc_order;
+  return `${note ? note + ' ' : ''}${parseInt(number_doc.substring(4)).pad(4)} ${partner.name}`;
 }
 
 export function PKFormatter(props) {
