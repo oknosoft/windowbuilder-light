@@ -145,9 +145,13 @@ export class RowProxy {
     if(editor) {
       const {project, eve} = editor;
       const szLine = project?.l_dimensions?.bottom;
+      let size = parseFloat(v);
+      if(size < 10) {
+        size = 10;
+      }
       szLine.sizes_wnd({
         wnd: szLine,
-        size: parseFloat(v),
+        size,
         name: 'auto',
       });
       this.recalcFin();
@@ -170,9 +174,13 @@ export class RowProxy {
     if(editor) {
       const {project, eve} = editor;
       const szLine = project?.l_dimensions?.right;
+      let size = parseFloat(v);
+      if(size < 10) {
+        size = 10;
+      }
       szLine.sizes_wnd({
         wnd: szLine,
-        size: parseFloat(v),
+        size,
         name: 'auto',
       });
       this.recalcFin();
