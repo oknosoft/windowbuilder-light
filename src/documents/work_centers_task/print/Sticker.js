@@ -8,7 +8,7 @@ export function Sticker({row}) {
   const other = prod_name?.other || [];
   return <article>
     <div className='partner nowrap'>{calc_order.partner.name}</div>
-    <div className='txt nowrap'>{`Заказ ${calc_order.number_doc} Задание ${_owner.number_doc}`}</div>
+    <div className='txt nowrap'>{`${calc_order.number_doc}/${ox.product} (${obj.specimen} из ${ox.calc_order_row?.quantity || '?'}) `}<small>{`/задание ${_owner.number_doc}`}</small></div>
     <div className='txt nowrap'>{`${calc_order.note}`}</div>
     <div className='flex'>
       <div className='qr' dangerouslySetInnerHTML={{__html: svg}} />
