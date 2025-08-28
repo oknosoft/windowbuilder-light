@@ -210,16 +210,18 @@ export const summary = (rows, selectedRows) => {
     bottom: {id: 'total_bottom',count: 0, area:0, power: 0}
   };
   for(const {row, obj, power} of rows) {
-    const {s} = obj.obj;
-    if(selectedRows.has(row)) {
-      res.top.count += 1;
-      res.top.area += s;
-      res.top.power += power;
-    }
-    else {
-      res.bottom.count += 1;
-      res.bottom.area += s;
-      res.bottom.power += power;
+    if(obj.obj) {
+      const {s} = obj.obj;
+      if(selectedRows.has(row)) {
+        res.top.count += 1;
+        res.top.area += s;
+        res.top.power += power;
+      }
+      else {
+        res.bottom.count += 1;
+        res.bottom.area += s;
+        res.bottom.power += power;
+      }
     }
   }
   return res;

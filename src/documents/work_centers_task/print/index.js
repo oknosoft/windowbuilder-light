@@ -1,4 +1,5 @@
 import {GroupedProducts} from './GroupedProducts';
+import {Stickers} from './Stickers';
 
 export function registerPrintForms({cat: {formulas}}) {
 
@@ -8,7 +9,7 @@ export function registerPrintForms({cat: {formulas}}) {
     parent: formulas.predefined('printing_plates'),
   };
   const components = [];
-  for(const Component of [GroupedProducts]) {
+  for(const Component of [GroupedProducts, Stickers]) {
     const formula = formulas.create(Object.assign({}, proto, {
       ref: Component.ref,
       name: Component.title,

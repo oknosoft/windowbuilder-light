@@ -1,0 +1,23 @@
+import React from 'react';
+
+export function Sticker({row}) {
+  const {calc_order, obj, part, _owner: {_owner}, svg} = row;
+  const ox = obj.obj;
+  const glassRow = ox.coordinates.find({elm_type: 'Стекло'});
+  const prod_name = glassRow ? ox.prod_name2({elm: glassRow.elm, cnstr: glassRow.cnstr}) : null;
+  const other = prod_name?.other || [];
+  return <article>
+    <div className='partner nowrap'>{calc_order.partner.name}</div>
+    <div className='txt nowrap'>{`Заказ ${calc_order.number_doc} Задание ${_owner.number_doc}`}</div>
+    <div className='txt nowrap'>{`${calc_order.note}`}</div>
+    <div className='flex'>
+      <div className='qr' dangerouslySetInnerHTML={{__html: svg}} />
+      <div>
+        {other.length < 2 ? <div className='txt' /> : null}
+        <div className='txt nowrap'>{prod_name?.main.join(' ') || 'Ошибка продукции'}</div>
+        {(prod_name?.other || []).map((v, i) => i < 3 ?
+          <div className='txt nowrap'>{v}</div> : <span className='txt'>{` ${v}`}</span>)}
+      </div>
+    </div>
+  </article>;
+}

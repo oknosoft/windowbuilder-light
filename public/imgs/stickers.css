@@ -1,0 +1,54 @@
+@page {
+  size: 80mm 40mm;
+  margin: 0;
+}
+
+@media print {
+  header, footer {
+    display: none;
+  }
+}
+
+html, body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+article {
+  width: 100%;
+  height: 100%;
+  padding: 2mm;
+  page-break-inside: avoid;
+  page-break-after: always;
+}
+
+.nowrap {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.partner {
+  font-size: 7mm;
+  line-height: 9mm;
+}
+
+.txt {
+  font-size: 5mm;
+  height: 6.6mm;
+}
+
+.flex {
+  display: flex;
+}
+
+.qr {
+  width: 22mm;
+  margin-right: 2mm;
+}
