@@ -11,7 +11,7 @@ export function PKFormatter(props) {
   switch (type.valueOf()) {
     case 'product':
       //return `${obj.product.pad(2)}|${specimen.pad(2)}|Изделие|${obj.owner.name}|${id}`;
-      return `${obj.product.pad(2)}|${specimen.pad(2)}|${obj.name}|${id}`;
+      return obj ? `${obj.product.pad(2)}|${specimen.pad(2)}|${obj.name}|${id}` : 'Изделие не найдено';
   }
   return id.toString();
 }

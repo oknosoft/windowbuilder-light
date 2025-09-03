@@ -134,6 +134,25 @@ export const query = async ({rmd, scheme, handleIfaceState}) => {
     return key;
   }
   const keys = new Set();
+  const orders = new Set();
+  for(const {ref, obj, specimen, elm, type, barcode, shift, part_type, ...raw} of rows) {
+    if(ref) {
+      const mgr = md.mgr_by_class_name(part_type);
+      if(mgr === calc_order) {
+        const part = mgr.by_ref[raw.part] || mgr.create({ref: raw.part}, false, true);
+        if(part.is_new()) {
+          orders.add(`${mgr.class_name}|${raw.part}`);
+        }
+      }
+      if(!calc_order.by_ref[raw.calc_order] || calc_order.by_ref[raw.calc_order].is_new()) {
+        orders.add(`${calc_order.class_name}|${raw.calc_order}`);
+      }
+    }
+  }
+  if(orders.size) {
+    await adapters.pouch.load_array(null, Array.from(orders), false, adapters.pouch.remote.doc);
+  }
+
   for(const {ref, obj, specimen, elm, type, barcode, shift, part_type, ...raw} of rows) {
     if(ref) {
       const mgr = md.mgr_by_class_name(part_type);

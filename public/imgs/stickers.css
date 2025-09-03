@@ -22,9 +22,7 @@ html {
 }
 
 article {
-  width: 100%;
-  height: 100%;
-  padding: 2mm;
+  padding: 1mm;
   page-break-inside: avoid;
   page-break-after: always;
 }
@@ -35,13 +33,14 @@ article {
 }
 
 .partner {
-  font-size: 7mm;
-  line-height: 9mm;
+  font-size: 6mm;
+  line-height: 7mm;
 }
 
 .txt {
-  font-size: 4.7mm;
-  height: 6.2mm;
+  font-size: 3.7mm;
+  line-height: 4mm;
+  min-height: 2mm;
 }
 
 .flex {
@@ -49,6 +48,6 @@ article {
 }
 
 .qr {
-  width: 22mm;
+  width: 20mm;
   margin-right: 2mm;
 }

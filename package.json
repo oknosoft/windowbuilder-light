@@ -35,10 +35,10 @@
   "proxy7": "http://localhost:3016/",
   "proxy8": "http://192.168.9.27:3016/",
   "proxy9": "https://steklotorg.oknosoft.ru:2310/",
-  "proxy10": "https://steklotorg.oknosoft.ru/",
+  "proxy": "https://steklotorg.oknosoft.ru/",
   "proxy11": "http://localhost:3031/",
   "proxy12": "http://192.168.9.31:3016/",
-  "proxy": "https://stdev.oknosoft.ru/",
+  "proxy13": "https://stdev.oknosoft.ru/",
   "dependencies": {
     "@aldabil/react-scheduler": "^3.1",
     "@emotion/react": "^11.14",
@@ -68,7 +68,7 @@
     "react-window-infinite-loader": "^1.0.10",
     "url-join": "^5.0",
     "url-parse": "^1.5",
-    "wb-core": "github:oknosoft/windowbuilder-core#a683613ed56708f728aa4adccffae8f0a5b23d4c",
+    "wb-core": "github:oknosoft/windowbuilder-core#f0c607b5b2e97863a741ccecabd22742ed41af73",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {

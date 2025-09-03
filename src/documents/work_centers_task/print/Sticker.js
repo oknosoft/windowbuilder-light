@@ -8,15 +8,15 @@ export function Sticker({row}) {
   const other = prod_name?.other || [];
   return <article>
     <div className='partner nowrap'>{calc_order.partner.name}</div>
-    <div className='txt nowrap'>{`${calc_order.number_doc}/${ox.product} (${obj.specimen} из ${ox.calc_order_row?.quantity || '?'}) `}<small>{`/задание ${_owner.number_doc}`}</small></div>
+    <div className='txt nowrap'>{`${calc_order.number_doc}/${ox.product.pad(2)} (${obj.specimen} из ${ox.calc_order_row?.quantity || '?'}) `}<small>{`// ${_owner.number_doc}`}</small></div>
     <div className='txt nowrap'>{`${calc_order.note}`}</div>
     <div className='flex'>
       <div className='qr' dangerouslySetInnerHTML={{__html: svg}} />
       <div>
-        {other.length < 2 ? <div className='txt' /> : null}
-        <div className='txt nowrap'>{prod_name?.main.join(' ') || 'Ошибка продукции'}</div>
-        {(prod_name?.other || []).map((v, i) => i < 3 ?
-          <div className='txt nowrap'>{v}</div> : <span className='txt'>{` ${v}`}</span>)}
+        {other.length < 3 ? <div className='txt' /> : null}
+        <div className='txt'>{prod_name?.main.join(' ') || 'Ошибка продукции'}</div>
+        {other.map((v, i) => i < 3 ?
+          <div className='txt'>{v}</div> : <span className='txt'>{` ${v}`}</span>)}
       </div>
     </div>
   </article>;
