@@ -31,6 +31,7 @@ export function Stickers({print, obj, attr, skipCss, externalWindow}) {
             rows.push(row);
           }
         }
+        rows.sort($p.utils.sort(['obj', 'obj', 'imaterial', 'name']));
         setRows(rows);
       })
       .then(() => {

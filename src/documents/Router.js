@@ -13,7 +13,7 @@ export default function DataRoute() {
       <Routes>
       <Route path="calc_order">
         <Route index element={<CalcOrderList />} />
-        <Route path=":ref" element={<CalcOrderObj />} />
+        <Route path=":ref/*" element={<CalcOrderObj />} />
       </Route>
       <Route path="work_centers_task">
         <Route index element={<WorkCentersTaskList />} />

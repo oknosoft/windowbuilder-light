@@ -1,5 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
+import {Routes, Route} from 'react-router';
 import frmObj, {jsVersion} from '../../aggregate/FrmObj/frmObj';
 import {Root} from '../../aggregate/Toolbars/styled';
 import ObjToolbar from '../../aggregate/Toolbars/ObjToolbar';
@@ -12,21 +13,7 @@ import ObjProduction from './ObjProduction';
 import ObjNom from './ObjNom';
 import ObjGlasses from './glasses/ObjGlasses';
 import {ObjSetting, key, setting as initSetting} from './ObjSetting';
-
-const stubDb = {
-  allDocs() {
-    return Promise.resolve({rows: []});
-  },
-  get() {
-    return Promise.resolve({});
-  },
-  bulkDocs() {
-    return Promise.resolve([]);
-  },
-  query() {
-    return Promise.resolve({rows: []});
-  }
-};
+import Drawer from '../../drawer';
 
 const {doc: {calc_order: mgr}, job_prm, current_user} = $p;
 
@@ -43,6 +30,7 @@ export default function CalcOrderObj() {
   } = frmObj({initSetting});
 
   const {ref} = params;
+  const isBuilder = params['*']?.includes('builder/');
   React.useEffect(() => {
     let res = Promise.resolve();
     if(job_prm.builder.glasses_template?.is_new?.()) {
@@ -70,12 +58,14 @@ export default function CalcOrderObj() {
   }, [ref]);
 
   React.useEffect(() => {
-    let title = obj ? obj.presentation : 'Расчёт-заказ';
-    if(obj?.is_read_only) {
-      title += ' /Только просмотр/';
+    if(!isBuilder) {
+      let title = obj ? obj.presentation : 'Расчёт-заказ';
+      if(obj?.is_read_only) {
+        title += ' /Только просмотр/';
+      }
+      setTitle({title, appTitle: <Typography variant="h6" noWrap>{title}</Typography>});
     }
-    setTitle({title, appTitle: <Typography variant="h6" noWrap>{title}</Typography>});
-  }, [obj, modified]);
+  }, [obj, modified, isBuilder]);
 
   usePrompt({
     when: modified,
@@ -135,24 +125,29 @@ export default function CalcOrderObj() {
 
   const curr = setting.tabs.filter(({visible}) => visible)[tab];
 
-  return <Root>
-    <ObjToolbar
-      obj={obj}
-      mgr={mgr}
-      setSettingOpen={setSettingOpen}
-      setBackdrop={setBackdrop}
-      btns={<RecalcBtn obj={obj} setBackdrop={setBackdrop}/>}
-      postBtns={SendBtn({obj, setBackdrop})}
-      readOnly={obj.is_read_only}
-      disablePost={!current_user.role_available('СогласованиеРасчетовЗаказов')}
-      modified={modified}
-      setModified={setModified}
-    />
-    <ObjHead obj={obj} setting={setting} setBackdrop={setBackdrop}/>
-    <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
-    {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj}/>}
-    {curr.name === 'nom' && <ObjNom tabRef={tabRef} obj={obj} setModified={setModified}/>}
-    {curr.name === 'glass' && <ObjGlasses tabRef={tabRef} obj={obj} setModified={setModified}/>}
-    {settingOpen && <ObjSetting setSettingOpen={setSettingOpen} />}
-  </Root>;
+  return <Routes>
+    <Route path="builder/:ox" element={<Drawer />} />
+    <Route path="*" element={
+      <Root>
+        <ObjToolbar
+          obj={obj}
+          mgr={mgr}
+          setSettingOpen={setSettingOpen}
+          setBackdrop={setBackdrop}
+          btns={<RecalcBtn obj={obj} setBackdrop={setBackdrop}/>}
+          postBtns={SendBtn({obj, setBackdrop})}
+          readOnly={obj.is_read_only}
+          disablePost={!current_user.role_available('СогласованиеРасчетовЗаказов')}
+          modified={modified}
+          setModified={setModified}
+        />
+        <ObjHead obj={obj} setting={setting} setBackdrop={setBackdrop}/>
+        <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
+        {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj}/>}
+        {curr.name === 'nom' && <ObjNom tabRef={tabRef} obj={obj} setModified={setModified}/>}
+        {curr.name === 'glass' && <ObjGlasses tabRef={tabRef} obj={obj} setModified={setModified}/>}
+        {settingOpen && <ObjSetting setSettingOpen={setSettingOpen} />}
+      </Root>
+    } />
+  </Routes>;
 }

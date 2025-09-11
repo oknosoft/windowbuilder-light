@@ -185,6 +185,16 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     }
   };
 
+  const builder = () => {
+    const row = getRow();
+    if(row) {
+      navigate(`builder/${row.row.characteristic.ref}`, {relative: 'path'});
+    }
+    else {
+      setSnack('Укажите строку табчасти для открытия деталей продукции');
+    }
+  };
+
   const recalc = () => {
     const row = getRow();
     if(row) {
@@ -426,7 +436,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     }
   };
 
-  return {create, clone, open, del, clear, recalc, add, load};
+  return {create, clone, open, del, clear, recalc, add, load, builder};
 
 }
 

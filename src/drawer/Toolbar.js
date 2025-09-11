@@ -1,0 +1,66 @@
+import React from 'react';
+
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import SaveIcon from '@mui/icons-material/Save';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
+import CloseIcon from '@mui/icons-material/Close';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import CopyAllIcon from '@mui/icons-material/CopyAll';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import {useNavigate} from 'react-router';
+import {HtmlTooltip} from '../aggregate/App/styled';
+import {useLoadingContext} from '../aggregate/Metadata';
+
+export default function MainToolbar({context}) {
+  const navigate = useNavigate();
+  const {editor, type, layer, setContext} = context;
+
+  const {close, recalc, save, saveClose, redraw} = React.useMemo(() => {
+    const close = () => navigate(-1);
+    const recalc = () => {
+      editor.project.calculateSpec();
+      editor.project.redraw();
+    };
+    const redraw = ({shiftKey}) => {
+      if(shiftKey) {
+        editor.project.props.registerChange();
+      }
+      editor.project.redraw();
+    };
+    const save = () => null;
+    const saveClose = () => null;
+    return {close, recalc, save, saveClose, redraw};
+  }, [editor]);
+
+  const {ifaceState: {drawerOpen}} = useLoadingContext();
+
+  return <>
+    {drawerOpen ? null : <Divider orientation="vertical" sx={{mr: 1}} flexItem />}
+    <HtmlTooltip title="Записать и закрыть">
+      <IconButton disabled onClick={saveClose}><SaveIcon/></IconButton>
+    </HtmlTooltip>
+    <HtmlTooltip title="Записать">
+      <IconButton disabled onClick={save}><SaveAsIcon/></IconButton>
+    </HtmlTooltip>
+    <HtmlTooltip title="Пересчитать">
+      <IconButton disabled={!editor?.project} onClick={recalc}><CalculateIcon/></IconButton>
+    </HtmlTooltip>
+    <HtmlTooltip title="Обновить">
+      <IconButton disabled={!editor?.project} onClick={redraw}><RefreshIcon/></IconButton>
+    </HtmlTooltip>
+    <Divider orientation="vertical" sx={{mx: 1}} flexItem />
+    <HtmlTooltip title="Скопировать в буфер обмена">
+      <IconButton disabled onClick={recalc}><CopyAllIcon/></IconButton>
+    </HtmlTooltip>
+    <HtmlTooltip title="Загрузить из буфера обмена">
+      <IconButton disabled onClick={recalc}><ContentPasteGoIcon/></IconButton>
+    </HtmlTooltip>
+    <Typography sx={{flex: 1}}></Typography>
+    <HtmlTooltip title="Закрыть редактор">
+      <IconButton onClick={close}><CloseIcon/></IconButton>
+    </HtmlTooltip>
+  </>;
+}

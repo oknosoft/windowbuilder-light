@@ -22,9 +22,9 @@ export default function ($p) {
     constructor(canvas) {
       super();
       this._canvas = canvas;
-      const scheme = new EditorInvisible.Scheme(this._canvas, this, typeof window === 'undefined');
+      const scheme = new EditorInvisible.Scheme(this._canvas, this);
 
-      this._stable_zoom = new StableZoom(this);
+      this.stableZoom = new StableZoom(this);
       // this._deformer = new Deformer(this);
       // this._mover = new Mover(this);
       // this._undo = new UndoRedo(this);
@@ -35,7 +35,7 @@ export default function ($p) {
 
       this.eve.on('coordinates_calculated', this.coordinates_calculated);
       this._canvas.addEventListener('touchstart', this.canvas_touchstart, false);
-      this._canvas.addEventListener('mousewheel', this._stable_zoom.mousewheel, false);
+      this._canvas.addEventListener('mousewheel', this.stableZoom.mousewheel, false);
     }
 
     coordinates_calculated = () => {
@@ -80,9 +80,6 @@ export default function ($p) {
     }
 
 
-
-
-
     /**
      * Create pixel perfect dotted rectable for drag selections
      * @param p1
@@ -113,8 +110,6 @@ export default function ($p) {
       rect.guide = true;
       return rect;
     }
-
-
 
 
     unload() {

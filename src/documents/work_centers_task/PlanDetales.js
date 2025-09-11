@@ -39,7 +39,7 @@ function PlanDetales({rows}) {
   />;
 }
 
-export default function planDetales(barcode) {
+export function planById(barcode) {
   const {adapters, ui} = $p;
   return adapters.pouch
     .fetch(`/adm/api/dates/keys?key=${barcode}`)
@@ -58,4 +58,12 @@ export default function planDetales(barcode) {
         throw new Error();
       }
     });
+}
+
+export function planByProd(ref) {
+
+}
+
+export function planByOrder(ref) {
+
 }

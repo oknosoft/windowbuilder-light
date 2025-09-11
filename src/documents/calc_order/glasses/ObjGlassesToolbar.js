@@ -15,7 +15,8 @@ import ClipBoard from '../../../aggregate/FrmObj/ClipBoard';
 export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBackdrop, setModified, selectedRowsChange, rawSetSelectedRows, methods}) {
 
 
-  const {create, clone, open, del, clear, recalc, load} = methods;
+  const {create, clone, open, del, clear, recalc, load, builder} = methods;
+
 
   return <ListSubheader>
     <Toolbar disableGutters>
@@ -28,7 +29,7 @@ export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBac
       </HtmlTooltip>
 
       <HtmlTooltip title="Изменить продукцию">
-        <IconButton disabled onClick={open}><EditIcon/></IconButton>
+        <IconButton disabled={!getRow} onClick={builder}><EditIcon/></IconButton>
       </HtmlTooltip>
 
       <HtmlTooltip title="Удалить строку {Delete}">
