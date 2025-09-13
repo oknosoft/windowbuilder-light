@@ -14,9 +14,8 @@ export function Sticker({row}) {
       <div className='qr' dangerouslySetInnerHTML={{__html: svg}} />
       <div>
         {other.length < 3 ? <div className='txt' /> : null}
-        <div className='txt'>{prod_name?.main.join(' ') || 'Ошибка продукции'}</div>
-        {other.map((v, i) => i < 3 ?
-          <div className='txt'>{v}</div> : <span className='txt'>{` ${v}`}</span>)}
+        <div className='large nowrap'>{prod_name?.main.reverse().join(' ') || 'Ошибка продукции'}</div>
+        <span className='txt multiline-nowrap' dangerouslySetInnerHTML={{__html: other.join('<br/>')}}/>
       </div>
     </div>
   </article>;

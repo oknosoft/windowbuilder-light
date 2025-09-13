@@ -28,19 +28,36 @@ article {
 }
 
 .nowrap {
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
+.multiline-nowrap {
+  display: -webkit-box;
+  line-clamp: 4;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .partner {
-  font-size: 6mm;
-  line-height: 7mm;
+  font-size: 8mm;
+  line-height: 9mm;
 }
 
 .txt {
-  font-size: 3.7mm;
-  line-height: 4mm;
+  font-size: 3.4mm;
+  line-height: 3.6mm;
   min-height: 2mm;
+}
+
+.large {
+  font-size: 4.7mm;
+  line-height: 5mm;
+  min-height: 2mm;
+  max-width: 62mm;
 }
 
 .flex {
@@ -48,6 +65,6 @@ article {
 }
 
 .qr {
-  width: 20mm;
+  width: 18mm;
   margin-right: 2mm;
 }
