@@ -87,6 +87,7 @@ export const Relative = styled('div')(() => ({
 }));
 
 export const Padding = styled('div')(({ theme }) => ({padding: theme.spacing()}));
+export const PaddingLeft = styled('div')(({ theme }) => ({paddingLeft: theme.spacing()}));
 
 export const Content = styled('div')(({ theme }) => ({
   height: `calc(100vh - ${toolbarHeight + 1}px)`,
@@ -103,7 +104,7 @@ export const Toolbar = styled(MuiToolbar)(({ theme }) => ({
 }));
 
 export const HtmlTooltip = styled(({ className, children, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} ><span>{children}</span></Tooltip>
+  <Tooltip arrow {...props} classes={{ popper: className }} ><span style={{fontSize: 'medium'}}>{children}</span></Tooltip>
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: '#f5f5f9',

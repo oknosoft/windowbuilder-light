@@ -1,13 +1,13 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import {Resize, ResizeHorizon} from 'metadata-ui/Resize';
-import {useTitleContext} from '../aggregate/App';
-import {useLoadingContext} from '../aggregate/Metadata';
-import {contentWidth} from '../styles/muiTheme';
+import {useTitleContext} from '../../aggregate/App';
+import {useLoadingContext} from '../../aggregate/Metadata';
+import {contentWidth} from '../../styles/muiTheme';
 import MainToolbar from './Toolbar';
 import Builder from './Builder';
 
-export default function BuilderFrame({useBuilderContext}) {
+export default function BuilderFrame({useBuilderContext, obj}) {
   const {description, title, setTitle} = useTitleContext();
   const context = useBuilderContext();
   const {handleIfaceState, ifaceState: {menu_open, innerWidth}} = useLoadingContext();
@@ -44,7 +44,7 @@ export default function BuilderFrame({useBuilderContext}) {
         ProductStructure
       </ResizeHorizon>
       <ResizeHorizon width={`${(width * 7 / 12).toFixed()}px`} minWidth="600px">
-        <Builder context={context} width={width} />
+        <Builder context={context} obj={obj} />
       </ResizeHorizon>
       <ResizeHorizon overflow="hidden auto" width={`${(width * 3 / 12).toFixed()}px`} minWidth="280px">
         Controls

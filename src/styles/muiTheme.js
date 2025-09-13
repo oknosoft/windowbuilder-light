@@ -1,5 +1,5 @@
-import {createTheme} from '@mui/material';
-import {blueGrey} from '@mui/material/colors';
+import {createTheme} from '@mui/material/styles';
+import {blueGrey as primary} from '@mui/material/colors';
 
 export const toolbarHeight = 50;
 export const disablePermanent = window.innerWidth < 640;
@@ -10,7 +10,7 @@ const theme = createTheme({
 
   // Purple and green play nicely together.
   palette: {
-    primary: blueGrey,
+    primary,
   },
 
   mixins: {
@@ -41,9 +41,16 @@ const theme = createTheme({
     MuiTab: {
       styleOverrides: {
         // Name of the slot
-        root: ({ ownerState, theme }) => ({
-          minHeight: 52,
-        }),
+        root: ({ ownerState, theme }) => {
+          const res = {
+            minHeight: 48,
+            minWidth: 'unset',
+          };
+          if(ownerState.accent && ownerState.selected) {
+            res.backgroundColor = theme.palette.primary[50];
+          }
+          return res;
+        },
       }
     },
 

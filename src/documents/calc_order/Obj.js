@@ -126,7 +126,7 @@ export default function CalcOrderObj() {
   const curr = setting.tabs.filter(({visible}) => visible)[tab];
 
   return <Routes>
-    <Route path="builder/:ox" element={<Drawer />} />
+    <Route path="builder/:ref" element={<Drawer obj={obj} />} />
     <Route path="*" element={
       <Root>
         <ObjToolbar

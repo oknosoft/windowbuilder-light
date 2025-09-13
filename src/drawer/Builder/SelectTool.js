@@ -4,12 +4,12 @@ import Tabs from '@mui/material/Tabs';
 import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 import {styled} from '@mui/material/styles';
-import CursorIcon from '../styles/icons/Cursor';
-import PenIcon from '../styles/icons/Pen';
-import ZoomFitIcon from '../styles/icons/ZoomFit';
+import CursorIcon from '../../styles/icons/Cursor';
+import PenIcon from '../../styles/icons/Pen';
+import ZoomFitIcon from '../../styles/icons/ZoomFit';
 import WavingHandOutlinedIcon from '@mui/icons-material/WavingHandOutlined';
-import {HtmlTooltip} from '../aggregate/App/styled';
-import {useBuilderContext} from './Context';
+import {HtmlTooltip} from '../../aggregate/App/styled';
+import {useBuilderContext} from '../Context';
 
 const Vertical = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -37,7 +37,7 @@ export default function SelectTool({view, setView, show3d, toggle3D}) {
 
   return editor ? <Vertical>
     <HtmlTooltip title="Вписать в окно (масштаб)" placement="right">
-      <IconButton sx={{ml: 1}} onClick={() => editor.project.zoomFit()}><ZoomFitIcon/></IconButton>
+      <IconButton sx={{ml: 1}} onClick={() => editor.project.zoom_fit()}><ZoomFitIcon/></IconButton>
     </HtmlTooltip>
     <Tabs value={currentTab} orientation="vertical" onChange={handleChange} >
       <Tab value={0} accent="true" icon={<HtmlTooltip title="Выделить и сдвинуть" placement="right"><CursorIcon /></HtmlTooltip>} aria-label="select" />
