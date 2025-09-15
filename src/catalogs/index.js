@@ -1,5 +1,5 @@
 
-import characteristics from './characteristics/spreading';
+import characteristics from './characteristics';
 
 export default function ($p) {
   characteristics($p);

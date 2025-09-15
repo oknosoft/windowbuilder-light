@@ -30,7 +30,7 @@ function OrderFormatter({row, column}) {
 }
 
 const columns = [
-  {key: "register", name: "Регистратор", width: 200, renderCell: RegisterFormatter},
+  {key: "register", name: "Регистратор", width: 220, renderCell: RegisterFormatter},
   {key: "sign", name: "Движение", width: 100, renderCell: RecordKindFormatter},
   {key: "phase", name: "Фаза", width: 100, renderCell: PresentationFormatter, mgr: enm.planning_phases},
   {key: "date", name: "Дата", width: 100, renderCell: DateFormatter},
@@ -38,8 +38,8 @@ const columns = [
   //{key: "work_center", name: "Рабочий центр", width: 180, renderCell: PresentationFormatter, mgr: cat.work_centers},
   {key: "ref", name: "Объект", renderCell: KeyFormatter},
   //{key: "stage", name: "Этап", renderCell: PresentationFormatter, mgr: cat.work_center_kinds},
-  {key: "calc_order", name: "Расчет", width: 200, renderCell: OrderFormatter, mgr: doc.calc_order},
-  {key: "power", name: "Мощность", width: 120, renderCell: NumberFormatter}
+  //{key: "calc_order", name: "Расчет", width: 220, renderCell: OrderFormatter, mgr: doc.calc_order},
+  {key: "power", name: "Мощность", width: 100, renderCell: NumberFormatter}
 ];
 
 export function PlanDetales({rows}) {

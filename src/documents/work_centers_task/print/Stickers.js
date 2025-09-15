@@ -48,3 +48,4 @@ export function Stickers({print, obj, attr, skipCss, externalWindow}) {
 Stickers.ref = '7cd91420-8440-11f0-b163-cf4cf985f90e';
 Stickers.destination = 'doc.work_centers_task';
 Stickers.title = 'Этикетки';
+Stickers.jsx = true;

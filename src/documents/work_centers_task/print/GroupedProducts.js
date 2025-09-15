@@ -26,3 +26,4 @@ export function GroupedProducts(props) {
 GroupedProducts.ref = '7d116d90-29bc-11f0-bf4b-21bb35fe82a7';
 GroupedProducts.destination = 'doc.work_centers_task';
 GroupedProducts.title = 'Изделия с группировкой';
+GroupedProducts.jsx = true;
