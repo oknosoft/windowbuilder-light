@@ -8,6 +8,7 @@ const catRoute = Wraper(React.lazy(() => import('../../catalogs/Router')));
 const docRoute = Wraper(React.lazy(() => import('../../documents/Router')));
 const scheduler = Wraper(React.lazy(() => import('../../reports/Scheduler/Stub')));
 const rmd = Wraper(React.lazy(() => import('../../reports/RMD')));
+const paperless = Wraper(React.lazy(() => import('../../reports/Paperless')));
 
 export default function DataRoute() {
   const {ifaceState: {complete_loaded}} = useLoadingContext();
@@ -17,5 +18,6 @@ export default function DataRoute() {
     <Route path="cch/*" element={catRoute} />
     <Route path="scheduler/*" element={scheduler} />
     <Route path="rmd/*" element={rmd} />
+    <Route path="paperless/*" element={paperless} />
   </Routes> : loginRoute;
 }

@@ -32,6 +32,7 @@ const title =  {
     <GoTo items={[
       {name: 'РМД', path: '/rmd'},
       {name: 'Задания на производство', path: '/doc/work_centers_task'},
+      {name: 'Безбумажка', path: '/paperless'},
     ]}/>
   </>};
 

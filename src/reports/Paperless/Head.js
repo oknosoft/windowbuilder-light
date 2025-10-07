@@ -4,25 +4,24 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import GoTo from '../../aggregate/App/GoTo';
 
-import {schemas, initScheme, setScheme} from './data';
+import {schemas, initScheme, setScheme} from '../RMD/data';
 
-export function RmdHead({handleIfaceState, rmd}) {
+export default function PaperlessHead({handleIfaceState, paperless}) {
 
-  const value = rmd?.scheme?.ref || initScheme;
-  const handleChange = (event, ref) => setScheme(handleIfaceState, rmd, ref);
+  const value = paperless?.scheme?.ref || initScheme;
+  const handleChange = (event, ref) => setScheme(handleIfaceState, paperless, ref);
 
   return <>
     <Tabs value={value} onChange={handleChange}>
       {schemas.map((scheme) => <Tab key={scheme.ref} value={scheme.ref} label={scheme.name} />)}
     </Tabs>
     <Typography sx={{flex: 1}}></Typography>
-    <Typography>{rmd?.tgt?.presentation}</Typography>
+    {/*<Typography>{rmd?.tgt?.presentation}</Typography>*/}
     <GoTo items={[
       {name: 'Расчёты-заказы', path: '/doc/calc_order'},
-      {name: 'Текущее задание', path: `/doc/work_centers_task/${rmd?.tgt?.ref}?return=/rmd&modified=false`},
       {name: 'Список заданий', path: '/doc/work_centers_task'},
       {name: 'Уточнения планов', path: '/doc/planning_event'},
-      {name: 'Безбумажка', path: '/paperless'},
     ]}/>
   </>;
 }
+
