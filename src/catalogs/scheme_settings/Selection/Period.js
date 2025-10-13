@@ -4,8 +4,8 @@ import Text from 'metadata-ui/DataField/Text';
 
 const slot = {
   input: {
-    min: '2023-01-01',
-    max: '2024-12-31',
+    min: `${new Date().getFullYear() - 1}-01-01`,
+    max: `${new Date().getFullYear()}-12-31`,
   },
 };
 const dateStyle={minWidth: 130};

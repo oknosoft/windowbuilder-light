@@ -6,6 +6,9 @@ import ProductFormatter from './ProductFormatter';
 // доступные типы вставок
 import {itypes, ioptions, ilist, sublist, RowProxy} from './RowProxy';
 
+const {adapters: {pouch}, cat: {scheme_settings}, cch, doc: {calc_order}, current_user, job_prm, utils} = $p;
+const restrict = !current_user.roles.includes('doc_full') && !current_user.role_available('РедактированиеСкидок') && !current_user.role_available('РедактированиеЦен');
+
 export const rowHeight = ({row, type}) => {
   if(type === 'DETAIL') {
     let {length} = row.inset.used_params();
@@ -26,7 +29,7 @@ export function rowKeyGetter(row) {
   return row.key;
 }
 
-const importParams = [$p.cch.properties.by_name('Маркировка')];
+const importParams = [cch.properties.by_name('Маркировка')];
 
 export function createGlasses({obj}){
   const glasses = [];
@@ -82,11 +85,11 @@ export function createGlasses({obj}){
     {key: 'len', name: 'Ширина', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
     {key: 'height', name: 'Высота', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
     {key: 'quantity', name: 'Колич.', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
-    {key: 'price_internal', name: 'Цена', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
-    {key: 'discount_percent_internal', name: 'Скидка', width: 88, renderEditCell: NumberCell, renderCell: NumberFormatter},
+    {key: 'price_internal', name: 'Цена', width: 88, renderEditCell: restrict ? null : NumberCell, renderCell: NumberFormatter},
+    {key: 'discount_percent_internal', name: 'Скидка', width: 88, renderEditCell: restrict ? null : NumberCell, renderCell: NumberFormatter},
     {key: 'amount_internal', name: 'Сумма', width: 88, renderCell: NumberFormatter},
   ];
-  if($p.job_prm.builder.flip_yx) {
+  if(job_prm.builder.flip_yx) {
     const height = columns.splice(4, 1)[0];
     columns.splice(3, 0, height);
   }
@@ -108,7 +111,6 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
 
   const navigate = useNavigate();
 
-  const {job_prm, utils, doc: {calc_order}} = $p;
 
   const add = async (proto) => {
     if(obj.is_new()) {
