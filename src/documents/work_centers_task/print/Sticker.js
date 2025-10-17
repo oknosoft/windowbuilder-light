@@ -7,7 +7,7 @@ export function Sticker({row}) {
   const prod_name = glassRow ? ox.prod_name2({elm: glassRow.elm, cnstr: glassRow.cnstr}) : null;
   const other = prod_name?.other || [];
   return <article>
-    <div className='partner nowrap'>{calc_order.partner.name}</div>
+    <div className='partner nowrap'>{calc_order.client_of_dealer ? `${calc_order.client_of_dealer} ${calc_order.partner.name}` : calc_order.partner.name}</div>
     <div className='txt nowrap'>{`${calc_order.number_doc}/${ox.product.pad(2)} (${obj.specimen} из ${ox.calc_order_row?.quantity || '?'}) `}<small>{`// ${_owner.number_doc}`}</small></div>
     <div className='txt nowrap'>{`${calc_order.note}`}</div>
     <div className='flex'>
