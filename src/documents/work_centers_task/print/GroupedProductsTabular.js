@@ -2,7 +2,7 @@ import React from 'react';
 
 const aggregator = $p.wsql.alasql.compile(
   `select len, width, number, partner, other, sum(qty) qty
-   from ? group by len, width, number, partner, other`);
+   from ? group by len, width, number, partner, other order by partner, len, width`);
 
 export default function GroupedProductsTabular({nom, obj}) {
   const rows = [];
