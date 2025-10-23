@@ -20,7 +20,7 @@ function Metadata({App, initialText}) {
   const [ifaceState, setIfaceState] = React.useState(null);
   const [first, resetFirst] = React.useState(true);
   const handleIfaceState = React.useMemo(() => (newState) => {
-    setIfaceState(prevState => ({...prevState, ...newState}));
+    setIfaceState(typeof newState === 'function' ? newState : prevState => ({...prevState, ...newState}));
   }, []);
 
   // инициализируем MetaEngine

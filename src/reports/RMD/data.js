@@ -63,10 +63,11 @@ export const schemas = scheme_settings
     return scheme;
   });
 
-const userScheme = wsql.get_user_param('rmd.scheme');
+const schemeKey = 'rmd.scheme';
+const userScheme = wsql.get_user_param(schemeKey);
 export const initScheme = (userScheme && schemas.find(v => v.ref === userScheme)) ? userScheme : schemas[0]?.ref;
 export const setScheme = (handleIfaceState, rmd, ref) => {
-  wsql.set_user_param('rmd.scheme', ref);
+  wsql.set_user_param(schemeKey, ref);
   handleIfaceState({rmd: Object.assign({}, rmd, {scheme: scheme_settings.get(ref)})});
 };
 
