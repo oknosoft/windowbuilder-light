@@ -10,7 +10,8 @@ import {title, initScheme} from './data';
 import {styled} from '@mui/material/styles';
 
 export const Grid = styled(MUIGrid)(({theme}) => ({
-  height: 'calc(100vh - 62px)',
+  height: 'calc(100vh - 60px)',
+  overflow: 'hidden',
 }));
 
 export default function Paperless() {
