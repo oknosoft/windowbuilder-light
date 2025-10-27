@@ -33,7 +33,7 @@ export default function Paperless() {
     setTitle({title, appTitle: <Head handleIfaceState={handleIfaceState} setBackdrop={setBackdrop} tab={tab} />});
   }, [tab]);
 
-  return paperless ? <Grid container spacing={1}>
+  return paperless?.rows ? <Grid container spacing={1}>
     <Grid size={6}>
       <Builder paperless={paperless} />
     </Grid>

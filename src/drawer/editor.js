@@ -115,7 +115,7 @@ export default function ($p) {
     unload() {
       this.project._dp._manager.off('update');
       this._canvas.removeEventListener("touchstart", this.canvas_touchstart);
-      this._canvas.removeEventListener('mousewheel', this._stable_zoom.mousewheel);
+      this._stable_zoom && this._canvas.removeEventListener('mousewheel', this._stable_zoom.mousewheel);
       super.unload();
       clearTimeout(this._recalc_timer);
     }

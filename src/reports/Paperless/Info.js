@@ -12,8 +12,8 @@ export default function BarcodeInfo({paperless}) {
   const {presentation, barcode, specimen, characteristic, calc_order, rows} = paperless;
   return <Cell>
     <Typography variant="h5">{`${presentation} ${barcode}`}</Typography>
-    <Typography variant="h5">{calc_order.client_of_dealer ? `${calc_order.client_of_dealer} ${calc_order.partner.name}` : calc_order.partner.name}</Typography>
-    <Typography variant="h6">{`Экземпляр ${specimen} из ${characteristic.calc_order_row.quantity}`}</Typography>
+    <Typography variant="h5">{calc_order?.client_of_dealer ? `${calc_order?.client_of_dealer} ${calc_order.partner.name}` : calc_order?.partner.name}</Typography>
+    <Typography variant="h6">{`Экземпляр ${specimen} из ${characteristic?.calc_order_row.quantity}`}</Typography>
     <div>
       <PlanDetales rows={rows} compact/>
     </div>
