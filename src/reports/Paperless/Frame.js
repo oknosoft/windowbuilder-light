@@ -1,15 +1,23 @@
 import React from 'react';
-import Loading from '../../aggregate/App/Loading';
+import MUIGrid from '@mui/material/Grid';
 import {useTitleContext, useBackdropContext} from '../../aggregate/App';
 import {useLoadingContext} from '../../aggregate/Metadata';
 import {contentWidth} from '../../styles/muiTheme';
 import Head from './Head';
-import {title} from './data';
+import Info from './Info';
+import Builder from './Builder';
+import {title, initScheme} from './data';
+import {styled} from '@mui/material/styles';
+
+export const Grid = styled(MUIGrid)(({theme}) => ({
+  height: 'calc(100vh - 62px)',
+}));
 
 export default function Paperless() {
   const {setTitle} = useTitleContext();
   const {setBackdrop} = useBackdropContext();
   const {handleIfaceState, ifaceState: {menu_open, innerWidth, paperless}} = useLoadingContext();
+  const tab = paperless?.scheme?.ref || initScheme;
   const width = contentWidth(menu_open, innerWidth);
 
   // при создании компонента, подготовим общие данные
@@ -21,8 +29,15 @@ export default function Paperless() {
     }
   }, []);
   React.useEffect(() => {
-    setTitle({title, appTitle: <Head handleIfaceState={handleIfaceState} paperless={paperless} />});
-  }, [paperless]);
+    setTitle({title, appTitle: <Head handleIfaceState={handleIfaceState} setBackdrop={setBackdrop} tab={tab} />});
+  }, [tab]);
 
-  return 'Paperless';
+  return paperless ? <Grid container spacing={1}>
+    <Grid size={6}>
+      <Builder paperless={paperless} />
+    </Grid>
+    <Grid size={6}>
+      <Info paperless={paperless} />
+    </Grid>
+  </Grid> : null;
 }

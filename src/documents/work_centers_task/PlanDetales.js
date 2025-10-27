@@ -42,10 +42,14 @@ const columns = [
   {key: "power", name: "Мощность", width: 100, renderCell: NumberFormatter}
 ];
 
-export function PlanDetales({rows}) {
+const columnsCompact = columns
+  .filter(v => v.key !== 'ref')
+  .map(v => v.key == 'register' ? {key: v.key, name: v.name, renderCell: v.renderCell} : v);
+
+export function PlanDetales({rows, compact}) {
   return <DataGrid
     rowKeyGetter={(row) => rows.indexOf(row)}
-    columns={columns}
+    columns={compact ? columnsCompact : columns}
     rows={rows}
     className="fill-grid"
     rowHeight={33}

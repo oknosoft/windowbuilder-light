@@ -5,10 +5,11 @@ import {barcodeState} from './data';
 
 export const TextField = styled(MUITextField)(({ theme }) => ({
   marginLeft: theme.spacing(2),
-  width: 160,
+  minWidth: 200,
+  width: 200,
 }));
 
-export default function Barcode({handleIfaceState, paperless}) {
+export default function Barcode({handleIfaceState, setBackdrop}) {
 
   const [barcode, setBarcode] = React.useState('');
 
@@ -24,14 +25,14 @@ export default function Barcode({handleIfaceState, paperless}) {
 
       onPaste(evt) {
         const str = evt.clipboardData.getData('text/plain');
-        str && barcodeState.control(str);
+        str && barcodeState.control(str, handleIfaceState, setBackdrop);
         evt.target.blur();
       },
     };
   }, []);
 
   React.useEffect(() => {
-    const bodyKeyDown = (evt) => barcodeState.keydown(evt, setBarcode);
+    const bodyKeyDown = (evt) => barcodeState.keydown(evt, setBarcode, handleIfaceState, setBackdrop);
     document.body.addEventListener('keydown', bodyKeyDown, false);
 
     return () => {

@@ -2,8 +2,9 @@
 
 const {
   CatCharacteristics,
-  cat: {scheme_settings, planning_keys, characteristics, work_centers, individuals},
-  doc: {scaning},
+  cat: {scheme_settings, planning_keys, characteristics, work_centers, work_center_kinds, individuals},
+  doc: {scaning, calc_order},
+  enm: {planning_phases},
   adapters: {pouch},
   ui: {dialogs},
   rep, utils, wsql, md} = $p;
@@ -18,9 +19,9 @@ export const schemas = scheme_settings
 const schemeKey = 'paperless.scheme';
 const userScheme = wsql.get_user_param(schemeKey);
 export const initScheme = (userScheme && schemas.find(v => v.ref === userScheme)) ? userScheme : schemas[0]?.ref;
-export const setScheme = (handleIfaceState, paperless, ref) => {
+export const setScheme = (handleIfaceState, ref) => {
   wsql.set_user_param(schemeKey, ref);
-  handleIfaceState({paperless: Object.assign({}, paperless, {scheme: scheme_settings.get(ref)})});
+  handleIfaceState(({paperless, ...other}) => ({...other, paperless: Object.assign({}, paperless, {scheme: scheme_settings.get(ref)})}));
 };
 
 
@@ -37,7 +38,7 @@ const wpaths = [];
  * Выполняет служебные команды
  * @param barcode
  */
-function barcodeControl(barcode) {
+function barcodeControl(barcode, handleIfaceState, setBackdrop) {
   const auth = barcode.split('@');
   const {current_user} = $p;
   // для снэка
@@ -100,9 +101,56 @@ function barcodeControl(barcode) {
     return wsql.set_user_param('work_center', wc.ref);
   }
 
+  setBackdrop(true);
+  pouch.fetch(`/adm/api/keys/${barcode}`)
+    .then(res => res.json())
+    .then(info => {
+      return calc_order.get(info.calc_order, 'promise')
+        .then(doc => doc.load_linked_refs())
+        .then(calc_order => Object.assign(info, {calc_order, characteristic: characteristics.get(info.characteristic)}));
+    })
+    .then((info) => {
+      return pouch.fetch(`/adm/api/dates/keys?keys=${barcode}`)
+        .then(res => res.json())
+        .then(rows => Object.assign(info, {rows}));
+    })
+    .then(async (info) => {
+      const {abonent, branch, calc_order, characteristic, elm, region, specimen, presentation, ref, type, rows} = info;
+      for(const row of rows) {
+        for(const fld of ['part', 'register']) {
+          const mgr = md.mgr_by_class_name(row[`${fld}_type`]);
+          const doc = mgr.get(row[fld]);
+          if(doc.is_new()) {
+            await doc.load();
+            if(doc.load_keys) {
+              await doc.load_keys();
+            }
+            await doc.load_linked_refs();
+          }
+          row[fld] = doc;
+        }
+        row.phase = planning_phases.get(row.phase);
+        row.planing_key = planning_keys.get(row.ref);
+        row.calc_order = calc_order;
+        row.obj = characteristic;
+        row.date = new Date(row.date);
+        row.period = new Date(row.period);
+        row.power = parseFloat(row.power);
+        row.stage = work_center_kinds.get(row.stage);
+        row.work_center = work_centers.get(row.work_center);
+
+      }
+      handleIfaceState(({paperless, ...other}) => ({...other,
+        paperless: {...paperless, calc_order, characteristic, elm, region, specimen, presentation, barcode, type, rows}}));
+      setBackdrop(false);
+    })
+    .catch(err => {
+      console.error(err);
+      setBackdrop(false);
+    })
   // const {pathname} = location;
   // if(wpaths.some((path) => pathname.includes(path))) {
-    md.emit_async('barcode', barcode);
+  //  md.emit_async('barcode', barcode);
   // }
   // else {
   //   dialogs.snack({message: `Не выбрано рабочее место (заполнения, импосты, раскладка...)`, timeout});
@@ -114,14 +162,14 @@ export const barcodeState = {
   s: '',     // текущее значение штрихкода
   input: null,
 
-  keydown(evt, setBarcode) {
+  keydown(evt, setBarcode, handleIfaceState, setBackdrop) {
 
     if(evt.target.tagName === 'INPUT' && !this.input || evt.code == 'NumLock'){
       return;
     }
 
     if(evt.code == 'Enter' || evt.code == 'NumpadEnter') {
-      this.s && barcodeControl(this.s);
+      this.s && barcodeControl(this.s, handleIfaceState, setBackdrop);
       this.s = '';
       this.input && this.input.blur();
     }

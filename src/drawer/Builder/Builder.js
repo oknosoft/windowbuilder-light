@@ -3,7 +3,7 @@ import {styled} from '@mui/material/styles';
 import {useParams} from 'react-router';
 import SelectTool from './SelectTool';
 export const Row = styled('div')(() => ({height: '100%'}));
-const Canvas = styled('canvas')(() => ({width: '100%', height: '100%'}));
+export const Canvas = styled('canvas')(() => ({width: '100%', height: '100%'}));
 
 function reset(ev) {
   ev.preventDefault();
@@ -49,7 +49,7 @@ export default function Builder({context, obj}) {
 
   React.useEffect(() => {
     return () => {
-      editor?.onload?.();
+      editor?.unload?.();
     };
   }, [editor]);
 
