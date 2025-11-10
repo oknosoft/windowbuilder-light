@@ -38,7 +38,7 @@ const wpaths = [];
  * Выполняет служебные команды
  * @param barcode
  */
-function barcodeControl(barcode, handleIfaceState, setBackdrop) {
+function barcodeControl(barcode, handleIfaceState, setBackdrop, skipStamp) {
   const auth = barcode.split('@');
   const {current_user} = $p;
   // для снэка
@@ -140,8 +140,11 @@ function barcodeControl(barcode, handleIfaceState, setBackdrop) {
         row.work_center = work_centers.get(row.work_center);
 
       }
-      handleIfaceState(({paperless, ...other}) => ({...other,
-        paperless: {...paperless, calc_order, characteristic, elm, region, specimen, presentation, barcode, type, rows}}));
+      handleIfaceState(({paperless, ...other}) => {
+        const prevStamp = paperless?.stamp || 0;
+        return {...other,
+          paperless: {...paperless, calc_order, characteristic, elm, region, specimen, presentation, barcode, type, rows, prevStamp, stamp: skipStamp ? prevStamp : Date.now()}}
+      });
       setBackdrop(false);
     })
     .catch(err => {

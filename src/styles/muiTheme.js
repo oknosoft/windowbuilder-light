@@ -26,6 +26,9 @@ const theme = createTheme({
       '@media (min-width:1200px)': {
         fontSize: '2rem',
       },
+    },
+    h6: {
+      fontWeight: 400,
     }
   },
 

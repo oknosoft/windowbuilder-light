@@ -38,7 +38,7 @@ export default function Paperless() {
       <Builder paperless={paperless} />
     </Grid>
     <Grid size={6}>
-      <Info paperless={paperless} />
+      <Info paperless={paperless} handleIfaceState={handleIfaceState} setBackdrop={setBackdrop}/>
     </Grid>
   </Grid> : null;
 }
