@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import {initScheme, barcodeState} from './data';
-const {cat: {scheme_settings}, doc: {planning_event}, ui: {dialogs}} = $p;
+const {doc: {planning_event}, ui: {dialogs}, adapters: {pouch}} = $p;
 
 const prev = {barcode: ''};
 
@@ -53,7 +53,26 @@ function Remake({paperless, handleIfaceState, setBackdrop}) {
   return wait ? <Typography variant="h6">Чтобы отправить изделие на переделку, просканируйте этикетку повторно в течение {wait} секунд</Typography> : null;
 }
 
-export default function RemakeCond({paperless, handleIfaceState, setBackdrop}) {
-  const scheme = paperless?.scheme || scheme_settings.get(initScheme);
-  return scheme.params.find({param: 'remake'}) ? <Remake paperless={paperless} handleIfaceState={handleIfaceState} setBackdrop={setBackdrop}/> : null;
+function Register({paperless}) {
+  const {barcode, calc_order, stamp, scheme, rows} = paperless;
+
+  React.useEffect(() => {
+    const body = {barcode, calc_order: calc_order.valueOf()};
+    for (const {_obj} of scheme.params) {
+      body[_obj.param] = _obj.value;
+    }
+    pouch.fetch('/adm/api/dates/scan', {
+      method: 'POST',
+      body: JSON.stringify(body)
+    });
+  }, [stamp]);
+
+  return null;
+}
+
+export default function RemakeOrRegister({paperless, handleIfaceState, setBackdrop}) {
+  const {scheme} = paperless;
+  return scheme.params.find({param: 'remake'}) ?
+    <Remake paperless={paperless} handleIfaceState={handleIfaceState} setBackdrop={setBackdrop}/> :
+    <Register paperless={paperless}/>;
 }

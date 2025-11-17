@@ -118,16 +118,18 @@ function barcodeControl(barcode, handleIfaceState, setBackdrop, skipStamp) {
       const {abonent, branch, calc_order, characteristic, elm, region, specimen, presentation, ref, type, rows} = info;
       for(const row of rows) {
         for(const fld of ['part', 'register']) {
-          const mgr = md.mgr_by_class_name(row[`${fld}_type`]);
-          const doc = mgr.get(row[fld]);
-          if(doc.is_new()) {
-            await doc.load();
-            if(doc.load_keys) {
-              await doc.load_keys();
+          if(row[fld] && row[`${fld}_type`]) {
+            const mgr = md.mgr_by_class_name(row[`${fld}_type`]);
+            const doc = mgr.get(row[fld]);
+            if(doc.is_new()) {
+              await doc.load();
+              if(doc.load_keys) {
+                await doc.load_keys();
+              }
+              await doc.load_linked_refs();
             }
-            await doc.load_linked_refs();
+            row[fld] = doc;
           }
-          row[fld] = doc;
         }
         row.phase = planning_phases.get(row.phase);
         row.planing_key = planning_keys.get(row.ref);
@@ -142,6 +144,9 @@ function barcodeControl(barcode, handleIfaceState, setBackdrop, skipStamp) {
       }
       handleIfaceState(({paperless, ...other}) => {
         const prevStamp = paperless?.stamp || 0;
+        if(!paperless) {
+          paperless = {scheme: scheme_settings.get(initScheme)};
+        }
         return {...other,
           paperless: {...paperless, calc_order, characteristic, elm, region, specimen, presentation, barcode, type, rows, prevStamp, stamp: skipStamp ? prevStamp : Date.now()}}
       });

@@ -11,7 +11,7 @@ export const Cell = styled('div')(({theme}) => ({
 
 export default function BarcodeInfo({paperless, handleIfaceState, setBackdrop}) {
   const {presentation, barcode, specimen, characteristic, calc_order, rows} = paperless;
-  return <Cell>
+  return presentation ? <Cell>
     <Typography variant="h5">{`${presentation} ${barcode}`}</Typography>
     <Typography variant="h5">{calc_order?.client_of_dealer ? `${calc_order?.client_of_dealer} ${calc_order.partner.name}` : calc_order?.partner.name}</Typography>
     <Typography variant="h6">{`Экземпляр ${specimen} из ${characteristic?.calc_order_row.quantity}`}</Typography>
@@ -19,6 +19,6 @@ export default function BarcodeInfo({paperless, handleIfaceState, setBackdrop}) 
       <PlanDetales rows={rows} compact/>
     </div>
     <Remake paperless={paperless} handleIfaceState={handleIfaceState} setBackdrop={setBackdrop}/>
-  </Cell>;
+  </Cell> : <Typography variant="h5">{`Ключ не найден: ${barcode}`}</Typography>;
 }
 
