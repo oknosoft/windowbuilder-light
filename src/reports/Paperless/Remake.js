@@ -22,9 +22,7 @@ const doRemake = (rows, barcode, handleIfaceState, setBackdrop) => {
     correct.date = new Date();
     correct.part = ev;
     return ev.save(true)
-      .then(() => {
-        barcodeState.control(barcode, handleIfaceState, setBackdrop, true)
-      })
+      .then(() => barcodeState.control(barcode, handleIfaceState, setBackdrop, true))
       .catch((err) => dialogs.alert({title: 'Переделка', text: err?.message || err}));
   }
   dialogs.alert({title: 'Переделка', text: 'Ошибка штрихкода', timeout: 3000});
@@ -53,7 +51,7 @@ function Remake({paperless, handleIfaceState, setBackdrop}) {
   return wait ? <Typography variant="h6">Чтобы отправить изделие на переделку, просканируйте этикетку повторно в течение {wait} секунд</Typography> : null;
 }
 
-function Register({paperless}) {
+function Register({paperless, handleIfaceState, setBackdrop}) {
   const {barcode, calc_order, stamp, scheme, rows} = paperless;
 
   React.useEffect(() => {
@@ -64,7 +62,9 @@ function Register({paperless}) {
     pouch.fetch('/adm/api/dates/scan', {
       method: 'POST',
       body: JSON.stringify(body)
-    });
+    })
+      .then(() => barcodeState.control(barcode, handleIfaceState, setBackdrop, true))
+      .catch((err) => dialogs.alert({title: 'Сканирование', text: err?.message || err}));
   }, [stamp]);
 
   return null;
@@ -74,5 +74,5 @@ export default function RemakeOrRegister({paperless, handleIfaceState, setBackdr
   const {scheme} = paperless;
   return scheme.params.find({param: 'remake'}) ?
     <Remake paperless={paperless} handleIfaceState={handleIfaceState} setBackdrop={setBackdrop}/> :
-    <Register paperless={paperless}/>;
+    <Register paperless={paperless} handleIfaceState={handleIfaceState} setBackdrop={setBackdrop}/>;
 }

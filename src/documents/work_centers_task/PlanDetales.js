@@ -5,15 +5,20 @@ import {RecordKindFormatter} from 'metadata-ui/DataField/RecordKindCell';
 import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {DataGrid} from 'react-data-grid';
 
-const {enm, cat, doc, md, adapters, ui, utils} = $p;
+const {enm, cat, doc, md, adapters, ui, utils, DocScaning} = $p;
 
 function RegisterFormatter({row}) {
   const [presentation, setPresentation] = React.useState('');
   React.useEffect(() => {
     const mgr = md.mgr_by_class_name(row.register_type);
     const doc = mgr.get(row.register);
-    (doc.is_new() ? doc.load() : Promise.resolve())
-      .then(() => setPresentation(doc.presentation));
+    if(doc instanceof DocScaning) {
+      setPresentation(`Скан ${utils.moment(row.period).format('DD.MM.YYYY HH:mm:ss')}`);
+    }
+    else {
+      (doc.is_new() ? doc.load() : Promise.resolve())
+        .then(() => setPresentation(doc.presentation));
+    }
   }, [row.register]);
   return presentation;
 }
@@ -26,7 +31,7 @@ function KeyFormatter({row}) {
 
 function OrderFormatter({row, column}) {
   const doc = column.mgr.get(row.calc_order);
-  return `${doc.number_doc} от ${utils.moment(doc.date).format('YYYY-MM-DD')}`;
+  return `${doc.number_doc} от ${utils.moment(doc.date).format('DD.MM.YYYY')}`;
 }
 
 const columns = [
