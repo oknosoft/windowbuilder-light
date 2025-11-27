@@ -7,11 +7,10 @@ export default function RecalcBtn({obj, setBackdrop}) {
 
   const recalc = () => {
     if(obj.contract.empty()) {
-      $p.ui.dialogs.alert({
+      return $p.ui.dialogs.alert({
         text: 'Не указан договор с покупателем (возможно, выбрана не та организация)',
         title: obj.presentation,
       });
-      return;
     }
     setBackdrop(true);
     obj.recalc()

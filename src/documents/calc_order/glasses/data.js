@@ -246,7 +246,43 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     }
   };
 
+  const loadProd = async (raw) => {
+    if(raw?.class_name === 'cat.characteristics') {
+      if(obj.posted) {
+        return $p.ui.dialogs.alert({
+          text: 'Отмените проведение перед импортом продукции',
+          title: obj.presentation,
+          timeout: 5000,
+        });
+      }
+      const row = new RowProxy(await obj.create_product_row({create: true}));
+
+      utils._mixin(row.characteristic, raw, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name'.split(','), true);
+      row.calc_order_row.note = raw.note;
+      row.calc_order_row.nom = row.characteristic.owner;
+      obj._data.chrows.add(row.calc_order_row);
+      const newRow = {
+        type: 'MASTER',
+        expanded: false,
+        row: row,
+        key: row.row,
+      };
+      setRows([...rows, newRow]);
+
+      await selectedRowsChange(new Set([newRow.key]));
+      await row.recalcFin();
+    }
+  };
+
   const load = async (text) => {
+    if(text.startsWith('{')) {
+      try {
+        return loadProd(JSON.parse(text));
+      }
+      catch (e) {
+        return;
+      }
+    }
     const irows = [];
     const iparams = new Map();
     for(const row of text.split('\n')) {
