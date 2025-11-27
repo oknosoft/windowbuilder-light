@@ -21,8 +21,7 @@ export default function MainToolbar({context}) {
   const {close, recalc, save, saveClose, redraw} = React.useMemo(() => {
     const close = () => navigate(-1);
     const recalc = () => {
-      editor.project.calculateSpec();
-      editor.project.redraw();
+      editor.project.save_coordinates({});
     };
     const redraw = ({shiftKey}) => {
       if(shiftKey) {
@@ -30,8 +29,8 @@ export default function MainToolbar({context}) {
       }
       editor.project.redraw();
     };
-    const save = () => null;
-    const saveClose = () => null;
+    const save = () => editor.project.save_coordinates({save: true});
+    const saveClose = () => editor.project.save_coordinates({save: true, close: true}).then(close);
     return {close, recalc, save, saveClose, redraw};
   }, [editor]);
 
@@ -40,10 +39,10 @@ export default function MainToolbar({context}) {
   return <>
     {drawerOpen ? null : <Divider orientation="vertical" sx={{mr: 1}} flexItem />}
     <HtmlTooltip title="Записать и закрыть">
-      <IconButton disabled onClick={saveClose}><SaveIcon/></IconButton>
+      <IconButton isabled={!editor?.project} onClick={saveClose}><SaveIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Записать">
-      <IconButton disabled onClick={save}><SaveAsIcon/></IconButton>
+      <IconButton isabled={!editor?.project} onClick={save}><SaveAsIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Пересчитать">
       <IconButton disabled={!editor?.project} onClick={recalc}><CalculateIcon/></IconButton>

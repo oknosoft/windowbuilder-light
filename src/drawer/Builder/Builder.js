@@ -48,10 +48,14 @@ export default function Builder({context, obj}) {
   };
 
   React.useEffect(() => {
-    return () => {
-      editor?.unload?.();
+    return function () {
+      const {paper} = window;
+      if(paper) {
+        paper.unload?.();
+        window.paper = null;
+      }
     };
-  }, [editor]);
+  }, []);
 
   return <Row>
     <SelectTool />

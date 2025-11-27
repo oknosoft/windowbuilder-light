@@ -113,11 +113,12 @@ export default function ($p) {
 
 
     unload() {
-      this.project._dp._manager.off('update');
-      this._canvas.removeEventListener("touchstart", this.canvas_touchstart);
-      this._stable_zoom && this._canvas.removeEventListener('mousewheel', this._stable_zoom.mousewheel);
+      const {project, _canvas, _stable_zoom, _recalc_timer} = this;
+      project?._dp?._manager.off('update');
+      _canvas?.removeEventListener("touchstart", this.canvas_touchstart);
+      _stable_zoom && _canvas.removeEventListener('mousewheel', _stable_zoom.mousewheel);
       super.unload();
-      clearTimeout(this._recalc_timer);
+      clearTimeout(_recalc_timer);
     }
 
   }

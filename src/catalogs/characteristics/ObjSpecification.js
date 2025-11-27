@@ -4,9 +4,21 @@ import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {TextFormatter} from 'metadata-ui/DataField/Text';
 import ObjTabular from '../../aggregate/FrmObj/ObjTabular';
 
+function StageFormatter({row, column}) {
+  const stage = row.stage.toString();
+  const style = {
+    color: `rgba(0, 0, 0, ${row.dop <= -4 ? 0.6 : 0.8})`,
+    fontWeight: row.dop <= -4 ? 700 : 100,
+  }
+  return  <span style={style}>{stage}</span>;
+}
+
+
 const columns = [
+  {key: "elm", width: 70, name: "Эл", renderCell: NumberFormatter},
   {key: "nom", width: 240, name: "Номенклатура", tooltip: "", renderCell: PresentationFormatter},
-  {key: "characteristic", width: 240, name: "Характеристика", tooltip: "", renderCell: PresentationFormatter},
+  {key: "characteristic", width: 180, name: "Характеристика", tooltip: "", renderCell: PresentationFormatter},
+  {key: "stage", width: 240, name: "Этап", tooltip: "", renderCell: StageFormatter},
   {key: "len", width: 90, name: "Длина", tooltip: "длина в м", renderCell: NumberFormatter},
   {key: "width", width: 90, name: "Высота", tooltip: "ширина в м", renderCell: NumberFormatter},
   {key: "qty", width: 90, name: "Штук", renderCell: NumberFormatter},
