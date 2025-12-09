@@ -23,6 +23,66 @@ const columns = scheme.rx_columns({
   fields,
   _mgr: calc_order,
   presentations: represents ? presentationsMap : null});
+columns.unshift({
+  key: 'paid',
+  headerCellClass: 'order-pay',
+  name: '',
+  width: 28,
+  minWidth: 28,
+  renderCell({column, row}) {
+    let {doc_amount, paid, posted} = row;
+    if(!posted) {
+      return null;
+    }
+    let posX = 0;
+    let tooltip = 'Оплачен';
+    if(!paid) {
+      posX = -40;
+      tooltip = 'Не оплачен';
+    }
+    else {
+      paid = parseFloat(paid);
+      doc_amount = parseFloat(doc_amount);
+      if(paid < doc_amount) {
+        posX = -20;
+        tooltip = 'Оплачен частично';
+      }
+      else if(paid > doc_amount) {
+        posX = -140;
+        tooltip = 'Переплата';
+      }
+    }
+    return <div className="order-state" style={{backgroundPositionX: posX}} title={tooltip}/>
+  }
+});
+columns.unshift({
+  key: 'shipped',
+  headerCellClass: 'order-ship',
+  name: '',
+  width: 28,
+  minWidth: 28,
+  renderCell({column, row}) {
+    let {doc_amount, shipped, posted} = row;
+    if(!posted) {
+      return null;
+    }
+    let posX = 0;
+    if(!shipped) {
+      posX = -40;
+    }
+    else {
+      shipped = parseFloat(shipped);
+      doc_amount = parseFloat(doc_amount);
+      if(shipped < doc_amount) {
+        posX = -20;
+      }
+      else if(shipped > doc_amount) {
+        posX = -140;
+      }
+    }
+    return <div className="order-state" style={{backgroundPositionX: posX}}/>
+  }
+});
 
 const listName = 'Расчёты-заказы (список)';
 const title =  {

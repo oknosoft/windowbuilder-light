@@ -57,3 +57,15 @@ html, body, input, textarea, select, button {
     -webkit-margin-after: 0.1em;
   }
 }
+.order-ship {
+  background: url("icons/order-ship.png") center no-repeat;
+}
+.order-pay {
+  background: url("icons/order-pay.png") center no-repeat;
+}
+.order-state {
+  background: url("icons/order-state.png") no-repeat;
+  width: 20px;
+  height: 20px;
+  margin-left: -4px;
+}
