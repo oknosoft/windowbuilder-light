@@ -59,9 +59,11 @@ html, body, input, textarea, select, button {
 }
 .order-ship {
   background: url("icons/order-ship.png") center no-repeat;
+  background-color: inherit;
 }
 .order-pay {
   background: url("icons/order-pay.png") center no-repeat;
+  background-color: inherit;
 }
 .order-state {
   background: url("icons/order-state.png") no-repeat;

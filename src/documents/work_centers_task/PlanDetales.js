@@ -26,8 +26,8 @@ function RegisterFormatter({row}) {
 function KeyFormatter({row}) {
   const key = cat.planning_keys.get(row.ref);
   const obj = cat.characteristics.get(row.obj);
-  //return `${obj.name} ${key.id}`;
-  return `${obj.calc_order.number_doc}/${obj.product.pad(2)}/${key.specimen.pad(2)}/${key.id}`;
+  return `${obj.name} ${key.id}`;
+  //return `${obj.calc_order.number_doc}/${obj.product.pad(2)}/${key.specimen.pad(2)}/${key.id}`;
 }
 
 function OrderFormatter({row, column}) {

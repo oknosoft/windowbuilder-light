@@ -27,8 +27,8 @@ columns.unshift({
   key: 'paid',
   headerCellClass: 'order-pay',
   name: '',
-  width: 28,
-  minWidth: 28,
+  width: 32,
+  minWidth: 32,
   renderCell({column, row}) {
     let {doc_amount, paid, posted} = row;
     if(!posted) {
@@ -59,8 +59,8 @@ columns.unshift({
   key: 'shipped',
   headerCellClass: 'order-ship',
   name: '',
-  width: 28,
-  minWidth: 28,
+  width: 32,
+  minWidth: 32,
   renderCell({column, row}) {
     let {doc_amount, shipped, posted} = row;
     if(!posted) {
