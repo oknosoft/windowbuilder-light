@@ -10,7 +10,7 @@ import Toolbar from '../../aggregate/Toolbars/ListToolbar';
 import Selection from '../../catalogs/scheme_settings/Selection';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../aggregate/AppLoad/dataGrid';
 
-
+const outerFields = ['paid', 'shipped'];
 const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}, utils, wsql} = $p;
 const scheme = scheme_settings
   .find_schemas('doc.calc_order', true)
@@ -173,7 +173,9 @@ export default function CalcOrderList() {
       const tmp = by_ref[row.ref];
       if(tmp && !tmp.is_new()) {
         for(const fld in row) {
-          row[fld] = tmp[fld];
+          if(!outerFields.includes(fld)) {
+            row[fld] = tmp[fld];
+          }
         }
       }
     }
