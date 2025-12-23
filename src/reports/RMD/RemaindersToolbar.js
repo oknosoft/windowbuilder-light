@@ -23,8 +23,9 @@ export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelecte
 
   const include = () => {
     const {tgt} = rmd;
+    const {ui: {dialogs}, adapters: {pouch}, enm: {debit_credit_kinds}} = $p;
     if(tgt.posted) {
-      return $p.ui.dialogs.alert({
+      return dialogs.alert({
         title: tgt.presentation,
         text: 'Нельзя редактировать проведённое задание',
         timeout: 10000,
@@ -37,8 +38,35 @@ export default function RemaindersToolbar({rmd, scheme, selectedRows, setSelecte
       row.phase = dp.phase;
     }
     tgt.fill_by_keys({c2d: true});
-    setSelectedRows(new Set());
-    filter({rmd, scheme, handleIfaceState});
+    const nom = new Set();
+    for(const row of tgt.cutting) {
+      if(row.len && row.width) {
+        nom.add(row.nom);
+      }
+    }
+
+    pouch.fetch('/couchdb/pgsql/cuts', {
+      method: 'POST',
+      body: JSON.stringify({nom: Array.from(nom).map(v => v.ref)}),
+    })
+      .then(res => res.json())
+      .then(({rows}) => {
+        for(const {nom, len, width, qty} of rows) {
+          tgt.cuts.clear();
+          tgt.cuts.add({
+            record_kind: debit_credit_kinds.debit,
+            nom,
+            len,
+            width,
+            quantity: qty,
+          });
+        }
+      })
+      .catch(() => null)
+      .then(() => {
+        setSelectedRows(new Set());
+        filter({rmd, scheme, handleIfaceState});
+      });
   };
 
   return <Toolbar disableGutters>
