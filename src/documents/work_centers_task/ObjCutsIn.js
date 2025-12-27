@@ -12,7 +12,7 @@ import {CutsInBtns} from './Cutting/OptimizeCut';
 
 export const columns = [
   {key: "stick", width: 80, name: "№ загот", tooltip: "№ листа (хлыста, заготовки)", renderCell: NumberFormatter, renderEditCell: NumberCell},
-  {key: "pair", width: 80, name: "№ пары", tooltip: "№ парной заготовки", renderCell: NumberFormatter, renderEditCell: NumberCell},
+  //{key: "pair", width: 80, name: "№ пары", tooltip: "№ парной заготовки", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "nom", width: 240, name: "Номенклатура", tooltip: "", renderCell: PresentationFormatter},
   {key: "characteristic", width: 240, name: "Характеристика", tooltip: "", renderCell: PresentationFormatter},
   {key: "len", width: 90, name: "Длина", tooltip: "длина в мм", renderCell: NumberFormatter, renderEditCell: NumberCell},

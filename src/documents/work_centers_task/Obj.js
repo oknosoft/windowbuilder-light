@@ -38,15 +38,9 @@ export default function WorkCentersTaskObj({ref}) {
   }
 
   React.useEffect(() => {
-    const searchParams = utils.prm();
-    if(searchParams.modified === 'false') {
-      const doc = mgr.get(ref);
-      if(!doc.is_new()) {
-        setObj(mgr.get(ref));
-        return setBackdrop(false);
-      }
-    }
-    mgr.get(ref, 'promise')
+    (utils.prm().modified === 'false' ?
+      Promise.resolve(function(doc) {doc._data._loading = false; return doc;}(mgr.get(ref))) :
+      mgr.get(ref, 'promise'))
       .then((doc) => {
         const refs = new Set();
         for(const {calc_order} of doc.set) {
