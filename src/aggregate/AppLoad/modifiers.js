@@ -16,7 +16,7 @@ import documents from "../../documents";
 //import chartscharacteristics from "./chartscharacteristics";
 
 // модификаторы отчетов
-//import reports from "./reports";
+import reports from "../../reports";
 
 import ui from 'metadata-ui';
 import './rubles';
@@ -28,6 +28,7 @@ export default function ($p) {
   ui($p);
   catalogs($p);
   documents($p);
+  reports($p);
   Object.assign($p.utils, {scale_svg});
   wss($p);
   loadQR($p);
