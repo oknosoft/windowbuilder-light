@@ -1,5 +1,5 @@
 import React from 'react';
-import Dialog from 'metadata-ui/App/Dialog';
+import Grid from './Grid';
 
 function getRows() {
   return adapters.pouch
@@ -39,6 +39,17 @@ function getRows() {
     });
 }
 
+const {rep: {mutual_settlements}, adapters: {pouch}, utils: {moment}} = $p;
+const dp = mutual_settlements.create();
+
 export default function SettlementsFrame({partner}) {
-  return 'SettlementsFrame';
+
+  const [rows, setRows] = React.useState([]);
+  const [error, setError] = React.useState(null);
+
+  React.useEffect(() => {
+
+  }, [partner]);
+
+  return error ? (error.message || error) : <Grid rows={rows}/>;
 }
