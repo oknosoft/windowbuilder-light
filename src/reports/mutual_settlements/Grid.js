@@ -6,7 +6,7 @@ import {NumberFormatter} from 'metadata-ui/DataField/Number';
 function RegisterFormatter({row, column}) {
   const register = row[column.key];
   const meta = register.type && $p.md.get(register.type);
-  return `${meta ? (meta.obj_presentation || meta.synonym) + ' ' : ''}${register.number_doc} от ${register.date}`;
+  return `${meta ? (meta.obj_presentation || meta.synonym) + ' ' : ''}${register.number_doc || '-'} от ${register.date}`;
 }
 
 function rowKeyGetter(row) {

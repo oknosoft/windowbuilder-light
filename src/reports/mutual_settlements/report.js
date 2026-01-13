@@ -16,7 +16,7 @@ export function MutualSettlements(obj, {adapters, ui, CatPartners, utils: {momen
       for(const row of rows) {
         row.period = moment(row.period).format('DD.MM.YY');
         row.register.date = row.period;
-        row.trans.date = moment(row.trans.date).format('DD.MM.YY');
+        row.trans.date = row.trans.date ? moment(row.trans.date).format('DD.MM.YY') : '';
       }
       ui.dialogs.alert({
         title,
