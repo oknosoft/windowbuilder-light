@@ -16,7 +16,7 @@ import Repartition from '../Repartition';
 const Manual2DCutting = React.lazy(() => import('./Manual2DCutting'));
 const Manual2DCuts = React.lazy(() => import('./Manual2DCuts'));
 
-const {adapters: {pouch}, ui: {dialogs}, enm: {debit_credit_kinds}, utils, classes} = $p;
+const {adapters: {pouch}, ui: {dialogs}, enm: {debit_credit_kinds}, utils, job_prm, classes} = $p;
 
 function setSticks(obj, data) {
   if(data.error) {
@@ -191,45 +191,51 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
 }
 
 export function CutsInBtns({obj, setBackdrop, ext, setExt, selected, mode}) {
+  const {use_biz_cuts} = job_prm.planning;
   const fill_cuts = () => {
-    const nom = new Set();
-    for(const row of obj.cutting) {
-      if(row.len && row.width) {
-        nom.add(row.nom);
+    if(use_biz_cuts) {
+      const nom = new Set();
+      for(const row of obj.cutting) {
+        if(row.len && row.width) {
+          nom.add(row.nom);
+        }
+      }
+      if(nom.size) {
+        setBackdrop(true);
+        pouch.fetch('/adm/api/pgsql/cuts', {
+          method: 'POST',
+          body: JSON.stringify({nom: Array.from(nom).map(v => v.ref)}),
+        })
+          .then(res => res.json())
+          .then(({rows}) => {
+            obj.cuts.clear();
+            for(const {nom, len, width, qty} of rows) {
+              obj.cuts.add({
+                record_kind: debit_credit_kinds.debit,
+                nom,
+                len,
+                width,
+                quantity: qty,
+              });
+            }
+          })
+          .catch(() => null)
+          .then(setBackdrop);
+      }
+      else {
+        dialogs.alert({
+          title: 'Раскрой 2D',
+          text: 'Нет изделий к раскрою - нечего заполнять',
+        });
       }
     }
-    if(nom.size) {
-      setBackdrop(true);
-      pouch.fetch('/adm/api/pgsql/cuts', {
-        method: 'POST',
-        body: JSON.stringify({nom: Array.from(nom).map(v => v.ref)}),
-      })
-        .then(res => res.json())
-        .then(({rows}) => {
-          obj.cuts.clear();
-          for(const {nom, len, width, qty} of rows) {
-            obj.cuts.add({
-              record_kind: debit_credit_kinds.debit,
-              nom,
-              len,
-              width,
-              quantity: qty,
-            });
-          }
-        })
-        .catch(() => null)
-        .then(setBackdrop);
-    }
     else {
-      dialogs.alert({
-        title: 'Раскрой 2D',
-        text: 'Нет изделий к раскрою - нечего заполнять',
-      });
+      obj.fill_cuts();
     }
   };
   return <>
     <Divider orientation="vertical" flexItem sx={{m: 1}} />
-    <HtmlTooltip title="Заполнить по остаткам">
+    <HtmlTooltip title={`Заполнить ${use_biz_cuts ? 'по остаткам' : 'стандартными размерами'}`}>
       <IconButton onClick={fill_cuts}><LayersIcon/></IconButton>
     </HtmlTooltip>
     <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode={mode}/>

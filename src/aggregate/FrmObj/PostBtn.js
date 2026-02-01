@@ -99,14 +99,16 @@ export default function PostBtn({obj, menuItems=null, onProcessed, onError, hide
     };
     const post = () => {
       backdrop.setBackdrop(true);
-      obj.save(true)
+      (obj.beforePost ? obj.beforePost() : Promise.resolve())
+        .then(() => obj.save(true))
         .then(waitProcessing)
         .then(handleOk)
         .catch(handleError);
     };
     const unpost = () => {
       backdrop.setBackdrop(true);
-      obj.save(false)
+      (obj.beforeUnPost ? obj.beforeUnPost() : Promise.resolve())
+        .then(() => obj.save(false))
         .then(waitProcessing)
         .then(handleOk)
         .catch(handleError);

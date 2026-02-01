@@ -33,8 +33,9 @@ const importParams = [cch.properties.by_name('Маркировка')];
 
 export function createGlasses({obj}){
   const glasses = [];
+  const {glasses_template} = job_prm.builder;
   for(const prow of obj.production) {
-    if(prow.characteristic.calc_order !== obj) {
+    if(prow.characteristic.calc_order !== obj || prow.characteristic.base_block !== glasses_template) {
       continue;
     }
     const row = new RowProxy(prow);

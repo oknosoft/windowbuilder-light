@@ -27,8 +27,8 @@ function RegisterFormatter({row}) {
 function KeyFormatter({row}) {
   const key = cat.planning_keys.get(row.ref);
   const obj = cat.characteristics.get(row.obj);
-  return `${obj.name} (${key.specimen.pad(2)}) ${key.id}`;
-  //return `${obj.calc_order.number_doc}/${obj.product.pad(2)}/${key.specimen.pad(2)}/${key.id}`;
+  //return `${obj.name} (${key.specimen.pad(2)}) ${key.id}`;
+  return `${obj.calc_order.number_doc}/${obj.product.pad(2)}/${key.specimen.pad(2)}/${key.id}`;
 }
 
 function OrderFormatter({row, column}) {
@@ -38,13 +38,13 @@ function OrderFormatter({row, column}) {
 
 const columns = [
   {key: "register", name: "Регистратор", width: 220, renderCell: RegisterFormatter},
-  {key: "sign", name: "Движение", width: 100, renderCell: RecordKindFormatter},
+  //{key: "sign", name: "Движение", width: 100, renderCell: RecordKindFormatter},
   //{key: "phase", name: "Фаза", width: 100, renderCell: PresentationFormatter, mgr: enm.planning_phases},
   {key: "date", name: "Дата", width: 100, renderCell: DateFormatter},
   //{key: "work_shift", name: "Смена", width: 120, renderCell: PresentationFormatter, mgr: cat.work_shifts},
-  //{key: "work_center", name: "Рабочий центр", width: 180, renderCell: PresentationFormatter, mgr: cat.work_centers},
+  {key: "work_center", name: "Рабочий центр", width: 180, renderCell: PresentationFormatter, mgr: [cat.work_centers, cat.delivery_directions]},
   {key: "ref", name: "Объект", renderCell: KeyFormatter},
-  //{key: "stage", name: "Этап", renderCell: PresentationFormatter, mgr: cat.work_center_kinds},
+  {key: "stage", name: "Этап", renderCell: PresentationFormatter, mgr: cat.work_center_kinds},
   //{key: "calc_order", name: "Расчет", width: 220, renderCell: OrderFormatter, mgr: doc.calc_order},
   {key: "power", name: "Мощность", width: 100, renderCell: NumberFormatter}
 ];
