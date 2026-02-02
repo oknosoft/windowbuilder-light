@@ -143,7 +143,8 @@ export default function CalcOrderObj() {
         />
         <ObjHead obj={obj} setting={setting} setBackdrop={setBackdrop}/>
         <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
-        {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj}/>}
+        {curr.name === 'all' && <ObjProduction tabRef={tabRef} obj={obj} setModified={setModified} variant="all"/>}
+        {curr.name === 'builder' && <ObjProduction tabRef={tabRef} obj={obj} setModified={setModified}/>}
         {curr.name === 'nom' && <ObjNom tabRef={tabRef} obj={obj} setModified={setModified}/>}
         {curr.name === 'glass' && <ObjGlasses tabRef={tabRef} obj={obj} setModified={setModified}/>}
         {settingOpen && <ObjSetting setSettingOpen={setSettingOpen} />}

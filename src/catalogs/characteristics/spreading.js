@@ -17,7 +17,7 @@ export default function ({cat, doc, utils, job_prm, CatCharacteristics}) {
     imaterial: {
       get () {
         const row = this.params.find({cnstr: 0, region: 0, param: job_prm.properties.imaterial});
-        return row?.value;
+        return row?.value || cat.nom.get();
       }
     },
     iedge: {

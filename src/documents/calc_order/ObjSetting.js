@@ -17,7 +17,7 @@ if(!Object.keys(setting).length) {
   ];
   setting.tabs = [
     {name: 'glass', text: 'Заполнения', visible: true},
-    {name: 'builder', text: 'Построитель', visible: false},
+    {name: 'builder', text: 'Построитель', visible: true},
     {name: 'parametric', text: 'Параметрик', visible: false},
     {name: 'nom', text: 'Материалы, услуги', visible: true},
     {name: 'all', text: 'Все строки', visible: true},

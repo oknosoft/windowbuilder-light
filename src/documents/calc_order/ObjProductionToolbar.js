@@ -14,12 +14,13 @@ import {Toolbar, HtmlTooltip} from '../../aggregate/App/styled';
 import {handlers} from './glasses/data';
 import ClipBoard from '../../aggregate/FrmObj/ClipBoard';
 
-export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBackdrop, setModified, selectedRowsChange}) {
+export default function ObjProductionToolbar({obj, variant, rows, getRow, setRows, setBackdrop, setModified, selectedRowsChange}) {
 
   const navigate = useNavigate();
   const {setSnack} = useBackdropContext();
+  const disabled = variant === 'all';
 
-  const {create, clone, open, del, clear, load} = handlers({obj, rows, setRows, getRow, setBackdrop, setModified, setSnack, selectedRowsChange});
+  const {create, clone, open, builder, del, clear, load} = handlers({obj, rows, setRows, getRow, setBackdrop, setModified, setSnack, selectedRowsChange});
 
   return <ListSubheader>
     <Toolbar disableGutters>
@@ -32,7 +33,7 @@ export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBac
       </HtmlTooltip>
 
       <HtmlTooltip title="Изменить продукцию">
-        <IconButton disabled onClick={open}><EditIcon/></IconButton>
+        <IconButton disabled={disabled} onClick={builder}><EditIcon/></IconButton>
       </HtmlTooltip>
 
       <HtmlTooltip title="Удалить строку {Delete}">
