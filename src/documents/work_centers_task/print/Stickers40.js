@@ -1,7 +1,7 @@
 import React from 'react';
 import {Sticker} from './Sticker';
 
-export function Stickers({print, obj, attr, skipCss, externalWindow}) {
+export function Stickers40({print, obj, attr, skipCss, externalWindow, cssName}) {
   skipCss();
   const [rows, setRows] = React.useState([]);
 
@@ -10,7 +10,7 @@ export function Stickers({print, obj, attr, skipCss, externalWindow}) {
     const link = document.createElement('link');
     link.type = 'text/css';
     link.rel = 'stylesheet';
-    link.href = '/imgs/stickers.css';
+    link.href = `/imgs/${cssName || 'stickers40'}.css`;
     document.getElementsByTagName('head')[0].appendChild(link);
 
     $p.utils.loadQR().then(() => {
@@ -41,11 +41,11 @@ export function Stickers({print, obj, attr, skipCss, externalWindow}) {
 
 
   return rows.length ?
-    rows.map((row, index) => <Sticker key={`r-${index}`} row={row} />) :
+    rows.map((row, index) => <Sticker key={`r-${index}`} row={row} cssName={cssName} />) :
     <div>Загрузка стилей</div>;
 }
 
-Stickers.ref = '7cd91420-8440-11f0-b163-cf4cf985f90e';
-Stickers.destination = 'doc.work_centers_task';
-Stickers.title = 'Этикетки';
-Stickers.jsx = true;
+Stickers40.ref = '7cd91420-8440-11f0-b163-cf4cf985f90e';
+Stickers40.destination = 'doc.work_centers_task';
+Stickers40.title = 'Этикетки 40';
+Stickers40.jsx = true;

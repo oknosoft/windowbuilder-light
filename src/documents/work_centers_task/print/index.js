@@ -1,8 +1,9 @@
 import {registerPrintComponents} from '../../../aggregate/Metadata/registerPrintForms';
 import {GroupedProducts} from './GroupedProducts';
-import {Stickers} from './Stickers';
+import {Stickers40} from './Stickers40';
+import {Stickers60} from './Stickers60';
 import {PlaningDates} from './PlaningDates';
 
 export function registerPrintForms($p) {
-  return registerPrintComponents($p, [GroupedProducts, Stickers, PlaningDates]);
+  return registerPrintComponents($p, [GroupedProducts, Stickers40, Stickers60, PlaningDates]);
 }
