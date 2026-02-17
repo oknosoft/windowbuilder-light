@@ -2,6 +2,8 @@ import React from 'react';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import SegmentIcon from '@mui/icons-material/Segment';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
@@ -106,9 +108,14 @@ export function run1D(obj, setBackdrop, setExt, state) {
   };
 }
 
-export function run2D(obj, setBackdrop) {
-  //obj.reset_sticks('2D');
-  return () => Promise.resolve(obj.fragments2D())
+export function run2D(obj, setBackdrop, selected, mode) {
+  if(mode !== 'all' && !selected?.row) {
+    return dialogs.alert({
+      title: 'Раскрой 2D',
+      text: 'Укажите строку изделия или обрези',
+    });
+  }
+  Promise.resolve(obj.fragments2D(selected.row.nom, mode === 'currentScrap' && selected.row))
     .then((params) => {
       if(!params.products.length || !params.scraps.length) {
         throw new Error('В задании нет изделий или заготовок для раскроя 2D');
@@ -134,6 +141,11 @@ export function run2D(obj, setBackdrop) {
 export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mode}) {
 
   const state = React.useMemo(() => ({statuses: []}), [obj]);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const openMenu = (event) => setAnchorEl(event.currentTarget);
+  const closeMenu = () => setAnchorEl(null);
 
   const report = () => {
     if(ext) {
@@ -173,8 +185,9 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
     <HtmlTooltip title="Оптимизировать раскрой профиля">
       <IconButton onClick={run1D(obj, setBackdrop, setExt, state)}><SegmentIcon/></IconButton>
     </HtmlTooltip>
-    <HtmlTooltip title="Оптимизировать раскрой 2D">
-      <IconButton onClick={run2D(obj, setBackdrop, setExt)}><ViewQuiltIcon/></IconButton>
+    <HtmlTooltip title="Раскрой 2D">
+      {/*<IconButton onClick={run2D(obj, setBackdrop, setExt)}><ViewQuiltIcon/></IconButton>*/}
+      <IconButton onClick={openMenu}><ViewQuiltIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Разместить вручную">
       <IconButton onClick={malual}><SwipeLeftOutlinedIcon/></IconButton>
@@ -187,6 +200,29 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
     <HtmlTooltip title="Статистика раскроя">
       <IconButton onClick={report}><AssessmentOutlinedIcon/></IconButton>
     </HtmlTooltip>
+    <Menu
+      anchorEl={anchorEl}
+      open={open}
+      onClose={closeMenu}
+      slotProps={{
+        list: {
+          'aria-labelledby': 'basic-button',
+        },
+      }}
+    >
+      <MenuItem disabled onClick={() => {
+        closeMenu();
+        run2D(obj, setBackdrop, selected, 'all');
+      }}>Оптимизировать всё</MenuItem>
+      <MenuItem onClick={() => {
+        closeMenu();
+        run2D(obj, setBackdrop, selected, 'currentNom');
+      }}>Текущую номенклатуру</MenuItem>
+      <MenuItem onClick={() => {
+        closeMenu();
+        run2D(obj, setBackdrop, selected, 'currentScrap');
+      }}>Только на текущем листе</MenuItem>
+    </Menu>
   </>;
 }
 
@@ -233,6 +269,7 @@ export function CutsInBtns({obj, setBackdrop, ext, setExt, selected, mode}) {
       obj.fill_cuts();
     }
   };
+
   return <>
     <Divider orientation="vertical" flexItem sx={{m: 1}} />
     <HtmlTooltip title={`Заполнить ${use_biz_cuts ? 'по остаткам' : 'стандартными размерами'}`}>
