@@ -115,19 +115,23 @@ export function run2D(obj, setBackdrop, selected, mode) {
       text: 'Укажите строку изделия или обрези',
     });
   }
-  Promise.resolve(obj.fragments2D(selected.row.nom, mode === 'currentScrap' && selected.row))
-    .then((params) => {
+  setBackdrop(true);
+  let res = Promise.resolve();
+  for(const [nom, params] of obj.fragments2D(mode !== 'all' && selected.row.nom, mode === 'currentScrap' && selected.row)) {
+    res = res.then(() => {
       if(!params.products.length || !params.scraps.length) {
         throw new Error('В задании нет изделий или заготовок для раскроя 2D');
       }
-      setBackdrop(true);
+
       return pouch.fetch('/adm/api/cut', {
         method: 'POST',
         body: JSON.stringify(params),
       });
     })
-    .then((res) => res.json())
-    .then((data) => setSticks(obj, data))
+      .then((res) => res.json())
+      .then((data) => setSticks(obj, data));
+  }
+  return res
     .then(() => setBackdrop(false))
     .catch((err) => {
       setBackdrop(false);
@@ -210,7 +214,7 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
         },
       }}
     >
-      <MenuItem disabled onClick={() => {
+      <MenuItem onClick={() => {
         closeMenu();
         run2D(obj, setBackdrop, selected, 'all');
       }}>Оптимизировать всё</MenuItem>
