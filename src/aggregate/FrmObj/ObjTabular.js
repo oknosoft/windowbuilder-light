@@ -10,15 +10,18 @@ export default function ObjTabular({tabRef, tabular, selection, columns, buttons
     rootStyle = tabularStyle(tabRef, useLoadingContext());
   }
 
-  const find_rows = selection ? () => {
+  const [selSelection, setSelSelection] = React.useState(null);
+
+  const find_rows = (selection || selSelection) ? () => {
     const res = [];
-    tabular.find_rows(selection, (row) => {
+    tabular.find_rows(selSelection ? {...selection, ...selSelection} : selection, (row) => {
       res.push(row);
     });
     return res;
   } : () => Array.from(tabular);
 
-  const [rows, setRows] = React.useState(find_rows());
+  const [rows, setRows] = React.useState(React.useMemo(() => find_rows(), []));
+
   let selectedRows, setSelectedRows, onCellClick, onCellKeyDown;
   if(select) {
     const [sRows, rawSetSelectedRows] = React.useState(new Set(rows.filter(row => row[select] === true).map(v => v.row)));
@@ -49,6 +52,8 @@ export default function ObjTabular({tabRef, tabular, selection, columns, buttons
     return () => tabular._owner._manager.off('rows', update);
   }, [tabular]);
 
+  React.useEffect(() => setRows(find_rows()), [selSelection]);
+
   const {getRow, create, clone, remove, clear} = tabularCreate({tabular, selection, find_rows, setRows, selectedRows, setSelectedRows});
   if(!select) {
     onCellClick = ({row, column, selectCell}) => {
@@ -61,7 +66,7 @@ export default function ObjTabular({tabRef, tabular, selection, columns, buttons
   }
 
   return <div style={rootStyle}>
-    <TabularToolbar clear={clear} create={create} clone={clone} remove={remove} buttons={buttons}/>
+    <TabularToolbar clear={clear} create={create} clone={clone} remove={remove} buttons={buttons} rows={rows} selectedRows={selectedRows} selSelection={selSelection} setSelSelection={setSelSelection}/>
     <DataGrid
       rowKeyGetter={(row) => row.row}
       columns={columns}

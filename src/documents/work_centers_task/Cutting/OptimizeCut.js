@@ -10,6 +10,7 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import SwipeLeftOutlinedIcon from '@mui/icons-material/SwipeLeftOutlined';
 import LayersIcon from '@mui/icons-material/Layers';
+import FormatRemove from '../../../styles/icons/FormatRemove';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
 import Loading from '../../../aggregate/App/Loading';
 import CuttingReport from './Report';
@@ -199,6 +200,10 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
     <HtmlTooltip title="Удалить данные оптимизации раскроя">
       <IconButton onClick={reset_sticks}><PlaylistRemoveIcon/></IconButton>
     </HtmlTooltip>
+    <HtmlTooltip title="Исключить изделия текущего материала из задания">
+      <IconButton onClick={reset_sticks}><FormatRemove/></IconButton>
+    </HtmlTooltip>
+
     {mode === 'cuts' ? null : <Repartition obj={obj} selected={selected} noRow={noRow} />}
     <Box sx={{flex: 1}}/>
     <HtmlTooltip title="Статистика раскроя">

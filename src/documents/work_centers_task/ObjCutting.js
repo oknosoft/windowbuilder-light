@@ -5,8 +5,8 @@ import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {TextFormatter} from 'metadata-ui/DataField/Text';
 import {useLoadingContext} from '../../aggregate/Metadata';
 import {tabularStyle} from '../../aggregate/AppLoad/dataGrid';
-import TabularToolbar from '../../aggregate/Toolbars/TabularToolbar';
-import ClipBoard from '../../aggregate/FrmObj/ClipBoard';
+//import TabularToolbar from '../../aggregate/Toolbars/TabularToolbar';
+//import ClipBoard from '../../aggregate/FrmObj/ClipBoard';
 import OptimizeCut from './Cutting/OptimizeCut';
 
 export const columns = [
@@ -15,12 +15,12 @@ export const columns = [
   {key: "characteristic", width: 200, name: "Характеристика", tooltip: "", renderCell: PresentationFormatter},
   {key: "len", width: 90, name: "Длина", tooltip: "длина в мм", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "width", width: 90, name: "Высота", tooltip: "ширина в мм", renderCell: NumberFormatter, renderEditCell: NumberCell},
-  {key: "x", width: 90, name: "X", tooltip: "", renderCell: NumberFormatter},
-  {key: "y", width: 90, name: "Y", tooltip: "", renderCell: NumberFormatter},
+  {key: "x", width: 90, name: "X", tooltip: "", renderCell: NumberFormatter, renderEditCell: NumberCell},
+  {key: "y", width: 90, name: "Y", tooltip: "", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "rotated", width: 80, name: "Поворот", tooltip: "", renderCell: NumberFormatter},
-  {key: "stick", width: 80, name: "№ загот", tooltip: "№ листа (хлыста, заготовки)", renderCell: NumberFormatter},
-  {key: "pair", width: 80, name: "№ пары", tooltip: "№ парной заготовки", renderCell: NumberFormatter},
-  {key: "part", width: 80, name: "Партия", tooltip: "Партия (такт, группа раскроя)", renderCell: NumberFormatter},
+  {key: "stick", width: 80, name: "№ загот", tooltip: "№ листа (хлыста, заготовки)", renderCell: NumberFormatter, renderEditCell: NumberCell},
+  //{key: "pair", width: 80, name: "№ пары", tooltip: "№ парной заготовки", renderCell: NumberFormatter},
+  //{key: "part", width: 80, name: "Партия", tooltip: "Партия (такт, группа раскроя)", renderCell: NumberFormatter},
   {key: "cell", width: 100, name: "Ячейка", tooltip: "№ ячейки (откуда брать заготовку или куда помещать)", renderCell: TextFormatter}
 ];
 
@@ -65,10 +65,11 @@ export default function ObjCutting({tabRef, obj, setBackdrop}) {
     return [load(obj), selected, selectedRowsChange];
   }, [obj]);
   const [ext, setExt] = React.useState(null);
-  const buttons = <>
-    <ClipBoard execute={execute}/>
-    <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode="cutting"/>
-  </>;
+  // const buttons = <>
+  //   <ClipBoard execute={execute}/>
+  //   <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode="cutting"/>
+  // </>;
+  const buttons = <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode="cutting"/>;
 
   // <ToolbarTabular clear={stub} create={stub} clone={stub} remove={stub} buttons={buttons}/>
   return ext ?

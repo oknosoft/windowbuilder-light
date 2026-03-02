@@ -6,9 +6,12 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {ListSubheader} from './styled';
 import {Toolbar, HtmlTooltip} from '../App/styled';
+import Divider from '@mui/material/Divider';
+import FilterRemove from '../../styles/icons/FilterRemove';
+import FilterAdd from '../../styles/icons/FilterAdd';
 
 
-export default function TabularToolbar({clear, create, clone, remove, buttons=null}) {
+export default function TabularToolbar({clear, create, clone, remove, buttons=null, rows, selectedRows, selSelection, setSelSelection}) {
 
   return <ListSubheader>
     <Toolbar disableGutters>
@@ -24,6 +27,23 @@ export default function TabularToolbar({clear, create, clone, remove, buttons=nu
       </HtmlTooltip>
       <HtmlTooltip title="Очистить (Удалить все строки)">
         <IconButton onClick={clear}><DeleteForeverIcon/></IconButton>
+      </HtmlTooltip>
+      <Divider orientation="vertical" flexItem sx={{m: 1}} />
+      <HtmlTooltip title={`${selSelection ? 'Сбросить' : 'Установить'} фильтр по выделенному`}>
+        <IconButton disabled={!selectedRows.size && !selSelection} onClick={() => {
+          if(selSelection) {
+            setSelSelection(null);
+          }
+          else {
+            const key = Array.from(selectedRows)[0];
+            const row = rows.find(v => v.row === key);
+            if(row) {
+              setSelSelection({nom: row.nom});
+            }
+          }
+        }}>
+          {selSelection ? <FilterRemove /> : <FilterAdd />}
+        </IconButton>
       </HtmlTooltip>
       {buttons}
     </Toolbar>
