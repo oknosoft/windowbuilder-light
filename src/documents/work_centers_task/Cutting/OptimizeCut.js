@@ -185,6 +185,45 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
     Promise.resolve().then(setBackdrop);
   };
 
+  const exclude = () => {
+    if(selected.rows?.size) {
+      const {nom} = (mode === 'cuts' ? obj.cuts : obj.cutting).find({row: Array.from(selected.rows)[0]});
+      const rm = [], keys = [];
+      for(const row of obj.cutting) {
+        if(row.nom === nom) {
+          rm.push(row);
+          if(!row.obj.empty()) {
+            keys.push(row.obj);
+          }
+        }
+      }
+      for(const row of rm) {
+        obj.cutting.del(row);
+      }
+      rm.length = 0;
+      for(const row of obj.set) {
+        if(keys.includes(row.obj)) {
+          rm.push(row);
+        }
+      }
+      for(const row of rm) {
+        obj.set.del(row);
+      }
+      rm.length = 0;
+      for(const row of obj.cuts) {
+        if(row.nom === nom) {
+          rm.push(row);
+        }
+      }
+      for(const row of rm) {
+        obj.cuts.del(row);
+      }
+    }
+    else {
+      noRow();
+    }
+  };
+
   return <>
     <Divider orientation="vertical" flexItem sx={{m: 1}} />
     <HtmlTooltip title="Оптимизировать раскрой профиля">
@@ -201,7 +240,7 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
       <IconButton onClick={reset_sticks}><PlaylistRemoveIcon/></IconButton>
     </HtmlTooltip>
     <HtmlTooltip title="Исключить изделия текущего материала из задания">
-      <IconButton onClick={reset_sticks}><FormatRemove/></IconButton>
+      <IconButton onClick={exclude}><FormatRemove/></IconButton>
     </HtmlTooltip>
 
     {mode === 'cuts' ? null : <Repartition obj={obj} selected={selected} noRow={noRow} />}
