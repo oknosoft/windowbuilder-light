@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 import SegmentIcon from '@mui/icons-material/Segment';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
@@ -21,9 +22,9 @@ const Manual2DCuts = React.lazy(() => import('./Manual2DCuts'));
 
 const {adapters: {pouch}, ui: {dialogs}, enm: {debit_credit_kinds}, utils, job_prm, classes} = $p;
 
-function setSticks(obj, data) {
+function setSticks({obj, data, record}) {
   if(data.error) {
-    throw data;
+    return record(data.message);
   }
   const sticks = new Set();
   for(const row of data.scrapsIn) {
@@ -118,10 +119,23 @@ export function run2D(obj, setBackdrop, selected, mode) {
   }
   setBackdrop(true);
   let res = Promise.resolve();
+  const errors = new Map();
   for(const [nom, params] of obj.fragments2D(mode !== 'all' && selected.row.nom, mode === 'currentScrap' && selected.row)) {
+    const record = (msg) => {
+      if(!errors.has(nom)) {
+        errors.set(nom, []);
+      }
+      errors.get(nom).push(msg);
+    };
     res = res.then(() => {
       if(!params.products.length || !params.scraps.length) {
-        throw new Error('В задании нет изделий или заготовок для раскроя 2D');
+        record('В задании нет изделий или заготовок для раскроя 2D');
+        return {json() {
+            return {
+              scrapsIn: [],
+              scrapsOut: [],
+              products: [],
+            }}};
       }
 
       return pouch.fetch('/adm/api/cut', {
@@ -130,14 +144,26 @@ export function run2D(obj, setBackdrop, selected, mode) {
       });
     })
       .then((res) => res.json())
-      .then((data) => setSticks(obj, data));
+      .then((data) => setSticks({obj, data, record}));
   }
   return res
-    .then(() => setBackdrop(false))
+    .then(() => {
+      setBackdrop(false);
+      if(errors.size) {
+        dialogs.alert({
+          title: 'Ошибки раскроя',
+          text: Array.from(errors)
+            .map(([nom, errors], index) => <div key={index}>
+              <Typography variant="h6">{nom.name}</Typography>
+              {errors.map((err, ierr) => <Typography key={ierr}>{err}</Typography>)}
+            </div>),
+        });
+      }
+    })
     .catch((err) => {
       setBackdrop(false);
       dialogs.alert({
-        title: 'Раскрой 2D',
+        title: 'Ошибки раскроя',
         text: err?.message || err,
       });
     });
