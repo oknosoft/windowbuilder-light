@@ -27,6 +27,7 @@ function setSticks({obj, data, record}) {
     return record(data.message);
   }
   const sticks = new Set();
+  const sticksMap = new Map();
   for(const row of data.scrapsIn) {
     let docRow = obj.cuts.find({stick: row.stick});
     if(!docRow) {
@@ -34,8 +35,11 @@ function setSticks({obj, data, record}) {
     }
     if(sticks.has(docRow)) {
       docRow = obj.cuts.add(docRow);
-      docRow.stick = row.id;
       docRow.quantity = row.quantity;
+      sticksMap.set(row.id, docRow.stick);
+    }
+    else {
+      sticksMap.set(row.id, row.stick);
     }
     sticks.add(docRow);
     docRow.dop = {svg: row.svg};
@@ -48,7 +52,7 @@ function setSticks({obj, data, record}) {
     if(!docRow) {
       throw new Error(`Нет отрезка №${row.id}`);
     }
-    docRow.stick = row.stick;
+    docRow.stick = sticksMap.get(row.stick);
     docRow.rotated = row.rotate;
     docRow.x = row.x;
     docRow.y = row.y;

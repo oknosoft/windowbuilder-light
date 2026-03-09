@@ -9,7 +9,8 @@ export default function calc_order({cat, doc, adapters, DocCalc_order}) {
       }
       const {obj_delivery_state} = this;
       if(obj_delivery_state.is('Отклонен') || obj_delivery_state.is('Отозван')) {
-        this.obj_delivery_state = 'Отправлен';
+        reject(new Error(`Нельзя провести заказ в статусе ${obj_delivery_state.name}`));
+        //this.obj_delivery_state = 'Отправлен';
       }
       resolve(this);
     });
