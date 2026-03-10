@@ -4,6 +4,7 @@ import {Cut2DSheet} from './Cut2DSheet';
 export function Cut2D({print, obj, attr, skipCss, externalWindow}) {
   skipCss();
   const [rows, setRows] = React.useState([]);
+  const projects = React.useMemo(() => [], []);
 
   React.useEffect(() => {
     const {document} = externalWindow;
@@ -13,7 +14,7 @@ export function Cut2D({print, obj, attr, skipCss, externalWindow}) {
     link.href = `/imgs/cut2d.css`;
     document.getElementsByTagName('head')[0].appendChild(link);
 
-    Promise.resolve().then(() => {
+    setTimeout(() => {
       const rows = [];
       const {cuts, cutting} = obj;
       for(const row of cuts) {
@@ -23,13 +24,19 @@ export function Cut2D({print, obj, attr, skipCss, externalWindow}) {
       }
       setRows(rows);
       //setTimeout(print, 100);
+    }, 100);
+
+    externalWindow.addEventListener('beforeunload', (ev) => {
+      for(const project of projects) {
+        project.remove();
+      }
     });
 
   }, []);
 
 
   return rows.length ?
-    rows.map((row, index) => <Cut2DSheet key={`r-${index}`} row={row} />) :
+    rows.map((row, index) => <Cut2DSheet key={`r-${index}`} row={row} projects={projects} />) :
     <div>Загрузка стилей</div>;
 }
 
