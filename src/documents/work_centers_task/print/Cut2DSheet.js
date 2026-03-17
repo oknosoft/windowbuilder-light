@@ -67,7 +67,7 @@ function draw_info({product, bounds, hor, vert, infos}) {
     if(bounds.width > 2000) {
       bounds = bounds.expand(2000 - bounds.width, 0);
     }
-    let content = `${index.toFixed()} ${partner}\n${info.size} ${info.number})`;
+    let content = `${index.toFixed()} ${partner}\n${info.size} ${info.number}`;
     if(other.length) {
       content += `\n${other.join(', ')}`;
     }
