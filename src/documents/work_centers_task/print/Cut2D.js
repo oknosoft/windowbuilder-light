@@ -23,7 +23,7 @@ export function Cut2D({print, obj, attr, skipCss, externalWindow}) {
         }
       }
       setRows(rows);
-      //setTimeout(print, 100);
+      setTimeout(print, 100);
     }, 100);
 
     externalWindow.addEventListener('beforeunload', (ev) => {
@@ -44,3 +44,4 @@ Cut2D.ref = '019cd3d3-7654-70e9-853c-ba9c90a58fbe';
 Cut2D.destination = 'doc.work_centers_task';
 Cut2D.title = 'Раскрой 2D';
 Cut2D.jsx = true;
+Cut2D.allowModified = true;

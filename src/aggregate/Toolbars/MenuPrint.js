@@ -8,7 +8,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 
 function handlePrint(model, {obj, allowModified}) {
-  if(!allowModified && (obj._modified || obj.is_new())) {
+  if(!allowModified && !model._data?._formula?.allowModified && (obj._modified || obj.is_new())) {
     return $p.ui.dialogs.alert({
       title: 'Документ изменён',
       text: 'Перед печатью, запишите документ',

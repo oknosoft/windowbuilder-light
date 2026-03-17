@@ -1,6 +1,7 @@
 import React from 'react';
 import ObjTabular from '../../aggregate/FrmObj/ObjTabular';
 import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
+import {BoolFormatter} from 'metadata-ui/DataField/Boolean';
 import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {TextFormatter} from 'metadata-ui/DataField/Text';
 import {useLoadingContext} from '../../aggregate/Metadata';
@@ -17,7 +18,7 @@ export const columns = [
   {key: "width", width: 90, name: "Высота", tooltip: "ширина в мм", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "x", width: 90, name: "X", tooltip: "", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "y", width: 90, name: "Y", tooltip: "", renderCell: NumberFormatter, renderEditCell: NumberCell},
-  {key: "rotated", width: 80, name: "Поворот", tooltip: "", renderCell: NumberFormatter},
+  {key: "rotated", width: 80, name: "Поворот", tooltip: "", renderCell: BoolFormatter},
   {key: "stick", width: 80, name: "№ загот", tooltip: "№ листа (хлыста, заготовки)", renderCell: NumberFormatter, renderEditCell: NumberCell},
   //{key: "pair", width: 80, name: "№ пары", tooltip: "№ парной заготовки", renderCell: NumberFormatter},
   //{key: "part", width: 80, name: "Партия", tooltip: "Партия (такт, группа раскроя)", renderCell: NumberFormatter},

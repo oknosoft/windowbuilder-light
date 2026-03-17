@@ -53,7 +53,16 @@ function setSticks({obj, data, record}) {
       throw new Error(`Нет отрезка №${row.id}`);
     }
     docRow.stick = sticksMap.get(row.stick);
-    docRow.rotated = row.rotate;
+    if(row.length === row.height) {
+      docRow.rotated = false;
+    }
+    else if(docRow.width === row.height && docRow.len === row.length) {
+      docRow.rotated = true;
+    }
+    else {
+      docRow.rotated = false;
+    }
+
     docRow.x = row.x;
     docRow.y = row.y;
   }

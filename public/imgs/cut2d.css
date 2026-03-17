@@ -42,18 +42,24 @@ html {
 .table {
   display: flex;
   flex-direction: row;
+  height: 100%;
   align-items: stretch;
 }
 
 .canvas {
-  background-color: beige;
-  width: 210mm;
-  height: 190mm;
-  border: 1px black solid;
-  border-collapse: collapse;
+  width: 196mm;
 }
 
 .info {
-  background-color: aqua;
-  width: 70mm;
+  width: 86mm;
+  padding-left: 4mm;
 }
+
+.infos {
+  font-size: x-small;
+}
+
+.colspan {
+  height: 1mm;
+}
+
