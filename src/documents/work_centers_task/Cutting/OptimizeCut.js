@@ -2,21 +2,19 @@ import React from 'react';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import SegmentIcon from '@mui/icons-material/Segment';
-import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
-import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import SwipeLeftOutlinedIcon from '@mui/icons-material/SwipeLeftOutlined';
 import LayersIcon from '@mui/icons-material/Layers';
-import FormatRemove from '../../../styles/icons/FormatRemove';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
 import Loading from '../../../aggregate/App/Loading';
 import CuttingReport from './Report';
 import CuttingProgress1D from './Progress1D';
 import Repartition from '../Repartition';
+import Cut2DMenu from './Cut2DMenu';
+import ExcludeMenu from './ExcludeMenu';
+import ResetSticksMenu from './ResetSticksMenu';
 const Manual2DCutting = React.lazy(() => import('./Manual2DCutting'));
 const Manual2DCuts = React.lazy(() => import('./Manual2DCuts'));
 
@@ -68,9 +66,9 @@ function setSticks({obj, data, record}) {
   }
 }
 
-function noRow() {
+function noRow(title = 'Ручной раскрой 2D') {
   dialogs.alert({
-    title: 'Ручной раскрой 2D',
+    title,
     text: 'Не выбрана текущая строка',
   });
 }
@@ -186,11 +184,6 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
 
   const state = React.useMemo(() => ({statuses: []}), [obj]);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const openMenu = (event) => setAnchorEl(event.currentTarget);
-  const closeMenu = () => setAnchorEl(null);
-
   const report = () => {
     if(ext) {
       setExt(null);
@@ -218,18 +211,26 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
     }
   };
 
-  const reset_sticks = () => {
+  const reset_sticks = (what) => {
+    const docRow = selected.rows && (mode === 'cuts' ? obj.cuts : obj.cutting).find({row: Array.from(selected.rows)[0]});
+    if(!docRow && (what === 'currentNom' || what === 'currentScrap')) {
+      return noRow('Очистка данных раскроя');
+    }
     setBackdrop(true);
-    obj.reset_sticks();
+    obj.reset_sticks('', what === 'currentNom' && docRow.nom, what === 'currentScrap' && docRow.stick);
     Promise.resolve().then(setBackdrop);
   };
 
-  const exclude = () => {
+  const exclude = (what) => {
     if(selected.rows?.size) {
-      const {nom} = (mode === 'cuts' ? obj.cuts : obj.cutting).find({row: Array.from(selected.rows)[0]});
+      const docRow = selected.rows && (mode === 'cuts' ? obj.cuts : obj.cutting).find({row: Array.from(selected.rows)[0]});
+      let {nom, stick} = docRow;
+      if(!stick) {
+        stick = -1;
+      }
       const rm = [], keys = [];
       for(const row of obj.cutting) {
-        if(row.nom === nom) {
+        if(what === 'currentNom' ? row.nom === nom : row.stick === stick) {
           rm.push(row);
           if(!row.obj.empty()) {
             keys.push(row.obj);
@@ -250,7 +251,7 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
       }
       rm.length = 0;
       for(const row of obj.cuts) {
-        if(row.nom === nom) {
+        if(what === 'currentNom' ? row.nom === nom : row.stick === stick) {
           rm.push(row);
         }
       }
@@ -259,7 +260,7 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
       }
     }
     else {
-      noRow();
+      noRow('Исключение из задания');
     }
   };
 
@@ -268,48 +269,18 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
     <HtmlTooltip title="Оптимизировать раскрой профиля">
       <IconButton onClick={run1D(obj, setBackdrop, setExt, state)}><SegmentIcon/></IconButton>
     </HtmlTooltip>
-    <HtmlTooltip title="Раскрой 2D">
-      {/*<IconButton onClick={run2D(obj, setBackdrop, setExt)}><ViewQuiltIcon/></IconButton>*/}
-      <IconButton onClick={openMenu}><ViewQuiltIcon/></IconButton>
-    </HtmlTooltip>
+    {<Cut2DMenu obj={obj} setBackdrop={setBackdrop} selected={selected} run2D={run2D}/>}
     <HtmlTooltip title="Разместить вручную">
       <IconButton onClick={malual}><SwipeLeftOutlinedIcon/></IconButton>
     </HtmlTooltip>
-    <HtmlTooltip title="Удалить данные оптимизации раскроя">
-      <IconButton onClick={reset_sticks}><PlaylistRemoveIcon/></IconButton>
-    </HtmlTooltip>
-    <HtmlTooltip title="Исключить изделия текущего материала из задания">
-      <IconButton onClick={exclude}><FormatRemove/></IconButton>
-    </HtmlTooltip>
+    {<ResetSticksMenu reset_sticks={reset_sticks} />}
+    {<ExcludeMenu exclude={exclude}/>}
 
     {mode === 'cuts' ? null : <Repartition obj={obj} selected={selected} noRow={noRow} />}
     <Box sx={{flex: 1}}/>
     <HtmlTooltip title="Статистика раскроя">
       <IconButton onClick={report}><AssessmentOutlinedIcon/></IconButton>
     </HtmlTooltip>
-    <Menu
-      anchorEl={anchorEl}
-      open={open}
-      onClose={closeMenu}
-      slotProps={{
-        list: {
-          'aria-labelledby': 'basic-button',
-        },
-      }}
-    >
-      <MenuItem onClick={() => {
-        closeMenu();
-        run2D(obj, setBackdrop, selected, 'all');
-      }}>Оптимизировать всё</MenuItem>
-      <MenuItem onClick={() => {
-        closeMenu();
-        run2D(obj, setBackdrop, selected, 'currentNom');
-      }}>Текущую номенклатуру</MenuItem>
-      <MenuItem onClick={() => {
-        closeMenu();
-        run2D(obj, setBackdrop, selected, 'currentScrap');
-      }}>Только на текущем листе</MenuItem>
-    </Menu>
   </>;
 }
 
