@@ -27,7 +27,7 @@ function setSticks({obj, data, record}) {
   const sticks = new Set();
   const sticksMap = new Map();
   for(const row of data.scrapsIn) {
-    let docRow = obj.cuts.find({stick: row.stick});
+    let docRow = obj.cuts.find({stick: row.stick, record_kind: 'Приход'});
     if(!docRow) {
       throw new Error(`Нет заготовки №${row.stick}`);
     }
@@ -41,9 +41,21 @@ function setSticks({obj, data, record}) {
     }
     sticks.add(docRow);
     docRow.dop = {svg: row.svg};
-  }
-  for(const row of data.scrapsOut) {
-
+    // обрезь
+    obj.cuts.clear({stick: docRow.stick, record_kind: 'Расход'});
+    for(const scrap of row.scraps) {
+      const scrapRow = obj.cuts.add({
+        stick: docRow.stick,
+        record_kind: 'Расход',
+        nom: docRow.nom,
+        characteristic: docRow.characteristic,
+        quantity: row.quantity,
+        x: scrap.x,
+        y: scrap.y,
+        len: scrap.length,
+        width: scrap.height,
+      });
+    }
   }
   for(const row of data.products) {
     const docRow = obj.cutting.get(row.id-1);
