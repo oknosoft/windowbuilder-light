@@ -9,21 +9,21 @@ import ListToolbar from '../../aggregate/Toolbars/ListToolbar';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../aggregate/AppLoad/dataGrid';
 
 
-const {adapters: {pouch}, cat: {scheme_settings}, doc: {planning_event}, utils} = $p;
+const {adapters: {pouch}, cat: {scheme_settings}, doc: {inventory_cuts}, utils} = $p;
 const scheme = scheme_settings
-  .find_schemas('doc.planning_event', true)
+  .find_schemas('doc.inventory_cuts', true)
   .find(({name}) => name.endsWith('.main'));
-const {fields} = planning_event.metadata();
-const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: planning_event});
+const {fields} = inventory_cuts.metadata();
+const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: inventory_cuts});
 
-const listName = 'Уточнения планов и диспетчеризация';
+const listName = 'Инвентаризация деловой обрези';
 const title =  {title: listName, appTitle: <>
     <Typography variant="h6" sx={{flex: 1}} noWrap>{listName}</Typography>
     <GoTo items={[
       {name: 'РМД', path: '/rmd'},
       {name: 'Расчёты-заказы', path: '/doc/calc_order'},
       {name: 'Задания на производство', path: '/doc/work_centers_task'},
-      {name: 'Инвентаризация обрези', path: '/doc/inventory_cuts'},
+      {name: 'Уточнения планов', path: '/doc/planning_event'},
       {name: 'Безбумажка', path: '/paperless'},
     ]}/>
   </>};
@@ -42,7 +42,7 @@ function loadMoreRows(newRowsCount, skip, ref, backdrop) {
   const selector = scheme.mango_selector(sprm);
   selector._raw = true;
 
-  return planning_event.find_rows_remote(selector)
+  return inventory_cuts.find_rows_remote(selector)
     .then((res) => {
       backdrop.setBackdrop(false);
       return res;
@@ -88,7 +88,7 @@ export default function PlanningEventList() {
       .catch(setError);
   }, [refresh]);
 
-  const [create, clone, open] = mgrCreate({mgr: planning_event, navigate, selectedRows, rows, backdrop, prms});
+  const [create, clone, open] = mgrCreate({mgr: inventory_cuts, navigate, selectedRows, rows, backdrop, prms});
 
   const onCellClick = cellClick({selectedRows, setSelectedRows});
 

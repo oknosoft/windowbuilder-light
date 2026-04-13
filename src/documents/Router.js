@@ -7,6 +7,8 @@ const WorkCentersTaskList = React.lazy(() => import('./work_centers_task/List'))
 const WorkCentersTaskObj = React.lazy(() => import('./work_centers_task/Obj'));
 const PlanningEventList = React.lazy(() => import('./planning_event/List'));
 const PlanningEventObj = React.lazy(() => import('./planning_event/Obj'));
+const InventoryCutsList = React.lazy(() => import('./inventory_cuts/List'));
+const InventoryCutsObj = React.lazy(() => import('./inventory_cuts/Obj'));
 
 export default function DataRoute() {
   return <React.Suspense fallback={<Loading/>}>
@@ -22,6 +24,10 @@ export default function DataRoute() {
       <Route path="planning_event">
         <Route index element={<PlanningEventList />} />
         <Route path=":ref" element={<PlanningEventObj />} />
+      </Route>
+      <Route path="inventory_cuts">
+        <Route index element={<InventoryCutsList />} />
+        <Route path=":ref" element={<InventoryCutsObj />} />
       </Route>
       <Route path="*" element="not found" />
       </Routes>

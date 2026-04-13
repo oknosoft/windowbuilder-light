@@ -24,6 +24,7 @@ const title =  {title: listName, appTitle: <>
       {name: 'РМД', path: '/rmd'},
       {name: 'Расчёты-заказы', path: '/doc/calc_order'},
       {name: 'Уточнения планов', path: '/doc/planning_event'},
+      {name: 'Инвентаризация обрези', path: '/doc/inventory_cuts'},
       {name: 'Безбумажка', path: '/paperless'},
     ]}/>
   </>};
