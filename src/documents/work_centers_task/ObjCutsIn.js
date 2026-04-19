@@ -10,8 +10,23 @@ import ObjTabular from '../../aggregate/FrmObj/ObjTabular';
 import ObjCuttingSvg from './ObjCuttingSvg';
 import {CutsInBtns} from './Cutting/OptimizeCut';
 
+const record_kind = $p.enm.debit_credit_kinds.debit;
+
+const stub = () => null;
+
+export function StickFormatter({row, column}) {
+  const {stick, _owner} = row;
+  let indicator = 'cell_indicator cell_number';
+  if(row.record_kind === record_kind) {
+    if(_owner._owner.cutting.find({stick})) {
+      indicator += ' cell_checked';
+    }
+  }
+  return <div className={indicator} title={stick}>{stick}</div>;
+}
+
 export const columns = [
-  {key: "stick", width: 80, name: "№ загот", tooltip: "№ листа (хлыста, заготовки)", renderCell: NumberFormatter, renderEditCell: NumberCell},
+  {key: "stick", width: 77, name: "№ загот", tooltip: "№ листа (хлыста, заготовки)", renderCell: StickFormatter},
   //{key: "pair", width: 80, name: "№ пары", tooltip: "№ парной заготовки", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "nom", width: 240, name: "Номенклатура", tooltip: "", renderCell: PresentationFormatter},
   {key: "characteristic", width: 240, name: "Характеристика", tooltip: "", renderCell: PresentationFormatter},
@@ -23,8 +38,6 @@ export const columns = [
   {key: "cell", width: 100, name: "Ячейка", tooltip: "№ ячейки (откуда брать заготовку или куда помещать деловой обрезок)", renderCell: TextFormatter}
 ];
 
-const record_kind = $p.enm.debit_credit_kinds.debit;
-const stub = () => null;
 
 export default function ObjCutsIn({tabRef, obj, setBackdrop}) {
   const lc = useLoadingContext();

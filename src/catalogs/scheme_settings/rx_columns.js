@@ -13,18 +13,18 @@ export default function proto_columns({utils: {moment}, enm, md}) {
     if(raw) {
       return value;
     }
-    let indicator = 'cell_ref_elm';
+    let indicator = 'cell_indicator';
     if(row.deleted || row._deleted) {
-      indicator = is_doc ? 'cell_doc_deleted' : 'cell_ref_elm_deleted';
+      indicator += is_doc ? ' cell_doc_deleted' : ' cell_ref_elm_deleted';
     }
     else if(row._open) {
-      indicator = 'cell_ref_folder_open';
+      indicator += ' cell_ref_folder_open';
     }
     else if(row.is_folder) {
-      indicator = 'cell_ref_folder';
+      indicator += ' cell_ref_folder';
     }
     else if(is_doc) {
-      indicator = row.posted ? 'cell_doc_posted' : 'cell_doc';
+      indicator += row.posted ? ' cell_doc_posted' : ' cell_doc';
     }
     if(is_date) {
       const values = value.split(' ');
