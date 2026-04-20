@@ -25,6 +25,16 @@ function CutsReport({rows}) {
   />;
 }
 
+export function materialSort(a, b) {
+  if(a.nom.name > b.nom.name) {
+    return 1;
+  }
+  if(b.nom.name > a.nom.name) {
+    return -1;
+  }
+  return a.len * a.width - b.len * b.width;
+}
+
 export function CutsBalance(task, {adapters, ui, utils, cat}) {
   const noms = new Set();
   for(const {nom} of task.cutting) {
@@ -47,15 +57,7 @@ export function CutsBalance(task, {adapters, ui, utils, cat}) {
             width: parseFloat(width),
             qty: parseFloat(qty),
           }))
-            .sort((a, b) => {
-              if(a.nom.name > b.nom.name) {
-                return 1;
-              }
-              if(b.nom.name > a.nom.name) {
-                return -1;
-              }
-              return a.len * a.width - b.len * b.width;
-            })
+            .sort(materialSort)
         },
         initFullScreen: true,
         large: true,

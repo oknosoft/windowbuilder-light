@@ -1,5 +1,6 @@
 import React from 'react';
 import {Cut2DSheet} from './Cut2DSheet';
+import {materialSort} from './CutsBalance'
 
 export function Cut2D({print, obj, attr, skipCss, externalWindow}) {
   skipCss();
@@ -16,11 +17,13 @@ export function Cut2D({print, obj, attr, skipCss, externalWindow}) {
     setTimeout(() => {
       const rows = [];
       const {cuts, cutting} = obj;
+      const record_kind = $p.enm.debit_credit_kinds.debit;
       for(const row of cuts) {
-        if(row.width && row.len && cutting.find({stick: row.stick})) {
+        if(row.record_kind === record_kind && row.width && row.len && cutting.find({stick: row.stick})) {
           rows.push(row);
         }
       }
+      rows.sort(materialSort);
       setRows(rows);
       setTimeout(print, 100);
     }, 100);
@@ -30,7 +33,7 @@ export function Cut2D({print, obj, attr, skipCss, externalWindow}) {
 
 
   return rows.length ?
-    rows.map((row, index) => <Cut2DSheet key={`r-${index}`} row={row}/>) :
+    rows.map((row, index) => <Cut2DSheet key={`r-${index}`} obj={obj} row={row}/>) :
     <div>Загрузка стилей</div>;
 }
 

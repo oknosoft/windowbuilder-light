@@ -48,6 +48,7 @@ function draw_info({product, bounds, hor, vert, infos}) {
     other.unshift(calc_order.note);
   }
   const size = Math.max(bounds.width, bounds.height);
+  const min = Math.min(bounds.width, bounds.height);
   const partner = calc_order.client_of_dealer ? `${calc_order.client_of_dealer} ${calc_order.partner.name}` : calc_order.partner.name;
   const info = {
     partner,
@@ -56,7 +57,7 @@ function draw_info({product, bounds, hor, vert, infos}) {
     other,
   };
   const index = infos.push(info);
-  if(size > 800) {
+  if(size > 800 && min > 300) {
     const rot = bounds.width < bounds.height;
     bounds = bounds.expand(-vert.bounds.width * 1.8, -hor.bounds.height * 1.8);
     bounds.centerY -= hor.bounds.height / 2;
@@ -67,7 +68,7 @@ function draw_info({product, bounds, hor, vert, infos}) {
     if(bounds.width > 2000) {
       bounds = bounds.expand(2000 - bounds.width, 0);
     }
-    let content = `${index.toFixed()} ${partner}\n${info.size} ${info.number}`;
+    let content = `(${index.toFixed()}) ${partner}\n${info.size} ${info.number}`;
     if(other.length) {
       content += `\n${other.join(', ')}`;
     }
@@ -84,12 +85,18 @@ function draw_info({product, bounds, hor, vert, infos}) {
     }
   }
   else {
-    new PointText({
+    const text = new PointText({
       point: bounds.center,
-      content: index.toFixed(),
+      content: `(${index.toFixed()})`,
       justification: 'center',
       fontSize: fontSize,
     });
+    if(hor.bounds.intersects(text.bounds) || hor.bounds.contains(text.bounds)) {
+      hor.translate([hor.bounds.width, 0]);
+    }
+    if(vert.bounds.intersects(text.bounds) || vert.bounds.contains(text.bounds)) {
+      vert.translate([0, -vert.bounds.height]);
+    }
   }
 }
 
@@ -215,10 +222,10 @@ function sheetInfo(el, infos) {
   }
 }
 
-export function Cut2DSheet({row}) {
+export function Cut2DSheet({row, obj}) {
   return <div className="sheet">
     <div className="head">
-      {`Лист №${row.stick} - ${row.nom.name} (${row.width}x${row.len})`}
+      {`Задание ${obj.number_doc.slice(-4)} от ${moment(obj.date).format(moment._masks.date)}. Лист №${row.stick} - ${row.nom.name} (${row.width}x${row.len})`}
     </div>
     <div className="table">
       <div className="canvas" ref={wrapper(row)}></div>
