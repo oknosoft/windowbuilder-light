@@ -93,10 +93,17 @@ function draw_info({product, bounds, hor, vert, infos}) {
   }
 }
 
-function wrapper(scrap, projects) {
+function wrapper(scrap) {
   return function draw(el) {
 
-    const project = new paper.Project(el);
+    if(!el) {
+      return;
+    }
+
+    const canvas = document.createElement('CANVAS');
+    canvas.height = 480;
+    canvas.width = 640;
+    const project = new paper.Project(canvas);
 
     const products = scrap._owner._owner.cutting.find_rows({stick: scrap.stick})
 
@@ -162,7 +169,31 @@ function wrapper(scrap, projects) {
     */
 
     zoom_fit(project);
-    projects.push(project);
+    const svg = project.exportSVG({
+      precision: 2,
+      matchShapes: true,
+      onExport: (item, node) => {
+        if (item._class === 'PointText') {
+          node.textContent = null;
+          for (let i = 0; i < item._lines.length; i++) {
+            let tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            tspan.textContent = `\u200b${item._lines[i]}`;
+            let dy = item.leading;
+            if (i === 0) {
+              dy = 0;
+            }
+            tspan.setAttributeNS(null, 'x', node.getAttribute('x'));
+            tspan.setAttributeNS(null, 'dy', dy);
+            node.appendChild(tspan);
+          }
+        }
+        return node;
+      }
+    });
+    project.remove();
+    svg.attributes.removeNamedItem('height');
+    svg.attributes.width.value = '100%';
+    el.appendChild(svg);
     sheetInfo(el, infos);
 
   }
@@ -184,13 +215,13 @@ function sheetInfo(el, infos) {
   }
 }
 
-export function Cut2DSheet({row, projects}) {
+export function Cut2DSheet({row}) {
   return <div className="sheet">
     <div className="head">
       {`Лист №${row.stick} - ${row.nom.name} (${row.width}x${row.len})`}
     </div>
     <div className="table">
-      <canvas className="canvas" ref={wrapper(row, projects)}></canvas>
+      <div className="canvas" ref={wrapper(row)}></div>
       <div className="info">
         <table className="infos"></table>
       </div>

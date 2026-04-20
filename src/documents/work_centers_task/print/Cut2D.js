@@ -4,7 +4,6 @@ import {Cut2DSheet} from './Cut2DSheet';
 export function Cut2D({print, obj, attr, skipCss, externalWindow}) {
   skipCss();
   const [rows, setRows] = React.useState([]);
-  const projects = React.useMemo(() => [], []);
 
   React.useEffect(() => {
     const {document} = externalWindow;
@@ -26,17 +25,12 @@ export function Cut2D({print, obj, attr, skipCss, externalWindow}) {
       setTimeout(print, 100);
     }, 100);
 
-    externalWindow.addEventListener('beforeunload', (ev) => {
-      for(const project of projects) {
-        project.remove();
-      }
-    });
 
   }, []);
 
 
   return rows.length ?
-    rows.map((row, index) => <Cut2DSheet key={`r-${index}`} row={row} projects={projects} />) :
+    rows.map((row, index) => <Cut2DSheet key={`r-${index}`} row={row}/>) :
     <div>Загрузка стилей</div>;
 }
 
