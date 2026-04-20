@@ -9,8 +9,9 @@
   block-size: 600px;
 }
 
+/*
 @layer rdg.TextEditor {
-  .rdg-7-0-0-beta-58-2f8db206 {
+  .rdg-7-0-0-beta-59-2f8db206 {
     appearance: auto;
   }
   select, input {
@@ -20,6 +21,7 @@
     padding-inline: 8px;
   }
 }
+*/
 
 @layer rdg.HeaderRow {
   .rdg-7-0-0-beta-58-0dbd5994 {

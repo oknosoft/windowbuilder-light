@@ -5,7 +5,6 @@ import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {TextFormatter} from 'metadata-ui/DataField/Text';
 import {tabularStyle} from '../../aggregate/AppLoad/dataGrid';
 import {useLoadingContext} from '../../aggregate/Metadata';
-import TabularToolbar from '../../aggregate/Toolbars/TabularToolbar';
 import ObjTabular from '../../aggregate/FrmObj/ObjTabular';
 import ObjCuttingSvg from './ObjCuttingSvg';
 import {CutsInBtns} from './Cutting/OptimizeCut';
