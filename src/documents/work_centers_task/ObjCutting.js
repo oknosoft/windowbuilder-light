@@ -62,6 +62,7 @@ export default function ObjCutting({tabRef, obj, setBackdrop}) {
     const selected = {};
     const selectedRowsChange = (rows) => {
       selected.rows = rows;
+      selected.row = rows.size ? obj.cutting.find({row: Array.from(rows)[0]}) : null;
     };
     return [load(obj), selected, selectedRowsChange];
   }, [obj]);

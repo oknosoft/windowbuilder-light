@@ -114,8 +114,14 @@ function wrapper(scrap) {
 
     const products = scrap._owner._owner.cutting.find_rows({stick: scrap.stick})
 
-    const dx = 0; //options?.edges?.dx || 0;
-    const dy = 0; //options?.edges?.dy || 0;
+    const edges = {
+      bottom: scrap.nom._extra('edgeBottom'),
+      top: scrap.nom._extra('edgeTop'),
+      left: scrap.nom._extra('edgeLeft'),
+      right: scrap.nom._extra('edgeRight')
+    };
+    const dx = edges.left || edges.right || 15; //options?.edges?.dx || 0;
+    const dy = edges.top || edges.bottom || 15; //options?.edges?.dy || 0;
 
     const path = new Path.Rectangle(-0.5, -0.5 - dy, scrap.len + 1 + dx /2, scrap.width + 1 + dy /2);
     path.set(Object.assign({}, pathAttr, {strokeWidth: 2}));

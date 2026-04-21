@@ -160,7 +160,16 @@ export function run2D(obj, setBackdrop, selected, mode) {
               products: [],
             }}};
       }
-
+      if(!params.options) {
+        params.options = {};
+      }
+      if(!params.options.edges) {
+        const edgeBottom = nom._extra('edgeBottom');
+        const edgeTop = nom._extra('edgeTop');
+        const edgeLeft = nom._extra('edgeLeft');
+        const edgeRight = nom._extra('edgeRight');
+        params.options.edges = {dx: edgeLeft || edgeRight || 15, dy: edgeTop || edgeBottom || 15};
+      }
       return pouch.fetch('/adm/api/cut', {
         method: 'POST',
         body: JSON.stringify(params),
