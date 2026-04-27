@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
 import CopyIcon from '@mui/icons-material/PostAdd';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import {useBackdropContext} from '../../aggregate/App';

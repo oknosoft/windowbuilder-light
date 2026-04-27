@@ -20,7 +20,7 @@ export default function ObjTabular({tabRef, tabular, selection, columns, buttons
     return res;
   } : () => Array.from(tabular);
 
-  const [rows, setRows] = React.useState(React.useMemo(() => find_rows(), []));
+  const [rows, setRows] = React.useState([]);
 
   let selectedRows, setSelectedRows, onCellClick, onCellKeyDown;
   if(select) {
@@ -44,9 +44,11 @@ export default function ObjTabular({tabRef, tabular, selection, columns, buttons
   }
 
   React.useEffect(() => {
-    const update = () => {
-      setRows(find_rows());
-      setSelectedRows(new Set());
+    const update = (o, tabulars) => {
+      if(tabular._owner === o && tabular._name in tabulars) {
+        setRows(find_rows());
+        setSelectedRows(new Set());
+      }
     };
     tabular._owner._manager.on('rows', update);
     return () => tabular._owner._manager.off('rows', update);

@@ -7,7 +7,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import {useBackdropContext} from '../App';
 import {HtmlTooltip} from '../App/styled';
 

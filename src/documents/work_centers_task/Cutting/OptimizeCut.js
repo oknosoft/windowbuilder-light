@@ -26,6 +26,7 @@ function setSticks({obj, data, record}) {
   }
   const sticks = new Set();
   const sticksMap = new Map();
+  const refresh = new Set();
   for(const row of data.scrapsIn) {
     let docRow = obj.cuts.find({stick: row.stick, record_kind: 'Приход'});
     if(!docRow) {
@@ -38,6 +39,7 @@ function setSticks({obj, data, record}) {
     }
     else {
       sticksMap.set(row.id, row.stick);
+      refresh.add(docRow);
     }
     sticks.add(docRow);
     docRow.dop = {svg: row.svg};
@@ -75,6 +77,9 @@ function setSticks({obj, data, record}) {
 
     docRow.x = row.x;
     docRow.y = row.y;
+  }
+  for(const row of refresh) {
+    obj._manager.emit('update', row, {indicator: true});
   }
 }
 
@@ -238,8 +243,23 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
       return noRow('Очистка данных раскроя');
     }
     setBackdrop(true);
+    obj._data._loading = mode === 'cuts';
     obj.reset_sticks('', what === 'currentNom' && docRow.nom, what === 'currentScrap' && docRow.stick);
-    Promise.resolve().then(setBackdrop);
+    Promise.resolve()
+      .then(setBackdrop)
+      .then(() => {
+        if(obj._data._loading) {
+          obj._data._loading = false;
+          obj._manager.emit('rows', obj, {cuts: true, cutting: true});
+          requestAnimationFrame(() => {
+            for(const row of obj.cuts) {
+              if(row.record_kind === debit_credit_kinds.debit) {
+                obj._manager.emit('update', row, {indicator: true});
+              }
+            }
+          });
+        }
+      });
   };
 
   const exclude = (what) => {

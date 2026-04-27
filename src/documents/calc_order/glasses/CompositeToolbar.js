@@ -8,7 +8,7 @@ import ExpandIcon from '@mui/icons-material/Expand';
 import ArrowDown from '@mui/icons-material/ArrowDownward';
 import ArrowUp from '@mui/icons-material/ArrowUpward';
 import FlipCameraAndroid from '@mui/icons-material/FlipCameraAndroid';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Divider from '@mui/material/Divider';
 import {Toolbar, HtmlTooltip} from '../../../aggregate/App/styled';

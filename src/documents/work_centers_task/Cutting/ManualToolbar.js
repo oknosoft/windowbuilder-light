@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Rotate90DegreesCcwIcon from '@mui/icons-material/Rotate90DegreesCcw';
 import Rotate90DegreesCwIcon from '@mui/icons-material/Rotate90DegreesCw';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import {ListSubheader} from '../../../aggregate/Toolbars/styled';
 import {Toolbar, HtmlTooltip} from '../../../aggregate/App/styled';
 import Autocomplete from 'metadata-ui/DataField/Autocomplete';

@@ -13,14 +13,32 @@ const record_kind = $p.enm.debit_credit_kinds.debit;
 
 const stub = () => null;
 
-export function StickFormatter({row, column}) {
-  const {stick, _owner} = row;
+function calcIndicator(row) {
+  const {stick, _owner: {_owner}} = row;
   let indicator = 'cell_indicator cell_number';
   if(row.record_kind === record_kind) {
-    if(_owner._owner.cutting.find({stick})) {
+    if(_owner.cutting.find({stick})) {
       indicator += ' cell_checked';
     }
   }
+  return indicator;
+}
+
+export function StickFormatter({row, column}) {
+  const {stick, _owner, _manager} = row;
+
+  const [indicator, setIndicator] = React.useState(React.useMemo(() => calcIndicator(row)), [row]);
+
+  React.useEffect(() => {
+    function update (curr, flds){
+      if(curr === row && 'indicator' in flds) {
+        setIndicator(calcIndicator(row));
+      }
+    }
+    _manager?.on({update});
+    return () => _manager?.off({update});
+  }, [row]);
+
   return <div className={indicator} title={stick}>{stick}</div>;
 }
 
