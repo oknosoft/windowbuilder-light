@@ -4,13 +4,13 @@ import {useLoadingContext} from '../Metadata';
 import TabularToolbar from '../Toolbars/TabularToolbar';
 import {cellKeyDown, tabularCreate, tabularStyle} from '../AppLoad/dataGrid';
 
-export default function ObjTabular({tabRef, tabular, selection, columns, buttons, rootStyle, selectedRowsChange, select, ...other}) {
+export default function ObjTabular({tabRef, tabular, selection, columns, buttons, rootStyle, selectedRowsChange, select, selSel, ...other}) {
 
   if(!rootStyle) {
     rootStyle = tabularStyle(tabRef, useLoadingContext());
   }
 
-  const [selSelection, setSelSelection] = React.useState(null);
+  const [selSelection, setSelSelection] = selSel || React.useState(null);
 
   const find_rows = (selection || selSelection) ? () => {
     const res = [];

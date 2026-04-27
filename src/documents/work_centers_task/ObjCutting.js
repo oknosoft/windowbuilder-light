@@ -55,7 +55,7 @@ const load = (obj) => {
 
 const stub = () => null;
 
-export default function ObjCutting({tabRef, obj, setBackdrop}) {
+export default function ObjCutting({tabRef, obj, setBackdrop, selSel}) {
 
   const rootStyle = tabularStyle(tabRef, useLoadingContext());
   const [execute, selected, selectedRowsChange] = React.useMemo(() => {
@@ -84,5 +84,6 @@ export default function ObjCutting({tabRef, obj, setBackdrop}) {
       columns={columns}
       buttons={buttons}
       selectedRowsChange={selectedRowsChange}
+      selSel={selSel}
     />;
 }

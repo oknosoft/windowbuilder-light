@@ -24,6 +24,7 @@ export default function WorkCentersTaskObj({ref}) {
   const tabRef = React.useRef(null);
   const [modified, setModified] = React.useState(false);
   const [settingOpen, setSettingOpen] = React.useState(false);
+  const selSel = React.useState(null);
   const [setting, setSetting] = React.useState(initSetting);
   const saveSetting = (setting) => {
     wsql.set_user_param(key, setting);
@@ -108,9 +109,9 @@ export default function WorkCentersTaskObj({ref}) {
     <ObjHead obj={obj} setting={setting}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
     {curr.name === 'planning' && <ObjPlan obj={obj} tabRef={tabRef} setBackdrop={setBackdrop}/>}
-    {curr.name === 'cuts_in' && <ObjCutsIn obj={obj} tabRef={tabRef} setBackdrop={setBackdrop}/>}
-    {curr.name === 'cuts_out' && <ObjCutsOut obj={obj} tabRef={tabRef} setBackdrop={setBackdrop}/>}
-    {curr.name === 'cutting' && <ObjCutting obj={obj} tabRef={tabRef} setBackdrop={setBackdrop} />}
+    {curr.name === 'cuts_in' && <ObjCutsIn obj={obj} tabRef={tabRef} setBackdrop={setBackdrop} selSel={selSel}/>}
+    {curr.name === 'cuts_out' && <ObjCutsOut obj={obj} tabRef={tabRef} setBackdrop={setBackdrop} selSel={selSel}/>}
+    {curr.name === 'cutting' && <ObjCutting obj={obj} tabRef={tabRef} setBackdrop={setBackdrop} selSel={selSel}/>}
     {settingOpen && <ObjSetting setSettingOpen={setSettingOpen} />}
   </Root>;
 }

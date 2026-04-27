@@ -56,7 +56,7 @@ export const columns = [
 ];
 
 
-export default function ObjCutsIn({tabRef, obj, setBackdrop}) {
+export default function ObjCutsIn({tabRef, obj, setBackdrop, selSel}) {
   const lc = useLoadingContext();
   const getStyle = () => {
     const style = Object.assign(tabularStyle(tabRef, lc), {position: 'relative'});
@@ -95,6 +95,7 @@ export default function ObjCutsIn({tabRef, obj, setBackdrop}) {
             selectedRowsChange={selectedRowsChange}
             selection={{record_kind}}
             buttons={buttons}
+            selSel={selSel}
           />
         }
       </ResizeHorizon>
