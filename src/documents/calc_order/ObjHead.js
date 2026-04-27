@@ -9,6 +9,7 @@ import ContractField from '../../catalogs/contracts/ContractField';
 
 const {CatAbonents, current_user} = $p;
 const userRestricted = !current_user.role_available('СогласованиеРасчетовЗаказов');
+const list = current_user.partners_uids;
 
 export default function ObjHead({obj, setBackdrop}) {
   const onChange = () => {
@@ -26,7 +27,7 @@ export default function ObjHead({obj, setBackdrop}) {
       <TextField label="Номер" value={obj.number_doc} enterTab/>
       <TextField label="Дата" value={moment(obj.date).format(moment._masks.date)} enterTab/>
       <RefField obj={obj} fld="organization" enterTab onChange={onChange}/>
-      <PartnerField obj={obj} fld="partner" enterTab disabled={userRestricted}/>
+      <PartnerField obj={obj} fld="partner" enterTab disabled={userRestricted} list={list}/>
     </Grid>
     <Grid size={{xs: 12, lg: 4}}>
       <ContractField obj={obj} organization={obj.organization} partner={obj.partner} enterTab onChange={onChange}/>
