@@ -81,6 +81,7 @@ function setSticks({obj, data, record}) {
   for(const row of refresh) {
     obj._manager.emit('update', row, {indicator: true});
   }
+  return utils.sleep(1000);
 }
 
 function noRow(title = 'Ручной раскрой 2D') {
