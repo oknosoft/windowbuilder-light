@@ -71,7 +71,7 @@ export default function ObjCutting({tabRef, obj, setBackdrop, selSel}) {
   //   <ClipBoard execute={execute}/>
   //   <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode="cutting"/>
   // </>;
-  const buttons = <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode="cutting"/>;
+  const buttons = <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode="cutting" divider/>;
 
   // <ToolbarTabular clear={stub} create={stub} clone={stub} remove={stub} buttons={buttons}/>
   return ext ?

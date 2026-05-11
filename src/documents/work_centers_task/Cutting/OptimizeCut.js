@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import SegmentIcon from '@mui/icons-material/Segment';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import SwipeLeftOutlinedIcon from '@mui/icons-material/SwipeLeftOutlined';
-import LayersIcon from '@mui/icons-material/Layers';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
 import Loading from '../../../aggregate/App/Loading';
 import CuttingReport from './Report';
@@ -14,11 +13,12 @@ import CuttingProgress1D from './Progress1D';
 import Repartition from '../Repartition';
 import Cut2DMenu from './Cut2DMenu';
 import ExcludeMenu from './ExcludeMenu';
+import CutsMenu from './CutsMenu';
 import ResetSticksMenu from './ResetSticksMenu';
 const Manual2DCutting = React.lazy(() => import('./Manual2DCutting'));
 const Manual2DCuts = React.lazy(() => import('./Manual2DCuts'));
 
-const {adapters: {pouch}, ui: {dialogs}, enm: {debit_credit_kinds}, utils, job_prm, classes} = $p;
+const {adapters: {pouch}, ui: {dialogs}, enm: {debit_credit_kinds}, utils, classes} = $p;
 
 function setSticks({obj, data, record}) {
   if(data.error) {
@@ -207,7 +207,7 @@ export function run2D(obj, setBackdrop, selected, mode) {
     });
 }
 
-export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mode}) {
+export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mode, divider = null}) {
 
   const state = React.useMemo(() => ({statuses: []}), [obj]);
 
@@ -307,7 +307,7 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
   };
 
   return <>
-    <Divider orientation="vertical" flexItem sx={{m: 1}} />
+    {divider && <Divider orientation="vertical" flexItem sx={{m: 1}} />}
     <HtmlTooltip title="Оптимизировать раскрой профиля">
       <IconButton onClick={run1D(obj, setBackdrop, setExt, state)}><SegmentIcon/></IconButton>
     </HtmlTooltip>
@@ -327,54 +327,11 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
 }
 
 export function CutsInBtns({obj, setBackdrop, ext, setExt, selected, mode}) {
-  const {use_biz_cuts} = job_prm.planning;
-  const fill_cuts = () => {
-    if(use_biz_cuts) {
-      const nom = new Set();
-      for(const row of obj.cutting) {
-        if(row.len && row.width) {
-          nom.add(row.nom);
-        }
-      }
-      if(nom.size) {
-        setBackdrop(true);
-        pouch.fetch('/adm/api/pgsql/cuts', {
-          method: 'POST',
-          body: JSON.stringify({nom: Array.from(nom).map(v => v.ref)}),
-        })
-          .then(res => res.json())
-          .then(({rows}) => {
-            obj.cuts.clear();
-            for(const {nom, len, width, qty} of rows) {
-              obj.cuts.add({
-                record_kind: debit_credit_kinds.debit,
-                nom,
-                len,
-                width,
-                quantity: qty,
-              });
-            }
-          })
-          .catch(() => null)
-          .then(setBackdrop);
-      }
-      else {
-        dialogs.alert({
-          title: 'Раскрой 2D',
-          text: 'Нет изделий к раскрою - нечего заполнять',
-        });
-      }
-    }
-    else {
-      obj.fill_cuts();
-    }
-  };
+
 
   return <>
     <Divider orientation="vertical" flexItem sx={{m: 1}} />
-    <HtmlTooltip title={`Заполнить ${use_biz_cuts ? 'по остаткам' : 'стандартными размерами'}`}>
-      <IconButton onClick={fill_cuts}><LayersIcon/></IconButton>
-    </HtmlTooltip>
+    <CutsMenu obj={obj} setBackdrop={setBackdrop}/>
     <OptimizeCut obj={obj} setBackdrop={setBackdrop} ext={ext} setExt={setExt} selected={selected} mode={mode}/>
   </>;
 }
