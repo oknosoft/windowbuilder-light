@@ -35,9 +35,9 @@ export function materialSort(a, b) {
   return a.len * a.width - b.len * b.width;
 }
 
-export function CutsBalance(task, {adapters, ui, utils, cat}) {
+export function CutsBalance(doc, {adapters, ui, utils, cat}) {
   const noms = new Set();
-  for(const {nom} of task.cutting) {
+  for(const {nom} of doc.cutting || doc.materials) {
     noms.add(nom);
   }
   return adapters.pouch
@@ -67,7 +67,7 @@ export function CutsBalance(task, {adapters, ui, utils, cat}) {
 }
 
 CutsBalance.ref = '019da6c5-d795-76d7-8a31-0bfe17e8bf80';
-CutsBalance.destination = 'doc.work_centers_task';
+CutsBalance.destination = 'doc.work_centers_task,doc.inventory_cuts';
 CutsBalance.title = 'Остатки обрези';
 CutsBalance.jsx = false;
 CutsBalance.allowModified = true;

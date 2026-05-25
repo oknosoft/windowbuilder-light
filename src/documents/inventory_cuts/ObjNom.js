@@ -11,7 +11,7 @@ const columns = [
   {key: "len", width: 100, name: "Длина", tooltip: "длина в мм", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "width", width: 100, name: "Высота", tooltip: "ширина в мм", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "qty", width: 100, name: "Кол-во шт", tooltip: "Количество штук", renderCell: NumberFormatter, renderEditCell: NumberCell},
-  {key: "quantity", width: 100, name: "Колич", tooltip: "Количество в единицах хранения", renderCell: NumberFormatter, renderEditCell: NumberCell},
+  {key: "quantity", width: 100, name: "Колич", tooltip: "Количество в единицах хранения", renderCell: NumberFormatter},
   {key: "cell", width: 100, name: "Ячейка", tooltip: "№ ячейки (откуда брать заготовку или куда помещать деловой обрезок)", renderCell: TextFormatter}
 ];
 
