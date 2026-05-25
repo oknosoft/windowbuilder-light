@@ -15,6 +15,24 @@ const scheme = scheme_settings
   .find(({name}) => name.endsWith('.main'));
 const {fields} = work_centers_task.metadata();
 const columns = scheme.rx_columns({mode: 'ts', fields, _mgr: work_centers_task});
+columns.unshift({
+  key: 'optimized',
+  headerCellClass: 'order-ship',
+  name: '',
+  width: 32,
+  minWidth: 32,
+  renderCell({column, row}) {
+    let {optimized} = row;
+    let posX = 0;
+    if(!optimized) {
+      posX = -40;
+    }
+    else if(optimized < 100) {
+      posX = -20;
+    }
+    return <div className="order-state" style={{backgroundPositionX: posX}}/>
+  }
+});
 const sort = utils.sort('date', true);
 
 const listName = 'Задания на производство (список)';
