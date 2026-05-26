@@ -32,10 +32,10 @@
   "proxy4": "https://brusnika.oknosoft.ru:2210/",
   "proxy5": "https://phototech.oknosoft.ru/",
   "proxy6": "https://phototech.oknosoft.ru:2300/",
-  "proxy7": "http://localhost:3016/",
+  "proxy": "http://localhost:3016/",
   "proxy8": "http://192.168.9.12:3016/",
   "proxy9": "https://steklotorg.oknosoft.ru:2310/",
-  "proxy": "https://steklotorg.oknosoft.ru/",
+  "proxy10": "https://steklotorg.oknosoft.ru/",
   "proxy11": "http://localhost:3031/",
   "proxy12": "http://192.168.9.31:3016/",
   "proxy13": "https://stdev.oknosoft.ru/",
@@ -68,7 +68,7 @@
     "shallowequal": "^1.1.0",
     "url-join": "^5.0",
     "url-parse": "^1.5",
-    "wb-core": "github:oknosoft/windowbuilder-core#0391165105b2b49c360bd4609b644f3d6cc7187d",
+    "wb-core": "github:oknosoft/windowbuilder-core#d7b294c17bcbb9360ad770dc78d7b74da8e29670",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {

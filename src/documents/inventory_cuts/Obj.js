@@ -12,7 +12,7 @@ import {ObjSetting, key, setting as initSetting} from './ObjSetting';
 
 const {doc: {inventory_cuts: mgr}, wsql, utils, current_user, job_prm} = $p;
 
-export default function PlanningEventObj() {
+export default function InventoryCutsObj() {
 
   const [obj, setObj] = React.useState(null);
   const [error, setError] = React.useState(null);
