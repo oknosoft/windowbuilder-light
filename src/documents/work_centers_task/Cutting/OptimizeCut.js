@@ -42,7 +42,12 @@ function setSticks({obj, data, record}) {
       refresh.add(docRow);
     }
     sticks.add(docRow);
-    docRow.dop = {svg: row.svg};
+    docRow.dop = {
+      svg: row.svg,
+      rez: data.rez.find(v => v[0] === row.stick)
+        ?.filter((v) => Array.isArray(v))
+        .map(([dir, x1, y1, x2, y2]) => ({dir, x1, y1, x2, y2})),
+    };
     // обрезь
     obj.cuts.clear({stick: docRow.stick, record_kind: 'Расход'});
     for(const scrap of row.scraps) {
