@@ -61,20 +61,20 @@ function exportRows(nom, rows) {
     x: nom._extra('edgeLeft') || nom._extra('edgeRight') || 0,
     y: nom._extra('edgeBottom') || nom._extra('edgeTop') || 0,
   }
-  let text = exportBorderX(border.x, max.y);
+  let text = exportBorderX(border, max);
   glob.flip = 'y';
   for(const row of rows) {
     text += exportRez(row, border);
   }
-  text += exportBorderY(border.x, border.y, max);
+  text += exportBorderY(border, max);
   return text;
 }
 
-function exportBorderX(x, y) {
-  return x > 0 ? `G04 F250\nG00 Z0 M-70\n${flipY()}G00 X${x} Y0\nG04 F100\nG01 Z1 M70\nG04 F250\nG01 Y${y}\n` : flipY();
+function exportBorderX({x, y}, max) {
+  return x > 0 ? `G04 F250\nG00 Z0 M-70\n${flipY()}G00 X${x} Y${y}\nG04 F100\nG01 Z1 M70\nG04 F250\nG01 Y${max.y + y}\n` : flipY();
 }
 
-function exportBorderY(x, y, max) {
+function exportBorderY({x, y}, max) {
   let text = y > 0 ? `G04 F250\nG00 Z0 M-70\n${
     glob.flip !== 'x' ? flipX() : ''
   }G00 X${max.x} Y${y}\nG04 F100\nG01 Z1 M70\nG04 F250\nG01 X${x}\n` : '';
@@ -102,7 +102,7 @@ function exportRez(row, border) {
   }
   text += `G04 F250\nG00 Z0 M-70\nG04 F200\nG00 X${
     row.x1 + border.x} Y${row.y1 + border.y}\nG04 F100\nG01 Z1 M70\nG04 F250\n`;
-  if(row.x1 = row.x2) {
+  if(row.x1 === row.x2) {
     text += `G01 Y${row.y2 + border.y}\n`;
   }
   else if(row.y1 === row.y2) {

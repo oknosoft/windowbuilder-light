@@ -68,7 +68,7 @@
     "shallowequal": "^1.1.0",
     "url-join": "^5.0",
     "url-parse": "^1.5",
-    "wb-core": "github:oknosoft/windowbuilder-core#72bcf0b77ba80d3989bc2e6e241604acf056a069",
+    "wb-core": "github:oknosoft/windowbuilder-core#fa77a58f5ff858a4aa9849773f09b35f8b0b7484",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {
