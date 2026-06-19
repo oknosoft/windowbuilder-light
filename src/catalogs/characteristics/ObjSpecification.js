@@ -1,8 +1,12 @@
 import React from 'react';
 import {NumberFormatter} from 'metadata-ui/DataField/Number';
 import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
-import {TextFormatter} from 'metadata-ui/DataField/Text';
+//import {TextFormatter} from 'metadata-ui/DataField/Text';
+import Dialog from 'metadata-ui/App/Dialog';
 import ObjTabular from '../../aggregate/FrmObj/ObjTabular';
+import FrmOrigin from './FrmOrigin';
+import BtnOrigin from './BtnOrigin';
+
 
 function StageFormatter({row, column}) {
   const stage = row.stage.toString();
@@ -30,9 +34,40 @@ const columns = [
 ];
 
 export default function ObjSpecification({tabRef, obj}) {
-  return <ObjTabular
-    tabRef={tabRef}
-    tabular={obj.specification}
-    columns={columns}
-  />;
+
+  const [origin, setOrigin] = React.useState(null);
+  const [selectedRow, setRow] = React.useState(null);
+
+  const habdleClose = () => setOrigin(null);
+  const handleOpen = () => {
+    if(selectedRow) {
+      setOrigin(selectedRow.origin);
+    }
+    else {
+      $p.ui.dialogs.alert({title: 'Происхлождение строки', text: 'Не указана текущая строка'});
+    }
+  };
+  const selectedRowsChange = (rows) => {
+    setRow(rows.size ? obj.specification.get(Array.from(rows)[0] - 1) : null);
+  };
+
+  return <>
+    <ObjTabular
+      tabRef={tabRef}
+      tabular={obj.specification}
+      columns={columns}
+      buttons={<BtnOrigin handleOpen={handleOpen}/>}
+      selectedRowsChange={selectedRowsChange}
+    />
+    {origin && <Dialog
+      open
+      noSpace
+      onClose={habdleClose}
+      onOk={habdleClose}
+      maxWidth="lg"
+      title={(typeof origin === 'string' && origin.startsWith('[')) ? 'Стек вызовов' : (origin.presentation || 'Ссылка оборвана')}
+    >
+      <FrmOrigin origin={origin} setOrigin={setOrigin}/>
+    </Dialog>}
+  </>;
 }

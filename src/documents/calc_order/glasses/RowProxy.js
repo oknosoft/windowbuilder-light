@@ -1,5 +1,5 @@
 
-const {cat: {inserts}, enm: {inserts_types}, doc: {calc_order}, dp: {buyers_order}, job_prm, utils}  = $p;
+const {cat: {inserts}, enm: {inserts_types}, doc: {calc_order}, dp: {buyers_order}, job_prm, utils, ui}  = $p;
 const {use_internal} = job_prm.pricing;
 
 // доступные типы вставок
@@ -67,6 +67,16 @@ export class RowProxy {
     }
   }
 
+  breakReadOnly(editor) {
+    if(editor.project.is_read_only) {
+      ui.dialogs.alert({
+        title: 'Редактирование запрещено',
+        text: 'Заказ проведён или отправлен',
+      });
+      return true;
+    }
+  }
+
   equals(row) {
     return this.#row === row;
   }
@@ -76,7 +86,7 @@ export class RowProxy {
   }
   set inset(v) {
     const {glassRow, editor, characteristic} = this;
-    if(editor) {
+    if(editor && !this.breakReadOnly(editor)) {
       const glass = editor.elm(glassRow.elm);
       //characteristic.params.clear();
       glass.set_inset(v, false, true);
@@ -142,7 +152,7 @@ export class RowProxy {
   }
   set len(v) {
     const {editor} = this;
-    if(editor) {
+    if(editor && !this.breakReadOnly(editor)) {
       const {project, eve} = editor;
       const szLine = project?.l_dimensions?.bottom;
       let size = parseFloat(v);
@@ -171,7 +181,7 @@ export class RowProxy {
   }
   set height(v) {
     const {editor} = this;
-    if(editor) {
+    if(editor && !this.breakReadOnly(editor)) {
       const {project, eve} = editor;
       const szLine = project?.l_dimensions?.right;
       let size = parseFloat(v);

@@ -9,7 +9,8 @@ import {GlassesDetail} from '../../../aggregate/Toolbars/styled';
 export default function GlassDetails({row, selected, glob}) {
   const {characteristic, inset, glassRow, editor} = row.row;
   const gprops = [];
-  const rprops = [<TextField key="note" obj={row.row} fld="note" onChange={(v) => characteristic.note = v}/>];
+  const readOnly = editor.project.is_read_only;
+  const rprops = [<TextField key="note" obj={row.row} fld="note" onChange={(v) => characteristic.note = v} readOnly={readOnly}/>];
 
   const [index, setIndex] = React.useState(0);
   React.useEffect(() => {
@@ -63,12 +64,12 @@ export default function GlassDetails({row, selected, glob}) {
   // параметры изделия
   characteristic.params.find_rows({cnstr: 0, region: 0}, (prow) => {
     if(prow.param.predefined_name !== 'auto_align') {
-      gprops.push(<ParamField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} />);
+      gprops.push(<ParamField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} readOnly={readOnly}/>);
     }
   });
   // параметры вставки
   characteristic.params.find_rows({cnstr: -glassRow.elm, region: 0}, (prow) => {
-    gprops.push(<ParamField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} />);
+    gprops.push(<ParamField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} readOnly={readOnly}/>);
   });
   // параметры рёбер
   const rrows = [];
@@ -82,6 +83,7 @@ export default function GlassDetails({row, selected, glob}) {
       obj={prow}
       inset={rrows.find((rrow) => rrow.elm === -prow.cnstr).inset}
       label={`${prow.param.caption || prow.param.name} ${profile.pos.name} ${profile.angle_hor.round(2)}°`}
+      readOnly={readOnly}
     />);
   });
 
