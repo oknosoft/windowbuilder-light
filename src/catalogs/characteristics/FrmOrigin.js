@@ -4,12 +4,18 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-//import DataObj from 'metadata-react/FrmObj/DataObj';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import InsertsObj from '../inserts/Obj';
 
-const FrmObj = () => {
-  return 'FrmObj';
+const FrmObj = ({mgr, obj, handlers}) => {
+  switch (mgr.class_name) {
+    case 'cat.inserts':
+      return <InsertsObj obj={obj} onClose={handlers.habdleClose}/>;
+    default:
+      return 'FrmObj';
+  }
 };
-
 
 function CompositeOrigin(composite, setOrigin) {
 
@@ -22,7 +28,7 @@ function CompositeOrigin(composite, setOrigin) {
       return null;
     }
     const row = origin.specification?.get?.(rNum - 1);
-    return <ListItem button onClick={() => setOrigin(origin)}>
+    return <ListItem button onClick={() => setOrigin({composite, obj: origin, presentation: origin.presentation})}>
       <ListItemAvatar>
         <Avatar>{type === 'isl' ? 'B' : type[0].toUpperCase()}</Avatar>
       </ListItemAvatar>
@@ -33,16 +39,31 @@ function CompositeOrigin(composite, setOrigin) {
   return <List>{composite.map(Detail)}</List>;
 }
 
+function BlankOrigin() {
+  const [refresh, setRefresh] = React.useState(0);
+  const {debug} = $p.job_prm;
+  return <>
+    <Typography variant="h5">Происхождение не заполнено</Typography>
+    <Typography sx={{mb: 2}}>Вероятно, в момент расчёта, был сброшен флаг отладки</Typography>
+    {debug ? <Typography>Пересчитайте изделие</Typography> :
+      <Button onClick={() => {
+        $p.job_prm.debug = true;
+        setRefresh(refresh + 1);
+      }}>Установить 'job_prm.debug = true'</Button>}
+  </>;
+}
+
 export default function FrmOrigin({origin, setOrigin}) {
-  if(typeof origin === 'string' && origin.startsWith('[')) {
-    return CompositeOrigin(JSON.parse(origin), setOrigin);
+  if(typeof origin === 'string') {
+    return origin.startsWith('[') ? CompositeOrigin(JSON.parse(origin), setOrigin) : <BlankOrigin/>;
   }
   else {
+    const {composite, obj} = origin;
     return <FrmObj
-      _mgr={origin._manager}
-      _acl="r"
-      match={{params: {ref: origin.ref}}}
-      handlers={{}}
+      mgr={obj._manager}
+      acl="r"
+      obj={obj}
+      handlers={{habdleClose() {setOrigin(JSON.stringify(composite))}}}
     />
   }
 }

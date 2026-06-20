@@ -50,6 +50,7 @@ export default function ObjSpecification({tabRef, obj}) {
   const selectedRowsChange = (rows) => {
     setRow(rows.size ? obj.specification.get(Array.from(rows)[0] - 1) : null);
   };
+  const hasOrigin = typeof origin === 'string';
 
   return <>
     <ObjTabular
@@ -59,13 +60,13 @@ export default function ObjSpecification({tabRef, obj}) {
       buttons={<BtnOrigin handleOpen={handleOpen}/>}
       selectedRowsChange={selectedRowsChange}
     />
-    {origin && <Dialog
+    {(hasOrigin || origin) && <Dialog
       open
       noSpace
       onClose={habdleClose}
       onOk={habdleClose}
       maxWidth="lg"
-      title={(typeof origin === 'string' && origin.startsWith('[')) ? 'Стек вызовов' : (origin.presentation || 'Ссылка оборвана')}
+      title={(hasOrigin && origin.startsWith('[')) ? 'Стек вызовов' : (origin.presentation || 'Ссылка оборвана')}
     >
       <FrmOrigin origin={origin} setOrigin={setOrigin}/>
     </Dialog>}
