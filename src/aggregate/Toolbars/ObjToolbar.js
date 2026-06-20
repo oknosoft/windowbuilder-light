@@ -80,9 +80,9 @@ export default function ObjToolbar({obj, mgr, btns=null, postBtns=null, setSetti
       <HtmlTooltip title="Настроить форму">
         <IconButton onClick={() => setSettingOpen(true)}><SettingsIcon/></IconButton>
       </HtmlTooltip>
-      <HtmlTooltip title="Закрыть форму">
+      {onClose !== false && <HtmlTooltip title="Закрыть форму">
         <IconButton onClick={close}><CloseIcon/></IconButton>
-      </HtmlTooltip>
+      </HtmlTooltip>}
     </Toolbar>
     {confirmOpen ? <UnmodidiedDialog
       confirmOpen={confirmOpen}
