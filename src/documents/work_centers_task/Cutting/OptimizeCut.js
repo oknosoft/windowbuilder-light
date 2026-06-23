@@ -179,7 +179,12 @@ export function run2D(obj, setBackdrop, selected, mode) {
         const edgeTop = nom._extra('edgeTop');
         const edgeLeft = nom._extra('edgeLeft');
         const edgeRight = nom._extra('edgeRight');
-        params.options.edges = {dx: edgeLeft || edgeRight || 15, dy: edgeTop || edgeBottom || 15};
+        params.options.edges = {
+          dx: edgeLeft || edgeRight || 0,
+          dy: edgeTop || edgeBottom || 0,
+          dx1: edgeRight || 0,
+          dy1: edgeBottom || 0,
+        };
       }
       return pouch.fetch('/adm/api/cut', {
         method: 'POST',
