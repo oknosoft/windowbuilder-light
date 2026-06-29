@@ -13,30 +13,33 @@ export function ExportGCode(obj, $p) {
         noms.get(row.nom).push(row);
       }
     });
+    const num = number_doc.slice(-4);
+    const files = [];
     for(const [nom, rows] of noms) {
-      noms.set(nom, {
-        name: `${number_doc}-${nom.article || nom.name}`,
-        text: exportNom(nom, rows, number_doc),
-      });
+      for(const row of rows) {
+        files.push({
+          name: `${num}-${(nom.article || nom.name).replace(/\s/g, '-')}-${row.stick.pad(2)}`,
+          text: exportNom(row, num),
+        });
+      }
+      //break;
     }
-    return Array.from(noms.values());
+    return files;
   })
-    .then(noms => {
-      for(const {name, text} of noms) {
+    .then(files => {
+      for(const {name, text} of files) {
         exportFile(name, text);
       }
     });
 }
 
-const glob = {flip: 'y'};
+const glob = {flip: 'y', p1: {}, p2: {}};
 
-function exportNom(nom, rows, number_doc) {
-  let text = '';
-  for(const row of rows) {
-    text += `;  Лист ${row.stick.pad(2)}, Задание ${number_doc}, ${nom.name}, ${row.len.round()}x${row.width.round()}\n`;
-    text += `G90\nM100\nT2 M6\nM-70\nG00 A90\n`;
-    text += exportRows(nom, row.dop.rez);
-  }
+function exportNom(row, number_doc) {
+  const {nom, stick, len, width, dop} = row;
+  let text = `;  Лист ${stick.pad(2)}, Задание ${number_doc}, ${nom.name}, ${len.round()}x${width.round()}\n`;
+  text += `G90\nM100\nT2 M6\nM-70\nG00 A90\n`;
+  text += exportRows(nom, dop.rez);
 
   return text;
 }
@@ -63,6 +66,12 @@ function exportRows(nom, rows) {
     x1: nom._extra('edgeRight') || 0,
     y1: nom._extra('edgeTop') || 0,
   }
+  if(border.x > 10) {
+    border.x -= 2;
+  }
+  if(border.y > 10) {
+    border.y -= 2;
+  }
   glob.flip = 'y';
   let text = exportBorderX(border, max);
   for(const row of rows) {
@@ -72,15 +81,13 @@ function exportRows(nom, rows) {
   return text;
 }
 
-function exportBorderX({x, y}, max) {
-  return x > 0 ? `${flipY()}G00 X${x} Y1\nM70\nG01 Y${max.y + y/2}\n` : flipY();
+function exportBorderX({x, y, x1, y1}, max) {
+  return x > 0 ? `${flipY()}G00 X${x} Y1\nM70\nG01 Y${max.y}\n` : flipY();
 }
 
 function exportBorderY({x, y}, max) {
-  let text = y > 0 ? `M-70\n${
-    glob.flip !== 'x' ? flipX() : ''
-  }G00 X${max.x} Y${y}\nM70\nG01 X${x}\n` : '';
-  text += `M-70\nG00 X0 Y0\nM94\n`;
+  let text = y > 0 ? `M-70\n${flipX()}G00 X${max.x} Y${y}\nM70\nG01 X${x}\n` : '';
+  text += `M-70\nG00 X0 Y0\nM94\nM30`;
   return text;
 }
 
@@ -102,22 +109,56 @@ function flipX() {
 
 function exportRez(row, border) {
   let text = '';
-  if(row.x1 === row.x2 && glob.flip !== 'y') {
-    text += flipY();
-  }
-  else if(row.y1 === row.y2 && glob.flip !== 'x') {
-    text += flipX();
-  }
-  text += `M-70\nG00 X${row.x1 + border.x} Y${row.y1 + border.y}\nM70\n`;
+  let p1, p2;
   if(row.x1 === row.x2) {
-    text += `G01 Y${row.y2 + border.y}\n`;
+    // вертикальные резы
+    text += flipY();
+    // сверху вниз
+    if(row.y1 > row.y2) {
+      p1 = {x: row.x1 + border.x, y: row.y1 + border.y - 1};
+      p2 = {x: row.x2 + border.x, y: row.y2 + border.y + 1};
+    }
+    // снизу вверх
+    else {
+      p1 = {x: row.x1 + border.x, y: row.y1 + border.y + 1};
+      p2 = {x: row.x2 + border.x, y: row.y2 + border.y - 1};
+    }
   }
   else if(row.y1 === row.y2) {
-    text += `G01 X${row.x2 + border.x}\n`;
+    // горизонтальные резы
+    text += flipX();
+    // справа налево
+    if(row.x1 > row.x2) {
+      p1 = {x: row.x1 + border.x - 1, y: row.y1 + border.y};
+      p2 = {x: row.x2 + border.x + 1, y: row.y2 + border.y};
+    }
+    // слева направо
+    else {
+      p1 = {x: row.x1 + border.x + 1, y: row.y1 + border.y};
+      p2 = {x: row.x2 + border.x - 1, y: row.y2 + border.y};
+    }
+  }
+
+  if(p1.x !== glob.p2.x && p1.y !== glob.p2.y) {
+    text += `M-70\nG00 X${p1.x} Y${p1.y}\n`;
+  }
+  else if(p1.x !== glob.p2.x) {
+    text += `M-70\nG00 X${p1.x}\n`;
+  }
+  else if(p1.y !== glob.p2.y) {
+    text += `M-70\nG00 Y${p1.y}\n`;
+  }
+
+  if(row.x1 === row.x2 && p2.y !== p1.y) {
+    text += `M70\nG01 Y${p2.y}\n`;
+  }
+  else if(row.y1 === row.y2 && p2.x !== p1.x) {
+    text += `M70\nG01 X${p2.x}\n`;
   }
   else {
-    text += `G01 X${row.x2 + border.x} Y${row.y2 + border.y}\n`;
+    text += `M70\G01 X${row.x2 + border.x} Y${row.y2 + border.y}\n`;
   }
+  Object.assign(glob, {p1, p2});
   return text;
 }
 
