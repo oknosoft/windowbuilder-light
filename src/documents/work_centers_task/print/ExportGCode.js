@@ -39,27 +39,27 @@ function exportNom(row, number_doc) {
   const {nom, stick, len, width, dop} = row;
   let text = `;  Лист ${stick.pad(2)}, Задание ${number_doc}, ${nom.name}, ${len.round()}x${width.round()}\n`;
   text += `G90\nM100\nT2 M6\nM-70\nG00 A90\n`;
-  text += exportRows(nom, dop.rez);
+  text += exportRows(nom, dop.rez, len, width);
 
   return text;
 }
 
-function exportRows(nom, rows) {
-  const max = {x: 0, y: 0};
-  for(const {x1, y1, x2, y2} of rows) {
-    if(x1 > max.x) {
-      max.x = x1;
-    }
-    if(x2 > max.x) {
-      max.x = x2;
-    }
-    if(y1 > max.y) {
-      max.y = y1;
-    }
-    if(y2 > max.y) {
-      max.y = y2;
-    }
-  }
+function exportRows(nom, rows, len, width) {
+  const max = {x: width, y: len};
+  // for(const {x1, y1, x2, y2} of rows) {
+  //   if(x1 > max.x) {
+  //     max.x = x1;
+  //   }
+  //   if(x2 > max.x) {
+  //     max.x = x2;
+  //   }
+  //   if(y1 > max.y) {
+  //     max.y = y1;
+  //   }
+  //   if(y2 > max.y) {
+  //     max.y = y2;
+  //   }
+  // }
   const border = {
     x: nom._extra('edgeLeft') || nom._extra('edgeRight') || 0,
     y: nom._extra('edgeBottom') || nom._extra('edgeTop') || 0,
@@ -82,11 +82,11 @@ function exportRows(nom, rows) {
 }
 
 function exportBorderX({x, y, x1, y1}, max) {
-  return x > 0 ? `${flipY()}G00 X${x} Y1\nM70\nG01 Y${max.y}\n` : flipY();
+  return x > 0 ? `${flipY()}G00 X${x} Y1\nM70\nG01 Y${max.y - 1}\n` : flipY();
 }
 
 function exportBorderY({x, y}, max) {
-  let text = y > 0 ? `M-70\n${flipX()}G00 X${max.x} Y${y}\nM70\nG01 X${x}\n` : '';
+  let text = y > 0 ? `M-70\n${flipX()}G00 X${max.x - 1} Y${y}\nM70\nG01 X1\n` : '';
   text += `M-70\nG00 X0 Y0\nM94\nM30`;
   return text;
 }
@@ -94,7 +94,7 @@ function exportBorderY({x, y}, max) {
 function flipY() {
   if(glob.flip !== 'y') {
     glob.flip = 'y';
-    return 'G00 A90\n';
+    return 'M-70\nG00 A90\n';
   }
   return '';
 }
@@ -102,7 +102,7 @@ function flipY() {
 function flipX() {
   if(glob.flip !== 'x') {
     glob.flip = 'x';
-    return 'G00 A0\n';
+    return 'M-70\nG00 A0\n';
   }
   return '';
 }
