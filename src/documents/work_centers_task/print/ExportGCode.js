@@ -26,9 +26,12 @@ export function ExportGCode(obj, $p) {
     }
     return files;
   })
-    .then(files => {
+    .then(async files => {
       for(const {name, text} of files) {
-        exportFile(name, text);
+        const link = exportFile(name, text);
+        await utils.sleep(100);
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
       }
     });
 }
@@ -182,8 +185,7 @@ function exportFile(name, text) {
   link.download = fileName;
   document.body.appendChild(link);
   link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(link.href);
+  return link;
 }
 
 const cp1251 = `ЂЃ‚ѓ„…†‡€‰Љ‹ЊЌЋЏђ‘’“”•–—�™љ›њќћџ ЎўЈ¤Ґ¦§Ё©Є«¬*®Ї°±Ііґµ¶·ё№є»јЅѕїАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя`;
