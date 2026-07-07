@@ -3,22 +3,22 @@ import Canvas from './Canvas';
 import ManualToolbar from './ManualToolbar';
 
 export default function Manual2DCuts({obj, row, setExt}) {
-  const {nom, cuts, products} = React.useMemo(() => {
-    const {nom, len, width, stick} = row;
-    const currentProducts = [];
-    obj.cutting.find_rows({stick}, (prow) => {
-      currentProducts.push(prow);
-    });
-    const cuts = new Map([[row, currentProducts]]);
-    const products = [];
-    for(const prow of obj.cutting) {
-      if(prow.nom === nom && (prow.len <= len && prow.width <= width || prow.len <= width && prow.width <= len)) {
-        products.push(prow);
-      }
+  const {nom, len, width, stick} = row;
+  const currentProducts = [];
+  obj.cutting.find_rows({stick}, (prow) => {
+    currentProducts.push(prow);
+  });
+  const cuts = new Map([[row, currentProducts]]);
+  const products = [];
+  for(const prow of obj.cutting) {
+    if(prow.nom === nom && (!prow.stick || prow.stick === stick) && (prow.len <= len && prow.width <= width || prow.len <= width && prow.width <= len)) {
+      products.push(prow);
     }
-    return {nom, cuts, products};
-  }, [row]);
-  const [currentProduct, setProduct] = React.useState(null);
+  }
+  let [currentProduct, setProduct] = React.useState(null);
+  if(!currentProduct && currentProducts.length === 1) {
+    currentProduct = currentProducts[0];
+  }
   const [currentCut, setCut] = React.useState(row);
   const [refresh, rawSetRefresh] = React.useState(0);
   const setRefresh = () => rawSetRefresh(refresh + 1);

@@ -8,19 +8,25 @@ class Sheet extends paper.Group {
 
   setup({cuts, currentProduct, currentCut}) {
     this.removeChildren();
+    this.currentCut = currentCut;
+    this.currentProduct = currentProduct;
     if(currentCut) {
-      this.drawSizes(currentCut);
-    }
-    if(currentProduct) {
-      this.drawCurrent(currentProduct, currentCut);
+      this.drawSizes();
+      const products = cuts.get(currentCut);
+      if(products) {
+        for(const product of products) {
+          new Product({product, parent: this});
+        }
+      }
     }
     this.project._scope.zoomFit();
   }
 
   drawSizes(cut) {
+    const {len, width} = this.currentCut;
     new paper.Path.Rectangle({
       from: [0, 0],
-      to: [cut.len, cut.width],
+      to: [len, width],
       parent: this,
       name: 'frame',
       strokeColor: 'black',
@@ -37,7 +43,7 @@ class Sheet extends paper.Group {
     const down = new paper.PointText({
       point: bounds.bottomCenter.add([0, fontSize * 1.5]),
       parent: this,
-      content: cut.len,
+      content: len,
       fillColor: 'black',
       fontFamily: 'Courier New',
       fontSize,
@@ -47,7 +53,7 @@ class Sheet extends paper.Group {
     const right = new paper.PointText({
       point: bounds.rightCenter.add([fontSize * 1.2, 0]),
       parent: this,
-      content: cut.width,
+      content: width,
       fillColor: 'black',
       fontFamily: 'Courier New',
       fontSize,
@@ -57,36 +63,63 @@ class Sheet extends paper.Group {
     });
   }
 
-  drawCurrent(product, cut) {
-    const path = new paper.Path.Rectangle({
+}
+
+class Product extends paper.Path {
+
+  constructor({product, parent}) {
+
+    const proto = paper.Path.Rectangle({
       from: [0, 0],
       to: product.rotated ? [product.width, product.len] : [product.len, product.width],
-      parent: this,
-      name: 'product',
+      insert: false,
+    });
+    const attr = {
+      segments: proto.segments,
+      closed: true,
+      parent,
+      name: `product-${product.row}`,
       strokeColor: 'black',
       fillColor: 'white',
       strokeWidth: 1,
-      dashArray: product.stick ? [] : [10, 4],
-    });
-    path.on({
-      mousemove(event) {
-        if(!product.stick) {
-          this.position = event.point;
-        }
-      },
-      click(event) {
-        if(product.stick) {
-          product.stick = 0;
-          this.dashArray = [10, 4];
-        }
-        else {
-          product.stick = cut.stick;
-          this.dashArray = [];
-        }
-      }
-    });
+    };
+    super(attr);
+    this.product = product;
+    this.decorate();
+    const {mousemove, click} = this;
+    this.on({mousemove, click});
   }
 
+  decorate() {
+    this.dashArray = this.isActive ? [10, 4] : [];
+  }
+
+  get sheet() {
+    return this.parent.currentCut;
+  }
+
+  get isActive() {
+    return this.parent.currentProduct === this.product;
+  }
+
+  mousemove(event) {
+    if(this.isActive) {
+      this.position = event.point;
+    }
+  }
+
+  click(event) {
+    const {parent, isActive} = this;
+    const {currentProduct: old} = parent;
+    if(isActive) {
+      parent.currentProduct === null;
+    }
+    else {
+      parent.currentProduct === this;
+      this.decorate();
+    }
+    old?.decorate();
+  }
 }
 
 class ProductTool extends paper.Tool {
