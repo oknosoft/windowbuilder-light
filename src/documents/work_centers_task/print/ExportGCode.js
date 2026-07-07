@@ -48,7 +48,7 @@ function exportNom(row, number_doc) {
 }
 
 function exportRows(nom, rows, len, width) {
-  const max = {x: width, y: len};
+  const max = {x: len, y: width};
   // for(const {x1, y1, x2, y2} of rows) {
   //   if(x1 > max.x) {
   //     max.x = x1;
