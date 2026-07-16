@@ -36,130 +36,164 @@ export function ExportGCode(obj, $p) {
     });
 }
 
-const glob = {flip: 'y', p1: {}, p2: {}};
+const glob = {
+
+  start(nom, len, width) {
+    this.flip = 'y';
+    this.p1 = {};
+    this.p2 = {};
+    this.posUp = true;
+    this.borderYExported = false;
+
+    this.border = {
+      x: nom._extra('edgeLeft') || nom._extra('edgeRight') || 0,
+      y: nom._extra('edgeBottom') || nom._extra('edgeTop') || 0,
+      x1: nom._extra('edgeRight') || 0,
+      y1: nom._extra('edgeTop') || 0,
+    }
+    if(!this.border.x1) {
+      this.border.x1 = 5;
+    }
+    if(!this.border.y1) {
+      this.border.y1 = 5;
+    }
+
+    this.max = {
+      x: len,
+      y: width,
+      mx: len - this.border.x1,
+      my: width - this.border.y1,
+    };
+
+    return `G90\nM100\nT2 M6\nM-70\nG00 A90\n`;
+  },
+
+  fin() {
+    return `${this.up()}G00 X0 Y0\nM94\nM30`;
+  },
+
+  flipY() {
+    if(this.flip !== 'y') {
+      this.flip = 'y';
+      return `${this.up()}G00 A90\n`;
+    }
+    return '';
+  },
+
+  flipX() {
+    if(this.flip !== 'x') {
+      this.flip = 'x';
+      return `${this.up()}G00 A0\n` + this.borderY();
+    }
+    return '';
+  },
+
+  up() {
+    if(!this.posUp) {
+      this.posUp = true;
+      return 'M-70\n';
+    }
+    return '';
+  },
+
+  down() {
+    if(this.posUp) {
+      this.posUp = false;
+      return 'M70\n';
+    }
+    return '';
+  },
+
+  borderY() {
+    const {max, border: {x, y, x1, y1}} = this;
+    if(y > 0 && !this.borderYExported) {
+      this.borderYExported = true;
+      return `${this.up()}G00 X${max.x - x1} Y${y}\n${this.down()}G01 X1\n`;
+    }
+    return '';
+  },
+
+  borderX() {
+    const {max, border: {x, y, x1, y1}} = this;
+    return x > 0 ? `${this.flipY()}G00 X${x} Y1\n${this.down()}G01 Y${max.y - y1}\n` : this.flipY();
+  },
+
+};
 
 function exportNom(row, number_doc) {
   const {nom, stick, len, width, dop} = row;
   let text = `;  Лист ${stick.pad(2)}, Задание ${number_doc}, ${nom.name}, ${len.round()}x${width.round()}\n`;
-  text += `G90\nM100\nT2 M6\nM-70\nG00 A90\n`;
-  text += exportRows(nom, dop.rez, len, width);
-
+  text += glob.start(nom, len, width);
+  text += exportRows(dop.rez);
+  text += glob.fin()
   return text;
 }
 
-function exportRows(nom, rows, len, width) {
-  const max = {x: len, y: width};
-  // for(const {x1, y1, x2, y2} of rows) {
-  //   if(x1 > max.x) {
-  //     max.x = x1;
-  //   }
-  //   if(x2 > max.x) {
-  //     max.x = x2;
-  //   }
-  //   if(y1 > max.y) {
-  //     max.y = y1;
-  //   }
-  //   if(y2 > max.y) {
-  //     max.y = y2;
-  //   }
-  // }
-  const border = {
-    x: nom._extra('edgeLeft') || nom._extra('edgeRight') || 0,
-    y: nom._extra('edgeBottom') || nom._extra('edgeTop') || 0,
-    x1: nom._extra('edgeRight') || 0,
-    y1: nom._extra('edgeTop') || 0,
-  }
-  if(border.x > 10) {
-    border.x -= 2;
-  }
-  if(border.y > 10) {
-    border.y -= 2;
-  }
-  glob.flip = 'y';
-  let text = exportBorderX(border, max);
+function exportRows(rows) {
+  let text = glob.borderX();
   for(const row of rows) {
-    text += exportRez(row, border);
+    text += exportRez(row);
   }
-  text += exportBorderY(border, max);
   return text;
 }
 
-function exportBorderX({x, y, x1, y1}, max) {
-  return x > 0 ? `${flipY()}G00 X${x} Y1\nM70\nG01 Y${max.y - 1}\n` : flipY();
-}
-
-function exportBorderY({x, y}, max) {
-  let text = y > 0 ? `M-70\n${flipX()}G00 X${max.x - 1} Y${y}\nM70\nG01 X1\n` : '';
-  text += `M-70\nG00 X0 Y0\nM94\nM30`;
-  return text;
-}
-
-function flipY() {
-  if(glob.flip !== 'y') {
-    glob.flip = 'y';
-    return 'M-70\nG00 A90\n';
-  }
-  return '';
-}
-
-function flipX() {
-  if(glob.flip !== 'x') {
-    glob.flip = 'x';
-    return 'M-70\nG00 A0\n';
-  }
-  return '';
-}
-
-function exportRez(row, border) {
+function exportRez(row) {
   let text = '';
   let p1, p2;
+  const {border: {x, y}, max: {mx, my}} = glob;
   if(row.x1 === row.x2) {
     // вертикальные резы
-    text += flipY();
+    text += glob.flipY();
     // сверху вниз
     if(row.y1 > row.y2) {
-      p1 = {x: row.x1 + border.x, y: row.y1 + border.y - 1};
-      p2 = {x: row.x2 + border.x, y: row.y2 + border.y + 1};
+      p1 = {x: row.x1 + x, y: row.y1 + y - 1};
+      p2 = {x: row.x2 + x, y: row.y2 + y + 1};
     }
     // снизу вверх
     else {
-      p1 = {x: row.x1 + border.x, y: row.y1 + border.y + 1};
-      p2 = {x: row.x2 + border.x, y: row.y2 + border.y - 1};
+      p1 = {x: row.x1 + x, y: row.y1 + y + 1};
+      p2 = {x: row.x2 + x, y: row.y2 + y - 1};
     }
   }
   else if(row.y1 === row.y2) {
     // горизонтальные резы
-    text += flipX();
+    text += glob.flipX();
     // справа налево
     if(row.x1 > row.x2) {
-      p1 = {x: row.x1 + border.x - 1, y: row.y1 + border.y};
-      p2 = {x: row.x2 + border.x + 1, y: row.y2 + border.y};
+      p1 = {x: row.x1 + x - 1, y: row.y1 + y};
+      p2 = {x: row.x2 + x + 1, y: row.y2 + y};
     }
     // слева направо
     else {
-      p1 = {x: row.x1 + border.x + 1, y: row.y1 + border.y};
-      p2 = {x: row.x2 + border.x - 1, y: row.y2 + border.y};
+      p1 = {x: row.x1 + x + 1, y: row.y1 + y};
+      p2 = {x: row.x2 + x - 1, y: row.y2 + y};
+    }
+    if(p1.x > mx) {
+      p1.x = mx;
+    }
+    if(p2.x > mx) {
+      p2.x = mx;
     }
   }
 
   if(p1.x !== glob.p2.x && p1.y !== glob.p2.y) {
-    text += `M-70\nG00 X${p1.x} Y${p1.y}\n`;
+    text += `${glob.up()}G00 X${p1.x} Y${p1.y}\n`;
   }
   else if(p1.x !== glob.p2.x) {
-    text += `M-70\nG00 X${p1.x}\n`;
+    text += `${glob.up()}G00 X${p1.x}\n`;
   }
   else if(p1.y !== glob.p2.y) {
-    text += `M-70\nG00 Y${p1.y}\n`;
+    text += `${glob.up()}G00 Y${p1.y}\n`;
   }
 
   if(row.x1 === row.x2 && p2.y !== p1.y) {
-    text += `M70\nG01 Y${p2.y}\n`;
+    text += `${glob.down()}G01 Y${p2.y}\n`;
   }
   else if(row.y1 === row.y2 && p2.x !== p1.x) {
-    text += `M70\nG01 X${p2.x}\n`;
+    text += `${glob.down()}G01 X${p2.x}\n`;
   }
   else {
-    text += `M70\G01 X${row.x2 + border.x} Y${row.y2 + border.y}\n`;
+    text += `M70\G01 X${row.x2 + x} Y${row.y2 + y}\n`;
   }
   Object.assign(glob, {p1, p2});
   return text;
