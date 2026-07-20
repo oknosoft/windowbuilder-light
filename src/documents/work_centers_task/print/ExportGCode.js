@@ -115,7 +115,12 @@ const glob = {
 
   borderX() {
     const {max, border: {x, y, x1, y1}} = this;
-    return x > 0 ? `${this.flipY()}G00 X${x} Y1\n${this.down()}G01 Y${max.y - y1}\n` : this.flipY();
+    const text = this.flipY();
+    if(x > 0) {
+      this.p2 = {x, y: max.y - y1};
+      return text + `G00 X${x} Y1\n${this.down()}G01 Y${this.p2.y}\n`;
+    }
+    return text;
   },
 
 };
@@ -147,11 +152,11 @@ function exportRez(row) {
     // сверху вниз
     if(row.y1 > row.y2) {
       p1 = {x: row.x1 + x, y: row.y1 + y - 1};
-      p2 = {x: row.x2 + x, y: row.y2 + y + 1};
+      p2 = {x: row.x2 + x, y: row.y2 ? row.y2 + y + 1 : 1};
     }
     // снизу вверх
     else {
-      p1 = {x: row.x1 + x, y: row.y1 + y + 1};
+      p1 = {x: row.x1 + x, y: row.y1 ? row.y1 + y + 1 : 1};
       p2 = {x: row.x2 + x, y: row.y2 + y - 1};
     }
   }
@@ -168,12 +173,18 @@ function exportRez(row) {
       p1 = {x: row.x1 + x + 1, y: row.y1 + y};
       p2 = {x: row.x2 + x - 1, y: row.y2 + y};
     }
-    if(p1.x > mx) {
-      p1.x = mx;
-    }
-    if(p2.x > mx) {
-      p2.x = mx;
-    }
+  }
+  if(p1.x > mx) {
+    p1.x = mx;
+  }
+  if(p2.x > mx) {
+    p2.x = mx;
+  }
+  if(p1.y > my) {
+    p1.y = my;
+  }
+  if(p2.y > my) {
+    p2.y = my;
   }
 
   if(p1.x !== glob.p2.x && p1.y !== glob.p2.y) {
