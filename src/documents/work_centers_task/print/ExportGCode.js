@@ -108,6 +108,7 @@ const glob = {
     const {max, border: {x, y, x1, y1}} = this;
     if(y > 0 && !this.borderYExported) {
       this.borderYExported = true;
+      this.p2 = {x: 1, y};
       return `${this.up()}G00 X${max.x - x1} Y${y}\n${this.down()}G01 X1\n`;
     }
     return '';
@@ -152,11 +153,11 @@ function exportRez(row) {
     // сверху вниз
     if(row.y1 > row.y2) {
       p1 = {x: row.x1 + x, y: row.y1 + y - 1};
-      p2 = {x: row.x2 + x, y: row.y2 ? row.y2 + y + 1 : 1};
+      p2 = {x: row.x2 + x, y: row.y2 + y + 1};
     }
     // снизу вверх
     else {
-      p1 = {x: row.x1 + x, y: row.y1 ? row.y1 + y + 1 : 1};
+      p1 = {x: row.x1 + x, y: row.y1 + y + 1};
       p2 = {x: row.x2 + x, y: row.y2 + y - 1};
     }
   }
