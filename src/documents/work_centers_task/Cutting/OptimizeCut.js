@@ -44,7 +44,7 @@ function setSticks({obj, data, record}) {
     sticks.add(docRow);
     docRow.dop = {
       svg: row.svg,
-      rez: data.rez.find(v => v[0] === row.stick)
+      rez: data.rez.find(v => v[0] === docRow.stick)
         ?.filter((v) => Array.isArray(v))
         .map(([dir, x1, y1, x2, y2]) => ({dir, x1, y1, x2, y2})),
     };
