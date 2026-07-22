@@ -1,7 +1,7 @@
 import React from 'react';
 
 export function ExportGCode(obj, $p) {
-  const {wsql, utils, enm: {debit_credit_kinds}, cat: {nom: nomMgr}} = $p;
+  const {wsql, utils, enm: {debit_credit_kinds}, cat: {nom: nomMgr}, ui} = $p;
 
   return Promise.resolve(obj).then(({cuts, number_doc}) => {
     const noms = new Map();
@@ -24,16 +24,33 @@ export function ExportGCode(obj, $p) {
       }
       //break;
     }
-    return files;
+    return [files, num];
   })
-    .then(async files => {
+    .then(async ([files, num]) => {
+      const JSZip = window.JSZip || await import('jszip').then(module => module.default);
+      const zip = new JSZip();
       for(const {name, text} of files) {
-        const link = exportFile(name, text);
-        await utils.sleep(100);
-        document.body.removeChild(link);
-        URL.revokeObjectURL(link.href);
+        exportFile(zip, name, text);
       }
-    });
+
+      // получаем двличные данные архива
+      const blob = await zip.generateAsync({type:"blob"})
+      const url = URL.createObjectURL(blob);
+
+      // Автоматически скачиваем файл
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${num}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      await utils.sleep(1000);
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+    })
+    .catch(err => ui.dialogs.alert({
+      title: 'Ошибка при формировании файла',
+      text: err.message,
+    }));
 }
 
 const glob = {
@@ -211,27 +228,13 @@ function exportRez(row) {
   return text;
 }
 
-function exportFile(name, text) {
-
-  // Кодируем строку в UTF-8 байты
-  //const utf8Bytes = new TextEncoder().encode(text);
+function exportFile(zip, name, text) {
 
   // Декодируем байты в кодировке Windows-1251
   const bytes = encodeCP1251(text);
-  //const win1251String = new TextDecoder('windows-1251').decode(bytes);
 
-  // Создаем файл и генерируем ссылку на него
-  const fileName = `${name}.txt`;
-  const blob = new File([bytes], fileName, { type: "text/plain; charset=windows-1251"});
-  const url = URL.createObjectURL(blob);
-
-  // Автоматически скачиваем файл
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  return link;
+  // Добавляем в архив
+  zip.file(`${name}.txt`, bytes, {binary: true});
 }
 
 const cp1251 = `ЂЃ‚ѓ„…†‡€‰Љ‹ЊЌЋЏђ‘’“”•–—�™љ›њќћџ ЎўЈ¤Ґ¦§Ё©Є«¬*®Ї°±Ііґµ¶·ё№є»јЅѕїАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя`;
