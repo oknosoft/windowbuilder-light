@@ -83,6 +83,7 @@ function unused({obj, setBackdrop}) {
       });
   }
 }
+
 export default function CutsMenu({obj, setBackdrop}) {
 
   return ToolbarMenu({

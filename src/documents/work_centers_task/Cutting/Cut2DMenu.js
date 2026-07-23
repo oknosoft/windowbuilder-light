@@ -2,6 +2,7 @@ import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
 
@@ -25,10 +26,12 @@ export function ToolbarMenu({title, icon, items}) {
         },
       }}
     >
-      {open && items.map(({text, action}, index) => <MenuItem key={`mi-${index}`} onClick={() => {
-        closeMenu();
-        action();
-      }}>{text}</MenuItem>)}
+      {open && items.map(({text, action, divider}, index) => divider ?
+        <Divider variant="middle" component="li" /> :
+        <MenuItem key={`mi-${index}`} onClick={() => {
+          closeMenu();
+          action();
+        }}>{text}</MenuItem>)}
     </Menu>
   </>;
 }

@@ -255,7 +255,13 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
     }
     setBackdrop(true);
     obj._data._loading = mode === 'cuts';
-    obj.reset_sticks('', what === 'currentNom' && docRow.nom, what === 'currentScrap' && docRow.stick);
+    if(what === 'refill') {
+      obj.cuts.clear();
+      obj.fill_by_keys({c2d: true});
+    }
+    else {
+      obj.reset_sticks('', what === 'currentNom' && docRow.nom, what === 'currentScrap' && docRow.stick);
+    }
     Promise.resolve()
       .then(setBackdrop)
       .then(() => {
@@ -337,8 +343,6 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
 }
 
 export function CutsInBtns({obj, setBackdrop, ext, setExt, selected, mode}) {
-
-
   return <>
     <Divider orientation="vertical" flexItem sx={{m: 1}} />
     <CutsMenu obj={obj} setBackdrop={setBackdrop}/>
