@@ -59,8 +59,8 @@ function setSticks({obj, data, record}) {
         quantity: row.quantity,
         x: scrap.x,
         y: scrap.y,
-        len: scrap.length,
-        width: scrap.height,
+        len: scrap.length - (docRow.nom._extra('edgeRight') || 0),
+        width: scrap.height - (docRow.nom._extra('edgeBottom') || 0),
       });
     }
   }

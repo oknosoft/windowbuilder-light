@@ -15,7 +15,9 @@ const cutAttr = {
   strokeWidth: 1,
   strokeScaling: false,
   dashArray: [6, 8],
-}
+  fillColor: new paper.Color('blue'),
+};
+cutAttr.fillColor.alpha = 0.08;
 
 function zoom_fit({activeLayer, view}) {
 
@@ -112,7 +114,8 @@ function wrapper(scrap) {
     canvas.width = 640;
     const project = new paper.Project(canvas);
 
-    const products = scrap._owner._owner.cutting.find_rows({stick: scrap.stick})
+    const products = scrap._owner._owner.cutting.find_rows({stick: scrap.stick});
+    const scraps = scrap._owner.find_rows({stick: scrap.stick, record_kind: 'Расход'});
 
     const edges = {
       bottom: scrap.nom._extra('edgeBottom'),
@@ -140,46 +143,27 @@ function wrapper(scrap) {
         -width);
       path.set(pathAttr);
       const {bounds} = path;
-      const hor = new PointText({
-        content: len.toFixed(),
-        fontSize,
-      });
+      const hor = new PointText({content: len.toFixed(), fontSize});
       hor.position = bounds.bottomCenter.add([0, -hor.bounds.height/2]);
-      const vert = new PointText({
-        content: width.toFixed(),
-        rotation: -90,
-        fontSize,
-      });
+      const vert = new PointText({content: width.toFixed(), rotation: -90, fontSize});
       vert.position = bounds.leftCenter.add([vert.bounds.width/2 + 8, 0]);
       draw_info({product: product._row, bounds: bounds.clone({insert: false}), hor, vert, infos});
     }
 
-    /*
-    scrap.scraps = scrapsOut.filter(v => v.id === scrap.id);
-    for(const product of scrap.scraps) {
+    for(const product of scraps) {
+      let {x, y, len, width} = product;
       const path = new Path.Rectangle(
-        product.x + dx,
-        scrap.height - product.y - dy,
-        product.length,
-        -product.height
-      );
+        x + dx,
+        scrap.width - y - dy,
+        len,
+        -width);
       path.set(cutAttr);
       const {bounds} = path;
-      let text = new PointText({
-        content: product.length.toFixed(),
-        fontSize,
-        fillColor: 'blue',
-      });
-      text.position = bounds.bottomCenter.add([0, -text.bounds.height/2]);
-      text = new PointText({
-        content: product.height.toFixed(),
-        rotation: -90,
-        fontSize,
-        fillColor: 'blue',
-      });
-      text.position = bounds.leftCenter.add([text.bounds.width/2 + 8, 0]);
+      const hor = new PointText({content: len.toFixed(), fontSize});
+      hor.position = bounds.bottomCenter.add([0, -hor.bounds.height/2]);
+      const vert = new PointText({content: width.toFixed(), rotation: -90, fontSize});
+      vert.position = bounds.leftCenter.add([vert.bounds.width/2 + 8, 0]);
     }
-    */
 
     zoom_fit(project);
     const svg = project.exportSVG({
