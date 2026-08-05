@@ -4,7 +4,7 @@ import {useLoadingContext} from '../Metadata';
 import TabularToolbar from '../Toolbars/TabularToolbar';
 import {cellKeyDown, tabularCreate, tabularStyle} from '../AppLoad/dataGrid';
 
-export default function ObjTabular({tabRef, tabular, selection, columns, buttons, rootStyle, selectedRowsChange, select, selSel, ...other}) {
+export default function ObjTabular({tabRef, tabular, selection, columns, buttons, preActions, rootStyle, selectedRowsChange, select, selSel, ...other}) {
 
   if(!rootStyle) {
     rootStyle = tabularStyle(tabRef, useLoadingContext());
@@ -56,7 +56,8 @@ export default function ObjTabular({tabRef, tabular, selection, columns, buttons
 
   React.useEffect(() => setRows(find_rows()), [selSelection]);
 
-  const {getRow, create, clone, remove, clear} = tabularCreate({tabular, selection, find_rows, setRows, selectedRows, setSelectedRows});
+  const {getRow, create, clone, remove, clear} = tabularCreate({
+    tabular, selection, preActions, find_rows, setRows, selectedRows, setSelectedRows});
   if(!select) {
     onCellClick = ({row, column, selectCell}) => {
       if(!selectedRows.size || Array.from(selectedRows)[0] !== row.row) {

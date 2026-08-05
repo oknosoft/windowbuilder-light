@@ -4,16 +4,51 @@ import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
 import {BoolFormatter} from 'metadata-ui/DataField/Boolean';
 import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {TextFormatter} from 'metadata-ui/DataField/Text';
+import RefCell from 'metadata-ui/DataField/RefCell';
 import {useLoadingContext} from '../../aggregate/Metadata';
 import {tabularStyle} from '../../aggregate/AppLoad/dataGrid';
 //import TabularToolbar from '../../aggregate/Toolbars/TabularToolbar';
 //import ClipBoard from '../../aggregate/FrmObj/ClipBoard';
 import OptimizeCut from './Cutting/OptimizeCut';
 
+function CondEditCell(attr) {
+  return attr.row.obj.empty() ? RefCell(attr) : PresentationFormatter(attr);
+}
+
+async function preActions(what, proto) {
+  switch (what) {
+    case 'create':
+      return true;
+
+    case 'clone':
+      if(proto?.obj?.empty()) {
+        return true
+      }
+      $p.ui.dialogs.alert({
+        text: 'Запрещено копировать строки с заполненным ключом планирования'});
+      return false;
+
+    case 'remove':
+      if(proto?.obj?.empty()) {
+        return true
+      }
+      return $p.ui.dialogs.alert({
+        title: 'Удаление изделия раскроя',
+        text: 'Строка будет удалена из раскроя, но останется в задании\nПродолжить?'})
+        .then(res => !res);
+
+    case 'clear':
+      return $p.ui.dialogs.alert({
+        title: 'Удаление изделий раскроя',
+        text: 'Позиции будут удалены из раскроя, но останутся в задании\nПродолжить?'})
+        .then(res => !res);
+  }
+}
+
 export const columns = [
   {key: "production", name: "Объект", width: 200, renderCell: PresentationFormatter},
-  {key: "nom", width: 200, name: "Номенклатура", tooltip: "", renderCell: PresentationFormatter},
-  {key: "characteristic", width: 200, name: "Характеристика", tooltip: "", renderCell: PresentationFormatter},
+  {key: "nom", width: 200, name: "Номенклатура", tooltip: "", renderCell: PresentationFormatter, renderEditCell: CondEditCell},
+  {key: "characteristic", width: 200, name: "Характеристика", tooltip: "", renderCell: PresentationFormatter, renderEditCell: CondEditCell},
   {key: "len", width: 90, name: "Длина", tooltip: "длина в мм", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "width", width: 90, name: "Высота", tooltip: "ширина в мм", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "x", width: 90, name: "X", tooltip: "", renderCell: NumberFormatter, renderEditCell: NumberCell},
@@ -85,5 +120,6 @@ export default function ObjCutting({tabRef, obj, setBackdrop, selSel}) {
       buttons={buttons}
       selectedRowsChange={selectedRowsChange}
       selSel={selSel}
+      preActions={preActions}
     />;
 }

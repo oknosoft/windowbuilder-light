@@ -112,7 +112,7 @@ export function mgrCreate({mgr, navigate, selectedRows, rows, backdrop, prms}) {
   return [create, clone, open, open1C];
 }
 
-export function tabularCreate({tabular, selection, find_rows, setRows, selectedRows, setSelectedRows}) {
+export function tabularCreate({tabular, selection, preActions, find_rows, setRows, selectedRows, setSelectedRows}) {
 
   const getRow = () => {
     const selectedKey = selectedRows.size && Array.from(selectedRows)[0];
@@ -120,6 +120,8 @@ export function tabularCreate({tabular, selection, find_rows, setRows, selectedR
       return tabular.get(selectedKey-1);
     }
   };
+
+  const pre = (what, proto) => preActions?.(what, proto) || Promise.resolve(true);
 
   const add = (proto) => {
     const selected = new Set();
@@ -133,22 +135,33 @@ export function tabularCreate({tabular, selection, find_rows, setRows, selectedR
     return row;
   };
 
-  const create = () => add();
+  const create = () => pre('create').then((ok) => ok && add());
 
-  const clone = () => add(getRow?.());
+  const clone = () => {
+    const proto = getRow?.();
+    pre('clone', proto).then((ok) => ok && add(proto));
+  };
 
   const clear = () => {
-    tabular.clear();
-    setSelectedRows(new Set());
-    setRows(Array.from(tabular));
+    pre('clear').then((ok) => {
+      if(ok) {
+        tabular.clear();
+        setSelectedRows(new Set());
+        setRows(Array.from(tabular));
+      }
+    });
   };
 
   const remove = () => {
     const row = getRow();
     if(row) {
-      tabular.del(row);
-      setSelectedRows(new Set());
-      setRows(Array.from(tabular));
+      pre('remove', row).then((ok) => {
+        if(ok) {
+          tabular.del(row);
+          setSelectedRows(new Set());
+          setRows(Array.from(tabular));
+        }
+      });
     }
   };
 

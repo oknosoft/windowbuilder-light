@@ -3,6 +3,7 @@ import {Resize, ResizeHorizon} from 'metadata-ui/Resize';
 import {NumberCell, NumberFormatter} from 'metadata-ui/DataField/Number';
 import {PresentationFormatter} from 'metadata-ui/DataField/RefField';
 import {TextFormatter} from 'metadata-ui/DataField/Text';
+import RefCell from 'metadata-ui/DataField/RefCell';
 import {tabularStyle} from '../../aggregate/AppLoad/dataGrid';
 import {useLoadingContext} from '../../aggregate/Metadata';
 import ObjTabular from '../../aggregate/FrmObj/ObjTabular';
@@ -45,8 +46,8 @@ export function StickFormatter({row, column}) {
 export const columns = [
   {key: "stick", width: 77, name: "№ загот", tooltip: "№ листа (хлыста, заготовки)", renderCell: StickFormatter},
   //{key: "pair", width: 80, name: "№ пары", tooltip: "№ парной заготовки", renderCell: NumberFormatter, renderEditCell: NumberCell},
-  {key: "nom", width: 240, name: "Номенклатура", tooltip: "", renderCell: PresentationFormatter},
-  {key: "characteristic", width: 240, name: "Характеристика", tooltip: "", renderCell: PresentationFormatter},
+  {key: "nom", width: 240, name: "Номенклатура", tooltip: "", renderCell: PresentationFormatter, renderEditCell: RefCell},
+  {key: "characteristic", width: 240, name: "Характеристика", tooltip: "", renderCell: PresentationFormatter, renderEditCell: RefCell},
   {key: "len", width: 90, name: "Длина", tooltip: "длина в мм", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "width", width: 90, name: "Высота", tooltip: "ширина в мм", renderCell: NumberFormatter, renderEditCell: NumberCell},
   {key: "x", width: 90, name: "X", tooltip: "", renderCell: NumberFormatter, renderEditCell: NumberCell},
@@ -64,8 +65,12 @@ export default function ObjCutsIn({tabRef, obj, setBackdrop, selSel}) {
     return style;
   };
   const [style, setStyle] = React.useState(getStyle());
-  const resize = () => {
+  const [width2, setWidth2] = React.useState(style.width * 4/12);
+  const resize = (what) => {
     const newStyle = getStyle();
+    if(what?.type === "horizon") {
+      setWidth2(what.resizeChilds[1].width);
+    }
     if(newStyle.width !== style.width || newStyle.height !== style.height) {
       setStyle(newStyle);
     }
@@ -99,8 +104,8 @@ export default function ObjCutsIn({tabRef, obj, setBackdrop, selSel}) {
           />
         }
       </ResizeHorizon>
-      <ResizeHorizon overflow="hidden auto" width={`${(style.width * 4/12).toFixed()}px`} minWidth="200px">
-        <ObjCuttingSvg row={selected.row} height={style.height}/>
+      <ResizeHorizon overflow="hidden auto" width={`${(width2).toFixed()}px`} minWidth="200px">
+        <ObjCuttingSvg row={selected.row} height={style.height} width={width2}/>
       </ResizeHorizon>
     </Resize>
   </div>;

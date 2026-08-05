@@ -288,7 +288,16 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
       }
       const rm = [], keys = [];
       for(const row of obj.cutting) {
-        if(what === 'currentNom' ? row.nom === nom : row.stick === stick) {
+        let push;
+        if(what === 'currentProduct') {
+          if(row === docRow) {
+            push = true;
+          }
+        }
+        else if(what === 'currentNom' ? row.nom === nom : row.stick === stick) {
+          push = true;
+        }
+        if(push) {
           rm.push(row);
           if(!row.obj.empty()) {
             keys.push(row.obj);
@@ -307,14 +316,10 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
       for(const row of rm) {
         obj.set.del(row);
       }
-      rm.length = 0;
       for(const row of obj.cuts) {
         if(what === 'currentNom' ? row.nom === nom : row.stick === stick) {
-          rm.push(row);
+          row.dop = {svg: '', rez: null};
         }
-      }
-      for(const row of rm) {
-        obj.cuts.del(row);
       }
     }
     else {
@@ -332,7 +337,7 @@ export default function OptimizeCut({obj, setBackdrop, ext, setExt, selected, mo
       <IconButton onClick={malual}><SwipeLeftOutlinedIcon/></IconButton>
     </HtmlTooltip>
     {<ResetSticksMenu reset_sticks={reset_sticks} />}
-    {<ExcludeMenu exclude={exclude}/>}
+    {<ExcludeMenu exclude={exclude} mode={mode}/>}
 
     {mode === 'cuts' ? null : <Repartition obj={obj} selected={selected} noRow={noRow} />}
     <Box sx={{flex: 1}}/>
