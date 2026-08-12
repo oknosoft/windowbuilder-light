@@ -17,7 +17,11 @@ function fill_cuts({obj, setBackdrop}) {
       setBackdrop(true);
       pouch.fetch('/adm/api/pgsql/cuts', {
         method: 'POST',
-        body: JSON.stringify({nom: Array.from(nom).map(v => v.ref)}),
+        body: JSON.stringify({
+          nom: Array.from(nom).map(v => v.ref),
+          ref: obj.ref,
+          type: obj.class_name,
+        }),
       })
         .then(res => res.json())
         .then(({rows}) => {
