@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import {useParams, unstable_usePrompt as usePrompt} from 'react-router'; // https://www.npmjs.com/package/react-router-prompt
+import {useParams, unstable_usePrompt as usePrompt, useNavigate} from 'react-router'; // https://www.npmjs.com/package/react-router-prompt
 import {useTitleContext, useBackdropContext} from '../../aggregate/App';
 import Loading from '../../aggregate/App/Loading';
 import {Root} from '../../aggregate/Toolbars/styled';
@@ -13,11 +13,13 @@ import ObjCutsIn from './ObjCutsIn';
 import ObjCutsOut from './ObjCutsOut';
 import ObjCutting from './ObjCutting';
 import {ObjSetting, key, setting as initSetting} from './ObjSetting';
+import {locker} from './locker';
 
-const {doc: {work_centers_task: mgr}, wsql, utils} = $p;
+const {doc: {work_centers_task: mgr}, wsql, utils, adapters: {pouch}, ui} = $p;
 
 export default function WorkCentersTaskObj({ref}) {
 
+  const [locked, setLocked] = React.useState(false);
   const [obj, setObj] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [tab, setTab] = React.useState(0);
@@ -38,10 +40,23 @@ export default function WorkCentersTaskObj({ref}) {
     ref = params.ref;
   }
 
-  React.useEffect(() => {
-    (utils.prm().modified === 'false' ?
-      Promise.resolve(function(doc) {doc._data._loading = false; return doc;}(mgr.get(ref))) :
-      mgr.get(ref, 'promise'))
+  const navigate = useNavigate();
+
+
+  React.useEffect( () => {
+
+    locker.lock(ref)
+      .catch(html => {
+        setLocked(true);
+        ui.dialogs.alert({
+          title: 'Уже редактируется',
+          html,
+          timeout: 20000,
+        });
+      })
+      .then(() => utils.prm().modified === 'false' ?
+        Promise.resolve(function(doc) {doc._data._loading = false; return doc;}(mgr.get(ref))) :
+        mgr.get(ref, 'promise'))
       .then((doc) => {
         const refs = new Set();
         for(const {calc_order} of doc.set) {
@@ -49,7 +64,7 @@ export default function WorkCentersTaskObj({ref}) {
             refs.add(calc_order.ref);
           }
         }
-        const {adapters: {pouch}, doc: {calc_order}} = $p;
+        const {calc_order} = $p.doc;
         return pouch.load_array(calc_order, Array.from(refs), false, pouch.remote.doc)
           .then(() => doc.load_keys())
           .then(() => doc.load_linked_refs())
@@ -61,6 +76,18 @@ export default function WorkCentersTaskObj({ref}) {
       .then(setObj)
       .catch(setError)
       .then(() => setBackdrop(false));
+
+    const forceClose = () => {
+      setModified(false);
+      navigate(-1);
+    }
+    document.addEventListener('freeze', forceClose, { capture: true });
+
+    return () => {
+      document.removeEventListener('freeze', forceClose);
+      locker.unlock(ref);
+      setLocked(false);
+    };
   }, [ref]);
 
   React.useEffect(() => {
@@ -105,7 +132,7 @@ export default function WorkCentersTaskObj({ref}) {
   const curr = setting.tabs.filter(({visible}) => visible)[tab];
 
   return <Root>
-    <ObjToolbar obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} modified={modified} setModified={setModified}/>
+    <ObjToolbar readOnly={locked} obj={obj} mgr={mgr} setSettingOpen={setSettingOpen} modified={modified} setModified={setModified}/>
     <ObjHead obj={obj} setting={setting}/>
     <ObjTabs ref={tabRef} tab={tab} setTab={setTab} setting={setting}/>
     {curr.name === 'planning' && <ObjPlan obj={obj} tabRef={tabRef} setBackdrop={setBackdrop}/>}
