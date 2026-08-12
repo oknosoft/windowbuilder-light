@@ -42,12 +42,13 @@ function setSticks({obj, data, record}) {
       refresh.add(docRow);
     }
     sticks.add(docRow);
-    docRow.dop = {
-      svg: row.svg,
-      rez: data.rez.find(v => v[0] === docRow.stick)
-        ?.filter((v) => Array.isArray(v))
-        .map(([dir, x1, y1, x2, y2]) => ({dir, x1, y1, x2, y2})),
-    };
+    const rez = data.rez.find(v => v[0] === row.id)
+      ?.filter((v) => Array.isArray(v))
+      .map(([dir, x1, y1, x2, y2]) => ({dir, x1, y1, x2, y2}));
+    if(row.products.length && !rez) {
+      return record(`Ошибка таблицы резов. Необходимо очистить данные раскроя и повторно оптимизировать текущую номенклатуру`);
+    }
+    docRow.dop = {svg: row.products.length ? row.svg : '', rez};
     // обрезь
     obj.cuts.clear({stick: docRow.stick, record_kind: 'Расход'});
     for(const scrap of row.scraps) {
