@@ -42,7 +42,7 @@ const columns = [
   //{key: "phase", name: "Фаза", width: 100, renderCell: PresentationFormatter, mgr: enm.planning_phases},
   {key: "date", name: "Дата", width: 100, renderCell: DateFormatter},
   //{key: "work_shift", name: "Смена", width: 120, renderCell: PresentationFormatter, mgr: cat.work_shifts},
-  {key: "work_center", name: "Рабочий центр", width: 180, renderCell: PresentationFormatter, mgr: [cat.work_centers, cat.delivery_directions]},
+  {key: "work_center", name: "Рабочий центр", width: 180, renderCell: PresentationFormatter, mgr: [cat.work_centers, cat.delivery_areas]},
   {key: "ref", name: "Объект", renderCell: KeyFormatter},
   //{key: "stage", name: "Этап", renderCell: PresentationFormatter, mgr: cat.work_center_kinds},
   //{key: "calc_order", name: "Расчет", width: 220, renderCell: OrderFormatter, mgr: doc.calc_order},

@@ -118,8 +118,6 @@ export const mdm = {
     "tm": "cat.templates",
     "cat.choice_params": "sp",
     "sp": "cat.choice_params",
-    "cat.delivery_directions": "dd",
-    "dd": "cat.delivery_directions",
     "cat.project_stages": "psg",
     "psg": "cat.project_stages",
     "cat.work_centers": "wpl",
