@@ -55,7 +55,7 @@ export function ExportGCode(obj, $p) {
 
 const glob = {
 
-  start(nom, len, width) {
+  start(nom, len, width, rez) {
     this.flip = 'y';
     this.p1 = {};
     this.p2 = {};
@@ -75,12 +75,23 @@ const glob = {
       this.border.y1 = 5;
     }
 
+    const max = {x: 0, y: 0};
+    for(const row of rez) {
+      if(row.dir === 1 && max.x < row.x1) {
+        max.x = row.x1;
+      }
+    }
+
     this.max = {
       x: len,
       y: width,
       mx: len - this.border.x1,
       my: width - this.border.y1,
     };
+    if(len - max.x > 300) {
+      this.max.x = max.x + this.border.x;
+      this.max.xx = true;
+    }
 
     return `G90\nM100\nT2 M6\nM-70\nG00 A90\n`;
   },
@@ -126,7 +137,7 @@ const glob = {
     if(y > 0 && !this.borderYExported) {
       this.borderYExported = true;
       this.p2 = {x: 1, y};
-      return `${this.up()}G00 X${max.x - x1} Y${y}\n${this.down()}G01 X1\n`;
+      return `${this.up()}G00 X${max.x - (max.xx ? 1 : x1)} Y${y}\n${this.down()}G01 X1\n`;
     }
     return '';
   },
@@ -146,7 +157,7 @@ const glob = {
 function exportNom(row, number_doc) {
   const {nom, stick, len, width, dop} = row;
   let text = `;  Лист ${stick.pad(2)}, Задание ${number_doc}, ${nom.name}, ${len.round()}x${width.round()}\n`;
-  text += glob.start(nom, len, width);
+  text += glob.start(nom, len, width, dop.rez);
   text += exportRows(dop.rez);
   text += glob.fin()
   return text;
