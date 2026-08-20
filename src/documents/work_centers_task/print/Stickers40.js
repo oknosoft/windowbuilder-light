@@ -34,7 +34,7 @@ export function Stickers40({print, obj, attr, skipCss, externalWindow, cssName})
         }
         rows.sort($p.utils.sort(['obj', 'obj', 'imaterial', 'name']));
         const cuts = [];
-        obj.cuts.find_rows({record_kind: 'Приход'}, row => {
+        obj.cuts.find_rows({record_kind: 'Расход'}, row => {
           cuts.push(row);
         });
         setRows([rows, cuts]);
