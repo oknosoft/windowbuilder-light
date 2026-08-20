@@ -1,9 +1,10 @@
 import React from 'react';
 import {Sticker} from './Sticker';
+import {StickerCut} from './StickerCut';
 
 export function Stickers40({print, obj, attr, skipCss, externalWindow, cssName}) {
   skipCss();
-  const [rows, setRows] = React.useState([]);
+  const [[rows, cuts], setRows] = React.useState([[], []]);
 
   React.useEffect(() => {
     const {document} = externalWindow;
@@ -32,7 +33,11 @@ export function Stickers40({print, obj, attr, skipCss, externalWindow, cssName})
           }
         }
         rows.sort($p.utils.sort(['obj', 'obj', 'imaterial', 'name']));
-        setRows(rows);
+        const cuts = [];
+        obj.cuts.find_rows({record_kind: 'Приход'}, row => {
+          cuts.push(row);
+        });
+        setRows([rows, cuts]);
       })
       .then(() => {
         setTimeout(print, 100);
@@ -41,7 +46,8 @@ export function Stickers40({print, obj, attr, skipCss, externalWindow, cssName})
 
 
   return rows.length ?
-    rows.map((row, index) => <Sticker key={`r-${index}`} row={row} cssName={cssName} />) :
+    rows.map((row, index) => <Sticker key={`r-${index}`} row={row} cssName={cssName} />)
+      .concat(cuts.map((row, index) => <StickerCut key={`r-${index}`} row={row} cssName={cssName} />)) :
     <div>Загрузка стилей</div>;
 }
 

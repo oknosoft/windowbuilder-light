@@ -55,6 +55,11 @@ article {
   text-overflow: ellipsis;
 }
 
+.cut {
+  font-size: 12mm;
+  line-height: 13mm;
+}
+
 .txt {
   font-size: 4mm;
   line-height: 4.2mm;

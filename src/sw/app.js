@@ -15,6 +15,8 @@ export default function () {
 
   precacheAndRoute([
     {url: '/dynamic-settings.js', revision: dkey },
+    {url: '/imgs/stickers40.css', revision: dkey },
+    {url: '/imgs/stickers60.css', revision: dkey },
     {url: '/manifest.webmanifest', revision: null},
     {url: '/favicon.ico', revision: null},
     {url: '/imgs/fav-okn144.png', revision: null},
