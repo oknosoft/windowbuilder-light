@@ -37,8 +37,8 @@ function fill_cuts({obj, setBackdrop}) {
             obj.cuts.add({
               record_kind: debit_credit_kinds.debit,
               nom,
-              len,
-              width,
+              len: Math.max(len, width),
+              width: Math.min(len, width),
               quantity: qty,
             });
           }
