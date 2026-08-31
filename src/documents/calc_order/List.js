@@ -10,7 +10,7 @@ import Toolbar from '../../aggregate/Toolbars/ListToolbar';
 import Selection from '../../catalogs/scheme_settings/Selection';
 import {rowKeyGetter, cellClick, cellKeyDown, mgrCreate, isAtBottom} from '../../aggregate/AppLoad/dataGrid';
 
-const outerFields = ['paid', 'shipped'];
+const outerFields = ['paid', 'shipped', 'tasked'];
 const {adapters: {pouch}, cat: {scheme_settings}, doc: {calc_order}, utils, wsql} = $p;
 const scheme = scheme_settings
   .find_schemas('doc.calc_order', true)
@@ -23,6 +23,35 @@ const columns = scheme.rx_columns({
   fields,
   _mgr: calc_order,
   presentations: represents ? presentationsMap : null});
+columns.unshift({
+  key: 'tasked',
+  headerCellClass: 'order-task',
+  name: '',
+  width: 32,
+  minWidth: 32,
+  renderCell({column, row}) {
+    let {doc_amount, tasked, posted} = row;
+    let posX = 0;
+    let tooltip = 'Включён в задание';
+    if(!tasked) {
+      posX = -40;
+      tooltip = 'Не включён в задание';
+    }
+    else {
+      tasked = parseFloat(tasked);
+      doc_amount = parseFloat(doc_amount);
+      if(tasked > 0 && tasked < 100) {
+        posX = -20;
+        tooltip = 'Включён частично';
+      }
+      else if(tasked > 100 || tasked < 0) {
+        posX = -140;
+        tooltip = 'Перекос';
+      }
+    }
+    return <div className="order-state" style={{backgroundPositionX: posX}} title={tooltip}/>
+  }
+});
 columns.unshift({
   key: 'paid',
   headerCellClass: 'order-pay',
@@ -66,21 +95,25 @@ columns.unshift({
     if(!posted) {
       return null;
     }
+    let tooltip = 'Отгружен';
     let posX = 0;
     if(!shipped) {
       posX = -40;
+      tooltip = 'Не отгружен';
     }
     else {
       shipped = parseFloat(shipped);
       doc_amount = parseFloat(doc_amount);
       if(shipped < doc_amount) {
         posX = -20;
+        tooltip = 'Отгружен частично';
       }
       else if(shipped > doc_amount) {
         posX = -140;
+        tooltip = 'Перекос';
       }
     }
-    return <div className="order-state" style={{backgroundPositionX: posX}}/>
+    return <div className="order-state" style={{backgroundPositionX: posX}} title={tooltip}/>
   }
 });
 

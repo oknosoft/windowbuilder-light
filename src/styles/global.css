@@ -65,6 +65,10 @@ html, body, input, textarea, select, button {
   background: url("icons/order-pay.png") center no-repeat;
   background-color: inherit;
 }
+.order-task {
+  background: url("icons/order-task.png") center no-repeat;
+  background-color: inherit;
+}
 .order-state {
   background: url("icons/order-state.png") no-repeat;
   width: 20px;
