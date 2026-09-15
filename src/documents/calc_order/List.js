@@ -212,6 +212,7 @@ export default function CalcOrderList() {
         }
       }
     }
+
     setRows((rows) => {
       const nrows = [...rows, ...data.docs];
       if(data.ref) {
@@ -232,6 +233,7 @@ export default function CalcOrderList() {
     });
     setLoading(false);
   };
+
   const moreRowsError = (err) => {
     setLoading(false);
     setError(err);

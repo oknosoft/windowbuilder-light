@@ -7,6 +7,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import SettingsIcon from '@mui/icons-material/DisplaySettings';
 import CloseIcon from '@mui/icons-material/Close';
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import {useNavigate} from 'react-router';
 import {useLoadingContext} from '../../aggregate/Metadata';
 import {ListSubheader} from './styled';
@@ -29,7 +30,7 @@ export default function ObjToolbar({obj, mgr, btns=null, postBtns=null, setSetti
   const navigate = useNavigate();
   const {ifaceState: {innerWidth}} = useLoadingContext();
   const [confirmOpen, setConfirmOpen] = React.useState(null);
-  const {close, save, saveClose, confirmClose} = React.useMemo(() => {
+  const {close, save, saveClose, confirmClose, reload} = React.useMemo(() => {
     const close = (typeof onClose === 'function') ? onClose : () => {
       const searchParams = utils.prm();
       const url = searchParams.return || `/${mgr.class_name.replace('.', '/')}${obj?.ref ? `?ref=${obj.ref}` : ''}`;
@@ -48,7 +49,20 @@ export default function ObjToolbar({obj, mgr, btns=null, postBtns=null, setSetti
     const save = () => queryModidied({setConfirmOpen, saveFin, obj, action: 'save'}).catch(fin);
     const saveClose = () => queryModidied({setConfirmOpen, saveFin, obj, action: 'close'}).then(close).catch(fin);
     const confirmClose = () => setConfirmOpen(null);
-    return {close, save, saveClose, confirmClose};
+    const reload = () => obj.load({emit: true})
+      .then(() => {
+        setModified(obj._modified);
+        // const flds = {};
+        // for(const ts in mgr.metadata().tabular_sections) {
+        //   flds[ts] = true;
+        // }
+        // mgr.emit('rows', obj, flds);
+      })
+      .catch(err => {
+        alert(err);
+        throw err;
+      });
+    return {close, save, saveClose, confirmClose, reload};
   }, [obj]);
 
   const actText = obj.posted ? 'Провести' : 'Записать';
@@ -78,7 +92,10 @@ export default function ObjToolbar({obj, mgr, btns=null, postBtns=null, setSetti
         />
       </HtmlTooltip>
       <HtmlTooltip title="Настроить форму">
-        <IconButton onClick={() => setSettingOpen(true)}><SettingsIcon/></IconButton>
+        <IconButton disabled onClick={() => setSettingOpen(true)}><SettingsIcon/></IconButton>
+      </HtmlTooltip>
+      <HtmlTooltip title="Перечитать с сервера">
+        <IconButton onClick={() => reload()}><RotateLeftIcon/></IconButton>
       </HtmlTooltip>
       {onClose !== false && <HtmlTooltip title="Закрыть форму">
         <IconButton onClick={close}><CloseIcon/></IconButton>
