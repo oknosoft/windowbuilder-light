@@ -52,11 +52,7 @@ export default function ObjToolbar({obj, mgr, btns=null, postBtns=null, setSetti
     const reload = () => obj.load({emit: true})
       .then(() => {
         setModified(obj._modified);
-        // const flds = {};
-        // for(const ts in mgr.metadata().tabular_sections) {
-        //   flds[ts] = true;
-        // }
-        // mgr.emit('rows', obj, flds);
+        mgr.emit('reload', obj);
       })
       .catch(err => {
         alert(err);

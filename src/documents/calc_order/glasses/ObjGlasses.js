@@ -44,10 +44,19 @@ export default function ObjGlasses({tabRef, obj, setModified}) {
   };
 
   React.useEffect(() => {
+
+    function reload() {
+      rawSetSelectedRows(new Set());
+      const [columns, glasses, glob] = createGlasses({obj});
+      setRows(glasses);
+    }
+    obj?._manager?.on('reload', reload);
+
     return () => {
       for(const {row} of glob.rows) {
         row.unloadEditor();
       }
+      obj?._manager?.off('reload', reload);
     };
   }, [obj]);
 
