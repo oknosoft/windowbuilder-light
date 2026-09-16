@@ -12,10 +12,32 @@ function selectionObj(row, checked, setChecked) {
     const mgr = md.mgr_by_class_name(row.right_value_type);
     const typeMeta = mgr?.metadata();
     const label = row.caption || (typeMeta?.obj_presentation || typeMeta?.synonym || row.left_value);
-    const list = row.list ? JSON.parse(row.list).map(v => mgr.get(v)) : [];
+    let list = row.list && JSON.parse(row.list), choice_params;
+    if(Array.isArray(list)) {
+      list = list.map(v => mgr.get(v));
+    }
+    else {
+      if(list.choice_params) {
+        choice_params = list.choice_params;
+      }
+      list = [];
+    }
+
     if(!list.length && mgr) {
       for(const o of mgr) {
         if(!o.is_folder) {
+          if(choice_params) {
+            let stop;
+            for(const {name, path} of choice_params) {
+              if(o[name] !== path) {
+                stop = true;
+                break;
+              }
+            }
+            if(stop) {
+              continue;
+            }
+          }
           list.push(o);
         }
       }
