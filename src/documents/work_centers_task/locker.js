@@ -22,12 +22,14 @@ export const locker = {
   },
 
   unlock(ref) {
+    this.cancel();
     return pouch.fetch(`/adm/api/lock/unlock?ref=work_centers_task|${ref}&uid=${uid}`);
   },
 
   refresh(ref) {
-    clearTimeout(this.timer);
-    setTimeout(() => this.lock(ref)
+    this.cancel();
+    this.timer = setTimeout(() =>
+      this.lock(ref)
       .then(() => this.refresh(ref))
       .catch(() => null), timeout);
   },
