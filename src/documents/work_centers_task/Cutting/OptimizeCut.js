@@ -187,6 +187,9 @@ export function run2D(obj, setBackdrop, selected, mode) {
           dy1: edgeBottom || 0,
         };
       }
+      if(nom.cutting_optimization_type.is('НельзяВращатьПереворачивать')) {
+        params.options.rotate = false;
+      }
       return pouch.fetch('/adm/api/cut', {
         method: 'POST',
         body: JSON.stringify(params),
