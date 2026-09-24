@@ -50,6 +50,7 @@
     "dataframe": "2.0",
     "date-fns": "^4.1",
     "deep-equal": "^2.2.3",
+    "dxf-parser": "^1.1.2",
     "hammerjs": "^2.0.8",
     "jszip": "^3.10",
     "marked": "^18.0",
@@ -69,7 +70,7 @@
     "shallowequal": "^1.1.0",
     "url-join": "^5.0",
     "url-parse": "^1.5",
-    "wb-core": "github:oknosoft/windowbuilder-core#ba6750fe0692083117283a9f6f0ab6e2b0955c8a",
+    "wb-core": "github:oknosoft/windowbuilder-core#9b67990231a99077b4753bdaab7f4a90b6bedcc4",
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {

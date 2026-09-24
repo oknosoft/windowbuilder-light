@@ -11,6 +11,7 @@ import CalculateIcon from '@mui/icons-material/Calculate';
 import {ListSubheader} from '../../../aggregate/Toolbars/styled';
 import {Toolbar, HtmlTooltip} from '../../../aggregate/App/styled';
 import ClipBoard from '../../../aggregate/FrmObj/ClipBoard';
+import {FromDXF} from './fromDXF';
 
 export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBackdrop, setModified, selectedRowsChange, rawSetSelectedRows, methods}) {
 
@@ -39,6 +40,8 @@ export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBac
       <HtmlTooltip title="Очистить (Удалить все строки)">
         <IconButton onClick={clear}><DeleteForeverIcon/></IconButton>
       </HtmlTooltip>
+
+      <FromDXF obj={obj} getRow={getRow} methods={methods}/>
 
       <ClipBoard execute={load}/>
 
