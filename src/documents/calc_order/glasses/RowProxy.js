@@ -67,11 +67,21 @@ export class RowProxy {
     }
   }
 
-  breakReadOnly(editor) {
-    if(editor.project.is_read_only) {
+  breakReadOnly({project}) {
+    if(project.is_read_only) {
       ui.dialogs.alert({
         title: 'Редактирование запрещено',
         text: 'Заказ проведён или отправлен',
+      });
+      return true;
+    }
+  }
+
+  breakRectangular({project}) {
+    if(!project.activeLayer.is_rectangular) {
+      ui.dialogs.alert({
+        title: 'Редактирование запрещено',
+        text: 'Изделие непрямоугольной формы',
       });
       return true;
     }
@@ -152,7 +162,7 @@ export class RowProxy {
   }
   set len(v) {
     const {editor} = this;
-    if(editor && !this.breakReadOnly(editor)) {
+    if(editor && !this.breakReadOnly(editor) && !this.breakRectangular(editor)) {
       const {project, eve} = editor;
       const szLine = project?.l_dimensions?.bottom;
       let size = parseFloat(v);
@@ -181,7 +191,7 @@ export class RowProxy {
   }
   set height(v) {
     const {editor} = this;
-    if(editor && !this.breakReadOnly(editor)) {
+    if(editor && !this.breakReadOnly(editor) && !this.breakRectangular(editor)) {
       const {project, eve} = editor;
       const szLine = project?.l_dimensions?.right;
       let size = parseFloat(v);

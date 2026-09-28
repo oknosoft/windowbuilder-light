@@ -41,7 +41,7 @@ export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBac
         <IconButton onClick={clear}><DeleteForeverIcon/></IconButton>
       </HtmlTooltip>
 
-      <FromDXF obj={obj} getRow={getRow} methods={methods}/>
+      <FromDXF obj={obj} getRow={getRow} methods={methods} rawSetSelectedRows={rawSetSelectedRows}/>
 
       <ClipBoard execute={load}/>
 

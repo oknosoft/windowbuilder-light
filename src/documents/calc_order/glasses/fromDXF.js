@@ -22,8 +22,7 @@ import DxfIcon from '../../../styles/icons/DxfFile';
  Как это использовать в коде (Контрольные точки)Чтобы этот вектор узлов работал правильно, массив ваших контрольных точек (Control Points) для B-сплайна должен состоять из всех точек SVG кривой подряд:[Старт, Контрольная1, Контрольная2, Конец1/Старт2, Контрольная3, Контрольная4, Конец2...]
 */
 
-const {EditorInvisible} = $p;
-let paper;
+const {EditorInvisible, ui: {dialogs}, utils} = $p;
 
 function interpolate(t, degree, points, knots) {
 
@@ -77,7 +76,7 @@ function interpolate(t, degree, points, knots) {
   return result;
 }
 
-function isLinear(pts) {
+function isLinear(pts, paper) {
   const line = new paper.Line(pts[0], pts[4]);
   for(let i=1; i<4; i++) {
     if(line.getDistance(pts[i]) > 0.001) {
@@ -90,10 +89,8 @@ function isLinear(pts) {
 async function parseSegments(text) {
   const DxfParser = (await import('dxf-parser')).default;
   const parser = new DxfParser();
-  if(!paper) {
-    paper = new EditorInvisible();
-    const project = paper.create_scheme();
-  }
+  const paper = new EditorInvisible();
+  const project = paper.create_scheme();
   const dxf = parser.parse(text);
   //nurbs
   for(const item of dxf.entities) {
@@ -150,7 +147,7 @@ async function parseSegments(text) {
             interpolate(kinks[i] - 0.003, degree, points, knotValues),
             interpolate(kinks[i], degree, points, knotValues),
           ].map(([x, y]) => ({x, y}));
-          if(isLinear(pts)) {
+          if(isLinear(pts, paper)) {
             segments.push({kind: 'line', points: [new paper.Point(pts[0]), new paper.Point(pts[4])]});
           }
           else {
@@ -220,12 +217,13 @@ async function parseSegments(text) {
         }
         delete segm.points;
       }
-      return segments;
+      return [segments, paper];
     }
   }
+  return [null, paper];
 }
 
-export function FromDXF ({obj, getRow, methods}) {
+export function FromDXF ({obj, getRow, methods, rawSetSelectedRows}) {
 
   const inputRef = React.createRef();
 
@@ -239,45 +237,53 @@ export function FromDXF ({obj, getRow, methods}) {
 
     const reader = new FileReader();
     reader.onload = async ({target}) => {
+      let editor;
       try {
-        const {dialogs} = $p.ui;
-        const segments = await parseSegments(target.result);
-        let row = getRow();
-        if(row) {
-          const query = await dialogs.alert({
-            title: 'Куда поместить фигуру?',
-            text: `В новую строку заказа (Ок)\nВ текущее изделие (Отмена)`,
-          });
-          if(!query) {
-            row = null;
+        const [segments, paper] = await parseSegments(target.result);
+        editor = paper;
+        if(segments) {
+          let row = getRow();
+          if(row) {
+            const query = await dialogs.alert({
+              title: 'Куда поместить фигуру?',
+              text: `В новую строку заказа (Ок)\nВ текущее изделие (Отмена)`,
+            });
+            if(!query) {
+              row = null;
+            }
           }
-        }
-        if(!row) {
-          row = await methods.create();
-        }
-        if(segments.length === 4) {
-          const {characteristic, editor: {project}} = row.row;
-          segments.forEach(({path}, index) => {
-            const crow = characteristic.coordinates.get(index);
-            crow.len = path.length;
-            crow.path_data = path.pathData;
-            crow.x1 = path.firstSegment.point.x;
-            crow.y1 = path.firstSegment.point.y;
-            crow.x2 = path.lastSegment.point.x;
-            crow.y2 = path.lastSegment.point.y;
-          });
-          await project.load(characteristic, true, characteristic.calc_order);
-          project.redraw();
-        }
-        else {
-          dialogs.alert({
-            title: 'Мало сегментов',
-            text: `Импорт из dxf с треугольников и арок, пока не поддержан`,
-          });
+          if(!row) {
+            row = await methods.create();
+          }
+          if(segments.length === 4) {
+            const {characteristic, editor: {project}} = row.row;
+            segments.forEach(({path}, index) => {
+              const crow = characteristic.coordinates.get(index);
+              crow.len = path.length;
+              crow.path_data = path.pathData;
+              crow.x1 = path.firstSegment.point.x;
+              crow.y1 = path.firstSegment.point.y;
+              crow.x2 = path.lastSegment.point.x;
+              crow.y2 = path.lastSegment.point.y;
+            });
+            await project.load(characteristic, true, characteristic.calc_order);
+            project.redraw();
+            await row.row.recalcFin();
+            rawSetSelectedRows?.(new Set([row.key]));
+          }
+          else {
+            dialogs.alert({
+              title: 'Мало сегментов',
+              text: `Импорт из dxf с треугольников и арок, пока не поддержан`,
+            });
+          }
         }
       }
       catch (err) {
-        return console.error(err.stack);
+        console.error(err.stack);
+      }
+      finally {
+        editor.unload();
       }
     };
     reader.readAsText(file); // или readAsDataURL для картинок
