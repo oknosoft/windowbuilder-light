@@ -224,7 +224,7 @@ export default function CalcOrderList() {
             if(current) {
               const pos = {idx: 0, rowIdx: nrows.indexOf(selectedRow)};
               current.scrollToCell(pos);
-              current.selectCell(pos);
+              current.setActivePosition(pos);
             }
           });
         }

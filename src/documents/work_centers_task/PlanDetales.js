@@ -56,13 +56,13 @@ const columnsCompact = columns
 
 export function PlanDetales({rows, compact}) {
   // const [selectedRows, setSelectedRows] = React.useState(new Set());
-  // const onCellClick = ({row, column, selectCell}) => {
+  // const onCellClick = ({row, column, setActivePosition}) => {
   //   const index = rows.indexOf(row);
   //   if(!selectedRows.size || Array.from(selectedRows)[0] !== index) {
   //     setSelectedRows(new Set([index]));
   //   }
   // };
-  const onCellDoubleClick = async ({column, row, rowIdx, selectCell}, ev) => {
+  const onCellDoubleClick = async ({column, row, rowIdx, setActivePosition}, ev) => {
     const {planing_key, register, register_type} = row;
     if(register_type === 'doc.work_centers_task') {
       const obj = doc.work_centers_task.get(register);

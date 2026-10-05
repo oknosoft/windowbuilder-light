@@ -15,7 +15,7 @@ import ObjGlasses from './glasses/ObjGlasses';
 import {ObjSetting, key, setting as initSetting} from './ObjSetting';
 import Drawer from '../../drawer';
 
-const {doc: {calc_order: mgr}, job_prm, current_user} = $p;
+const {doc: {calc_order: mgr}, job_prm, current_user, utils: {deflate}} = $p;
 
 export default function CalcOrderObj() {
 
@@ -46,7 +46,15 @@ export default function CalcOrderObj() {
       // }
     }
     res = res.then(() => mgr.get(ref, 'promise'))
-      .then((doc) => doc.load_linked_refs())
+      .then(async (doc) => {
+        const {_obj} = doc.production;
+        if(typeof _obj === 'string') {
+          const uint8Array = await deflate.base64ToBufferAsync(_obj);
+          const json = await deflate.decompress(uint8Array);
+          doc._obj.production = JSON.parse(json);
+        }
+        return doc.load_linked_refs();
+      })
       .then((doc) => {
         setObj(doc);
         setModified(doc._modified);

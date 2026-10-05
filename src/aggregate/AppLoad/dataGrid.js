@@ -11,7 +11,7 @@ export function preventDefault(event) {
 }
 
 export function cellClick({selectedRows, setSelectedRows}) {
-  return ({row, column, selectCell}) => {
+  return ({row, column, setActivePosition}) => {
     if(!selectedRows.size || Array.from(selectedRows)[0] !== row.ref) {
       setSelectedRows(new Set([row.ref]));
     }
@@ -169,7 +169,7 @@ export function tabularCreate({tabular, selection, preActions, find_rows, setRow
 }
 
 export function cellKeyDown({rows, columns, create, clone, open, remove, keyField = 'ref', setSelectedRows}) {
-  return ({ mode, row, column, rowIdx, selectCell }, event) => {
+  return ({ mode, row, column, rowIdx, setActivePosition }, event) => {
     if (mode === 'EDIT' || !rows.length) return;
     const { idx } = column;
     const { key, shiftKey } = event;
@@ -188,28 +188,28 @@ export function cellKeyDown({rows, columns, create, clone, open, remove, keyFiel
     }
     else if (key === 'ArrowDown') {
       if (rowIdx < rows.length - 1) {
-        selectCell({rowIdx: rowIdx + 1, idx});
+        setActivePosition({rowIdx: rowIdx + 1, idx});
         setSelectedRows(new Set([rows[rowIdx + 1][keyField]]));
       }
       preventDefault(event);
     }
     else if ((key === 'ArrowRight' || (key === 'Tab' && !shiftKey)) && idx === columns.length - 1) {
       if (rowIdx < rows.length - 1) {
-        selectCell({rowIdx: rowIdx + 1, idx: 0});
+        setActivePosition({rowIdx: rowIdx + 1, idx: 0});
         setSelectedRows(new Set([rows[rowIdx + 1][keyField]]));
       }
       preventDefault(event);
     }
     else if (key === 'ArrowUp') {
       if(rowIdx > 0) {
-        selectCell({rowIdx: rowIdx - 1, idx});
+        setActivePosition({rowIdx: rowIdx - 1, idx});
         setSelectedRows(new Set([rows[rowIdx - 1][keyField]]));
       }
       preventDefault(event);
     }
     else if ((key === 'ArrowLeft' || (key === 'Tab' && shiftKey)) && idx === 0) {
       if(rowIdx > 0) {
-        selectCell({ rowIdx: rowIdx - 1, idx: columns.length - 1 });
+        setActivePosition({ rowIdx: rowIdx - 1, idx: columns.length - 1 });
         setSelectedRows(new Set([rows[rowIdx - 1][keyField]]));
       }
       preventDefault(event);

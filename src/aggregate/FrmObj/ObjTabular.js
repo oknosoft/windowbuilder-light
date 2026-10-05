@@ -59,7 +59,7 @@ export default function ObjTabular({tabRef, tabular, selection, columns, buttons
   const {getRow, create, clone, remove, clear} = tabularCreate({
     tabular, selection, preActions, find_rows, setRows, selectedRows, setSelectedRows});
   if(!select) {
-    onCellClick = ({row, column, selectCell}) => {
+    onCellClick = ({row, column, setActivePosition}) => {
       if(!selectedRows.size || Array.from(selectedRows)[0] !== row.row) {
         setSelectedRows(new Set([row.row]));
       }

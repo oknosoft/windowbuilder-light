@@ -67,13 +67,13 @@ export default function ObjNom({tabRef, obj, setModified}) {
     }
   };
 
-  const onCellClick = ({row, column, selectCell}) => {
+  const onCellClick = ({row, column, setActivePosition}) => {
     if(!selectedRows.size || Array.from(selectedRows)[0] !== row.row) {
       setSelectedRows(new Set([row.row]));
     }
   };
 
-  const onCellKeyDown = ({ mode, row, column, rowIdx, selectCell }, event) => {
+  const onCellKeyDown = ({ mode, row, column, rowIdx, setActivePosition }, event) => {
 
     if (event.isDefaultPrevented() || row?.type === "DETAIL") {
       // skip parent grid keyboard navigation if nested grid handled it
@@ -102,28 +102,28 @@ export default function ObjNom({tabRef, obj, setModified}) {
     const { idx } = column;
     if (key === 'ArrowDown') {
       if (rowIdx < rows.length - 1) {
-        selectCell({rowIdx: rowIdx + 1, idx});
+        setActivePosition({rowIdx: rowIdx + 1, idx});
         selectedRowsChange(new Set([rows[rowIdx + 1].row]));
       }
       preventDefault(event);
     }
     else if ((key === 'ArrowRight' || (key === 'Tab' && !shiftKey)) && idx === columns.length - 1) {
       if (rowIdx < rows.length - 1) {
-        selectCell({rowIdx: rowIdx + 1, idx: 0});
+        setActivePosition({rowIdx: rowIdx + 1, idx: 0});
         selectedRowsChange(new Set([rows[rowIdx + 1].row]));
       }
       preventDefault(event);
     }
     else if (key === 'ArrowUp') {
       if(rowIdx > 0) {
-        selectCell({rowIdx: rowIdx - 1, idx});
+        setActivePosition({rowIdx: rowIdx - 1, idx});
         selectedRowsChange(new Set([rows[rowIdx - 1].row]));
       }
       preventDefault(event);
     }
     else if ((key === 'ArrowLeft' || (key === 'Tab' && shiftKey)) && idx === 0) {
       if(rowIdx > 0) {
-        selectCell({ rowIdx: rowIdx - 1, idx: columns.length - 1 });
+        setActivePosition({ rowIdx: rowIdx - 1, idx: columns.length - 1 });
         selectedRowsChange(new Set([rows[rowIdx - 1].row]));
       }
       preventDefault(event);

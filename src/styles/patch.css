@@ -9,22 +9,8 @@
   block-size: 600px;
 }
 
-/*
-@layer rdg.TextEditor {
-  .rdg-7-0-0-beta-59-2f8db206 {
-    appearance: auto;
-  }
-  select, input {
-    border: none;
-    width: 100%;
-    height: 100%;
-    padding-inline: 8px;
-  }
-}
-*/
-
 @layer rdg.HeaderRow {
-  .rdg-7-0-0-beta-58-0dbd5994 {
+  .rdg-7-0-0-beta-60-0dbd5994 {
     font-weight: unset;
   }
 }

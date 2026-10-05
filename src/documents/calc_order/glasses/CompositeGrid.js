@@ -25,7 +25,7 @@ export default function CompositeGrid({elm, rows, glRow, elmRow, selectedRows, s
 
 
 
-  const onCellClick = ({row, column, selectCell}) => {
+  const onCellClick = ({row, column, setActivePosition}) => {
     if(!selectedRows.size || Array.from(selectedRows)[0] !== row.row) {
       setSelectedRows(new Set([row.row]));
     }

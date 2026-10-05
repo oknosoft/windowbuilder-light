@@ -54,7 +54,7 @@ export default function RMDRemainders() {
     }
   }, [scheme]);
 
-  const onCellKeyDown = ({ mode, row, column, rowIdx, selectCell }, event) => {
+  const onCellKeyDown = ({ mode, row, column, rowIdx, setActivePosition}, event) => {
 
     if (event.isDefaultPrevented()) {
       // skip parent grid keyboard navigation

@@ -53,7 +53,7 @@ export default function ObjProduction({tabRef, obj, setModified, variant}) {
     }
   };
 
-  const onCellClick = ({row, column, selectCell}) => {
+  const onCellClick = ({row, column, setActivePosition}) => {
     if(!selectedRows.size || Array.from(selectedRows)[0] !== row.row) {
       setSelectedRows(new Set([row.row]));
     }

@@ -19,7 +19,7 @@ const keys = {
 const flip_yx = $p.job_prm.builder;
 
 
-export function shortcuts({mode, row, rows, column, rowIdx, selectCell, onClose, event, gridRef, selectedRowsChange, methods}) {
+export function shortcuts({mode, row, rows, column, rowIdx, setActivePosition, onClose, event, gridRef, selectedRowsChange, methods}) {
   const { key, shiftKey, altKey } = event;
   const { idx } = column;
   if(mode === 'EDIT') {
@@ -28,13 +28,13 @@ export function shortcuts({mode, row, rows, column, rowIdx, selectCell, onClose,
       onClose(true);
       if(idx < 5) {
         setTimeout(() => {
-          gridRef.current?.selectCell({rowIdx, idx: idx + 1}, true);
+          gridRef.current?.setActivePosition({rowIdx, idx: idx + 1}, true);
         }, 60);
       }
       else if(idx === 5 && rowIdx < rows.length - 1) {
         setTimeout(() => {
           rowIdx += 1;
-          gridRef.current?.selectCell({rowIdx, idx: 3}, true);
+          gridRef.current?.setActivePosition({rowIdx, idx: 3}, true);
           selectedRowsChange(new Set([rows[rowIdx].key]));
         }, 60);
       }
