@@ -75,3 +75,10 @@ html, body, input, textarea, select, button {
   height: 20px;
   margin-left: -4px;
 }
+.glass-select {
+  background: transparent;
+  border: none;
+  width: 220px;
+  height: 33px;
+  padding-left: 4px;
+}

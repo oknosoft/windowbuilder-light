@@ -70,15 +70,15 @@ export function createGlasses({obj}){
         const {row, onRowChange} = props;
         return <select
           autoFocus
-          className="rdg-text-editor"
-          value={row.row.inset}
+          className="rdg-text-editor glass-select"
+          value={row.row.inset.ref}
           onChange={({target}) => {
             row.row.inset = target.value;
             onRowChange({ ...row}, true);
           }}
         >
           {ioptions.map((inset) => (
-            <option key={inset.ref} value={inset}>{inset.name}</option>
+            <option key={inset.ref} value={inset.ref}>{inset.name}</option>
           ))}
         </select>;
       }
