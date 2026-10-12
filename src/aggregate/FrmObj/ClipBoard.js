@@ -11,7 +11,7 @@ const Textarea = styled('textarea')(() => ({
   height: 400,
 }));
 
-export default function ClipBoard({execute}) {
+export default function ClipBoard({execute, adds=null}) {
 
   const [open, rawSetOpen] = React.useState(false);
   const setOpen = () => rawSetOpen(true);
@@ -50,6 +50,7 @@ export default function ClipBoard({execute}) {
 
   return <>
     <Dialog open={open} onClose={setClose} onOk={onOk} maxWidth="lg" title="Загрузить из буфера обмена">
+      {adds}
       <Textarea
         ref={textRef}
         placeholder="Вставьте содержимое буфера обмена или введите текст..."

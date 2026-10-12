@@ -22,7 +22,7 @@ import DxfIcon from '../../../styles/icons/DxfFile';
  Как это использовать в коде (Контрольные точки)Чтобы этот вектор узлов работал правильно, массив ваших контрольных точек (Control Points) для B-сплайна должен состоять из всех точек SVG кривой подряд:[Старт, Контрольная1, Контрольная2, Конец1/Старт2, Контрольная3, Контрольная4, Конец2...]
 */
 
-const {EditorInvisible, ui: {dialogs}, utils} = $p;
+const {EditorInvisible, ui: {dialogs}, utils, job_prm} = $p;
 
 function interpolate(t, degree, points, knots) {
 
@@ -252,10 +252,11 @@ export function FromDXF ({obj, getRow, methods, rawSetSelectedRows}) {
               row = null;
             }
           }
-          if(!row) {
-            row = await methods.create();
+          if(!row || segments.length == 3) {
+            const proto = job_prm.builder['glasses_template' + (segments.length == 3 ? '_triangle' : '')];
+            row = await methods.add(proto);
           }
-          if(segments.length === 4) {
+          if([3, 4].includes(segments.length)) {
             const {characteristic, editor: {project}} = row.row;
             segments.forEach(({path}, index) => {
               const crow = characteristic.coordinates.get(index);
@@ -274,7 +275,7 @@ export function FromDXF ({obj, getRow, methods, rawSetSelectedRows}) {
           else {
             dialogs.alert({
               title: 'Мало сегментов',
-              text: `Импорт из dxf с треугольников и арок, пока не поддержан`,
+              text: `Импорт из dxf арочных фигур, пока не поддержан`,
             });
           }
         }

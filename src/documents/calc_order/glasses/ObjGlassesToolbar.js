@@ -1,6 +1,8 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
 import CopyIcon from '@mui/icons-material/PostAdd';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,10 +15,34 @@ import {Toolbar, HtmlTooltip} from '../../../aggregate/App/styled';
 import ClipBoard from '../../../aggregate/FrmObj/ClipBoard';
 import {FromDXF} from './fromDXF';
 
+const {wsql} = $p;
+
 export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBackdrop, setModified, selectedRowsChange, rawSetSelectedRows, methods}) {
 
 
   const {create, clone, open, del, clear, recalc, load, builder} = methods;
+
+  const [flipFormula, setFlipFormula] = React.useState(wsql.get_user_param('flip_formula', 'boolean'));
+  const [triangles, setTriangles] = React.useState(false);
+  const [flipTriangles, setFlipTriangles] = React.useState(false);
+
+  const clipBoardAdds = <Toolbar disableGutters>
+    <FormControlLabel
+      control={<Checkbox color="primary" checked={flipFormula} onChange={({target}) => {
+        wsql.set_user_param('flip_formula', target.checked);
+        setFlipFormula(target.checked);
+      }} />}
+      label="Перевернуть формулу"
+    />
+    <FormControlLabel
+      control={<Checkbox color="primary" checked={triangles} onChange={({target}) => setTriangles(target.checked)} />}
+      label="Треугольники"
+    />
+    <FormControlLabel
+      control={<Checkbox color="primary" checked={flipTriangles} onChange={({target}) => setFlipTriangles(target.checked)} />}
+      label="Перевернуть треугольники"
+    />
+  </Toolbar>;
 
 
   return <ListSubheader>
@@ -43,7 +69,7 @@ export default function ObjProductionToolbar({obj, rows, getRow, setRows, setBac
 
       <FromDXF obj={obj} getRow={getRow} methods={methods} rawSetSelectedRows={rawSetSelectedRows}/>
 
-      <ClipBoard execute={load}/>
+      <ClipBoard execute={load({flipFormula, triangles, flipTriangles})} adds={clipBoardAdds}/>
 
       <Typography sx={{flex: 1}}></Typography>
 

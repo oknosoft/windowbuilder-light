@@ -6,7 +6,7 @@ import ProductFormatter from './ProductFormatter';
 // доступные типы вставок
 import {itypes, ioptions, ilist, sublist, RowProxy} from './RowProxy';
 
-const {adapters: {pouch}, cat: {scheme_settings}, cch, doc: {calc_order}, current_user, job_prm, utils} = $p;
+const {adapters: {pouch}, cat: {scheme_settings}, cch, doc: {calc_order}, current_user, job_prm, utils, ui} = $p;
 const restrict = !current_user.roles.includes('doc_full') && !current_user.role_available('РедактированиеСкидок') && !current_user.role_available('РедактированиеЦен');
 
 export const rowHeight = ({row, type}) => {
@@ -121,8 +121,12 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     if(!proto) {
       proto = job_prm.builder.glasses_template;
     }
+    let {base_block} = proto;
+    if(!base_block || base_block.empty()) {
+      base_block = proto;
+    }
     const tmp = utils._clone(proto.toJSON());
-    tmp.base_block = job_prm.builder.glasses_template?.ref;
+    tmp.base_block = base_block?.ref;
     utils._mixin(row.characteristic, tmp, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name'.split(','), true);
     row.calc_order_row.note = tmp.note;
     row.calc_order_row.nom = row.characteristic.owner;
@@ -213,6 +217,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     symbol: 'ₓ',
     regex: /-|_|\*|х|Х|X|x/g,
     regexM: /^(\d+)([a-zа-яё])/ui,
+    regexX: /([a-zа-яё])/ui,
     map: [['ext', 'e×t'], ['lux', 'lu×'], ['mex', 'me×'], ['nix', 'ni×']],
     exec(str = '') {
       str = str.toLowerCase();
@@ -230,7 +235,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       return str;
     },
     test(strings, str) {
-      return !strings && (this.regex.test(str) || this.regexM.test(str));
+      return !strings && (this.regex.test(str) || this.regexM.test(str) || this.regexX.test(str));
     },
     split(str = '') {
       return str.split(this.symbol);
@@ -250,7 +255,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
   const loadProd = async (raw) => {
     if(raw?.class_name === 'cat.characteristics') {
       if(obj.posted) {
-        return $p.ui.dialogs.alert({
+        return ui.dialogs.alert({
           text: 'Отмените проведение перед импортом продукции',
           title: obj.presentation,
           timeout: 5000,
@@ -275,7 +280,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     }
   };
 
-  const load = async (text) => {
+  const load = ({flipFormula, triangles, flipTriangles}) => async (text) => {
     if(text.startsWith('{')) {
       try {
         return loadProd(JSON.parse(text));
@@ -286,7 +291,11 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
     }
     const irows = [];
     const iparams = new Map();
-    for(const row of text.split('\n')) {
+    const textRows = text.split('\n');
+    if(textRows.length > 120) {
+      return alert('За один такт, можно загрузить не более 100 стеклопакетов.\nРазбейте импорт на несколько заказов.');
+    }
+    for(const row of textRows) {
       const values = row.split('\t');
       let strings = 0;
       let numbers = 0;
@@ -322,6 +331,9 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
           else if(numbers === 1) {
             newRow.height = n;
           }
+          else if(triangles) {
+            newRow.third = n;
+          }
           else if(!newRow.quantity) {
             newRow.quantity = n;
           }
@@ -329,12 +341,16 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
         }
       });
 
-      if(newRow?.formula && newRow.height) {
+      if(newRow?.formula && triangles ? newRow.third : newRow.height) {
         if(!newRow.quantity) {
           newRow.quantity = 1;
         }
         newRow.formula = newRow.formula.toLowerCase();
         newRow.note = newRow.note.join('\xA0');
+        if(flipFormula) {
+          const parts = normalize.split(newRow.formula).reverse();
+          newRow.formula = parts.join(normalize.symbol);
+        }
         irows.push(newRow);
       }
     }
@@ -343,7 +359,7 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
       setBackdrop(true);
       const newRows = [];
       const problems = new Set();
-      for(const {formula, len, height, quantity, note, ...params} of irows) {
+      for(const {formula, len, height, third, quantity, note, ...params} of irows) {
         const candidates = [];
         let clarification;
         for(const inset of ilist) {
@@ -387,11 +403,13 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
           }
           if(candidates.length) {
             const stub = {ilist, sublist};
+            const error = new Set();
             clarification = parts.map((id, ind) => {
               const pre = sublist.find((curr) => curr.name.toLowerCase() === id || curr.article.toLowerCase() === id);
               if(pre) {
                 return pre;
               }
+              error.add(id);
               const th = normalize.number(id);
               const c2 = sublist.filter((curr) => {
                 if(curr.thickness() === th) {
@@ -405,14 +423,17 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
               }
               return sublist[0]._manager.get();
             });
+            if(error.size) {
+              Object.defineProperty(clarification, 'error', {value: Array.from(error)});
+            }
           }
         }
         if(candidates.length) {
           candidates.sort((a, b) => b.weight - a.weight);
           const row = new RowProxy(await obj.create_product_row({create: true}));
           newRows.push({type: 'MASTER', expanded: false, row, key: row.row});
-          const tmp = utils._clone(job_prm.builder.glasses_template.toJSON());
-          utils._mixin(row.characteristic._set_loaded(), tmp, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name'.split(','), true);
+          const tmp = utils._clone(job_prm.builder[`glasses_template${triangles ? '_triangle' : ''}`].toJSON());
+          utils._mixin(row.characteristic._set_loaded(), tmp, null, 'ref,name,calc_order,timestamp,_rev,specification,class_name,struct'.split(','), true);
           // параметры из колонок
           for(const param in params) {
             const prow = row.characteristic.params.find({cnstr: 0, param});
@@ -421,7 +442,8 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
             }
           }
           await row.createEditor();
-          const {editor: {project, eve}, glassRow} = row;
+          const {editor, glassRow} = row;
+          const {project, eve} = editor;
           const glass = row.editor.elm(glassRow.elm);
           glass.set_inset(candidates[0].inset, false, true);
           if(clarification) {
@@ -439,15 +461,53 @@ export function handlers({obj, rows, setRows, getRow, setBackdrop, setModified, 
             project.ox.glass_specification.add({elm: glassRow.elm, inset});
           }
           const {bottom, right} = project.l_dimensions;
-          right.sizes_wnd({wnd: right, size: height, name: 'auto'});
           bottom.sizes_wnd({wnd: bottom, size: len, name: 'auto'});
+          if(third) {
+            // получим координаты вершин треугольника по трём сторонам
+            let [a, b, c] = [third, height, len];
+            if(flipTriangles) {
+              [a, b] = [b, a];
+            }
+            const x = (b*b + c*c - a*a) / (2 * c);
+            if(b*b < x*x) {
+              problems.add(`Невозможный треугольник ${c} ${a} ${b}`);
+              unloadEditor(editor);
+              continue;
+            }
+            const pt = new editor.Point({x, y: -Math.sqrt(b*b - x*x)});
+
+            while (editor.eve._async?.move_points?.timer) {
+              await utils.sleep(20);
+            }
+
+            // в шаблоне, 3 - низ, 4 - лево, 1 - право
+            const {e} = project.activeLayer.getItem({elm: 3});
+            const profile = project.activeLayer.getItem({elm: 1});
+            b = profile.b;
+            b.selected = true;
+            const delta = e.add(pt).subtract(b);
+            if(delta.length) {
+              profile.move_points(delta);
+            }
+          }
+          else {
+            right.sizes_wnd({wnd: right, size: height, name: 'auto'});
+          }
           while (eve._async?.move_points?.timer) {
             await utils.sleep(20);
           }
           row.quantity = project._dp.quantity = quantity;
           row.note = project._dp.note = project.ox.note = note;
-          project.ox.extra = {clarification, formula};
-          project.redraw();
+          const extra = {clarification, formula};
+          if(clarification?.error) {
+            extra.error = clarification.error;
+          }
+          project.ox.extra = extra;
+          let i = 10;
+          while (project._ch.length && i > 0) {
+            project.redraw();
+            i--;
+          }
           await project.save_coordinates({});
           row.characteristic.before_save({});
           row.characteristic._modified = true;
