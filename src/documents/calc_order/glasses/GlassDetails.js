@@ -4,13 +4,17 @@ import Grid from '@mui/material/Grid';
 import TextField from 'metadata-ui/DataField/Text';
 import ParamField from 'metadata-ui/DataField/ParamField';
 import {GlassesDetail} from '../../../aggregate/Toolbars/styled';
+import {CustomSizes, custom_sizes} from './CustomSizes';
 
 
 export default function GlassDetails({row, selected, glob}) {
   const {characteristic, inset, glassRow, editor} = row.row;
   const gprops = [];
   const readOnly = editor.project.is_read_only;
-  const rprops = [<TextField key="note" obj={row.row} fld="note" onChange={(v) => characteristic.note = v} readOnly={readOnly}/>];
+  const rprops = [<TextField key="note" obj={row.row} fld="note" onChange={(v) => characteristic.note = v} readOnly={readOnly} enterTab/>];
+  if(custom_sizes) {
+    rprops.push(<CustomSizes characteristic={characteristic} elm={glassRow.elm} readOnly={readOnly} enterTab/>);
+  }
 
   const [index, setIndex] = React.useState(0);
   React.useEffect(() => {
@@ -69,7 +73,9 @@ export default function GlassDetails({row, selected, glob}) {
   });
   // параметры вставки
   characteristic.params.find_rows({cnstr: -glassRow.elm, region: 0}, (prow) => {
-    gprops.push(<ParamField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} readOnly={readOnly}/>);
+    if(prow.param !== custom_sizes) {
+      gprops.push(<ParamField key={`pr-${prow.row}-${inset.ref}`} obj={prow} inset={inset} readOnly={readOnly}/>);
+    }
   });
   // параметры рёбер
   const rrows = [];
