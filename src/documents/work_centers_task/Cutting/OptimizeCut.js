@@ -72,13 +72,13 @@ function setSticks({obj, data, record}) {
     }
     docRow.stick = sticksMap.get(row.stick);
     if(row.length === row.height) {
-      docRow.rotated = false;
+      docRow.rotated = 0;
     }
     else if(docRow.width === row.height && docRow.len === row.length) {
-      docRow.rotated = true;
+      docRow.rotated = 90;
     }
     else {
-      docRow.rotated = false;
+      docRow.rotated = 0;
     }
 
     docRow.x = row.x;

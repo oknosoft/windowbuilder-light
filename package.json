@@ -74,9 +74,9 @@
     "wb-cutting": "github:oknosoft/genetic-cutting#f1fa48a521b5850caa68f108622eb641c9b27a71"
   },
   "devDependencies": {
-    "@babel/core": "^8.0",
-    "@babel/preset-env": "^8.0",
-    "@babel/preset-react": "^8.0",
+    "@babel/core": "^7.29",
+    "@babel/preset-env": "^7.29",
+    "@babel/preset-react": "^7.29",
     "babel-loader": "^10.1",
     "css-loader": "^7.1",
     "fs-extra": "^11.4",
