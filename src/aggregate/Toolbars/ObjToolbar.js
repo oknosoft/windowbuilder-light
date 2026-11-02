@@ -5,18 +5,19 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
-import SettingsIcon from '@mui/icons-material/DisplaySettings';
+
 import CloseIcon from '@mui/icons-material/Close';
-import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import {useNavigate} from 'react-router';
 import {useLoadingContext} from '../../aggregate/Metadata';
 import {ListSubheader} from './styled';
 import {Toolbar, HtmlTooltip} from '../App/styled';
 import PostBtn from '../FrmObj/PostBtn';
 import MenuPrint from './MenuPrint';
+import {MenuExt} from './MenuExt';
 import UnmodidiedDialog, {queryModidied} from './Unmodidied';
 
 const {utils, ui: {dialogs}} = $p;
+
 export const alert = (err) => {
   if(typeof err === 'string' || err instanceof Error) {
     dialogs.alert({
@@ -80,19 +81,20 @@ export default function ObjToolbar({obj, mgr, btns=null, postBtns=null, setSetti
       {btns && <Divider orientation="vertical" flexItem sx={{m: 1}} />}
       {btns}
       <Typography sx={{flex: 1}}></Typography>
-      <HtmlTooltip title="печать">
+      <HtmlTooltip title="Печать">
         <MenuPrint
           mgr={mgr}
           obj={obj}
           variant="button"
         />
       </HtmlTooltip>
-      <HtmlTooltip title="Настроить форму">
-        <IconButton disabled onClick={() => setSettingOpen(true)}><SettingsIcon/></IconButton>
-      </HtmlTooltip>
-      <HtmlTooltip title="Перечитать с сервера">
-        <IconButton onClick={() => reload()}><RotateLeftIcon/></IconButton>
-      </HtmlTooltip>
+
+      <MenuExt
+        obj={obj}
+        setSettingOpen={setSettingOpen}
+        reload={reload}
+      />
+
       {onClose !== false && <HtmlTooltip title="Закрыть форму">
         <IconButton onClick={close}><CloseIcon/></IconButton>
       </HtmlTooltip>}

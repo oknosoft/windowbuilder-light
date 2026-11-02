@@ -2,8 +2,11 @@ import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import {HtmlTooltip} from '../../../aggregate/App/styled';
 import DxfIcon from '../../../styles/icons/DxfFile';
+import {checkContract} from '../RecalcBtn';
+import {alert} from '../../../aggregate/Toolbars/ObjToolbar';
 
 /*
+http://localhost:8031/doc/calc_order/019ffade-b00d-7423-aa39-9ae0c76075ba
 рассчитать knotvalues для spline из svg
 1. Стандартный способ: Зажатый (Clamped) вектор узловЕсли вы объединяете несколько последовательных кубических кривых Безье из SVG в один B-сплайновый путь,
  стандартный и самый простой способ — использовать неравномерный зажатый вектор узлов (Non-uniform Clamped Knot Vector).
@@ -227,13 +230,25 @@ export function FromDXF ({obj, getRow, methods, rawSetSelectedRows}) {
 
   const inputRef = React.createRef();
 
-  function openDXF(e) {
-    inputRef.current?.showPicker(e);
+  async function openDXF(e) {
+    if(!checkContract(obj)) {
+      try {
+        await obj.recalc();
+        obj._data.chrows?.clear?.();
+        inputRef.current?.showPicker(e);
+      }
+      catch (err) {
+        alert(err);
+      }
+    }
   }
 
   function handleFileChange({target}) {
     const file = target.files[0];
     if (!file) return;
+
+    const {name} = file;
+    const {_attachments} = obj;
 
     const reader = new FileReader();
     reader.onload = async ({target}) => {
@@ -267,10 +282,20 @@ export function FromDXF ({obj, getRow, methods, rawSetSelectedRows}) {
               crow.x2 = path.lastSegment.point.x;
               crow.y2 = path.lastSegment.point.y;
             });
-            await project.load(characteristic, true, characteristic.calc_order);
-            project.redraw();
-            await row.row.recalcFin();
-            rawSetSelectedRows?.(new Set([row.key]));
+
+            try {
+              await project.load(characteristic, true, characteristic.calc_order);
+              project.redraw();
+              await row.row.recalcFin();
+              rawSetSelectedRows?.(new Set([row.key]));
+              await obj.save();
+
+              const rev = await obj.save_attachment(`Co${utils.b62.encode(characteristic.ref)}:${file.name}`, target.result, 'application/dxf');
+              obj._rev;
+            }
+            catch (err) {
+              alert(err);
+            }
           }
           else {
             dialogs.alert({
