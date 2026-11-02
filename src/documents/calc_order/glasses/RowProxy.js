@@ -142,7 +142,9 @@ export class RowProxy {
         if(eve?._async?.move_points?.timer) {
           return this.recalcFin();
         }
-        project.redraw();
+        while (project._ch.length) {
+          project.redraw();
+        }
         return project.save_coordinates({})
           .then(() => utils.sleep(20))
           .then(row._owner._owner._data.chrows.delete(row));
