@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid';
 import TextField from 'metadata-ui/DataField/Text';
 import ParamField from 'metadata-ui/DataField/ParamField';
 import {GlassesDetail} from '../../../aggregate/Toolbars/styled';
+import scale_svg from '../../../aggregate/AppLoad/scale_svg';
 import {CustomSizes, custom_sizes} from './CustomSizes';
 
 
@@ -18,7 +19,7 @@ export default function GlassDetails({row, selected, glob}) {
 
   const [index, setIndex] = React.useState(0);
   React.useEffect(() => {
-    const {CatCharacteristicsParamsRow, cat: {characteristics}} = $p;
+    const {CatCharacteristicsParamsRow, cat: {characteristics}, utils} = $p;
     let kb = {shift: false, rows: new Set()};
 
     function keydown({altKey, shiftKey}) {
@@ -93,12 +94,17 @@ export default function GlassDetails({row, selected, glob}) {
     />);
   });
 
+  const {svg} = characteristic;
+
   return <GlassesDetail container spacing={2} selected={selected}>
     <Grid size={{sm: 12, md: 5}}>
       <FormGroup>{gprops}</FormGroup>
     </Grid>
     <Grid size={{sm: 12, md: 5}}>
       <FormGroup>{rprops}</FormGroup>
+    </Grid>
+    <Grid size={{sm: 4, md: 2}}>
+      <div style={{marginLeft: 16, marginTop: 16}} dangerouslySetInnerHTML={{__html: svg ? scale_svg(svg, {height: 150, width: 180, zoom: 0.6}, 0) : ''}}/>
     </Grid>
   </GlassesDetail>;
 }
