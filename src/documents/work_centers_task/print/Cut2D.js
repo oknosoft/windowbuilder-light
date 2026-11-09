@@ -25,7 +25,7 @@ export function Cut2D({print, obj, attr, skipCss, externalWindow}) {
       }
       rows.sort(materialSort);
       setRows(rows);
-      setTimeout(print, 100);
+      //setTimeout(print, 100);
     }, 100);
 
 
