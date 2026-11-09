@@ -20,9 +20,10 @@ const cutAttr = {
 cutAttr.fillColor.alpha = 0.08;
 
 const obrAttr = {
-  strokeColor: 'grey',
-  strokeWidth: 1,
+  strokeColor: 'green',
+  strokeWidth: 2,
   strokeScaling: false,
+  dashArray: [9, 6],
 };
 
 function zoom_fit({activeLayer, view}) {
@@ -48,7 +49,7 @@ function zoom_fit({activeLayer, view}) {
 }
 
 function draw_info({product, bounds, hor, vert, infos}) {
-  const {calc_order, obj, specimen} = product.obj;
+  const {rotated, obj: {calc_order, obj, specimen}} = product;
   const glassRow = obj.coordinates.find({elm_type: 'Стекло'});
   const prod_name = glassRow ? obj.prod_name2({elm: glassRow.elm, cnstr: glassRow.cnstr}) : null;
   const other = prod_name?.other || [];
@@ -56,25 +57,28 @@ function draw_info({product, bounds, hor, vert, infos}) {
     for(const {cnstr, value} of obj.params) {
       if(cnstr < 0 && cnstr !== -glassRow.elm && value?.empty && !value.empty() && value.name !== 'Нет') {
         const profile = obj.coordinates.find({elm: -cnstr});
-        const segments = [];
-        if(profile?.pos.is('left')) {
-          segments.push(bounds.bottomLeft.add([11, 0]), bounds.topLeft.add([11, 0]));
-        }
-        else if(profile?.pos.is('top')) {
-          segments.push(bounds.topLeft.add([0, 11]), bounds.topRight.add([0, 11]));
-        }
-        else if(profile?.pos.is('right')) {
-          segments.push(bounds.topRight.add([-11, 0]), bounds.bottomRight.add([-11, 0]));
-        }
-        else if(profile?.pos.is('bottom')) {
-          segments.push(bounds.bottomRight.add([0, -11]), bounds.bottomLeft.add([0, -11]));
-        }
-        if(segments.length) {
-          const obr = new Path({segments, ...obrAttr});
-          if(value.name.includes('Евро')) {
-            obr.dashArray = [3, 4];
-            obr.strokeWidth = 3;
-            obr.strokeColor = 'red';
+        if(profile) {
+          const {pos} = profile;
+          const segments = [];
+          if(rotated && pos.is('left') || !rotated && pos.is('bottom')) {
+            segments.push(bounds.bottomLeft.add([11, 0]), bounds.topLeft.add([11, 0]));
+          }
+          else if(rotated && pos.is('top') || !rotated && pos.is('left')) {
+            segments.push(bounds.topLeft.add([0, 11]), bounds.topRight.add([0, 11]));
+          }
+          else if(rotated && pos.is('right') || !rotated && pos.is('top')) {
+            segments.push(bounds.topRight.add([-11, 0]), bounds.bottomRight.add([-11, 0]));
+          }
+          else if(rotated && pos.is('bottom') || !rotated && pos.is('right')) {
+            segments.push(bounds.bottomRight.add([0, -11]), bounds.bottomLeft.add([0, -11]));
+          }
+          if(segments.length) {
+            const obr = new Path({segments, ...obrAttr});
+            if(value.name.includes('Евро')) {
+              obr.dashArray = [2, 3];
+              obr.strokeWidth = 3;
+              obr.strokeColor = 'red';
+            }
           }
         }
       }
