@@ -14,9 +14,14 @@ export default function RefInField({row, placeholder, setRefresh}) {
   const [mgr, options] = React.useMemo(() => {
     const mgr = $p.md.mgr_by_class_name(row.right_value_type);
     const options = [];
+    const names = {};
     for(const v of mgr) {
       if(!v.is_folder) {
-        options.push(v);
+        const {name} = v;
+        if(name && !names.hasOwnProperty(name)) {
+          names[name] = v;
+          options.push(v);
+        }
       }
     }
     return [mgr, options];
