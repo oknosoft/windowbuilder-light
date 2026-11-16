@@ -19,6 +19,15 @@ const cutAttr = {
 };
 cutAttr.fillColor.alpha = 0.08;
 
+const figAttr = {
+  strokeColor: new paper.Color('black'),
+  strokeWidth: 1,
+  strokeScaling: false,
+  fillColor: new paper.Color('blue'),
+};
+figAttr.strokeColor.alpha = 0.6;
+figAttr.fillColor.alpha = 0.1;
+
 const obrAttr = {
   strokeColor: 'green',
   strokeWidth: 2,
@@ -48,7 +57,7 @@ function zoom_fit({activeLayer, view}) {
   view.center = center.add([Math.sign(scaling.y) * dx / 2, 20]);
 }
 
-function draw_info({product, bounds, hor, vert, infos}) {
+function drawInfo({product, bounds, hor, vert, infos}) {
   const {rotated, obj: {calc_order, obj, specimen}} = product;
   const glassRow = obj.coordinates.find({elm_type: 'Стекло'});
   const prod_name = glassRow ? obj.prod_name2({elm: glassRow.elm, cnstr: glassRow.cnstr}) : null;
@@ -97,6 +106,7 @@ function draw_info({product, bounds, hor, vert, infos}) {
     other,
   };
   const index = infos.push(info);
+  let text;
   if(size > 800 && min > 300) {
     const rot = bounds.width < bounds.height;
     bounds = bounds.expand(-vert.bounds.width * 1.8, -hor.bounds.height * 1.8);
@@ -113,7 +123,7 @@ function draw_info({product, bounds, hor, vert, infos}) {
       content += `\n${other.join(', ')}`;
     }
 
-    const text = new PointText({
+    text = new PointText({
       point: bounds.center,
       content,
       justification: 'center',
@@ -125,7 +135,7 @@ function draw_info({product, bounds, hor, vert, infos}) {
     }
   }
   else {
-    const text = new PointText({
+    text = new PointText({
       point: bounds.center,
       content: `(${index.toFixed()})`,
       justification: 'center',
@@ -137,6 +147,21 @@ function draw_info({product, bounds, hor, vert, infos}) {
     if(vert.bounds.intersects(text.bounds) || vert.bounds.contains(text.bounds)) {
       vert.translate([0, -vert.bounds.height]);
     }
+  }
+  if(drawFigure({glassRow, obj, bounds})) {
+    hor.opacity = 0.4;
+    vert.opacity = 0.4;
+    text.opacity = 0.3;
+  }
+}
+
+function drawFigure({glassRow, obj, bounds}) {
+  const gl = obj.glasses.find({elm: glassRow.elm});
+  if(gl && !gl.is_rectangular) {
+    const path = new Path({...figAttr, pathData:  glassRow.path_data});
+    const delta = bounds.center.subtract(path.bounds.center);
+    path.translate(delta);
+    return true;
   }
 }
 
@@ -185,7 +210,7 @@ function wrapper(scrap) {
       hor.position = bounds.bottomCenter.add([0, -hor.bounds.height/2]);
       const vert = new PointText({content: width.toFixed(), rotation: -90, fontSize});
       vert.position = bounds.leftCenter.add([vert.bounds.width/2 + 8, 0]);
-      draw_info({product: product._row, bounds: bounds.clone({insert: false}), hor, vert, infos});
+      drawInfo({product: product._row, bounds: bounds.clone({insert: false}), hor, vert, infos});
     }
 
     for(const product of scraps) {
